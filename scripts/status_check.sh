@@ -14,7 +14,8 @@ fi
 du -sh $R/data/beacon_raw/* 2>/dev/null | head -15
 du -sh /mnt/cunyuliu/hf_home 2>/dev/null
 
-echo "--- [2] rnaft 环境 ---"
+echo "--- [2] rnaft 环境 ---"  # peft 等在 /mnt pypath, 需 PYTHONPATH 才可见
+export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath
 /home/cunyuliu/llr_env/bin/python -c "
 mods = ['torch','transformers','peft','sklearn','lightgbm','datasets']
 import importlib

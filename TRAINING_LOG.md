@@ -29,6 +29,33 @@
 - GPU 真实性验证：cuda:7 matmul 379 TFLOP/s（CPU 不可能）——该服务器
   nvidia-smi 利用率列显示 N/A 是驱动显示特性，训练确实在 GPU 上（已记录证据方法）。
 
+### Day 1 上午巡检（04:00 轮）
+
+**新增结果**（均为全量正式 run，非冒烟口径，已入 ledger）：
+
+| run | 切分 | ACC | 备注 |
+|---|---|---|---|
+| RiNALMo-micro frozen | random | **0.796** | 冻结即强：超过 RNA-Sc-10M 全部策略（最佳 lora 0.745） |
+| RNA-Sc-10M frozen | family | 0.222 | vs random 0.375 → Δ(random−family)=+15.3pp，C4 首个数据点 |
+| k-mer logreg（传统基线）| random | 0.662 | B5 口径，与 LM 同数据同切分 |
+| k-mer LightGBM（传统基线）| random | **0.900** | ⚠ 最强基线 > 当前全部 LM 结果 |
+
+**基线警报（诚实记录，非结论）**：k-mer LightGBM 0.900 超过 RNA-Sc-10M 最佳微调
+（lora 0.745）与 RiNALMo-micro frozen（0.796）。含义：该任务上 k-mer 频率特征
+已携带大量家族判别信息。待 RiNALMo-micro lora/full 微调结果出炉后对齐比较；
+若微调仍不敌基线，将是"预训练收益"叙事的关键负结果（B5 防线按 spec 触发报告）。
+
+**正在跑**：GPU6 = family 切分 10-run 队列（frozen s17 done，full s17 训练中，
+后续 lora/head-only + seeds 29/43）；GPU7 = RiNALMo-micro 4 策略矩阵
+（frozen done 0.796，head-only 训练中，后续 lora/full）。
+
+**巡检修复**：
+1. status_check.sh 环境检查补 PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath，
+   修复 peft=MISSING 误报（实际 peft=0.13.2、transformers=5.0.0，LoRA 可训已证）；
+2. 本地 run_remote.sh 的 check 路径改为 /home/cunyuliu/rna-ft-eval/scripts/
+   （原指向 /mnt 下不存在路径），新增 pushcode 子命令；
+3. baselines.py（k-mer logreg + LightGBM，B5 口径）首次产出结果 → 本轮提交。
+
 ## 2026-09-14（Day 0：交接启动）
 
 ### 交接文档阅读结论
