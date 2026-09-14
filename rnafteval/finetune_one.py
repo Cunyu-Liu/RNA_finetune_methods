@@ -83,25 +83,41 @@ def main() -> int:
     torch.cuda.reset_peak_memory_stats(args.device)
 
     # --- data ---
-    recs = ncrna.load_ncrna(
-        os.path.join(BEACON_RAW, "noncoding-rna-family", "data"))
-    from .tasks.dedup import dedup
-    n_before = len(recs)
-    recs = dedup(recs)
-    if len(recs) != n_before:
-        print("dedup: %d -> %d (BEACON cross-split exact dups removed)"
-              % (n_before, len(recs)), flush=True)
+    if args.split == "family":
+        import pyarrow.parquet as pq
+        fpath = os.path.join(ROOT, "data", "family_splits",
+                             "noncoding-rna-family.parquet")
+        t = pq.read_table(fpath)
+        d = t.to_pydict()
+        recs = [{"seq": s, "label": int(l), "cluster": c}
+                for s, l, c in zip(d["seq"], d["label"], d["cluster_id"])]
+        parts = {
+            "train": [r for r, sp in zip(recs, d["split"]) if sp == "train"],
+            "val": [r for r, sp in zip(recs, d["split"]) if sp == "val"],
+            "test": [r for r, sp in zip(recs, d["split"]) if sp == "test"],
+        }
+    else:
+        recs = ncrna.load_ncrna(
+            os.path.join(BEACON_RAW, "noncoding-rna-family", "data"))
+        from .tasks.dedup import dedup
+        n_before = len(recs)
+        recs = dedup(recs)
+        if len(recs) != n_before:
+            print("dedup: %d -> %d (BEACON cross-split exact dups removed)"
+                  % (n_before, len(recs)), flush=True)
+        parts = random_split(recs, seed=17)
     if args.smoke:
         recs = recs[:600]
+        parts = {k: v[:60] for k, v in parts.items()}
     labels = sorted({r["label"] for r in recs})
     lab2id = {l: i for i, l in enumerate(labels)}
     for r in recs:
         r["label_id"] = lab2id[r["label"]]
+    for k in parts:
+        for r in parts[k]:
+            r["label_id"] = lab2id[r["label"]]
 
-    if args.split == "family":
-        parts = family_split(recs, family_key="label")
-    else:
-        parts = random_split(recs, seed=17)
+    # zero-overlap assertion (B1) — both arms
     assert_no_overlap(parts["train"], parts["val"] + parts["test"], unit="seq")
     print("data: train %d val %d test %d classes %d" % (
         len(parts["train"]), len(parts["val"]), len(parts["test"]),
