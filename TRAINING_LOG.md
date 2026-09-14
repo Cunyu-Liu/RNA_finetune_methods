@@ -2,6 +2,39 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 上午：矩阵成型，24+ 正式 runs）
+
+### 当前矩阵快照（ledger 汇总，status/summary.md 自动生成）
+
+**ncRNA 分类（13 类，ACC）**：
+
+| 模型 | 策略 | random | family | 种子 |
+|---|---|---|---|---|
+| RNA-Sc-10M | frozen | 0.375 | 0.214 (3s 方向一致) | 1/3 |
+| RNA-Sc-10M | lora | **0.745** | 0.070 (崩) | 1/2 |
+| RNA-Sc-10M | full | 0.660 | 0.065 (崩, 3s ↓*) | 1/3 |
+| RiNALMo-micro | frozen | 0.812 (2s) | 0.696 | 2/1 |
+| RiNALMo-micro | lora | **0.923** | 0.084 (崩) | 1/1 |
+| k-mer LGBM 基线 | — | 0.900 | 0.893 | — |
+
+**modification m6A（per-base AUC）**：LoRA 0.941/0.944/0.943（3 种子，方向完全一致）
+vs frozen 0.645；full FT 进行中。
+
+### 三个正在固化的模式（初步，未过 BH 校正，不可作为最终结论）
+1. **C4 泄漏×策略交互**：family 切分下 LoRA/full 全崩（Δ≈-0.8），
+   frozen 温和跌（RiNALMo 0.81→0.70），k-mer 基线几乎不动（0.90→0.89）。
+   → "随机切分下的微调收益中相当部分是家族内泄漏"的直接证据形态；
+2. **ΔLM−基线格点**：RiNALMo+LoRA (random) 是唯一超基线的组合（+0.023）；
+   RNA-Sc-10M 全策略不敌 LGBM（受控 10M 模型容量小）但在 m6A 上
+   LoRA 0.94 极强 —— 微调收益的任务/模型依赖性（C1 的核心维度）；
+3. **LoRA vs full 分化**：random 下 LoRA > full（0.745 vs 0.660；0.923 vs pending），
+   与蛋白侧 Schmirler "LoRA≈full" 出现分化苗头 → C5 素材。
+
+### 基建与运维
+- 四 GPU 并行轮转（G1 modification 矩阵 / G5+G7 RiNALMo 策略与种子 / G6 family）；
+- 每策略列完成度已过 20%（T2.0 预注册检查点分析待 formal 全列 20% 后执行）；
+- M5 无触发（见 docs/m5_monitoring.md）；GitHub 已推 8 次。
+
 ## 2026-09-15（Day 1 凌晨：首个策略对比数据点出炉）
 
 ### ★ 核心结果（ncRNA 分类 / random 切分 / seed 17 / 全量 8.5k 序列）
@@ -28,84 +61,6 @@
   RiNALMo-micro 前向验证通过（nt token 化正确）；
 - GPU 真实性验证：cuda:7 matmul 379 TFLOP/s（CPU 不可能）——该服务器
   nvidia-smi 利用率列显示 N/A 是驱动显示特性，训练确实在 GPU 上（已记录证据方法）。
-
-### Day 1 上午巡检（04:00 轮）
-
-**新增结果**（均为全量正式 run，非冒烟口径，已入 ledger）：
-
-| run | 切分 | ACC | 备注 |
-|---|---|---|---|
-| RiNALMo-micro frozen | random | **0.796** | 冻结即强：超过 RNA-Sc-10M 全部策略（最佳 lora 0.745） |
-| RNA-Sc-10M frozen | family | 0.222 | vs random 0.375 → Δ(random−family)=+15.3pp，C4 首个数据点 |
-| k-mer logreg（传统基线）| random | 0.662 | B5 口径，与 LM 同数据同切分 |
-| k-mer LightGBM（传统基线）| random | **0.900** | ⚠ 最强基线 > 当前全部 LM 结果 |
-
-**基线警报（诚实记录，非结论）**：k-mer LightGBM 0.900 超过 RNA-Sc-10M 最佳微调
-（lora 0.745）与 RiNALMo-micro frozen（0.796）。含义：该任务上 k-mer 频率特征
-已携带大量家族判别信息。待 RiNALMo-micro lora/full 微调结果出炉后对齐比较；
-若微调仍不敌基线，将是"预训练收益"叙事的关键负结果（B5 防线按 spec 触发报告）。
-
-**正在跑**：GPU6 = family 切分 10-run 队列（frozen s17 done，full s17 训练中，
-后续 lora/head-only + seeds 29/43）；GPU7 = RiNALMo-micro 4 策略矩阵
-（frozen done 0.796，head-only 训练中，后续 lora/full）。
-
-**巡检修复**：
-1. status_check.sh 环境检查补 PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath，
-   修复 peft=MISSING 误报（实际 peft=0.13.2、transformers=5.0.0，LoRA 可训已证）；
-2. 本地 run_remote.sh 的 check 路径改为 /home/cunyuliu/rna-ft-eval/scripts/
-   （原指向 /mnt 下不存在路径），新增 pushcode 子命令；
-3. baselines.py（k-mer logreg + LightGBM，B5 口径）首次产出结果 → 本轮提交。
-
-### Day 1 早晨巡检（06:05 轮）
-
-**新增结果**（全量正式 run，已入 ledger，非冒烟口径）：
-
-| run | 切分 | ACC | 备注 |
-|---|---|---|---|
-| RiNALMo-micro lora s17 | random | **0.923** | 545,280 LoRA 可训参；**超过 k-mer LGBM 0.900 最强传统基线** |
-| RiNALMo-micro head-only s17 | random | 0.796 | 与 frozen 持平（同构预期成立） |
-| RNA-Sc-10M lora s17 | family | 0.064 | family 下微调策略全体沦陷 |
-| RNA-Sc-10M head-only s17 | family | 0.222 | = frozen 水平 |
-| RNA-Sc-10M full s29 | family | 0.067 | 与 s17 full/lora 一致 |
-
-**叙事更新（单种子，非结论）**：random 挡位排序 RiNALMo-LoRA 0.923 >
-k-mer LGBM 0.900 > RiNALMo frozen/head-only 0.796 > RNA-Sc 最佳 0.745
-——预训练质量 + LoRA 双重增益显现，B5 基线警报部分解除（RiNALMo 侧）。
-family 挡位 RNA-Sc 出现**反转信号**：random 下 lora(0.745)>full(0.660)>
-frozen(0.375)，family 下 frozen/head-only(0.22) > full/lora(0.06-0.07)
-——微调在家族外推时反而不敌冻结，C4（外推泛化差）的首个策略级证据。
-
-**本轮失败诊断与处置（闭环）**：
-1. q_rinalmo_v6c lora 崩溃 `ValueError: Target modules {'k','q','v','o'}
-   not found`（multimolecule 用 BERT 式 query/key/value/dense 命名）→
-   942131b autodetect 修复已在 GPU5 实战验证（即上表 0.923 run）；
-2. GPU7（MIG 4.75GB 切片）full FT：v6c 重跑 30min/epoch（10 epoch > 4h
-   timeout 红线），且前 2 epoch loss 平在 2.56（13 类随机水平 ln13≈2.565）
-   无收敛迹象 → 人工终止 v6c（ledger 留 pending 行，claim 只拒
-   running/done，无需 reset），改派 GPU5 全卡链式重跑（~10min/epoch）；
-3. smoke_matrix.log 的 4×OVERLAP 断言失败系 00:08 历史产物（早于
-   f27b5fe dedup 修复 01:10），ledger 后续 smoke 全部 done，闭环已验证；
-4. GPU7 历史 OOM：MIG 切片 4.75GB 放不下 RiNALMo lora/full → lora 已
-   迁 GPU5 完成；full 改 GPU5；GPU7 只排 frozen/head-only（实测 ~78min/run）。
-
-**下一批派发（三 GPU 并行，含链式等待）**：
-- GPU5（即时）：RiNALMo family lora/frozen/head-only s17（lora 06:22
-  启动 epoch0 loss 2.98）→ 链式 full s17 random 重跑（queue_gpu5c）；
-- GPU6（链式，family 队列 lora s29 之后还有 frozen/full/lora s43）：
-  head-only s29/s43 family + RiNALMo full s17 family（queue_gpu6b）；
-- GPU7（v6c 终止后即时释放）：RiNALMo frozen/head-only s29/s43 random
-  （queue_gpu7e，B14 种子稳健性，~78min/run × 4）。
-
-**环境与协作备注**：
-- GPU0-4 被机理篇 wave/editflow/gmx/他人任务占满；GPU5 上 rna-sc
-  30M/100M 长训占 31.5GB，本项目 RiNALMo lora 峰值仅 2.2GB 可共存；
-- 发现另一会话 06:12 起在 GPU1 派发 modification 任务矩阵
-  （finetune_base.py + run_mod_queue.sh，per-base BCE token 头），ledger
-  claim 去重机制保证无冲突；分工：ncrna 主矩阵（本会话）/
-  modification（彼会话）；
-- CUDA 全线可用（llr_env torch 2.5.1+cu121），磁盘 /home 30% /mnt 51%
-  无风险；nvidia-smi GPU6/7 利用率列 [N/A] 为驱动显示特性（既往已用
-  379 TFLOP/s matmul 证明真实 GPU 计算）。
 
 ## 2026-09-14（Day 0：交接启动）
 
