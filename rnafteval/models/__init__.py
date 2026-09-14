@@ -57,10 +57,16 @@ def get(name: str) -> ModelSpec:
 
 
 def load_hf(spec: ModelSpec, device: str):
-    from transformers import AutoModel, AutoTokenizer
+    """Load multimolecule RNA LMs via the multimolecule package.
+
+    The pypath copy is compat-patched (import guards for transformers 5.0);
+    requires PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath.
+    """
+    from multimolecule import RnaTokenizer
+    from transformers import AutoModel
     path = hf_path(spec.repo)
     assert os.path.isdir(path), "model dir missing: %s (download first)" % path
-    tok = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
+    tok = RnaTokenizer.from_pretrained(path)
     backbone = AutoModel.from_pretrained(path, trust_remote_code=True)
     return tok, backbone.to(device)
 

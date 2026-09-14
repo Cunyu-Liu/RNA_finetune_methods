@@ -15,7 +15,7 @@ du -sh $R/data/beacon_raw/* 2>/dev/null | head -15
 du -sh /mnt/cunyuliu/hf_home 2>/dev/null
 
 echo "--- [2] rnaft 环境 ---"
-/home/cunyuliu/miniconda3/envs/rnaft/bin/python -c "
+/home/cunyuliu/llr_env/bin/python -c "
 mods = ['torch','transformers','peft','sklearn','lightgbm','datasets']
 import importlib
 ok = []
