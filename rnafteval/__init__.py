@@ -1,145 +1,114 @@
-"""Model adapters + loaders: HF RNA LMs + RNA-Sc controlled family.
+"""Training strategies (frozen / lora / head-only / full) — spec §3 definitions.
 
-All models expose (tokenizer, backbone) where backbone(**enc) returns an
-object with .last_hidden_state (B, T, D) aligned to input token positions.
-env: HF_ENDPOINT=hf-mirror, HF_HOME=/mnt/cunyuliu/hf_home, PYTHONPATH pypath.
+Head spec (frozen口径): single-hidden-layer MLP, hidden width 32 (Schmirler-aligned)
+for per-seq tasks with attention pooling over non-pad tokens (mean-pool FORBIDDEN).
 """
 from __future__ import annotations
 
-import os
-from dataclasses import dataclass
-
-HF_HOME = "/mnt/cunyuliu/hf_home"
-RNASC_RUNS = "/mnt/cunyuliu/rna-sc/runs"
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
 
-def hf_path(repo: str) -> str:
-    return HF_HOME + "/models/" + repo.replace("/", "--") + "/snapshots/main"
+class AttentionPool(nn.Module):
+    """Attention pooling over non-pad tokens (order-aware)."""
+
+    def __init__(self, d_model: int):
+        super().__init__()
+        self.score = nn.Linear(d_model, 1)
+
+    def forward(self, h: torch.Tensor, pad_mask: torch.Tensor) -> torch.Tensor:
+        s = self.score(h).squeeze(-1)
+        s = s.masked_fill(pad_mask, float("-inf"))
+        w = F.softmax(s, dim=-1)
+        return (h * w.unsqueeze(-1)).sum(dim=1)
 
 
-@dataclass
-class ModelSpec:
-    name: str
-    repo: str
-    d_model: int
-    params_m: float
-    layer: str          # tierA | tierB | appendix | controlled (rna-sc family)
-    strategies: tuple = ("frozen", "lora", "head-only", "full")
-    kmer: int = 1
-    notes: str = ""
-    custom_loader: str = ""   # "rnasc" for RNA-Sc family
+class SeqMLPHead(nn.Module):
+    """Per-seq head: attention pool -> Linear(D,32) -> GELU -> Linear(32,C)."""
+
+    def __init__(self, d_model: int, n_classes: int, hidden: int = 32):
+        super().__init__()
+        self.pool = AttentionPool(d_model)
+        self.fc1 = nn.Linear(d_model, hidden)
+        self.fc2 = nn.Linear(hidden, n_classes)
+
+    def forward(self, h: torch.Tensor, pad_mask: torch.Tensor) -> torch.Tensor:
+        z = self.pool(h, pad_mask)
+        return self.fc2(F.gelu(self.fc1(z)))
 
 
-MODEL_SPECS: dict[str, ModelSpec] = {
-    "RiNALMo-micro": ModelSpec("RiNALMo-micro", "lmzb-bupt/RiNALMo", 640,
-                               33.4, "tierA"),
-    "ERNIE-RNA": ModelSpec("ERNIE-RNA", "multimolecule/ernierna", 768,
-                           86.0, "tierA"),
-    "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),
-    "SpliceBERT": ModelSpec("SpliceBERT", "multimolecule/splicebert", 512,
-                            19.2, "tierB"),
-    "SpliceBERT-human510": ModelSpec(
-        "SpliceBERT-human510", "gyx1130/SpliceBERT-human510", 512, 19.2,
-        "tierB", notes="original ckpt"),
-    "RNA-Sc-1M": ModelSpec("RNA-Sc-1M", "", 256, 1.0, "controlled",
-                           custom_loader="rnasc"),
-    "RNA-Sc-10M": ModelSpec("RNA-Sc-10M", "", 512, 10.0, "controlled",
-                            custom_loader="rnasc"),
-    "RNA-Sc-30M": ModelSpec("RNA-Sc-30M", "", 480, 30.0, "controlled",
-                            custom_loader="rnasc"),
-    "RNA-Sc-100M": ModelSpec("RNA-Sc-100M", "", 768, 100.0, "controlled",
-                             custom_loader="rnasc"),
-}
+class TokenHead(nn.Module):
+    """Per-base head: Linear(D, hidden) -> GELU -> Linear(hidden, C)."""
+
+    def __init__(self, d_model: int, n_classes: int, hidden: int = 32):
+        super().__init__()
+        self.fc1 = nn.Linear(d_model, hidden)
+        self.fc2 = nn.Linear(hidden, n_classes)
+
+    def forward(self, h: torch.Tensor, pad_mask: torch.Tensor) -> torch.Tensor:
+        z = self.fc2(F.gelu(self.fc1(h)))
+        return z.masked_fill(pad_mask.unsqueeze(-1), 0.0)
 
 
-def get(name: str) -> ModelSpec:
-    return MODEL_SPECS[name]
+def make_head(granularity: str, d_model: int, n_classes: int,
+              hidden: int = 32) -> nn.Module:
+    if granularity == "per-seq":
+        return SeqMLPHead(d_model, n_classes, hidden)
+    return TokenHead(d_model, n_classes, hidden)
 
 
-def load_hf(spec: ModelSpec, device: str):
-    from transformers import AutoModel, AutoTokenizer
-    path = hf_path(spec.repo)
-    assert os.path.isdir(path), "model dir missing: %s (download first)" % path
-    tok = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
-    backbone = AutoModel.from_pretrained(path, trust_remote_code=True)
-    return tok, backbone.to(device)
+def apply_strategy(model, strategy: str, lora_rank: int = 8,
+                   lora_alpha: int = 4):
+    """Return (model, trainable_param_count) after applying strategy.
 
+    model may be an HF nn.Module OR a wrapper with .m (RNA-Sc custom arch).
+    frozen / head-only: freeze everything (head trained separately).
+    lora: peft on the underlying nn.Module; HF models target q/k/v/o,
+    RNA-Sc targets qkv/out projections (its attention exposes qkv+out).
+    full: all params trainable.
+    """
+    core = model.m if hasattr(model, "m") else model
 
-class _RnaScWrapper:
-    """Wrap rna_sc.RNAMLMEncoder into the HF .last_hidden_state contract."""
-
-    def __init__(self, model):
-        self.m = model
-
-    def to(self, device):
-        self.m = self.m.to(device)
-        return self
-
-    def parameters(self):
-        return self.m.parameters()
-
-    def train(self, mode=True):
-        self.m.train(mode)
-
-    def eval(self):
-        self.m.eval()
-
-    def __call__(self, input_ids, attention_mask=None):
-        _logits, _loss, hiddens = self.m(input_ids, None,
-                                         return_all_hiddens=True)
-        h = self.m.ln_f(hiddens[-1])
-        return type("O", (), {"last_hidden_state": h})
-
-
-class _RnaScTok:
-    """nt-level tokenizer matching RNA-Sc vocab (A=0 C=1 G=2 U/T=3, PAD=4)."""
-
-    def __call__(self, seqs, padding=True, truncation=True, max_length=512,
-                 return_tensors="pt"):
-        import torch
-        V = {"A": 0, "C": 1, "G": 2, "U": 3, "T": 3}
-        PAD = 4
-        ids, mask = [], []
-        for s in seqs:
-            s = s.upper().replace("U", "T")[:max_length]
-            row = [V.get(ch, PAD) for ch in s]
-            ids.append(row)
-            mask.append([1] * len(row))
-        maxlen = max(len(r) for r in ids)
-        for i, r in enumerate(ids):
-            pad = maxlen - len(r)
-            ids[i] = r + [PAD] * pad
-            mask[i] = mask[i] + [0] * pad
-        return {"input_ids": torch.tensor(ids),
-                "attention_mask": torch.tensor(mask)}
-
-
-def load_rnasc(model_name: str, device: str):
-    import sys
-    import torch
-    sys.path.insert(0, "/home/cunyuliu/rna-sc")
-    from rna_sc.model import RNAMLMEncoder
-
-    run_map = {
-        "RNA-Sc-1M": "RNA-Sc-1M_s17",
-        "RNA-Sc-10M": "RNA-Sc-10M_s17",
-        "RNA-Sc-30M": "RNA-Sc-30M_s17",
-        "RNA-Sc-100M": "RNA-Sc-100M_s17",
-    }
-    run_dir = os.path.join(RNASC_RUNS, run_map[model_name])
-    cks = sorted([f for f in os.listdir(run_dir) if f.startswith("ckpt_")],
-                 key=lambda f: int(f.split("_nt")[1].split("_")[0]))
-    ck = torch.load(os.path.join(run_dir, cks[-1]), map_location="cpu",
-                    weights_only=False)
-    mcfg = ck["cfg"]["arch"]
-    model = RNAMLMEncoder(d_model=mcfg["d_model"], n_layers=mcfg["n_layers"],
-                          n_heads=mcfg["n_heads"], d_ff=mcfg["d_ff"])
-    model.load_state_dict(ck["model"])
-    return _RnaScTok(), _RnaScWrapper(model).to(device)
-
-
-def load_model(name: str, device: str):
-    spec = MODEL_SPECS[name]
-    if spec.custom_loader == "rnasc":
-        return spec, *load_rnasc(name, device)
-    return spec, *load_hf(spec, device)
+    if strategy in ("frozen", "head-only"):
+        for p in core.parameters():
+            p.requires_grad = False
+        core.eval()
+        return model, 0
+    if strategy == "full":
+        for p in core.parameters():
+            p.requires_grad = True
+        return model, sum(p.numel() for p in core.parameters()
+                          if p.requires_grad)
+    if strategy == "lora":
+        from peft import LoraConfig, get_peft_model
+        hf_style = hasattr(core, "config") and hasattr(core, "forward")
+        rnasc_style = hasattr(core, "blocks")
+        if rnasc_style:
+            target = ["qkv", "out"]
+        elif hf_style:
+            # multimolecule RiNALMo/ERNIE expose query/key/value/dense (BERT-style)
+            names = {n for n, _ in core.named_modules()}
+            for cand in (["query", "key", "value", "dense"],
+                         ["qkv_proj", "out_proj"],
+                         ["q", "k", "v", "o"]):
+                if all(any(c in n for n in names) for c in cand):
+                    target = cand
+                    break
+            else:
+                target = ["query", "value"]
+        else:
+            target = ["query", "value"]
+        cfg = LoraConfig(
+            r=lora_rank, lora_alpha=lora_alpha, lora_dropout=0.0,
+            target_modules=target, bias="none",
+            task_type="FEATURE_EXTRACTION",
+        )
+        pm = get_peft_model(core, cfg)
+        if hasattr(model, "m"):
+            model.m = pm
+        else:
+            model = pm
+        n = sum(p.numel() for p in pm.parameters() if p.requires_grad)
+        return model, n
+    raise ValueError("unknown strategy %s" % strategy)

@@ -83,7 +83,22 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
     if strategy == "lora":
         from peft import LoraConfig, get_peft_model
         hf_style = hasattr(core, "config") and hasattr(core, "forward")
-        target = ["q", "k", "v", "o"] if hf_style else ["qkv", "out"]
+        rnasc_style = hasattr(core, "blocks")
+        if rnasc_style:
+            target = ["qkv", "out"]
+        elif hf_style:
+            # multimolecule RiNALMo/ERNIE expose query/key/value/dense (BERT-style)
+            names = {n for n, _ in core.named_modules()}
+            for cand in (["query", "key", "value", "dense"],
+                         ["qkv_proj", "out_proj"],
+                         ["q", "k", "v", "o"]):
+                if all(any(c in n for n in names) for c in cand):
+                    target = cand
+                    break
+            else:
+                target = ["query", "value"]
+        else:
+            target = ["query", "value"]
         cfg = LoraConfig(
             r=lora_rank, lora_alpha=lora_alpha, lora_dropout=0.0,
             target_modules=target, bias="none",

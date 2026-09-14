@@ -1,0 +1,2 @@
+RiNALMo-micro noncoding-rna-family lora 17 random 8
+RiNALMo-micro noncoding-rna-family full 17 random 8
