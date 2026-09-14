@@ -66,7 +66,9 @@ def load_hf(spec: ModelSpec, device: str):
 
 
 class _RnaScWrapper:
-    """Wrap rna_sc.RNAMLMEncoder into the HF .last_hidden_state contract."""
+    """Wrap rna_sc.RNAMLMEncoder (or peft-wrapped version) into the HF
+    .last_hidden_state contract. PeftModel.forward passes **kwargs, so we
+    translate input_ids/attention_mask to the RNAMLMEncoder signature."""
 
     def __init__(self, model):
         self.m = model
@@ -85,12 +87,13 @@ class _RnaScWrapper:
         self.m.eval()
 
     def __call__(self, input_ids, attention_mask=None):
-        # RNAMLMEncoder derives key_padding from ids==PAD itself; our
-        # tokenizer already pads with PAD(4), so attention_mask is redundant
-        # for this model (kept for API compat).
-        _logits, _loss, hiddens = self.m(input_ids, None,
-                                         return_all_hiddens=True)
-        h = self.m.ln_f(hiddens[-1])
+        core = self.m
+        # unwrap peft (its forward forwards **kwargs to base encoder)
+        if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
+            core = core.base_model.model
+        _logits, _loss, hiddens = core(input_ids, None,
+                                       return_all_hiddens=True)
+        h = core.ln_f(hiddens[-1])
         return type("O", (), {"last_hidden_state": h})
 
 

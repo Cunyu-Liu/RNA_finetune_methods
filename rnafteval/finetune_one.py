@@ -124,6 +124,9 @@ def main() -> int:
     head_params = sum(p.numel() for p in head.parameters())
     train_params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
+    if hasattr(backbone, "m"):
+        train_params = [p for p in head.parameters() if p.requires_grad] + \
+            [p for p in backbone.m.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
 

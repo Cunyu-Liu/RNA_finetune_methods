@@ -58,32 +58,42 @@ def make_head(granularity: str, d_model: int, n_classes: int,
     return TokenHead(d_model, n_classes, hidden)
 
 
-def apply_strategy(model: nn.Module, strategy: str, lora_rank: int = 8,
+def apply_strategy(model, strategy: str, lora_rank: int = 8,
                    lora_alpha: int = 4):
     """Return (model, trainable_param_count) after applying strategy.
 
-    frozen: backbone eval-mode + requires_grad False (head trained separately)
-    head-only: same freezing contract, alias for bookkeeping
-    lora: peft LoRA on q/k/v/o; rank=8, alpha=4 (spec: alpha=rank/2)
-    full: all params trainable
+    model may be an HF nn.Module OR a wrapper with .m (RNA-Sc custom arch).
+    frozen / head-only: freeze everything (head trained separately).
+    lora: peft on the underlying nn.Module; HF models target q/k/v/o,
+    RNA-Sc targets qkv/out projections (its attention exposes qkv+out).
+    full: all params trainable.
     """
+    core = model.m if hasattr(model, "m") else model
+
     if strategy in ("frozen", "head-only"):
-        for p in model.parameters():
+        for p in core.parameters():
             p.requires_grad = False
-        model.eval()
+        core.eval()
         return model, 0
     if strategy == "full":
-        for p in model.parameters():
+        for p in core.parameters():
             p.requires_grad = True
-        return model, sum(p.numel() for p in model.parameters() if p.requires_grad)
+        return model, sum(p.numel() for p in core.parameters()
+                          if p.requires_grad)
     if strategy == "lora":
         from peft import LoraConfig, get_peft_model
+        hf_style = hasattr(core, "config") and hasattr(core, "forward")
+        target = ["q", "k", "v", "o"] if hf_style else ["qkv", "out"]
         cfg = LoraConfig(
             r=lora_rank, lora_alpha=lora_alpha, lora_dropout=0.0,
-            target_modules=["q", "k", "v", "o"], bias="none",
+            target_modules=target, bias="none",
             task_type="FEATURE_EXTRACTION",
         )
-        pm = get_peft_model(model, cfg)
+        pm = get_peft_model(core, cfg)
+        if hasattr(model, "m"):
+            model.m = pm
+        else:
+            model = pm
         n = sum(p.numel() for p in pm.parameters() if p.requires_grad)
-        return pm, n
+        return model, n
     raise ValueError("unknown strategy %s" % strategy)
