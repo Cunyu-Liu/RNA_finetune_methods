@@ -1,0 +1,3 @@
+RiNALMo-micro noncoding-rna-family lora 17 family 8
+RiNALMo-micro noncoding-rna-family frozen 17 family 8
+RiNALMo-micro noncoding-rna-family head-only 17 family 8

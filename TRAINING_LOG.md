@@ -56,6 +56,57 @@
    （原指向 /mnt 下不存在路径），新增 pushcode 子命令；
 3. baselines.py（k-mer logreg + LightGBM，B5 口径）首次产出结果 → 本轮提交。
 
+### Day 1 早晨巡检（06:05 轮）
+
+**新增结果**（全量正式 run，已入 ledger，非冒烟口径）：
+
+| run | 切分 | ACC | 备注 |
+|---|---|---|---|
+| RiNALMo-micro lora s17 | random | **0.923** | 545,280 LoRA 可训参；**超过 k-mer LGBM 0.900 最强传统基线** |
+| RiNALMo-micro head-only s17 | random | 0.796 | 与 frozen 持平（同构预期成立） |
+| RNA-Sc-10M lora s17 | family | 0.064 | family 下微调策略全体沦陷 |
+| RNA-Sc-10M head-only s17 | family | 0.222 | = frozen 水平 |
+| RNA-Sc-10M full s29 | family | 0.067 | 与 s17 full/lora 一致 |
+
+**叙事更新（单种子，非结论）**：random 挡位排序 RiNALMo-LoRA 0.923 >
+k-mer LGBM 0.900 > RiNALMo frozen/head-only 0.796 > RNA-Sc 最佳 0.745
+——预训练质量 + LoRA 双重增益显现，B5 基线警报部分解除（RiNALMo 侧）。
+family 挡位 RNA-Sc 出现**反转信号**：random 下 lora(0.745)>full(0.660)>
+frozen(0.375)，family 下 frozen/head-only(0.22) > full/lora(0.06-0.07)
+——微调在家族外推时反而不敌冻结，C4（外推泛化差）的首个策略级证据。
+
+**本轮失败诊断与处置（闭环）**：
+1. q_rinalmo_v6c lora 崩溃 `ValueError: Target modules {'k','q','v','o'}
+   not found`（multimolecule 用 BERT 式 query/key/value/dense 命名）→
+   942131b autodetect 修复已在 GPU5 实战验证（即上表 0.923 run）；
+2. GPU7（MIG 4.75GB 切片）full FT：v6c 重跑 30min/epoch（10 epoch > 4h
+   timeout 红线），且前 2 epoch loss 平在 2.56（13 类随机水平 ln13≈2.565）
+   无收敛迹象 → 人工终止 v6c（ledger 留 pending 行，claim 只拒
+   running/done，无需 reset），改派 GPU5 全卡链式重跑（~10min/epoch）；
+3. smoke_matrix.log 的 4×OVERLAP 断言失败系 00:08 历史产物（早于
+   f27b5fe dedup 修复 01:10），ledger 后续 smoke 全部 done，闭环已验证；
+4. GPU7 历史 OOM：MIG 切片 4.75GB 放不下 RiNALMo lora/full → lora 已
+   迁 GPU5 完成；full 改 GPU5；GPU7 只排 frozen/head-only（实测 ~78min/run）。
+
+**下一批派发（三 GPU 并行，含链式等待）**：
+- GPU5（即时）：RiNALMo family lora/frozen/head-only s17（lora 06:22
+  启动 epoch0 loss 2.98）→ 链式 full s17 random 重跑（queue_gpu5c）；
+- GPU6（链式，family 队列 lora s29 之后还有 frozen/full/lora s43）：
+  head-only s29/s43 family + RiNALMo full s17 family（queue_gpu6b）；
+- GPU7（v6c 终止后即时释放）：RiNALMo frozen/head-only s29/s43 random
+  （queue_gpu7e，B14 种子稳健性，~78min/run × 4）。
+
+**环境与协作备注**：
+- GPU0-4 被机理篇 wave/editflow/gmx/他人任务占满；GPU5 上 rna-sc
+  30M/100M 长训占 31.5GB，本项目 RiNALMo lora 峰值仅 2.2GB 可共存；
+- 发现另一会话 06:12 起在 GPU1 派发 modification 任务矩阵
+  （finetune_base.py + run_mod_queue.sh，per-base BCE token 头），ledger
+  claim 去重机制保证无冲突；分工：ncrna 主矩阵（本会话）/
+  modification（彼会话）；
+- CUDA 全线可用（llr_env torch 2.5.1+cu121），磁盘 /home 30% /mnt 51%
+  无风险；nvidia-smi GPU6/7 利用率列 [N/A] 为驱动显示特性（既往已用
+  379 TFLOP/s matmul 证明真实 GPU 计算）。
+
 ## 2026-09-14（Day 0：交接启动）
 
 ### 交接文档阅读结论

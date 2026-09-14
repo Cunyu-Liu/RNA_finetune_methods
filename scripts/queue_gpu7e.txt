@@ -1,0 +1,4 @@
+RiNALMo-micro noncoding-rna-family frozen 29 random 8
+RiNALMo-micro noncoding-rna-family head-only 29 random 8
+RiNALMo-micro noncoding-rna-family frozen 43 random 8
+RiNALMo-micro noncoding-rna-family head-only 43 random 8
