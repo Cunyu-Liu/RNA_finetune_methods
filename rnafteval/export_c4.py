@@ -17,18 +17,34 @@ LEDGER = os.path.join(ROOT, "ledger.jsonl")
 
 
 def cells() -> dict:
+    """Formal matrix cells. Tuning runs (seed 101) excluded. Formal runs
+    with a tuned-LR tag (e.g. _lr1e-05, seeds 17/29/43) ARE included —
+    they are the LR-tuned protocol arm (A8: LR chosen on 101, formal on
+    17/29/43). Where both default-LR and tuned-LR rows exist for the same
+    (strategy, seed, split), the tuned-LR value wins (protocol arm)."""
     rows = [json.loads(l) for l in open(LEDGER) if l.strip()]
-    out: dict[tuple, dict[int, float]] = collections.defaultdict(dict)
+    formal = []
     for r in rows:
         if r.get("status") != "done" or r.get("smoke"):
             continue
-        if "_s101_" in r["run_id"]:
+        if r.get("seed") == 101:
             continue  # tuning runs excluded from formal matrix
-        v = r.get("value")
-        if v is None:
+        if r.get("value") is None:
+            continue
+        formal.append(r)
+    out: dict[tuple, dict[int, float]] = collections.defaultdict(dict)
+    # pass 1: default-LR rows (no _lr tag)
+    for r in formal:
+        if "_lr" in r["run_id"]:
             continue
         key = (r["model"], r["task"], r["strategy"], r["split"])
-        out[key][r["seed"]] = float(v)
+        out[key].setdefault(r["seed"], float(r["value"]))
+    # pass 2: tuned-LR rows override
+    for r in formal:
+        if "_lr" not in r["run_id"]:
+            continue
+        key = (r["model"], r["task"], r["strategy"], r["split"])
+        out[key][r["seed"]] = float(r["value"])
     return out
 
 
