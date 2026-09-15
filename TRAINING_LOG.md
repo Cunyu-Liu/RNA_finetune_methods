@@ -2,37 +2,24 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
-## 2026-09-15（Day 1 20:04 巡检：四条夜链派发，SSP E1 收尾方案落地）
-
-### 巡检结论（健康，0 failed）
-- ledger 110 行 = 104 done + 4 pending（全部对应活进程）+ 0 failed；
-  smoke_matrix.log 尾部 4 策略 OVERLAP 断言 = 00:08 历史失败（dedup 修复前旧数据），
-  修复后 smoke_v5 已通过，与 15:00 巡检结论一致，无需处理；
-- 资源：8 卡全忙；G5 = SSP s29 波（frozen/lora 已 done）∥ RNA-Sc LR 网格 3e-4；
-  G6/G7 = MIG 4.75G 单任务（先查 torch total_memory 再派发，纪律执行）；
-  /home 31%、/mnt 51%，无磁盘风险；训练进程 97-100% 满载，CUDA 正常。
-
-### 本轮新完成（相对 17:30 快照）
-- RiNALMo ncRNA full s29 random @3e-4 → ACC 0.070（default-LR 口径有效 formal 点，
-  与 LR 网格互证：RiNALMo full 甜区 1e-5，3e-4 崩溃在 s29 复现）；
-- RiNALMo SSP s17 两策略×两切分收齐：random frozen F1 0.209 / lora 0.235，
-  family frozen 0.233 / lora 0.245 —— 大模型 SSP 优势在 family 切分下保持。
-
-### 派发（四条夜链，setsid nohup，全部 kill -0 + /proc cmdline 双校验）
-- **G6**（run_newmodels PID 850663 排空后）→ queue_gpu6g：新模型 family 首探
-  ERNIE/RNA-FM/SpliceBERT × ncrna × frozen/lora × s17 family（6 runs）；
-- **G7**（chain_g7_ssp PID 3997155 排空后）→ run_ssp_fill_g7：
-  RNA-Sc SSP full s29 random（E1 随机列最后一格）+ RiNALMo SSP
-  frozen/lora × s29/s43 × 两切分（8 runs）；
-- **G5**（SSP s29 波 PID 320118 排空后）→ run_ssp_rinalmo_full：RiNALMo SSP
-  full s17 × 两切分（整卡跑，MIG 装不下）；chain_g5_final 再接 full s29/s43
-  × 两切分（4 runs）；
-- 合计 21 runs 夜间队列：SSP E1 两侧矩阵（RNA-Sc + RiNALMo）明晨应全齐。
-- 启动坑：`cd X && setsid ... &` 的 & 会连 cd 一起后台化，第二条相对路径
-  脚本静默失败（chain_g5_rsspf 首启失败教训）——补挂改用绝对路径成功。
-
 ## 2026-09-15（Day 1 晚间：RiNALMo SSP 全谱 + 统计层 + 新模型首探）
 
+### ★★ A8 LR 网格全谱完成（双模型×4LR×2策略，s101）——模型规模×策略×LR 三重交互
+| LR | RNA-Sc full | RNA-Sc lora | RiNALMo full | RiNALMo lora |
+|---|---|---|---|---|
+| 1e-5 | 0.683 | 0.181 | **0.943** | 0.735 |
+| 3e-5 | **0.815** | 0.351 | **0.944** | 0.812 |
+| 1e-4 | 0.807 | 0.558 | 0.924 | 0.882 |
+| 3e-4 | 0.688 | **0.723** | 0.077(崩) | **0.923** |
+
+- **full 甜区随模型规模左移**：10M→3e-5；33M→1e-5，且 33M@3e-4 崩溃；
+- **LoRA 一律需高 LR**（两模型都在 3e-4），低 LR 严重欠拟合
+  （RNA-Sc lora@1e-5 仅 0.18——"LoRA 不行"的假象实为 LR 错配）；
+- **LR 错配可造成 ±0.5 假策略差**（RiNALMo full 0.943↔0.077）——
+  无网格的策略对比（含 Schmirler 未调 LR 的部分对照）存在系统性
+  风险，这是本工作的方法论贡献点之一；
+- 行动：RNA-Sc full@3e-5 formal 3 种子已排 GPU5（现有 formal
+  3e-4 的 0.66 是 LR 低估，tuned 后预期 0.81）。
 
 ### ★ RiNALMo SSP 矩阵（s17 双切分全策略）
 | 策略 | random | family |
