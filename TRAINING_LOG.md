@@ -2,6 +2,43 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 晚间：RiNALMo SSP 全谱 + 统计层 + 新模型首探）
+
+### ★ RiNALMo SSP 矩阵（s17 双切分全策略）
+| 策略 | random | family |
+|---|---|---|
+| frozen | 0.209 | 0.233 |
+| lora | **0.234** | **0.245** |
+
+- vs RNA-Sc（frozen 0.034）：**6.2× 模型规模优势**；
+- vs 最强基线 0.047：**5×+**；
+- LoRA 微调在两种切分下稳定增益 (+0.01-0.02)，家族切分无崩溃——
+  SSP 的微调收益为真（与 m6A 同模式，与 ncRNA 反模式）。
+
+### ★ 统计层上线（stats.py，预注册 §3.5 协议）
+- 30 个配对对比（策略间 + C4 delta），符号检验 + BH FDR q=0.05；
+- 诚实结论：n=3 符号检验最小 p=0.25 → BH 后 0 显著（功效墙），
+  3/3 方向一致性 + 效应量（ncRNA Δ≈0.6-0.85 vs m6A Δ≈-0.04）才是
+  主证据——这正是 spec R2 预防的"3 种子当 CI 卖"陷阱的正面处理；
+- 格级 bootstrap CI 表同步生成（status/stats.md + .json）。
+
+### ★ 修复与新增
+- **multimolecule 补丁复发修复**：SpliceBERT `create_bidirectional_mask
+  (inputs_embeds=)` vs transformers 5.0 签名 `input_embeds` ——14 个
+  modeling 文件调用侧补丁 + 补丁脚本持久化（scripts/patch_multimolecule.py，
+  幂等验证通过）。新模型队列（ERNIE/RNA-FM/SpliceBERT × frozen/lora ×
+  s17 random）在 G6 MIG 重启；
+- **export_c4 升级**：formal tuned-LR runs（_lr1e-05, seeds 17/29/43）
+  并入主表（A8 协议臂）——RiNALMo full random 修正为 0.938（tuned）
+  而非 0.07/0.94 混合；RiNALMo ERNIE 前向 GPU 验证通过（d512）。
+
+### 矩阵状态（21:00）
+- RNA-Sc：三任务 E1 全矩阵齐（m6A 3×3×2、ncRNA 3×3×2、SSP random
+  3 种子齐 + family s17 齐/s29 s43 在跑）；
+- RiNALMo：ncRNA 3×3×2 齐（含 tuned full @1e-5）；SSP s17 2×2 齐；
+- 新模型首探：6 runs 在 G6 排队/运行；
+- LR 网格：RiNALMo 4 LR × 2 策略完成；RNA-Sc 网格 chain_lr2 排程中。
+
 ## 2026-09-15（Day 1 傍晚：C4 主表成型 + 大模型 SSP 优势显现）
 
 ### ★ C4 主表（export_c4.py 自动生成，status/c4_table.md）
