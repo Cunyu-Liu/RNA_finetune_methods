@@ -2,6 +2,31 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-16（Day 2 凌晨：E2 PEFT 横评上线 + 跨语料模型 LoRA 落地）
+
+### ★ ERNIE-RNA LoRA = 0.974（跨语料模型首个微调数据点）
+- frozen 0.825 → **LoRA 0.974**（+0.15，超 RiNALMo LoRA 0.923 与
+  k-mer 基线 0.90）；86M 模型 LoRA 重跑于整卡 GPU5（MIG OOM 教训）；
+- 至此 ncRNA random frozen/LoRA 双数据点：RNA-Sc 0.38/0.75、
+  ERNIE 0.83/0.97、RiNALMo 0.82/0.93——**跨语料一致微调增益**（C1
+  模型维度扩展的直接证据）。
+
+### E2 PEFT 横评臂（spec C5，5 臂口径）
+- **DoRA/IA3/head-only × 3 种子**（RiNALMo-micro ncRNA random）
+  已排队 GPU5（DoRA s17 训练中）+ LoRA/full 已有 formal——
+  五臂位次表数据即将齐；
+- **prefix-tuning 不可行**（记录在案）：peft 0.13 的 tuple 式
+  past_key_values 与 transformers 5.0 Cache 接口断层（RiNALMo 报
+  get_seq_length 错误；RNA-Sc 需改姐妹项目源码，越界）→ E2 以
+  5 臂呈报 + preprint limitation 说明；
+- 顺带修复：smoke label 截断 KeyError（600→labels 集不全）；
+  RNA-Sc 注入 HF 风格 config（_PseudoConfig dict 兼容 peft 的
+  `in` 检查）+ device 属性。
+
+### ledger 140 行（prefix 僵尸行已清）
+- 8 训练进程并行：E2 DoRA（G5）/ RNA-FM lora（G6 MIG）/
+  SSP 种子链（G2/G5/G7）。
+
 ## 2026-09-15（Day 1 夜：tuned-LR formal + 新模型首探 + 预印本骨架）
 
 ### ★ tuned-LR formal runs 落地
