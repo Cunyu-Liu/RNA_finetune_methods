@@ -2,6 +2,38 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 中午：LR 网格重大发现 + GPU7 MIG 事件）
+
+### ★ A8 LR 网格首个结果：RiNALMo full 崩溃 = LR 过高
+- RiNALMo-micro full FT @ lr=1e-5 (s101) ncRNA random → **ACC 0.9499**
+  vs 默认 3e-4 的 0.0699（崩溃）。
+- 含义：① "RiNALMo full FT 崩溃"是 LR 伪象，不是模型本身——修正此前
+  Day1 上午日志的初步解读；② full FT 在 33M 模型上以 0.95 超过 LoRA
+  (0.923) 和 k-mer 基线 (0.90)——C1 "微调总体有益" 的强证据；
+  ③ 需按 A8 协议用 tuned LR 重跑 formal 3 种子（run_rinalmo_lrbest
+  队列已挂 GPU6：full×3 random + family @1e-5）。
+- LR 网格继续：lora@{1e-5..3e-4}（GPU5），RNA-Sc 网格接续（chain_lr2）。
+
+### ⚠ GPU7 被外部切成 MIG 1g.5gb（4.75 GiB）
+- mod family lora s29/s43 在 eval 阶段 OOM（"GPU7 total capacity
+  4.75 GiB"）；训练阶段能活（~600MB），eval bs=64 撞墙。
+- 处置：mod family 队列迁 GPU2（chain_modfam2，等 fill 完成）；GPU7
+  上 SSP（RNA-Sc 小模型）与 G7E 的 RiNALMo（lora bs=8 勉强、full
+  峰值 2.7GB 可活）继续跑；nvidia-smi 显存列不再可信，以 torch
+  device properties 为准。
+- 教训：GPU "显存 total 40GB" 显示与实际 MIG 实例可分配量不一致，
+  队列派发前应查 `torch.cuda.get_device_properties`。
+
+### 矩阵增量（vs 上午）
+- SSP s17 矩阵基本齐：frozen rand 0.034 / lora rand 0.083 / full rand
+  0.096 / frozen fam 0.031 / headonly≈frozen（0.032）；lora family 跑
+  中；基线 random 0.042 / family 0.047——**SSP 上 LoRA/full 稳超基线 2×**；
+- m6A family：frozen 3 seeds 0.653-0.726；**lora s17 0.985**（s29/s43
+  OOM 后已排 GPU2 重跑）；
+- RNA-Sc ncRNA random：lora 3 seeds 齐 (0.738-0.745)，full s29/s43
+  在跑；
+- fill 队列（GPU2，并行 session 建的）覆盖 E1 ncRNA 缺口，方向一致。
+
 ## 2026-09-15（Day 1 上午·二：SSP 重大修复 + 矩阵扩全，~51 正式 runs）
 
 ### 今日修复（防返工记录）

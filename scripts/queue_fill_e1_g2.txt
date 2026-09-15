@@ -1,0 +1,10 @@
+RNA-Sc-10M noncoding-rna-family frozen 29 random 16
+RNA-Sc-10M noncoding-rna-family frozen 43 random 16
+RNA-Sc-10M noncoding-rna-family lora 29 random 16
+RNA-Sc-10M noncoding-rna-family lora 43 random 16
+RNA-Sc-10M noncoding-rna-family full 29 random 16
+RNA-Sc-10M noncoding-rna-family full 43 random 16
+RiNALMo-micro noncoding-rna-family lora 29 family 8
+RiNALMo-micro noncoding-rna-family lora 43 family 8
+RiNALMo-micro noncoding-rna-family full 29 family 8
+RiNALMo-micro noncoding-rna-family full 43 family 8
