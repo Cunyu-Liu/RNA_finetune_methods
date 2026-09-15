@@ -2,6 +2,41 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 下午：C4 双任务反差成型 + 运维三坑修复）
+
+### ★ C4 矩阵关键数值（formal，非 smoke）
+- **ncRNA（RNA-Sc + RiNALMo 双模型三种子）**：random 侧 lora 0.74-0.93
+  / full 0.66-0.96 / frozen 0.38-0.83 → family 侧 **lora/full 全崩**
+  （0.06-0.10），frozen 温和跌（RiNALMo 0.70，三种子方向一致）；
+- **m6A（RNA-Sc 三种子）**：random lora 0.943/full 0.940 → family 侧
+  **不崩反升**：lora 0.981-0.985、full 0.977-0.981（宿主级切分下微调
+  依然有效）——**C4 泄漏×策略交互存在任务维度分化**（ncRNA 崩 / m6A
+  不崩），这是超出 Schmirler 的新发现形态；
+- **SSP（s17）**：random lora 0.083/full 0.096 vs frozen 0.034；
+  family lora 0.075 vs frozen 0.031——微调列在两种切分下都 2×基线
+  （0.042/0.047）；
+- **RiNALMo full @lr=1e-5 (s101)**：0.943-0.950 —— full FT 最优
+  （超 lora 0.92、超基线 0.90），formal 三种子已排（GPU6/GPU2 队列）。
+
+### ⚠ 运维事件（三坑，全部已修复+规则固化）
+1. **GPU6/7 被外部切 MIG 1g.5gb（4.75 GiB）**：nvidia-smi 显示整卡
+   40G 但 torch 实测 4.8G。mod family lora s29/s43 eval 撞墙 OOM、
+   lrbest s17 random 撞墙。处置：队列迁 GPU2 + MIG 内只跑单任务；
+   规则：派发前必查 `torch.cuda.get_device_properties`；
+2. **pgrep -f 死锁**：chain 脚本用 pgrep -f 等前置队列，但 ssh bash -c
+   壳进程的命令行文本包含匹配串 → 永假（等待不存在的目标已死进程的
+   幽灵匹配）。处置：杀污染壳 + 手动接力；规则：chain 用 pgrep -x 或
+   PID 文件；
+3. **双实例队列撞车**：run_mod_family2 被我手动 + chain_modfam2 各启
+   一次（flock claim 竞态窗口），同一 run 在 GPU2 双跑。处置：杀重复
+   实例树。教训：启动队列前先 pgrep -x 查重。
+
+### 矩阵缺口（截至 14:20）
+- RiNALMo full @1e-5 三种子（random GPU2 队列 / family GPU6 MIG 队列）
+- mod family full s29/s43（GPU2 在跑）
+- LR 网格 3e-5/1e-4/3e-4（GPU5）+ RNA-Sc 网格（chain_lr2）
+- SSP s17 full family（GPU7 在跑）+ SSP 29/43 种子 + RiNALMo SSP
+
 ## 2026-09-15（Day 1 中午：LR 网格重大发现 + GPU7 MIG 事件）
 
 ### ★ A8 LR 网格首个结果：RiNALMo full 崩溃 = LR 过高
