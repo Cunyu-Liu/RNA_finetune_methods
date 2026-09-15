@@ -1,3 +1,5 @@
-RNA-Sc-10M noncoding-rna-family head-only 29 family 16
-RNA-Sc-10M noncoding-rna-family head-only 43 family 16
 RiNALMo-micro noncoding-rna-family full 17 family 8
+RiNALMo-micro noncoding-rna-family frozen 29 family 8
+RiNALMo-micro noncoding-rna-family frozen 43 family 8
+RiNALMo-micro noncoding-rna-family lora 29 family 8
+RiNALMo-micro noncoding-rna-family lora 43 family 8

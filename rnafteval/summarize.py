@@ -26,15 +26,21 @@ def main() -> int:
         if v is not None:
             cells[key][r["seed"]] = float(v)
 
-    # baselines
+    # baselines: strongest traditional baseline per (task, split)
     baselines = {}
-    for task in ("noncoding-rna-family",):
+    for task in ("noncoding-rna-family", "modification", "secondary-structure"):
         for split in ("random", "family"):
             p = os.path.join(ROOT, "artifacts",
                              "baseline_%s_%s.json" % (task, split))
             if os.path.exists(p):
-                b = json.load(open(p))
-                baselines[(task, split)] = max(b["results"].values())
+                try:
+                    b = json.load(open(p))
+                    if "results" in b:
+                        vals = [v["f1"] if isinstance(v, dict) else v
+                                for v in b["results"].values()]
+                        baselines[(task, split)] = max(vals)
+                except Exception:
+                    pass
 
     out_lines = ["# RNA-ft-eval 汇总（自动生成）", ""]
     table = {}
@@ -59,7 +65,9 @@ def main() -> int:
         delta_base = ("%.3f" % (mean - base)) if base is not None else ""
         out_lines.append(
             "| %s | %s | %s | %s | %.4f | %d seeds | %s | %s |" % (
-                model, task.replace("noncoding-rna-family", "ncRNA"),
+                model, task.replace("noncoding-rna-family", "ncRNA")
+                .replace("secondary-structure", "SSP")
+                .replace("modification", "m6A"),
                 strat, split, mean, n, dir_ok, delta_base))
         table["%s|%s|%s|%s" % key] = {
             "mean": mean, "n_seeds": n, "seeds": cells[key],

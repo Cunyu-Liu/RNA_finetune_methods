@@ -40,6 +40,18 @@
 - status_check.sh 修复（llr_env 路径）；run_queue/run_mod_family/
   run_ssp_wave3 队列脚本；monitoring cron 30min。
 
+### ★ 新发现（Day 1 上午·二补充）：BEACON m6A 官方 split 27% 宿主级泄漏
+- 诊断：MMseqs2 0.8/0.8 聚 309,460 窗口（train+test），1200 个官方 test
+  窗口中 **327 个（27.3%）与 train 窗口同簇**（宿主/近重复共享）；
+  31-mer 视角 10.8% 重叠；exact 重复 23/1200（1.9%）。
+- 含义：BEACON 官方"random" arm 的 m6A 成绩有相当部分是泄漏分——
+  C4 claim 的直接 RNA 实例（qYsy "simply cheating" 引用的定量版）。
+  也解释 k-mer LGBM 基线反常：family 重切分（0.837）> 官方 random
+  （0.509，注意 test 仅 1200 窗口，n=600 正样本，AUC 波动大）。
+- 行动：① m6A 的 Δ(随机−家族) 对比将报告官方 27% 泄漏率作机制注脚；
+  ② LM 侧 family arm 已在跑（frozen s17/s29 出分 0.726/0.717）；
+  ③ preprint 中把"官方 split 泄漏审计"作为独立小节（B1 纪律卖点）。
+
 ## 2026-09-15（Day 1 上午：矩阵成型，24+ 正式 runs）
 
 ### 当前矩阵快照（ledger 汇总，status/summary.md 自动生成）

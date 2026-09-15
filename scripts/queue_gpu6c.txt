@@ -1,0 +1,4 @@
+RNA-Sc-10M noncoding-rna-family lora 29 random 16
+RNA-Sc-10M noncoding-rna-family lora 43 random 16
+RNA-Sc-10M noncoding-rna-family full 29 random 16
+RNA-Sc-10M noncoding-rna-family full 43 random 16
