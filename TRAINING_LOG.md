@@ -291,3 +291,54 @@ vs frozen 0.645；full FT 进行中。
 
 ## M5 监控
 见 docs/m5_monitoring.md（首轮 2026-09-15：无触发，四源仍单臂）。
+
+## 2026-09-15（Day 1 傍晚 16:10 巡检：summarize 口径修复 + 撞车链终局清理）
+
+### 巡检基线（16:10）
+- GPU0-4 满载（他人任务），G6/G7 MIG 1g.5gb 各一任务，G2/G5 本项目训练并行；
+  磁盘 /home ~31% /mnt 51%；CUDA 正常（llr_env torch 2.5.1+cu121）；
+- status_check.sh v2 上线：[5] GPU 段新增 torch 视角 MIG 切片显存探测
+  （cuda:6/7 = 4.75 GiB，nvidia-smi 却显示整卡 40960 MiB——已固化进巡检）；
+- ledger 90 行（frozen 24 done / lora 23 / full 25 / head-only 11 + pending 5）。
+
+### 本轮修复
+1. **summarize.py 口径污染 bug（科学口径，重要）**：原版按 (model,task,strategy,
+   split) 聚合不含 LR 维度，RiNALMo full@1e-5 的 formal 行会与默认 3e-4 行
+   混入同一均值（ncRNA full family 均值 0.0826 含 1e-5 s17 行）。
+   修复：E1 主表只收 formal 种子（17/29/43）× 默认 LR 行；seed=101 与
+   _lr 后缀行单列 "Tuning runs" 段（用完整 run_id 作键，防 LR 变体折叠
+   覆盖）。已部署并验证输出，随 37bbbaf 入库；
+2. **ledger 去重清理**：101→84 行（同 run_id 重复行保最后一条；G6 MIG OOM
+   三行僵尸 pending 清除；两个 RiNALMo frozen smoke 幽灵 pending 标记
+   cancelled）。备份 ledger.jsonl.bak_20260915_patrol3；
+3. **撞车链终局清理**：本 session 15:54-15:59 重挂的 chain_ssp29_g2 /
+   chain_ssp43_g6 / chain_ssp43_g7 与并行 session 15:46 的分工链重复，
+   已全部 kill（4029948/4029950/4051898/4051900/4005575），保留统一拓扑：
+   **G5=s29 全套（chain_ssp29_g5） / G2=s43 random（chain_g2_ssp） /
+   G7=s43 family（chain_g7_ssp） / G6=新模型首探（chain_g6_next）**；
+   本 session 贡献的 chain_ssp29_g5 与 run_ssp_wave_seeds.sh 被采纳保留。
+
+### 训练进度增量（本轮新增 done）
+- m6A family 全齐：full s29=0.984 / s43=0.962（mod_family2 队列 14:39 完成，
+  m6A family {frozen 0.699, lora 0.983, full 0.977}×3 seeds 全齐）；
+- RiNALMo full@1e-5 random：s17=0.9394（G2 lrbest）；s29/s43 在跑（G2/G7）；
+- RiNALMo full@1e-5 family s17=0.0643（G6）：**ncRNA family 崩溃在 tuned LR
+  下依然成立**（LR 修复的只是 random 侧 0.07→0.94，family 侧 0.06-0.08 不动
+  ——任务维度分化，非 LR 伪象，C4 核心观察强化）；
+- SSP wave3 全部完成（s17 全 6 格：frozen/lora/full × random/family 均有值，
+  lora family 0.0754 vs frozen 0.0306 = 2.4×）；
+- LR 网格 RiNALMo 侧：full 1e-5=0.9429 / 3e-5=0.9441（3e-4 崩 0.07 的对照）。
+
+### 当前在跑（16:10 快照）
+- G2：RiNALMo full s43 random@1e-5（lrbest 最后 job）→ 完成后 chain_g2_ssp
+  接 s43 SSP random 3 runs；
+- G5：LR 网格 phase2 RNA-Sc-10M（lora s101@1e-4）→ chain_lr2 已排；
+- G6：RiNALMo full s29 family@1e-5（lrbest family job2）→ 完成后
+  chain_g6_next 接 ERNIE-RNA/RNA-FM/SpliceBERT 首探（MIG-safe frozen/lora）；
+- G7：queue_gpu7e 最后 job（RiNALMo full s29 random）+ run_ssp_rinalmo
+  （RiNALMo SSP frozen s17 random）→ 完成后 chain_g7_ssp 接 s43 SSP family。
+
+### 矩阵缺口（不变，排程覆盖中）
+- SSP s29/s43（12 runs：G5/G2/G7 链排程，预计 21:00 前齐）；
+- RiNALMo full@1e-5 random s29/s43（G2/G7 在跑）+ family s29/s43（G6 在跑）；
+- 新模型首探（G6 chain_g6_next）+ RNA-Sc LR 网格（G5 chain_lr2）。
