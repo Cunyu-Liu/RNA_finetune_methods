@@ -134,12 +134,23 @@ def main() -> int:
         train = ssp_task.load_split("TR0", meta, max_len=args.max_len)
         test = ssp_task.load_split("TS0", meta, max_len=args.max_len)
     else:
-        union = (ssp_task.load_split("TR0", meta, max_len=args.max_len) +
-                 ssp_task.load_split("VL0", meta, max_len=args.max_len) +
-                 ssp_task.load_split("TS0", meta, max_len=args.max_len))
-        from .splits import family_split
-        sp = family_split(union, family_key="family", seed=17)
-        train, test = sp["train"], sp["test"]
+        # family arm: precomputed MMseqs2 cluster split (make_family_split_ssp)
+        fam_parquet = os.path.join(
+            ROOT, "data", "family_splits", "secondary-structure.parquet")
+        if not os.path.exists(fam_parquet):
+            print(json.dumps({"event": "SSP_FAMILY_SPLIT_MISSING"}))
+            return 3
+        import pyarrow.parquet as pq
+        tbl = pq.read_table(fam_parquet).to_pydict()
+        side_of = dict(zip(tbl["id"], tbl["split"]))
+        union = []
+        for split_name in ("TR0", "VL0", "TS0"):
+            union += ssp_task.load_split(split_name, meta,
+                                         max_len=args.max_len)
+        seen = set()
+        uniq = [r for r in union if not (r["id"] in seen or seen.add(r["id"]))]
+        train = [r for r in uniq if side_of.get(r["id"]) == "train"]
+        test = [r for r in uniq if side_of.get(r["id"]) == "test"]
 
     train = rng.sample(train, min(args.n_train, len(train)))
     test = rng.sample(test, min(args.n_test, len(test)))
