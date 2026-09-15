@@ -18,13 +18,34 @@ def main() -> int:
     done = [r for r in rows if r.get("status") == "done"
             and not r["run_id"].endswith("_smoke") and "_s999" not in r["run_id"]]
 
+    # E1 主表口径：只收 formal 种子（17/29/43）默认 LR 的行；
+    # tuning runs（seed=101 / _lr 后缀）混入会污染均值，单独入 tuning 段
+    formal_seeds = {17, 29, 43}
+
+    def _is_tuning(r: dict) -> bool:
+        if r.get("seed") not in formal_seeds:
+            return True
+        return "_lr" in r["run_id"]
+
+    formal = [r for r in done if not _is_tuning(r)]
+    tuning = [r for r in done if _is_tuning(r)]
+
     # cell = (model, task, strategy, split) -> {seed: value}
     cells: dict[tuple, dict[int, float]] = collections.defaultdict(dict)
-    for r in done:
+    for r in formal:
         key = (r["model"], r["task"], r["strategy"], r["split"])
         v = r.get("value")
         if v is not None:
             cells[key][r["seed"]] = float(v)
+
+    # tuning cell: (model, task, strategy, split) -> {完整 run_id: value}
+    # 用完整 run_id 作键，避免不同 LR 变体折叠到同一 base 互相覆盖
+    tuning_cells: dict[tuple, dict[str, float]] = collections.defaultdict(dict)
+    for r in tuning:
+        key = (r["model"], r["task"], r["strategy"], r["split"])
+        v = r.get("value")
+        if v is not None:
+            tuning_cells[key][r["run_id"]] = float(v)
 
     # baselines: strongest traditional baseline per (task, split)
     baselines = {}
@@ -77,11 +98,27 @@ def main() -> int:
     header = ["| model | task | strategy | split | mean | seeds | dir | ΔLM−基线 |",
               "|---|---|---|---|---|---|---|---|"]
     lines = header + out_lines
+
+    # tuning 段（LR 网格 seed=101 等，不进主表）
+    if tuning_cells:
+        lines += ["", "## Tuning runs（seed=101 / LR 网格，不进主表）", "",
+                  "| model | task | strategy | split | run | value |",
+                  "|---|---|---|---|---|---|"]
+        for key in sorted(tuning_cells):
+            model, task, strat, split = key
+            for base, v in sorted(tuning_cells[key].items()):
+                lines.append("| %s | %s | %s | %s | %s | %.4f |" % (
+                    model, task.replace("noncoding-rna-family", "ncRNA")
+                    .replace("secondary-structure", "SSP")
+                    .replace("modification", "m6A"),
+                    strat, split, base, v))
+
     out_lines = lines + ["", "基线：%s" % json.dumps(
         {"%s|%s" % k: round(v, 4) for k, v in baselines.items()}, ensure_ascii=False)]
     out_lines.append("")
     out_lines.append("注：dir=与 frozen 的 3 种子方向一致性（* = 方向一致）；"
-                     "ΔLM−基线 = 该策略均值 − 最强传统基线。smoke run 不入表。")
+                     "ΔLM−基线 = 该策略均值 − 最强传统基线。smoke run 不入表；"
+                     "tuning runs（seed=101）单列，不与 formal 种子混算。")
 
     os.makedirs(os.path.join(ROOT, "status"), exist_ok=True)
     with open(os.path.join(ROOT, "status", "summary.md"), "w") as fh:

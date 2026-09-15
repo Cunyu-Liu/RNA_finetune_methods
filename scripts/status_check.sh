@@ -1,5 +1,7 @@
 #!/bin/bash
 # 服务器端巡检脚本: 下载/环境/训练/磁盘 一站式状态
+# 2026-09-15 15:0x 更新: [5] GPU 段加入 CUDA 实际可见设备/MIG 切片显存探测
+# （规则: nvidia-smi 显示整卡 40G 但 torch 视角可能是 MIG 1g.5gb=4.75GiB）
 R=/mnt/cunyuliu/rna-ft-eval
 echo "===== RNA-Ft-Eval 巡检 $(date '+%F %T') ====="
 
@@ -48,6 +50,15 @@ ps aux | grep -E "[r]nafteval|[f]inetune_one" | head -10 || echo "无训练进�
 
 echo "--- [5] GPU ---"
 nvidia-smi --query-gpu=index,memory.used,memory.total,utilization.gpu --format=csv,noheader
+echo "-- CUDA 可见设备（torch 视角，MIG 切片真实显存）--"
+PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath /home/cunyuliu/llr_env/bin/python -c "
+import torch
+n = torch.cuda.device_count()
+print('torch device_count:', n)
+for i in range(n):
+    p = torch.cuda.get_device_properties(i)
+    print('  cuda:%d  %s  %.2f GiB' % (i, p.name, p.total_memory / (1 << 30)))
+" 2>&1 | grep -v Warning
 
 echo "--- [6] 磁盘 ---"
 df -h /home/cunyuliu /mnt/cunyuliu 2>/dev/null | tail -2
