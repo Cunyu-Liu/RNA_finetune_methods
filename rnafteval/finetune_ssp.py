@@ -32,6 +32,8 @@ from .tasks import ssp as ssp_task
 
 ROOT = "/mnt/cunyuliu/rna-ft-eval"
 FAMILY_IDS_PATH = os.path.join(ROOT, "artifacts", "ssp_family_ids.json")
+FAMILY_PARQUET = os.path.join(ROOT, "data", "family_splits",
+                              "secondary-structure.parquet")
 
 
 class PairHead(nn.Module):
@@ -146,33 +148,33 @@ def main() -> int:
         ledger.update(rid, "failed", note="bpRNA.csv missing")
         return 3
     if args.split == "random":
-        train = ssp_task.load_split("TR0", meta,
-                                    max_len=args.max_len)
+        train = ssp_task.load_split("TR0", meta, max_len=args.max_len)
         val = ssp_task.load_split("VL0", meta, max_len=args.max_len)
         test = ssp_task.load_split("TS0", meta, max_len=args.max_len)
     else:
-        # family arm: cluster-pure split from make_family_split_ssp
+        # family arm: use precomputed MMseqs2 cluster split (make_family_split_ssp)
+        if not os.path.exists(FAMILY_PARQUET):
+            print(json.dumps({"event": "SSP_FAMILY_SPLIT_MISSING",
+                              "path": FAMILY_PARQUET}), flush=True)
+            ledger.update(rid, "failed", note="family split parquet missing")
+            return 3
         import pyarrow.parquet as pq
-        tbl = pq.read_table(os.path.join(
-            ROOT, "data", "family_splits", "secondary-structure.parquet"))
-        d = tbl.to_pydict()
-        sd = dict(zip(d["id"], d["split"]))
-        union = (ssp_task.load_split("TR0", meta, max_len=args.max_len) +
-                 ssp_task.load_split("VL0", meta, max_len=args.max_len) +
-                 ssp_task.load_split("TS0", meta, max_len=args.max_len))
+        tbl = pq.read_table(FAMILY_PARQUET).to_pydict()
+        side_of = dict(zip(tbl["id"], tbl["split"]))
+        union = []
+        for split_name in ("TR0", "VL0", "TS0"):
+            union += ssp_task.load_split(split_name, meta,
+                                         max_len=args.max_len)
+        # dedup by id (union may contain duplicates)
         seen = set()
-        uniq = []
-        for r in union:
-            if r["id"] not in seen:
-                seen.add(r["id"])
-                uniq.append(r)
-        train = [r for r in uniq if sd.get(r["id"]) == "train"]
-        val = [r for r in uniq if sd.get(r["id"]) == "val"]
-        test = [r for r in uniq if sd.get(r["id"]) == "test"]
+        uniq = [r for r in union if not (r["id"] in seen or seen.add(r["id"]))]
+        train = [r for r in uniq if side_of.get(r["id"]) == "train"]
+        val = [r for r in uniq if side_of.get(r["id"]) == "val"]
+        test = [r for r in uniq if side_of.get(r["id"]) == "test"]
 
     rng = random.Random(args.seed)
     train = rng.sample(train, min(args.n_train, len(train)))
-    val = rng.sample(val, min(100, len(val)))
+    val = rng.sample(val, min(args.n_test, len(val)))
     test = rng.sample(test, min(args.n_test, len(test)))
     if args.smoke:
         train, val, test = train[:24], val[:24], test[:24]
@@ -180,6 +182,18 @@ def main() -> int:
     from .models import load_model
     from .strategies import apply_strategy
     spec, tok, backbone = load_model(args.model, device)
+
+    # class balance: candidate pairs >> real pairs (pos_rate ~1%) ->
+    # pos_weight so positives actually drive gradients (root cause of
+    # all-negative collapse at threshold 0.5)
+    pos = tot = 0
+    for r in train:
+        Lb = r["L"]
+        pos += len(r.get("pairs", []))
+        tot += Lb * (Lb - 1) // 2
+    pw = float(min(200.0, max(1.0, (tot - pos) / max(1, pos))))
+    print("pos_weight %.1f (pos %d / cand %d)" % (pw, pos, tot), flush=True)
+
     with torch.no_grad():
         probe = encode_one(tok, [train[0]["seq"]], device, args.max_len)
         d = backbone(**probe).last_hidden_state.shape[-1]
@@ -188,6 +202,7 @@ def main() -> int:
     params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
+    pw_t = torch.tensor(pw, device=device)
 
     def run_batch(b, train_mode: bool):
         enc = encode_one(tok, [r["seq"] for r in b], device, args.max_len)
@@ -198,11 +213,10 @@ def main() -> int:
             h = backbone(**enc).last_hidden_state
         pad = enc["attention_mask"] == 0
         S = head(h, pad)                     # (B, T, T)
-        # loss over non-pad upper triangle (pos-weighted: pairs are ~1-2%
-        # of candidate positions; unweighted BCE collapses to negatives)
+        # loss over non-pad upper triangle
+        total, n = 0.0, 0
         loss = torch.tensor(0.0, device=device)
         tri_masks = []
-        n_pos = n_tok = 0
         for bi, r in enumerate(b):
             Lb = min(r["L"], L)
             m = torch.zeros(L, L, device=device, dtype=torch.bool)
@@ -214,19 +228,9 @@ def main() -> int:
                 if i < L and j < L:
                     y[i, j] = 1.0
                     y[j, i] = 1.0
-                    n_pos += 2
-            n_tok += int(m.sum().item())
-        pos_weight = torch.tensor(
-            max(1.0, (n_tok - n_pos) / max(1, n_pos)), device=device)
-        for bi, r in enumerate(b):
-            y = torch.zeros(L, L, device=device)
-            for i, j in r.get("pairs", []):
-                if i < L and j < L:
-                    y[i, j] = 1.0
-                    y[j, i] = 1.0
             loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(
-                S[bi], y, reduction="none", pos_weight=pos_weight)[
-                    tri_masks[bi]].mean()
+                S[bi], y, reduction="none",
+                pos_weight=pw_t)[m].mean()
         loss = loss / len(b)
         return enc, S, tri_masks, loss
 
@@ -247,47 +251,54 @@ def main() -> int:
             nb += 1
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
 
-    # ---- threshold calibration on held-out val subset ----
+    # ---- eval: pair-level F1, threshold tuned on val ----
     backbone.eval()
     head.eval()
-    # val is the independent VL0 / cluster-val calibration set
-    # (calibrating on a test slice would leak test labels - B1 discipline)
-    cal_scores, cal_golds = [], []
-    with torch.no_grad():
-        for i in range(0, len(val), args.batch_size * 2):
-            b = val[i:i + args.batch_size * 2]
-            enc, S, tm, _ = run_batch(b, False)
-            Ssm = torch.sigmoid(S)
-            for bi, r in enumerate(b):
-                Lb = r["L"]
-                s = Ssm[bi, :Lb, :Lb].cpu().numpy()
-                cal_scores.append(s)
-                cal_golds.append(set(map(tuple, r.get("pairs", []))))
-    best_t, best_f = 0.5, -1.0
-    for t in (0.3, 0.4, 0.5, 0.6, 0.7, 0.8):
-        p = [{(i, j) for i in range(len(s)) for j in range(i + 1, len(s))
-              if s[i, j] > t} for s in cal_scores]
-        f = pair_f1(p, cal_golds)["f1"]
-        if f > best_f:
-            best_f, best_t = f, t
-    print("calibrated threshold %.2f (val F1 %.4f)" % (best_t, best_f),
-          flush=True)
 
-    # ---- eval: pair-level F1 ----
-    preds, golds = [], []
-    with torch.no_grad():
-        for i in range(0, len(test), args.batch_size * 2):
-            b = test[i:i + args.batch_size * 2]
-            enc, S, tm, _ = run_batch(b, False)
-            Ssm = torch.sigmoid(S)
-            for bi, r in enumerate(b):
-                Lb = r["L"]
-                s = Ssm[bi, :Lb, :Lb].cpu().numpy()
-                pred = {(i, j) for i in range(Lb) for j in range(i + 1, Lb)
-                        if s[i, j] > best_t}
-                preds.append(pred)
-                golds.append(set(map(tuple, r.get("pairs", []))))
-    m = pair_f1(preds, golds)
+    def collect_scores(recs):
+        preds, golds, scores = [], [], []
+        with torch.no_grad():
+            for i in range(0, len(recs), args.batch_size * 2):
+                b = recs[i:i + args.batch_size * 2]
+                enc, S, tm, _ = run_batch(b, False)
+                Ssm = torch.sigmoid(S)
+                for bi, r in enumerate(b):
+                    Lb = r["L"]
+                    s = Ssm[bi, :Lb, :Lb].cpu().numpy()
+                    scores.append(s)
+                    golds.append(set(map(tuple, r.get("pairs", []))))
+                    preds.append(None)  # filled after threshold chosen
+        return scores, golds
+
+    val_scores, val_golds = collect_scores(val)
+
+    def f1_at(thr: float, scores, golds) -> float:
+        tp = fp = fn = 0
+        for s, g in zip(scores, golds):
+            p = {(i, j) for i in range(s.shape[0])
+                 for j in range(i + 1, s.shape[0]) if s[i, j] > thr}
+            tp += len(p & g)
+            fp += len(p - g)
+            fn += len(g - p)
+        prec = tp / max(1, tp + fp)
+        rec = tp / max(1, tp + fn)
+        return 2 * prec * rec / max(1e-9, prec + rec)
+
+    best_thr, best_f1 = 0.5, -1.0
+    for thr in (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9):
+        f = f1_at(thr, val_scores, val_golds)
+        if f > best_f1:
+            best_f1, best_thr = f, thr
+    print("val threshold sweep: best thr=%.2f val F1=%.4f" %
+          (best_thr, best_f1), flush=True)
+
+    test_scores, test_golds = collect_scores(test)
+    preds = [{(i, j) for i in range(s.shape[0])
+              for j in range(i + 1, s.shape[0]) if s[i, j] > best_thr}
+             for s in test_scores]
+    m = pair_f1(preds, test_golds)
+    m["threshold"] = best_thr
+    m["val_f1"] = round(best_f1, 4)
 
     wall = time.time() - t0
     peak = torch.cuda.max_memory_allocated(args.device) / (1 << 20)
@@ -295,7 +306,8 @@ def main() -> int:
         "run_id": rid, "model": args.model, "task": args.task,
         "strategy": args.strategy, "seed": args.seed, "split": args.split,
         "metric": "F1", "value": m["f1"], "precision": m["precision"],
-        "recall": m["recall"], "threshold": best_t,
+        "recall": m["recall"], "threshold": m["threshold"],
+        "val_f1": m["val_f1"], "pos_weight": round(pw, 1),
         "n_train": len(train), "n_test": len(test),
         "wall_sec": round(wall, 1), "peak_mem_mb": round(peak, 1),
         "backbone_trainable": n_trainable, "lr": args.lr,

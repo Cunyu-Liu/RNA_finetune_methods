@@ -74,11 +74,35 @@ def main() -> int:
     t0 = time.time()
     torch.cuda.reset_peak_memory_stats(args.device)
 
-    sp = mod_task.load_official_split()
-    train = sp["train"]
-    test = sp["test"]
-    rng = random.Random(17)
-    train = rng.sample(train, min(args.n_train, len(train)))
+    if args.split == "family":
+        # cluster-pure split (make_family_split_mod): host-transcript proxy
+        # via MMseqs2 80-80 on overlapping 101-nt windows
+        import pyarrow.parquet as pq
+        fam = os.path.join(ROOT, "data", "family_splits", "modification.parquet")
+        if not os.path.exists(fam):
+            print("family split missing: %s" % fam, flush=True)
+            ledger.update(rid, "failed", note="modification family parquet missing")
+            return 3
+        t = pq.read_table(fam).to_pydict()
+        by_side = {}
+        for seq, lab, sd in zip(t["seq"], t["labels"], t["split"]):
+            if sd == "train":
+                by_side.setdefault("train", []).append(
+                    {"seq": seq, "labels": [int(x) for x in str(lab).split()],
+                     "subset": "family_%s" % sd})
+            elif sd == "test":
+                by_side.setdefault("test", []).append(
+                    {"seq": seq, "labels": [int(x) for x in str(lab).split()],
+                     "subset": "family_%s" % sd})
+        train, test = by_side["train"], by_side["test"]
+        rng = random.Random(17)
+        train = rng.sample(train, min(args.n_train, len(train)))
+    else:
+        sp = mod_task.load_official_split()
+        train = sp["train"]
+        test = sp["test"]
+        rng = random.Random(17)
+        train = rng.sample(train, min(args.n_train, len(train)))
     if args.smoke:
         train = train[:320]
         test = test[:320]

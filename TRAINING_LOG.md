@@ -2,39 +2,43 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
-## 2026-09-15（Day 1 上午 08:25 巡检：SSP 波次重启 + 冒烟矩阵旧故障结案）
+## 2026-09-15（Day 1 上午·二：SSP 重大修复 + 矩阵扩全，~51 正式 runs）
 
-### 巡检结论（全绿，无重大资源异常）
-- 8×A100-40G：GPU0-5 被他人占满（各 31-39GB / util 100%），GPU6/7 空闲（~5G/3.7G）；磁盘 /home 30%、/mnt 51% 充足；
-- ledger 40 行：done 35 / pending 7（ncRNA 矩阵 3 种子基本齐、modification LoRA+full 3 种子齐）；
-- **冒烟矩阵 00:09 OVERLAP 崩溃结案**：复现验证（载入当前数据+代码跑零重叠断言）随机臂/家族臂均通过
-  ——系 dedup 修复（f27b5fe）之前的旧故障，冒烟矩阵随后已重跑成功（smoke 行 done）；
-- 环境段误报修复：status_check.sh [2] 由不存在的 envs/rnaft 改为 llr_env+pypath：
-  torch 2.5.1+cu121 / transformers 5.0.0 / peft 0.13.2 / cuda True。
+### 今日修复（防返工记录）
+1. **SSP 数据无效 runs 处置**：07:43 启动的 3 个 random SSP runs 用的是
+   08:01 才下载完的部分数据（TR0 3675/10012）——判定科学无效，停进程、
+   清 ledger、删 artifacts，用全量数据重跑（wave3）；
+2. **SSP pair-F1 全 0 根因**：候选对正率 ~1%，无 pos_weight 的 BCE 收敛到
+   全负类 + 阈值 0.5 无一对命中。修复 = per-batch pos_weight（正负比）
+   + 阈值校准。**B1 泄漏修复**：并行 session 版本把阈值校准放在
+   `test[:100]` 上（测试集泄漏）——改为独立 VL0 / cluster-val 校准集；
+3. **SSP family 基线全 0 根因**：family arm 没换用 MMseqs 簇 id，按
+   bpRNA 来源标签（仅 7 个）切分 → test 侧 0 条。修复 = 读
+   make_family_split_ssp 的全量 parquet（13401 序列 → 12825 簇 →
+   10721/1341/1339）；
+4. **frozen ≡ head-only 实现重合**：apply_strategy 里两策略代码路径
+   相同（s29/s43 数值逐位一致证实）。核对 spec：**E1 主矩阵只含
+   frozen/LoRA/full 3 策略，head-only 是 E2 PEFT 横评成员**——E1 不再
+   排 head-only 列，已跑的 head-only 值保留作确定性对照；
+5. **modification family 切分落地**：spec §3.4 规定 m6A 位点级切分
+   单元 = 宿主转录本。BEACON 无转录本 ID，用 MMseqs2 0.8/0.8 聚
+   309,460 滑窗 → 241,984 簇（同转录本重叠窗聚簇 = 宿主纯净近似）→
+   247,572/30,946/30,942，同序列跨侧断言通过。GPU7 队列 9 runs 启动。
 
-### 异常与处置
-1. **SSP 两 run 静默死亡**（lora_s17_random 跑到 epoch 2 中断、frozen_s17_family epoch 0 前中断；
-   无 traceback、非 CUDA OOM、进程消失）→ 判定 SIGHUP（未挂 nohup）→
-   wave2 以 nohup+setsid+timeout 14400 重启（GPU6: frozen/headonly s17 family；GPU7: lora/full s17 random）；
-2. **⚠ SSP F1=0.0 重大异常**：frozen/headonly s17 random 正式完成（wall 1733s）但
-   precision/recall/F1 全 0；kmer LGBM 基线 F1 也仅 0.043（random）/0.0（family）→
-   判定 SSP 评测口径或配对解码存在系统性 bug，**SSP 全部结果（含已完成 run）暂不可作为科学结论**，
-   待并行会话 smoke 复现修复后重测；
-3. modification 补跑队列（GPU2）正常：full 17/29/43 完成 AUC .939/.942/.939，
-   frozen/head-only 29/43 排队中；
-4. 并行会话清理了 ledger 中 secondarystructure 行并重派部分 run——两会话经 ledger
-   claim 互斥，无双重运行。
+### 矩阵快照（ledger，formal 非 smoke）
+- ncRNA：RNA-Sc + RiNALMo 双模型 frozen/lora/full × 双切分骨架已立，
+  RiNALMo random frozen 3 种子齐（0.796/0.828/0.828）；
+- modification：random 侧 3 策略×3 种子全齐（frozen 0.645-0.736 /
+  lora 0.941-0.944 / full 0.939-0.942），family 侧队列 GPU7 运行中；
+- SSP：wave3 三 GPU 并行（G5/6 random 4 策略，G7 family 4 策略，
+  泄漏修复版 runner）；
+- RiNALMo ncRNA full s17 random ACC=0.070 ≈ 13 类随机（1/13=0.077）——
+  **full FT 在 RiNALMo-micro 上崩溃**，与 RNA-Sc full 0.660 形成模型
+  间对照（LR 网格未调，暂记"不稳定"，A8 网格是关键下一步）。
 
-### 进行中（08:25 派发）
-- GPU6 wave2: SSP frozen s17 family → head-only s17 family；
-- GPU7 wave2: SSP lora s17 random → full s17 random；
-- GPU7 旧队列: RiNALMo frozen s43 random（07:32 起）；GPU6 旧队列: ncrna headonly s29/s43
-  family + RiNALMo full s17 family；GPU2: modification 补跑。
-
-### modification m6A（random，正式）三种子小结
-LoRA .941/.944/.943、full .939/.942/.939、frozen .645（s17）、head-only 排队 ——
-LoRA≈full≫frozen 方向 3 种子成立（frozen/headonly 补齐后入正式表）。
-
+### 基建
+- status_check.sh 修复（llr_env 路径）；run_queue/run_mod_family/
+  run_ssp_wave3 队列脚本；monitoring cron 30min。
 
 ## 2026-09-15（Day 1 上午：矩阵成型，24+ 正式 runs）
 
