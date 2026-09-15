@@ -44,13 +44,17 @@
 - RiNALMo full@1e-5 random 三种子将齐（s17 0.9394 + s29/s43 在跑）vs
   lora 0.92-0.93：full FT 用对 LR 后在 33M 模型上为最优列。
 
-### 15:55 补记：SSP 补种子三 session 撞车去重
+### 15:55 补记：SSP 补种子三 session 撞车去重（含 15:58 dev6 三度撞车）
 - 巡检发现 s29 SSP 被三个队列预订（dev5 G5 / dev2 G2 / 本 session G2+G7）而 s43 无人订；
   claim 只拒 running/done，在途 pending 不拒 → 必然双跑。
 - 终态分工（全 12 runs 恰好一次）：**G5=s29 全套**（dev5 chain_ssp29_g5，触发最早
   ~16:30；与 chain_lr2 的 RNA-Sc 网格同卡并行，内存预算 ~7G 可容纳，算力分时）、
   **G2=s43 random**、**G7=s43 family**（本 session 两条链已裁剪）；dev2 的
   chain_ssp29_g2（纯重复）已杀。
+- 15:58 再补：dev6 又挂 chain_ssp43_g6（s43 全套 on G6）→ 与 G2/G7 s43 链三重
+  撞车且与 chain_g6_next（新模型首探）G6 双队列（MIG 4.75G 必 OOM）→ 已杀；
+  s43 维持 G2=random/G7=family 分工。G5 上 chain_lr2(lr_grid2) 与
+  chain_ssp29_g5 同触发同卡并存（真整卡 40G，峰值和 ~5G 安全，算力分时），留观。
 
 ### 矩阵缺口（截至 15:45）
 - SSP s29/s43（12 runs，两 chain 排程中）；
