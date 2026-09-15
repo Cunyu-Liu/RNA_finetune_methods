@@ -34,6 +34,69 @@
 - ledger：~95 行，E1 formal 矩阵 RNA-Sc 侧三任务全齐，
   RiNALMo 侧 ncRNA 全齐 + SSP frozen/lora 进行中。
 
+
+## 2026-09-15（Day 1 下午 15:00 巡检：chain 匹配 bug 处置 + 下一批三 GPU 派发）
+
+### 巡检基线
+- 8 卡全忙（GPU0-5 机理篇/共享任务满载，G6/G7 MIG 单任务，2-5 各有本项目训练）；
+  磁盘 /home 31%、/mnt 51%；llr_env torch 2.5.1+cu121 cuda=True；下载已全部完成；
+- **smoke_matrix.log 的 4 策略 OVERLAP 崩溃 = 00:08 旧数据历史失败**（SSP 全量数据
+  08:01 才就绪，届时 dedup 修复后 8 个 formal SSP run 已全部 done），不是新问题，
+  smoke 维度按 E1 规则不入矩阵；
+- ledger 100→86 行：并行 session 15:21 清理/dedup 时**误删了 G2 lrbest s17 的行**
+  （该 run 15:24 完成，update 找不到行 → 结果没进 ledger）——已从 result.json
+  恢复 done 行（备份 ledger.jsonl.bak_patrol_20260915）。
+
+### ⚠ 本轮修复（三件事）
+1. **GPU6 也变 MIG 4.75G**（13:34 起）：run_rinalmo_lrbest.sh 6 前三个 random
+   job 45 秒连环 OOM（1.65G PyTorch 分配 vs MIG 总量 4.75G）→ ledger pending
+   僵尸行已清；random 缺口由 GPU2 chain_g2_lrbest 补跑（s17 done ACC 0.9394，
+   s29/s43 在跑）；family job 峰值 2.67G 可在 MIG 内存活，G6 队列继续；
+2. **chain_g2_ssp pgrep -x bug**：等待目标 cmdline 带参数（`run_rinalmo_lrbest.sh 6`），
+   -x 全字匹配永假 → 15:03 提前触发，GPU2 双任务并行（正式 lrbest s17 + ssp
+   frozen s29）。处置：杀 ssp 进程树（杀 python 后队列 3 秒内续跑孤儿 lora s29
+   的竞态已一并清理，损失 ~25min ssp-frozen 进度）；ledger 孤儿 pending 行已清；
+3. **chain 等待纪律再升级**：全部改 `kill -0 <PID>` + `/proc/<PID>/cmdline`
+   双校验（新版 chain_g2_ssp / chain_g7_ssp / chain_g6_next），PID 为启动时
+   记录的具体实例。
+
+### 下一批派发（15:40 三个 chain 已挂，setsid nohup）
+- **G2**（lrbest ~17:00 排空后）→ SSP s29/s43 × random（6 runs）；
+- **G7**（queue_gpu7e ~17:00 排空后）→ SSP s29/s43 × family（6 runs）
+  → SSP E1 补种子两卡并行，预计 20:30-21:00 齐全；
+- **G6**（lrbest family ~18:45 排空后，MIG 4.75G）→ **新模型维度首探**：
+  ERNIE-RNA / RNA-FM / SpliceBERT × ncrna × frozen/lora × s17 random
+  （MIG 内不排 full 防 OOM；full 待整卡恢复或换卡）；
+- G5 已被 chain_lr2 占用（RNA-Sc LR 网格 8 runs，s101）。
+
+### ★ 科学观察（修正/推进既有解读）
+- **RiNALMo full @lr=1e-5 family s17 = 0.064**：random 侧 1e-5 修复到 0.94，
+  family 侧仍崩在 0.06-0.08（与默认 lr 的 0.076 同水平）→ **ncRNA family
+  崩溃不是 LR 伪象**，C4 任务维度分化（ncRNA 崩 / m6A 不崩）在 tuned LR 下
+  依然成立，且更清晰：LR 修复的只是 random 侧；
+- RiNALMo full@1e-5 random 三种子将齐（s17 0.9394 + s29/s43 在跑）vs
+  lora 0.92-0.93：full FT 用对 LR 后在 33M 模型上为最优列。
+
+### 15:55 补记：SSP 补种子三 session 撞车去重（含 15:58 dev6 三度撞车）
+- 巡检发现 s29 SSP 被三个队列预订（dev5 G5 / dev2 G2 / 本 session G2+G7）而 s43 无人订；
+  claim 只拒 running/done，在途 pending 不拒 → 必然双跑。
+- 终态分工（全 12 runs 恰好一次）：**G5=s29 全套**（dev5 chain_ssp29_g5，触发最早
+  ~16:30；与 chain_lr2 的 RNA-Sc 网格同卡并行，内存预算 ~7G 可容纳，算力分时）、
+  **G2=s43 random**、**G7=s43 family**（本 session 两条链已裁剪）；dev2 的
+  chain_ssp29_g2（纯重复）已杀。
+- 15:58 再补：dev6 又挂 chain_ssp43_g6（s43 全套 on G6）→ 与 G2/G7 s43 链三重
+  撞车且与 chain_g6_next（新模型首探）G6 双队列（MIG 4.75G 必 OOM）→ 已杀；
+  s43 维持 G2=random/G7=family 分工。G5 上 chain_lr2(lr_grid2) 与
+  chain_ssp29_g5 同触发同卡并存（真整卡 40G，峰值和 ~5G 安全，算力分时），留观。
+
+### 矩阵缺口（截至 15:45）
+- SSP s29/s43（12 runs，两 chain 排程中）；
+- RiNALMo full s29/s43 random（G7/G2 在跑）+ family s29/s43 @1e-5（G6 在跑）；
+- 新模型首探（G6 chain）→ 依结果决定扩 seeds/splits/full；
+- RNA-Sc LR 网格（G5 chain_lr2 排程中）。
+
+
+
 ## 2026-09-15（Day 1 下午：C4 双任务反差成型 + 运维三坑修复）
 
 ### ★ C4 矩阵关键数值（formal，非 smoke）
