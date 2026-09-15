@@ -1,0 +1,6 @@
+ERNIE-RNA noncoding-rna-family frozen 17 random 8
+ERNIE-RNA noncoding-rna-family lora 17 random 8
+RNA-FM noncoding-rna-family frozen 17 random 8
+RNA-FM noncoding-rna-family lora 17 random 8
+SpliceBERT noncoding-rna-family frozen 17 random 8
+SpliceBERT noncoding-rna-family lora 17 random 8
