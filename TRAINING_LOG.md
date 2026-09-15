@@ -2,6 +2,40 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 上午 08:25 巡检：SSP 波次重启 + 冒烟矩阵旧故障结案）
+
+### 巡检结论（全绿，无重大资源异常）
+- 8×A100-40G：GPU0-5 被他人占满（各 31-39GB / util 100%），GPU6/7 空闲（~5G/3.7G）；磁盘 /home 30%、/mnt 51% 充足；
+- ledger 40 行：done 35 / pending 7（ncRNA 矩阵 3 种子基本齐、modification LoRA+full 3 种子齐）；
+- **冒烟矩阵 00:09 OVERLAP 崩溃结案**：复现验证（载入当前数据+代码跑零重叠断言）随机臂/家族臂均通过
+  ——系 dedup 修复（f27b5fe）之前的旧故障，冒烟矩阵随后已重跑成功（smoke 行 done）；
+- 环境段误报修复：status_check.sh [2] 由不存在的 envs/rnaft 改为 llr_env+pypath：
+  torch 2.5.1+cu121 / transformers 5.0.0 / peft 0.13.2 / cuda True。
+
+### 异常与处置
+1. **SSP 两 run 静默死亡**（lora_s17_random 跑到 epoch 2 中断、frozen_s17_family epoch 0 前中断；
+   无 traceback、非 CUDA OOM、进程消失）→ 判定 SIGHUP（未挂 nohup）→
+   wave2 以 nohup+setsid+timeout 14400 重启（GPU6: frozen/headonly s17 family；GPU7: lora/full s17 random）；
+2. **⚠ SSP F1=0.0 重大异常**：frozen/headonly s17 random 正式完成（wall 1733s）但
+   precision/recall/F1 全 0；kmer LGBM 基线 F1 也仅 0.043（random）/0.0（family）→
+   判定 SSP 评测口径或配对解码存在系统性 bug，**SSP 全部结果（含已完成 run）暂不可作为科学结论**，
+   待并行会话 smoke 复现修复后重测；
+3. modification 补跑队列（GPU2）正常：full 17/29/43 完成 AUC .939/.942/.939，
+   frozen/head-only 29/43 排队中；
+4. 并行会话清理了 ledger 中 secondarystructure 行并重派部分 run——两会话经 ledger
+   claim 互斥，无双重运行。
+
+### 进行中（08:25 派发）
+- GPU6 wave2: SSP frozen s17 family → head-only s17 family；
+- GPU7 wave2: SSP lora s17 random → full s17 random；
+- GPU7 旧队列: RiNALMo frozen s43 random（07:32 起）；GPU6 旧队列: ncrna headonly s29/s43
+  family + RiNALMo full s17 family；GPU2: modification 补跑。
+
+### modification m6A（random，正式）三种子小结
+LoRA .941/.944/.943、full .939/.942/.939、frozen .645（s17）、head-only 排队 ——
+LoRA≈full≫frozen 方向 3 种子成立（frozen/headonly 补齐后入正式表）。
+
+
 ## 2026-09-15（Day 1 上午：矩阵成型，24+ 正式 runs）
 
 ### 当前矩阵快照（ledger 汇总，status/summary.md 自动生成）
