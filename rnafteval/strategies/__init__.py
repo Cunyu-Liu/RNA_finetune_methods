@@ -126,7 +126,7 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
                 else ["qkv_proj"]
             ffn = ["intermediate.dense"] if any("intermediate.dense" in n
                                                 for n in names) else ["fc1"]
-            cfg = IA3Config(target_modules=target,
+            cfg = IA3Config(target_modules=target + ffn,
                             feedforward_modules=ffn,
                             task_type="FEATURE_EXTRACTION")
         pm = get_peft_model(core, cfg)

@@ -425,3 +425,41 @@ vs frozen 0.645；full FT 进行中。
 
 ## M5 监控
 见 docs/m5_monitoring.md（首轮 2026-09-15：无触发，四源仍单臂）。
+
+## 2026-09-16（Day 2 晨巡检：IA3 修复 + ERNIE MIG-OOM 重派 + E1 mod 缺口补齐派发）
+
+### 巡检发现的两类失败（均已处置）
+1. **E2 IA3 三种子全挂**（q_e2_peft_g5.log 02:31-02:32）：
+   `IA3Config` 校验 `feedforward_modules ⊆ target_modules` 抛
+   ValueError——strategies 代码只把 ["query","value"] 设为 target，
+   `intermediate.dense` 在 ffn 却不在 target。修复：
+   `IA3Config(target_modules=target + ffn, ...)`（RiNALMo 侧）；
+   RNA-Sc 分支 ["qkv","ffn"] 本就正确。ledger 3 行僵尸 pending 已清
+   （备份 ledger.jsonl.bak_patrol_20260916），修复后随 G7 队列重跑。
+2. **ERNIE-RNA lora s17 family 在 GPU6（MIG 4.75G）OOM**（q_newfam_g6.log
+   04:55）：显式 attn 矩阵 3.97G 已占满，与既有教训一致（ERNIE LoRA
+   需整卡）。run_queue 逐项独立失败不阻塞队列（正确行为）；ledger 僵尸
+   pending 已清，**重派至 G5 链**：SSP full seeds（PID 630606）排空后
+   自动接续 run_g5_ernie_mod.sh（kill -0 PID 监听，禁 pgrep -f）。
+
+### 服务器状态（05:04-05:17）
+- CUDA 可用（8 卡 torch 视角）；磁盘充裕（/home 31%，/mnt 51%）；
+- GPU0-4 他人满载，G5 我方 SSP full s29 family 训练中（30G），
+  G6 我方 RNA-FM frozen family 训练中，G7 我方 mod 队列已起；
+- ledger 152 行（148 done）；无 CUDA 不可用事件。
+
+### E1/E2 覆盖缺口 → 本批派发（GPU7 + GPU5 链）
+- **RiNALMo-micro 在 modification 任务 0 run（E1 最大缺口）**：
+  G7（MIG）派 frozen/lora × 3 seeds × 2 splits = 12 runs；
+  full × 3 × 2 = 6 runs 排 G5 链（full 需整卡）；
+- 队列脚本带 CUDA/显存预检（派发前 torch.cuda.mem_get_info 验证
+  G7 free 4.46G > 3G 阈值——规则"派发前查 total_memory"落实为运行时断言）；
+- 进程：run_mod_rinalmo_g7.sh PID 1376693（首个 run frozen s17 random
+  已开跑）、chain_g5_ernmod.sh PID 1376694（等 SSP 排空）；
+- G6 queue_gpu6g 剩余项（RNA-FM/SpliceBERT lora family）不干预继续。
+
+### 冒烟矩阵口径澄清
+- `logs/smoke_matrix.log` 尾部是 9月15日 00:09 的 v1 冒烟（OVERLAP
+  拦截记录，B1 防线实战证据，后续 dedup 修复）；当前实验全部为
+  formal 口径（n_train=20000/3000 全量切分、17/29/43 种子），
+  smoke 结果不进结论。
