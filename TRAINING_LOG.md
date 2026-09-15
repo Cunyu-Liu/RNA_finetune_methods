@@ -2,6 +2,26 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-15（Day 1 夜：tuned-LR formal + 新模型首探 + 预印本骨架）
+
+### ★ tuned-LR formal runs 落地
+- **RNA-Sc full @3e-5（A8 网格选定）**：s17 0.791 / s29 0.811（默认
+  3e-4 仅 0.66——tuned 后 +0.13~0.15），s43 与 family 侧队列推进中；
+- ERNIE-RNA frozen ncRNA random s17 = **0.825**（三模型 frozen 梯度：
+  RNA-Sc 0.38 / ERNIE 0.83 / RiNALMo 0.82）——跨语料模型同台可用；
+- SSP family 侧三策略多种子落地：frozen 0.033 / lora 0.080 /
+  full 0.094——与 random 侧一致（微调收益在家族切分下保持，
+  C4 的 SSP 不崩模式三种子固化）。
+
+### 预印本数据面成型（Day 1 交付）
+- **paper/preprint_draft.md v0.1**：摘要+结果+方法骨架，全部数值
+  取自三重验证过的 ledger 快照；
+- **三张核心图**（status/figs/，png+pdf）：
+  fig_c1_matrix（策略×任务热图+基线框）/ fig_c4_delta（Δ 条形图，
+  红橙绿三档）/ fig_lr_grid（LR 网格四曲线）；
+- **统计表**：status/stats.md（30 对比+BH FDR+bootstrap CI）；
+- **C4 表**：status/c4_table.md + .csv。
+
 ## 2026-09-15（Day 1 晚间：RiNALMo SSP 全谱 + 统计层 + 新模型首探）
 
 ### ★★ A8 LR 网格全谱完成（双模型×4LR×2策略，s101）——模型规模×策略×LR 三重交互
