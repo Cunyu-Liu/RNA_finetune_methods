@@ -58,6 +58,16 @@ def make_head(granularity: str, d_model: int, n_classes: int,
     return TokenHead(d_model, n_classes, hidden)
 
 
+def _lora_targets(core) -> list[str]:
+    """Target module names for LoRA-family adapters (HF BERT-style first)."""
+    names = {n for n, _ in core.named_modules()}
+    for cand in (["query", "key", "value", "dense"],
+                 ["qkv_proj", "out_proj"], ["q", "k", "v", "o"]):
+        if all(any(c in n for n in names) for c in cand):
+            return cand
+    return ["query", "value"]
+
+
 def apply_strategy(model, strategy: str, lora_rank: int = 8,
                    lora_alpha: int = 4):
     """Return (model, trainable_param_count) after applying strategy.
@@ -67,6 +77,8 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
     lora: peft on the underlying nn.Module; HF models target q/k/v/o,
     RNA-Sc targets qkv/out projections (its attention exposes qkv+out).
     full: all params trainable.
+    E2 PEFT arms: dora (LoRA + weight-decay decomposition), ia3
+    (rescaling vectors on q/v/ffn), prefix (prefix-tuning on attention).
     """
     core = model.m if hasattr(model, "m") else model
 
@@ -80,30 +92,68 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
             p.requires_grad = True
         return model, sum(p.numel() for p in core.parameters()
                           if p.requires_grad)
-    if strategy == "lora":
+    if strategy in ("lora", "dora"):
         from peft import LoraConfig, get_peft_model
-        hf_style = hasattr(core, "config") and hasattr(core, "forward")
         rnasc_style = hasattr(core, "blocks")
         if rnasc_style:
             target = ["qkv", "out"]
-        elif hf_style:
-            # multimolecule RiNALMo/ERNIE expose query/key/value/dense (BERT-style)
-            names = {n for n, _ in core.named_modules()}
-            for cand in (["query", "key", "value", "dense"],
-                         ["qkv_proj", "out_proj"],
-                         ["q", "k", "v", "o"]):
-                if all(any(c in n for n in names) for c in cand):
-                    target = cand
-                    break
-            else:
-                target = ["query", "value"]
         else:
-            target = ["query", "value"]
+            target = _lora_targets(core)
         cfg = LoraConfig(
             r=lora_rank, lora_alpha=lora_alpha, lora_dropout=0.0,
             target_modules=target, bias="none",
             task_type="FEATURE_EXTRACTION",
+            use_dora=(strategy == "dora"),
         )
+        pm = get_peft_model(core, cfg)
+        if hasattr(model, "m"):
+            model.m = pm
+        else:
+            model = pm
+        n = sum(p.numel() for p in pm.parameters() if p.requires_grad)
+        return model, n
+    if strategy == "ia3":
+        from peft import IA3Config, get_peft_model
+        rnasc_style = hasattr(core, "blocks")
+        if rnasc_style:
+            # RNA-Sc: rescale qkv outputs + ffn
+            cfg = IA3Config(target_modules=["qkv", "ffn"],
+                            feedforward_modules=["ffn"],
+                            task_type="FEATURE_EXTRACTION")
+        else:
+            names = {n for n, _ in core.named_modules()}
+            target = ["query", "value"] if any("query" in n for n in names) \
+                else ["qkv_proj"]
+            ffn = ["intermediate.dense"] if any("intermediate.dense" in n
+                                                for n in names) else ["fc1"]
+            cfg = IA3Config(target_modules=target,
+                            feedforward_modules=ffn,
+                            task_type="FEATURE_EXTRACTION")
+        pm = get_peft_model(core, cfg)
+        if hasattr(model, "m"):
+            model.m = pm
+        else:
+            model = pm
+        n = sum(p.numel() for p in pm.parameters() if p.requires_grad)
+        return model, n
+    if strategy == "prefix":
+        from peft import PrefixTuningConfig, get_peft_model
+        cfg_model = getattr(core, "config", None)  # RNA-Sc 由 loader 注入
+        d = getattr(cfg_model, "hidden_size", None)
+        n_layers = getattr(cfg_model, "num_hidden_layers", None)
+        n_heads = getattr(cfg_model, "num_attention_heads", None)
+        if d is None or n_layers is None or n_heads is None:
+            blocks = getattr(core, "blocks", None)
+            n_layers = len(blocks) if blocks is not None else 6
+            d = 192
+            n_heads = 6
+        cfg = PrefixTuningConfig(
+            num_virtual_tokens=min(20, d // 8),  # 按模型 D 适配 (spec T3.3.1)
+            encoder_hidden_size=d,
+            token_dim=d,
+            num_attention_heads=n_heads,
+            num_layers=n_layers,
+            task_type="FEATURE_EXTRACTION")
         pm = get_peft_model(core, cfg)
         if hasattr(model, "m"):
             model.m = pm

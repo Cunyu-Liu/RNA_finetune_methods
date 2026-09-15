@@ -45,7 +45,8 @@ def main() -> int:
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", required=True)
     ap.add_argument("--strategy", required=True,
-                    choices=["frozen", "lora", "head-only", "full"])
+                    choices=["frozen", "lora", "head-only", "full",
+                             "dora", "ia3", "prefix"])
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--split", required=True, choices=["random", "family"])
     ap.add_argument("--device", type=int, required=True)
@@ -111,12 +112,11 @@ def main() -> int:
                   % (n_before, len(recs)), flush=True)
         parts = random_split(recs, seed=17)
     if args.smoke:
-        recs = recs[:600]
+        # 全量数据取 labels（防止截断后 label 集不全导致 KeyError），
+        # parts 各截前 60 条
         parts = {k: v[:60] for k, v in parts.items()}
     labels = sorted({r["label"] for r in recs})
     lab2id = {l: i for i, l in enumerate(labels)}
-    for r in recs:
-        r["label_id"] = lab2id[r["label"]]
     for k in parts:
         for r in parts[k]:
             r["label_id"] = lab2id[r["label"]]
@@ -152,7 +152,8 @@ def main() -> int:
 
     # --- train ---
     for ep in range(args.epochs):
-        is_training_backbone = args.strategy in ("lora", "full")
+        is_training_backbone = args.strategy in (
+            "lora", "full", "dora", "ia3", "prefix")
         backbone.train(is_training_backbone)
         head.train()
         tot = 0.0

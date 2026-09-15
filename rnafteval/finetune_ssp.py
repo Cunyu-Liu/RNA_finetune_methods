@@ -104,7 +104,8 @@ def main() -> int:
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", default="secondary-structure")
     ap.add_argument("--strategy", required=True,
-                    choices=["frozen", "lora", "head-only", "full"])
+                    choices=["frozen", "lora", "head-only", "full",
+                             "dora", "ia3", "prefix"])
     ap.add_argument("--seed", type=int, default=17)
     ap.add_argument("--split", default="random",
                     choices=["random", "family"])

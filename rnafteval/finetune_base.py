@@ -40,7 +40,8 @@ def main() -> int:
     ap.add_argument("--model", required=True)
     ap.add_argument("--task", default="modification")
     ap.add_argument("--strategy", required=True,
-                    choices=["frozen", "lora", "head-only", "full"])
+                    choices=["frozen", "lora", "head-only", "full",
+                             "dora", "ia3", "prefix"])
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--split", required=True, choices=["random", "family"])
     ap.add_argument("--device", type=int, required=True)

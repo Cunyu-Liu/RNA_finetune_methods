@@ -71,6 +71,44 @@ def load_hf(spec: ModelSpec, device: str):
     return tok, backbone.to(device)
 
 
+class _PseudoConfig(dict):
+    """HF-config 兼容容器：属性访问 + `in`（peft _prepare_prompt_learning
+    会做 `"num_key_value_heads" in model_config` 检查）。"""
+
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+
+    def get(self, key, default=None):
+        return dict.get(self, key, default)
+
+
+def _rnasc_pseudo_config(mcfg: dict) -> _PseudoConfig:
+    return _PseudoConfig({
+        "hidden_size": mcfg["d_model"],
+        "num_hidden_layers": mcfg["n_layers"],
+        "num_attention_heads": mcfg["n_heads"],
+        "vocab_size": 5,          # ACGU + PAD (_RnaScTok)
+        "pad_token_id": 4,
+        "torch_dtype": "float32",
+        "model_type": "rnasc",
+        "architectures": ["RNAMLMEncoder"],
+    })
+
+
+def _attach_device_property(model):
+    """peft PeftModel.device 属性转发到 base model 的 .device——
+    RNAMLMEncoder 无此属性，动态注入（跟随首个参数的 device）。"""
+    if hasattr(model, "device"):
+        return
+    try:
+        model.device = next(model.parameters()).device
+    except StopIteration:
+        model.device = "cpu"
+
+
 class _RnaScWrapper:
     """Wrap rna_sc.RNAMLMEncoder (or peft-wrapped version) into the HF
     .last_hidden_state contract. PeftModel.forward passes **kwargs, so we
@@ -78,6 +116,20 @@ class _RnaScWrapper:
 
     def __init__(self, model):
         self.m = model
+        # 伪 config：peft 在 wrapper 层访问 model.config 时兜底
+        core = model.m if hasattr(model, "m") else model
+        cfg = getattr(core, "config", None)
+        if cfg is None:
+            mcfg = {"d_model": 192, "n_layers": 6, "n_heads": 6}
+            blocks = getattr(core, "blocks", None)
+            if blocks is not None and len(blocks):
+                mcfg["n_layers"] = len(blocks)
+            cfg = _rnasc_pseudo_config(mcfg)
+        self.config = cfg;
+
+    def __getattr__(self, name):
+        # 转发给内部模型（peft PeftModel.__getattr__ 也走这条）
+        return getattr(self.m, name)
 
     def to(self, device):
         self.m = self.m.to(device)
@@ -147,6 +199,9 @@ def load_rnasc(model_name: str, device: str):
     model = RNAMLMEncoder(d_model=mcfg["d_model"], n_layers=mcfg["n_layers"],
                           n_heads=mcfg["n_heads"], d_ff=mcfg["d_ff"])
     model.load_state_dict(ck["model"])
+    # 暴露 HF 风格 config + device（peft PrefixTuning 运行时读取）
+    model.config = _rnasc_pseudo_config(mcfg)
+    _attach_device_property(model)
     return _RnaScTok(), _RnaScWrapper(model).to(device)
 
 
