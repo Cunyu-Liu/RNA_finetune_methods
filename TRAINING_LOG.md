@@ -3,6 +3,40 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 23:15 Day 2 深夜：队列大丰收（+26 runs，三大结论升级）
+
+**状态**: ledger 227 行（223 done）；G7/G5 队列正常排空
+（SpliceBERT full 21:21 / ERNIE+RNA-FM full 22:57）; ssptuned
+最后一 run（s43 family）在跑; 守护链待全排空自动刷八产物。
+
+### ★★ 新结论 1：LR 崩溃跨架构传播（默认 3e-4 全参）
+| 模型 | 架构 | full random @3e-4 | loss 模式 |
+|---|---|---|---|
+| RiNALMo 33M | 标准 attn | 0.077 崩 | ln-13 平原 |
+| SpliceBERT 19M | ALiBi | 0.077 崩（6/6 runs） | ln-13 平原 |
+| ERNIE 86M | 显式配对 attn | 0.077 崩（6/6） | ln-13 平原（epoch 0 即卡死 2.56） |
+| RNA-FM 99.5M | 标准 attn | **0.82-0.84 正常** | 1.10→0.32 正常下降 |
+
+- **崩溃不挑架构**（标准/ALiBi/显式配对 attn 全崩）——A8 LR
+  结论从"两模型规律"升级为"跨架构普遍现象"；
+- RNA-FM 唯一幸存（预训练最充分 23.7M ncRNA）→ 预训练深度
+  可能是全参 LR 冲击的抗性来源（观察性，样本 n=1）；
+- RNA-FM full family 侧仍崩（0.06-0.10）→ C4 崩溃矩阵 full
+  臂也是 5/5（与 LoRA 臂一致）。
+
+### ★ 新结论 2：SSP full tuned 3/3 一致恢复
+- s17 0.176 / s29 0.151 / s43 0.171 vs default 0.006x
+  （x24-x27, 方向 3/3 一致——B14 级证据）;
+- family 侧 tuned 0.158-0.189（2/3 已落地）;
+- SSP full 从 B14 ±(不定) 转 3 种子可判——export_c4 将重判。
+
+### ★ 新结论 3：五模型 E1 矩阵 full 臂齐
+- ERNIE full 6/6 / RNA-FM full 6/6 / SpliceBERT full 6/6
+  全部落地——E1 五模型 × 3 策略矩阵接近完备（G6 剩
+  RNA-FM frozen/lora 少量 run）。
+
+**下步**: SSP s43 family 收尾 → 守护链自动刷八产物 →
+预印本数值终版化（三大新结论入 2.4 节）→ 明晨验收。
 ## 2026-09-16 21:40 Day 2 夜 II：README 程序化自查 + 旧副本清理
 
 **状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
