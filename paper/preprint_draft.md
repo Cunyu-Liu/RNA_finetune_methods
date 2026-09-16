@@ -52,22 +52,46 @@ training windows**).
 
 ### 2.1 Fine-tuning is beneficial but task/split dependent (C1, Fig 1)
 [fig:fig_c1_matrix] — heatmap; black boxes = beats strongest k-mer baseline.
+Cross-model consistency (ncRNA random, LoRA): RNA-Sc 0.75, SpliceBERT 0.90,
+RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora.
 
 ### 2.2 Family-level splits reveal task-granularity-dependent collapse (C4, Fig 2)
-[fig:fig_c4_delta] — Δ bars. Key numbers (3-seed means, tuned LR):
-- ncRNA: RiNALMo full 0.938 random / 0.085 family (Δ+0.853);
-  LoRA 0.928 / 0.081 (Δ+0.847); frozen 0.817 / 0.696 (Δ+0.121).
-- m6A (RNA-Sc): LoRA 0.943 / 0.983 (Δ−0.040); full 0.940 / 0.977.
-- SSP: RNA-Sc LoRA 0.084 / 0.075; RiNALMo frozen 0.209 / 0.233, LoRA
-  0.234 / 0.245 — no collapse; 2–5× over baselines.
-- Traditional baselines: k-mer LGBM Δ = +0.007 (ncRNA) — insensitive.
+[fig:fig_c4_delta] — Δ bars. Key numbers (3-seed means where marked, tuned LR):
+- ncRNA: collapse **replicates across all five models**: LoRA Δ = +0.68
+  (RNA-Sc) / +0.85 (RiNALMo) / +0.82 (SpliceBERT) / +0.89 (ERNIE) /
+  +0.91 (RNA-FM); frozen Δ = +0.06–0.26 (mild); k-mer LGBM Δ = +0.007.
+- m6A (per-base): no collapse, both models — RNA-Sc LoRA 0.94→0.98;
+  RiNALMo LoRA 0.97→0.995 (Δ = −0.025).
+- SSP: robust gains, no collapse — RiNALMo frozen 0.196→0.218, LoRA
+  0.214→0.223 (3 seeds); RNA-Sc LoRA 0.084→0.076.
+- **Leakage-sensitive fine-tuning is the norm for per-sequence
+  classification (5/5 models), and the exception for per-base tasks (0/4
+  model-task pairs).**
 
-### 2.3 LR grids: scale × strategy × LR triple interaction (A8, Fig 3)
+### 2.3 E2 PEFT horizontal comparison (C5, 5 arms, RiNALMo ncRNA random)
+| arm | 3-seed mean | trainable params |
+|---|---|---|
+| full FT (LR-tuned 1e-5) | 0.938 | 33M |
+| DoRA r=8 | 0.934 | ~0.35M |
+| LoRA r=8 | 0.927 | ~0.18M |
+| IA3 | 0.860 | ~0.02M |
+| head-only | 0.817 | 16K |
+
+- DoRA ≈ LoRA at r=8 (Schmirler's protein-side observation replicates in
+  RNA); IA3 trails by ~0.07 with 10× fewer params; full FT wins only with
+  tuned LR (default 3e-4 collapses to 0.077).
+- Prefix-tuning infeasible under current dependency versions (peft 0.13
+  tuple-style past_key_values vs transformers 5.0 Cache API) — documented
+  limitation.
+
+### 2.4 LR grids: scale × strategy × LR triple interaction (A8, Fig 3)
 [fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
 RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
 RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA: 0.723/0.923 (RNA-Sc/RiNALMo @3e-4).
+m6A replication: RiNALMo full default-LR 0.30 → tuned 1e-5 (runs queued);
+SSP full default-LR 0.006 → re-run at 1e-5 (queued).
 
-### 2.4 Official split leakage audit (B1 discipline, new)
+### 2.5 Official split leakage audit (B1 discipline, new)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
 test windows (27.3%) cluster with training windows; 31-mer overlap 10.8%.
 The official "random" arm is leak-contaminated at host-transcript level.
