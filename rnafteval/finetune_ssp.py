@@ -127,13 +127,16 @@ def main() -> int:
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
+    # run_id 编码 LR 维度（A8 协议，与 finetune_one/base 一致）
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    extra = ("_smoke" if args.smoke else "") + lr_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
-                        args.split, "_smoke" if args.smoke else "")
+                        args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
     os.makedirs(out_dir, exist_ok=True)
     claim = ledger.claim(args.model, args.task, args.strategy, args.seed,
                          args.split, device=args.device, out_dir=out_dir,
-                         extra="_smoke" if args.smoke else "")
+                         extra=extra)
     if not claim["claimed"]:
         print("skip (already %s): %s" % (claim["row"]["status"], rid))
         return 0
