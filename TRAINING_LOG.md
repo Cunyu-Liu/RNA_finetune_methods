@@ -3,6 +3,25 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 18:20 Day 2 傍晚 VII：中文对照摘要 + A13 断言独立复算
+
+**状态**: ledger 200 行（195 done）；五链健康，三训练并行
+（G6 ERNIE frozen s43 / G5 ERNIE lora s43 / G7 SpliceBERT full s29）。
+
+**本轮完成**:
+1. **中文对照摘要文档**（paper/preprint_zh_summary.md）: 标题备选
+   3 款 + 中文摘要（逐点对照英文版）+ 电梯陈述 + 红队防线自查表
+   （R1/R2/R5/R6/R7/R11/R9 七条状态）——用户快速审阅入口
+2. **A13 宿主断言独立复算 PASS**: 从 modification.parquet 直接
+   groupby 复核 309,460 行——同序列 0 跨侧 / 同簇 0 跨侧
+   （每簇均值 1.28 序列, max 721）; 原先只有构建期断言声明,
+   现在有独立后验验证记录（入 checklist_audit）
+3. SpliceBERT full s29 在跑（崩溃模式的种子复制验证中）
+
+**Git**: 3719fb8（zh summary）+ c39e700（A13 复算）已推送。
+
+**下步**: 队列自然推进; 明日晨验收全链（终版产物由守护链
+自动刷新 + SpliceBERT full 种子复制判定 + tuned-LR 补跑决策）。
 ## 2026-09-16 18:00 Day 2 傍晚 VI：References 核证 + SpliceBERT full 崩溃观察
 
 **状态**: ledger 200 行（195 done）。
