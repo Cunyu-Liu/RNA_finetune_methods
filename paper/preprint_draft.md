@@ -233,6 +233,55 @@ preprint scope, rules already frozen.
   "no BH-significant cell" branch is vacuously true under n=3 sign
   tests (power wall) — documented, decision unchanged.
 
+
+## References (core; full list to be BibTeX-ized at submission)
+
+1. Schmirler R, Heinzinger M, Rost B. Fine-tuning protein language
+   models boosts predictions across diverse tasks. *Nat Commun*
+   15:7407 (2024). doi:10.1038/s41467-024-51844-2
+2. Ren Y, Chen Z, Qiao L, et al. BEACON: benchmark for
+   comprehensive RNA tasks and language models. *NeurIPS 2024
+   Datasets & Benchmarks*. (full-FT-only protocol that we extend
+   with the strategy axis; 13 tasks)
+3. [Zablocki et al.] Frozen-embedding evaluation of RNA language
+   models (深圳湾/GenSLMs line). (single-arm protocol)
+4. Penić R, Vlašić T, Huber RG, Wan Y, Šikić M. RiNALMo: general-
+   purpose RNA language models can generalize well on structure
+   prediction tasks. *Nat Commun* (2025).
+   doi:10.1038/s41467-025-60872-5. (650M params, 36M ncRNAs;
+   the 33M micro variant used here)
+5. Yin W, Zhang Z, Zhang S, et al. (Xie Z, Zhang X, Qin T
+   corresponding) ERNIE-RNA: an RNA language model with structure-
+   enhanced representations. *Nat Commun* (2025).
+   doi:10.1038/s41467-025-64972-0. (86M params, 20.4M ncRNAs;
+   base-pairing-constrained attention)
+6. Chen J, Hu Z, Sun S, et al. Interpretable RNA foundation model
+   from unannotated data for highly accurate RNA structure and
+   function predictions. arXiv:2204.00300 (2022). (100M params,
+   23.7M ncRNAs from RNAcentral)
+7. Chen K, Zhou Y, Ding M, Wang Y, Ren Z, Yang Y. Self-supervised
+   learning on millions of primary RNA sequences from 72 vertebrates
+   improves sequence-based RNA splicing prediction. *Brief
+   Bioinform* 25(3):bbae163 (2024). doi:10.1093/bib/bbae163.
+   (SpliceBERT, 19M, pre-mRNA corpus)
+8. Hu E et al. LoRA: low-rank adaptation of large language models.
+   *ICLR* (2022).
+9. Liu S et al. DoRA: weight-decomposed low-rank adaptation.
+   *ICLR* (2024).
+10. Liu H et al. IA3: parameter-efficient fine-tuning with
+    learned activation rescaling. *ICLR Wkshp PEFT* (2023).
+11. Steinegger M, Söding J. MMseqs2 enables sensitive protein
+    sequence searching and clustering. *Nat Commun* 8:1558 (2017).
+12. [良渚/gLM-eval] 11 genomic LMs × 4 tasks unified fine-tune
+    ranking study. (2025). (sensitivity-of-rankings-to-strategy
+    motivation)
+13. [Vishniakov et al.] DNA tokenizer perspective. *ICLR* (2026).
+14. Dincer A et al. bpRNA: large-scale annotation of ncRNA structure
+    alignments. *Nucleic Acids Res* (2017). (SSP task)
+
+（预印本版注：3/7/12/13 的完整书目信息在投稿版 BibTeX 化时
+补齐——当前以可辨识缩写标记，见 repo references.bib 计划）
+
 ## Data & Code
 github.com/Cunyu-Liu/RNA_finetune_methods; ledger + figures auto-generated
 (rnafteval export_c4 / stats / figures).
