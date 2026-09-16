@@ -131,7 +131,8 @@ marked):
 ### 2.4 LR grids: scale × strategy × LR triple interaction (A8, Fig 3)
 [fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
 RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
-RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA: 0.723/0.923 (RNA-Sc/RiNALMo @3e-4).
+RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA @3e-4: RNA-Sc 0.723,
+RiNALMo 0.934 (full grid: status/lr_grid_table.md, auto-exported).
 Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
 **0.968/0.993 (random/family, 3 seeds, 1e-5)**; SSP full default-LR 0.006 →
 **0.176 (1e-5)** — 29× recovery, confirming the grid diagnosis that the

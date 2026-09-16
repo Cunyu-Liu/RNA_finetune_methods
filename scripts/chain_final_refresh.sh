@@ -26,4 +26,5 @@ $PY -m rnafteval.export_e2 >> $LOG 2>&1
 $PY -m rnafteval.stats >> $LOG 2>&1
 $PY -m rnafteval.figures --out /mnt/cunyuliu/rna-ft-eval/status/figs >> $LOG 2>&1
 $PY -m rnafteval.export_resources >> $LOG 2>&1
+$PY -m rnafteval.export_lr_grid >> $LOG 2>&1
 echo "FINAL REFRESH DONE $(date)" >> $LOG
