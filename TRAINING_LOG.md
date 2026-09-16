@@ -3,6 +3,25 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 19:40 Day 2 傍晚 XI：S5 切分统计自动表（七产物链）
+
+**状态**: ledger 200 行（195 done）；五链健康（G6 frozen s43
+31min / G5 lora s43 24min / G7 SpliceBERT full s29 14min）。
+
+**本轮完成**:
+1. **export_splits.py 上线**: S5 家族切分统计自动导出
+   - 关键数字: ncRNA 7,731 簇 / SSP 12,825 簇 / m6A 241,984 簇
+   - m6A rows 309,460 > seqs 308,915 = 宿主代理设计实证
+     （同转录本多窗口共享簇归属）
+   - **每次导出现场 groupby 零重叠复算**（三任务全部 PASS）——
+     A13 独立验证产物化, 从"一次性检查"变"每次导出都验"
+2. Supp S5 接自动表; 守护链扩至**七产物**
+   （c4/e2/stats/figs/resources/lr_grid/splits）
+
+**Git**: 724407a 已推送。
+
+**下步**: 队列自然推进; 明日晨验收（SpliceBERT full 崩溃复制
+判定 + tuned-LR 补跑决策 + 终版七产物自动刷新）。
 ## 2026-09-16 19:20 Day 2 傍晚 X：LR 网格自动表 + 网格数修正
 
 **状态**: ledger 200 行（195 done）；五链健康（G6 ERNIE frozen
