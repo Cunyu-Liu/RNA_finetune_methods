@@ -244,8 +244,9 @@ preprint scope, rules already frozen.
   (8 models) in progress per spec E1.
 - Prefix-tuning excluded due to dependency-stack incompatibility (peft
   0.13 / transformers 5.0 Cache API); documented, not worked around.
-- RiNALMo SSP full tuned arm currently 1 seed (0.176); 5-run backfill
-  queued (s29/43 random + 3 family).
+- RiNALMo SSP full tuned arm: 3/3 seeds random (0.151–0.176,
+  ×24–27 recovery, direction-consistent) + family side backfilled
+  (0.158–0.189); no longer a 1-seed claim.
 - Preregistered checkpoint rule has two ambiguities discovered at
   automation (B16): the gain-median population was undefined (fixed:
   per-task best model, primary; all-cell pool, reported); and the
