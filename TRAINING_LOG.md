@@ -3,6 +3,26 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 20:30 Day 2 傍晚 XIII：Supp S0 索引 + Methods 补全
+
+**状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
+40min / G7 SpliceBERT full s29 23min / G5 ERNIE lora family s29
+6.5min）。
+
+**本轮完成**:
+1. **Supp S0 产物索引节**: 八产物导航表（节↔产物↔生成器）+
+   守护链说明 + "ledger/parquet 为唯一数据源, 无手工誊写"
+   声明——投稿版 checklist 直接可用
+2. **Methods 模型池补全**: 5 模型参数量/语料规模全列
+   （RNA-Sc 10M / SpliceBERT 19M / RiNALMo-micro 33M /
+   ERNIE 86M+20.4M ncRNAs / RNA-FM 99.5M+23.7M ncRNAs）
+   ——规模跨度 10M–99M 明确标注; 匹配脚本一字之差
+   （splice-corpus vs splice corpus）修正后落地
+
+**Git**: 0ad1cc5 + ac5866b 已推送。
+
+**下步**: 队列自然推进; 明日晨验收（ERNIE full 首数据点 +
+SpliceBERT full 崩溃复制判定 + 终版八产物自动刷新）。
 ## 2026-09-16 20:00 Day 2 傍晚 XII：S6 泄漏审计可复现化（八产物链）
 
 **状态**: ledger 200 行（196 done）; **ERNIE lora 三种子齐**:
