@@ -3,6 +3,22 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 21:20 Day 2 夜：README 上线（投稿级 repo 入口）
+
+**状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
+45min / G7 SpliceBERT full s29 28min / G5 ERNIE lora family s29
+12min）。
+
+**本轮完成**:
+1. **README.md 上线**（此前 repo 无入口文档——预印本 Data&Code
+   引用 repo 但审稿人无导航）: 三发现摘要 / 目录表（rnafteval
+   模块+导出器 8 件 / paper / scripts / docs / TRAINING_LOG）/
+   复现命令块（runner + 八导出器全列）/ 冻结协议节
+   （种子/切分/统计口径）/ 数据与权重布局说明
+
+**Git**: c446514 已推送。
+
+**下步**: 队列自然推进（~18 runs）; 明日晨验收。
 ## 2026-09-16 21:00 Day 2 收官：交接目录状态快照
 
 **状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
