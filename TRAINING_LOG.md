@@ -3,6 +3,26 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 19:00 Day 2 傍晚 IX：R4 分层图 + 投稿三节
+
+**状态**: ledger 200 行（195 done）；五链健康; G5 ERNIE lora s43
+在跑（~19min）。
+
+**本轮完成**:
+1. **fig_c1 R4 分层改造**: 模型行按 受控家族（RNA-Sc）/ 同语料
+   RNAcentral 系（ERNIE/RNA-FM/RiNALMo）/ 跨语料任务专用
+   （SpliceBERT）三块分面板 + 组间黑分隔线 + 图注声明
+   "跨组比较仅观察性"——红队 R4 混杂防线落到图上（此前 C1
+   模型字母序混排）
+2. **投稿三节补齐**: Author Contributions（骨架, PI 确认前
+   draft 标注）/ Acknowledgments（BEACON + 各模型开源社区 +
+   算力）/ Funding（占位, 提交前补）
+3. C1 图已重绘验证（compile OK + figures 全刷新）
+
+**Git**: 245a8cb 已推送。
+
+**下步**: 队列自然推进; 明日晨验收（SpliceBERT full 崩溃复制
+判定 + 终版产物守护链自动刷新 + tuned-LR 补跑决策）。
 ## 2026-09-16 18:40 Day 2 傍晚 VIII：全文一致性扫描 + v0.2.1
 
 **状态**: ledger 200 行（195 done）；五链健康; G5 整卡队列
