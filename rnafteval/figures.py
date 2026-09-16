@@ -40,11 +40,32 @@ def fig_c1(c, base, outdir):
     import matplotlib.pyplot as plt
     import numpy as np
 
-    models = sorted({k[0] for k in c})
+    # R4 混杂分层: 同语料组（RNAcentral 系）/ 跨语料组（任务专用）
+    # / 受控家族 — 三块分面板, 组间分隔线, 禁跨层比较语句
+    GROUPS = [
+        ("受控家族 (controlled)", ["RNA-Sc-10M"]),
+        ("同语料组 RNAcentral 系 (same-corpus)",
+         ["ERNIE-RNA", "RNA-FM", "RiNALMo-micro"]),
+        ("跨语料组 任务专用 (cross-corpus)", ["SpliceBERT"]),
+    ]
+    present = sorted({k[0] for k in c})
+    ordered = []
+    boundaries = []
+    for gname, gm in GROUPS:
+        avail = [m for m in gm if m in present]
+        if avail:
+            if ordered:
+                boundaries.append(len(ordered))
+            ordered.extend(avail)
+    for m in present:
+        if m not in ordered:
+            if ordered:
+                boundaries.append(len(ordered))
+            ordered.append(m)
+
     tasks = ["noncoding-rna-family", "modification", "secondary-structure"]
     strats = ["frozen", "lora", "full"]
-    # rows: (model, task); cols: strategy; random arm values
-    rows = [(m, t) for m in models for t in tasks
+    rows = [(m, t) for m in ordered for t in tasks
             if any((m, t, s, "random") in c for s in strats)]
     M = np.full((len(rows), len(strats)), np.nan)
     for i, (m, t) in enumerate(rows):
@@ -57,6 +78,9 @@ def fig_c1(c, base, outdir):
     ax.set_xticks(range(len(strats)), strats)
     ax.set_yticks(range(len(rows)),
                   ["%s  %s" % (model_label(m), task_label(t)) for m, t in rows])
+    for b in boundaries:
+        y = b - 0.5
+        ax.axhline(y, color="black", lw=2.5)
     for i in range(len(rows)):
         for j in range(len(strats)):
             if not np.isnan(M[i, j]):
@@ -75,7 +99,9 @@ def fig_c1(c, base, outdir):
             ax.text(len(strats) - 0.3, i, "base\n%.3f" % b, fontsize=6,
                     va="center", ha="left", color="gray")
     ax.set_title("C1: fine-tuning gains (random split, 3-seed mean);\n"
-                 "black box = beats strongest traditional baseline")
+                 "black box = beats strongest traditional baseline;\n"
+                 "horizontal dividers = corpus groups (R4: cross-group "
+                 "comparisons observational only)")
     fig.colorbar(im, ax=ax, shrink=0.8, label="ACC/AUC/F1")
     fig.tight_layout()
     for ext in ("png", "pdf"):

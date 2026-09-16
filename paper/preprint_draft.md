@@ -235,6 +235,28 @@ preprint scope, rules already frozen.
   tests (power wall) — documented, decision unchanged.
 
 
+
+## Author Contributions (draft, to be finalized)
+
+L.C. conceived and designed the study, implemented the full
+pipeline (data splits, training, evaluation, statistics, figures),
+ran all experiments, and wrote the manuscript. (Additional
+co-author roles — e.g. supervision, funding, revision — to be
+assigned with the PI before submission.)
+
+## Acknowledgments
+
+We thank the BEACON consortium for open benchmark tasks and data,
+the RNA-LM community for open weights (RiNALMo / ERNIE-RNA /
+RNA-FM / SpliceBERT / RNA-Sc), and the A100 cluster operators.
+Computing resources: institutional GPU cluster (see Data & Code
+for per-run resource ledger).
+
+## Funding
+
+To be completed before submission. (No funding statement is made
+in this draft.)
+
 ## References (core; full list to be BibTeX-ized at submission)
 
 1. Schmirler R, Heinzinger M, Rost B. Fine-tuning protein language
