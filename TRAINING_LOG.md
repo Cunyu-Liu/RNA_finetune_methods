@@ -3,6 +3,27 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 17:20 Day 2 傍晚 IV：E5 资源实测自动导出（独立核对过）
+
+**状态**: ledger 199 行；四链健康（G6 frozen s43 / G7 SpliceBERT
+full s17 57min / G5 ERNIE lora s43 已开跑）。
+
+**本轮完成**:
+1. **export_resources.py 上线**: E5 资源实测自动导出
+   （status/resources.md）——按策略 wall 中位数/峰值显存中位数/
+   检查点体积，formal 与 tuning 分池，覆盖 185/186
+   - 关键数字: frozen 20.2min/407MB、lora 37.9min/771MB、
+     full 22.4min/1057MB、dora 55.1min/3151MB、ia3 106.4min/2074MB、
+     head-only 13.7min/407MB（n=48/47/56/3/3/13）
+   - **独立交叉核对通过**（不走同一代码路径重算，6 策略逐位一致）
+2. S7 节接通 resources.md；守护链刷新序列加 export_resources
+   （队列排空后 S7 也自动出终版）
+3. 修正脚本冗余表达式（tuning.count(0) 无操作）
+
+**Git**: fefa21a + 9a1452c 已推送。
+
+**下步**: 队列自然推进; 明日晨巡检验收（G6 20 runs + SpliceBERT
+full 6 runs 预计完成; ERNIE/RNA-FM full 矩阵看整卡释放）。
 ## 2026-09-16 17:05 Day 2 傍晚 III：T2.0 检查点自动化 + B16 勘误 + Supp 骨架
 
 **状态**: ledger 199 行（194 done）；四链健康；新数据点
