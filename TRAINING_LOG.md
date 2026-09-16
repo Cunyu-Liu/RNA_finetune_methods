@@ -3,6 +3,22 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 21:40 Day 2 夜 II：README 程序化自查 + 旧副本清理
+
+**状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
+47min / G7 SpliceBERT full s29 30min / G5 ERNIE lora family s29
+14min）。
+
+**本轮完成**:
+1. **README 程序化自查 PASS**: 引用 8 路径存在性 + 8 模块
+   import 全过（0 issues）——README 声明的复现命令均可执行
+2. **根目录过时旧副本清理**: preprint_draft.md 根目录版为
+   Day-1 旧副本（105 行 vs paper/ 314 行, 会误导读者）→
+   git rm + 留指针文件（防旧链接 404）
+
+**Git**: 46050ec 已推送。
+
+**下步**: 队列自然推进（~17 runs）; 明日晨验收。
 ## 2026-09-16 21:20 Day 2 夜：README 上线（投稿级 repo 入口）
 
 **状态**: ledger 201 行（196 done）；五链健康（G6 frozen s43
