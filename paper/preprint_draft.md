@@ -1,11 +1,11 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.2.1** — 2026-09-16（数据快照：Day 2，200 ledger
-runs，195 done；tuned-LR 协议臂落地：RiNALMo m6A full@1e-5 三种子
-0.968/0.993、SSP full@1e-5 0.176（29× 默认 LR 恢复）。新模型种子
-补齐 + SpliceBERT full 崩溃复制 + SSP tuned5 五链自动推进中；数值在
-矩阵补齐后终版刷新，结构与结论形态已固化）
+**Preprint draft v0.3** — 2026-09-17（数据快照：Day 2 深夜，228
+ledger runs；E1 五模型 full 臂全部落地；跨架构 LR 崩溃新证据：
+三种注意力架构全崩 + RNA-FM 唯一幸存；SSP full tuned 5/5 方向一致
+×24-27；C4 崩溃矩阵 LoRA/full 双臂均 5/5 模型。G6 尾队列收尾中，
+守护链自动刷新八产物）
 
 ## Abstract
 
@@ -33,12 +33,16 @@ Three findings emerge:
    the "fine-tuning benefit" on sequence-level tasks under random splits is
    **family-level leakage**, echoing and quantifying the "simply cheating"
    critique for RNA benchmarks.
-3. **Learning rate × strategy × model scale interact**: full FT's sweet
-   spot shifts left with scale (3e-5 at 10M → 1e-5 at 33M, with
-   catastrophic collapse at the 3e-4 default), while LoRA requires high LR
-   (3e-4) at both scales; LR misconfiguration alone can flip apparent
-   strategy rankings by ±0.5 accuracy — a systematic risk for un-tuned
-   comparisons. Under tuned LRs the per-sequence task ranking is
+3. **Learning rate × strategy × model scale interact, and the default
+   LR is an architecture-agnostic trap**: full FT's sweet spot shifts
+   left with scale (3e-5 at 10M → 1e-5 at 33M), while LoRA requires
+   high LR (3e-4); at the 3e-4 default, full FT collapses to ln(C)
+   prediction-entropy plateaus across three attention architectures
+   (standard / ALiBi / base-pairing-constrained — 0.077 ACC,
+   3/3 seeds each), with only the most extensively pretrained model
+   (RNA-FM, 23.7M ncRNAs) surviving (0.82–0.84). LR misconfiguration
+   alone can flip apparent strategy rankings by ±0.5 accuracy. Under
+   tuned LRs the per-sequence task ranking is
    full ≥ DoRA ≈ LoRA ≫ IA3 > head-only.
 
 We release the full run ledger, MMseqs2 0.8/0.8 family-cluster splits for
