@@ -112,11 +112,13 @@ marked):
 ### 2.3 E2 PEFT horizontal comparison (C5, 5 arms, RiNALMo ncRNA random)
 | arm | 3-seed mean | trainable params |
 |---|---|---|
-| full FT (LR-tuned 1e-5) | 0.938 | 33M |
-| DoRA r=8 | 0.934 | ~0.35M |
-| LoRA r=8 | 0.927 | ~0.18M |
-| IA3 | 0.860 | ~0.02M |
-| head-only | 0.817 | 16K |
+| full FT (LR-tuned 1e-5) | 0.938 | 33.5M |
+| DoRA r=8 | 0.934 | ~0.57M |
+| LoRA r=8 | 0.928 | ~0.55M |
+| IA3 | 0.860 | ~0.01M |
+| head-only | 0.817 | 0 (+16K head) |
+
+(auto-exported from ledger: status/e2_table.md, export_e2.py)
 
 - DoRA ≈ LoRA at r=8 (Schmirler's protein-side observation replicates in
   RNA); IA3 trails by ~0.07 with 10× fewer params; full FT wins only with
@@ -173,11 +175,11 @@ cell-level bootstrap CIs in Supp.
   deployment (new ncRNA families), frozen or k-mer baselines remain
   competitive (0.893–0.896 vs fine-tuned 0.06–0.10).
 - **LR discipline is a confound-killer**: with per-scale tuned LRs the
-  full ≥ LoRA ordering re-emerges (0.938 vs 0.927); untuned defaults
-  (3e-4) invert it (0.077 vs 0.927). Any cross-strategy claim without a
+  full ≥ LoRA ordering re-emerges (0.938 vs 0.928); untuned defaults
+  (3e-4) invert it (0.077 vs 0.928). Any cross-strategy claim without a
   per-strategy LR sweep on held-out data is suspect.
 - **Practical selection rule (from C5)**: at 33M scale, DoRA r=8 matches
-  LoRA within noise (0.934 vs 0.927) at 2× params; IA3 trades ~0.07 ACC
+  LoRA within noise (0.934 vs 0.928) at comparable params (~0.57M vs ~0.55M); IA3 trades ~0.07 ACC
   for 10× param economy; head-only is a strong floor (0.817) but not
   competitive for per-sequence tasks under random splits.
 
