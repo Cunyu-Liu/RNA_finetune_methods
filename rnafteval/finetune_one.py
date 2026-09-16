@@ -55,6 +55,8 @@ def main() -> int:
     ap.add_argument("--batch-size", type=int, default=32)
     ap.add_argument("--max-len", type=int, default=512)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--n-train", type=int, default=0,
+                    help="E3 小数据档: 10/100/1000 (簇级子集); 0=全量")
     args = ap.parse_args()
 
     # --- GPU discipline: no CUDA => abort with evidence ---
@@ -72,7 +74,8 @@ def main() -> int:
     # run_id 编码 LR 维度（A8 网格协议）：非默认 3e-4 的 tuning runs 用
     # _lr 后缀区分，避免 ledger claim 误 skip 不同 LR 变体
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    extra = ("_smoke" if args.smoke else "") + lr_tag
+    e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
+    extra = ("_smoke" if args.smoke else "") + lr_tag + e3_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -101,6 +104,19 @@ def main() -> int:
             "val": [r for r, sp in zip(recs, d["split"]) if sp == "val"],
             "test": [r for r, sp in zip(recs, d["split"]) if sp == "test"],
         }
+        if args.n_train > 0:
+            # E3 小数据档: 簇级降采样子集（行号表, e3_subsampler 产物）
+            sub_path = os.path.join(
+                ROOT, "data", "e3_subsets",
+                "ncrna_%d_s%d.txt" % (args.n_train, args.seed))
+            with open(sub_path) as f:
+                keep = {int(x) for x in f.read().split()}
+            train_rows = [r for r, sp in zip(recs, d["split"])
+                          if sp == "train"]
+            parts["train"] = [train_rows[i] for i in sorted(keep)
+                              if i < len(train_rows)]
+            print("E3 subset: %s -> %d train rows" % (
+                sub_path, len(parts["train"])), flush=True)
     else:
         recs = ncrna.load_ncrna(
             os.path.join(BEACON_RAW, "noncoding-rna-family", "data"))
