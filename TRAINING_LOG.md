@@ -3,6 +3,29 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 19:20 Day 2 傍晚 X：LR 网格自动表 + 网格数修正
+
+**状态**: ledger 200 行（195 done）；五链健康（G6 ERNIE frozen
+s43 28min / G5 ERNIE lora s43 21min / G7 SpliceBERT full s29 11min）。
+
+**本轮完成**:
+1. **export_lr_grid.py 上线**: A8 LR 网格 16 格自动导出
+   （status/lr_grid_table.md + csv; 修复 LR 键格式化 bug——
+   %.0e 生成 3e-04 与列键 0.0003 不匹配, 改为数值
+   归一化映射）
+2. **预印本 2.4 数值修正**: RiNALMo LoRA@3e-4 grid 值 0.923 →
+   **0.934**（原误用 s17 formal 值混入 s101 grid 上下文）——
+   交叉核对自动表抓出
+3. 守护链刷新序列加入 export_lr_grid（终版六产物: c4/e2/
+   stats/figs/resources/lr_grid）
+
+**Git**: 2f528f6 已推送。
+
+**数据面现状**: 六件自动产物 + 五链 + 守护链全就位; 预印本
+数值全部走自动表交叉核对通道。
+
+**下步**: 队列自然推进; 明日晨验收（SpliceBERT full 崩溃复制
+判定 + tuned-LR 补跑决策 + 终版六产物自动刷新）。
 ## 2026-09-16 19:00 Day 2 傍晚 IX：R4 分层图 + 投稿三节
 
 **状态**: ledger 200 行（195 done）；五链健康; G5 ERNIE lora s43
