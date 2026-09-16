@@ -1,10 +1,11 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.2** — 2026-09-16（数据快照：Day 2，196 ledger runs，
-192 done；tuned-LR 协议臂全部落地：RiNALMo m6A full@1e-5 三种子 0.968/0.993、
-SSP full@1e-5 0.176（29× 默认 LR 恢复）。新模型种子补齐队列推进中，
-数值将在矩阵补齐后终版刷新，结构与结论形态已固化）
+**Preprint draft v0.2.1** — 2026-09-16（数据快照：Day 2，200 ledger
+runs，195 done；tuned-LR 协议臂落地：RiNALMo m6A full@1e-5 三种子
+0.968/0.993、SSP full@1e-5 0.176（29× 默认 LR 恢复）。新模型种子
+补齐 + SpliceBERT full 崩溃复制 + SSP tuned5 五链自动推进中；数值在
+矩阵补齐后终版刷新，结构与结论形态已固化）
 
 ## Abstract
 
