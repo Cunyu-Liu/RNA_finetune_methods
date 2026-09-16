@@ -1,0 +1,70 @@
+# 预印本中文对照摘要 + 标题备选（v0.2，2026-09-16）
+
+> 用途：用户快速审阅版；英文正文在 paper/preprint_draft.md。
+> 数值与 ledger/自动产物核对过（2026-09-16 18:10 快照）。
+
+## 标题备选
+
+1. **To fine-tune or not to fine-tune RNA language models? A
+   controlled strategy comparison reveals task-granularity-dependent
+   leakage effects**（当前主用；问句式，呼应 Schmirler 姊妹篇）
+2. Fine-tuning RNA language models: task granularity, not strategy,
+   decides whether the gains survive family-level splits
+   （陈述式；把 C4 主结论前置）
+3. Controlled comparison of adaptation strategies for RNA language
+   models: leakage, learning rates, and practical recipes
+   （保守式；三个关键词全列）
+
+## 中文摘要（对照英文版逐点）
+
+**背景** RNA 语言模型（RNA-LM）的微调被普遍默认优于冻结
+embedding，但跨适配策略的受控对比在 RNA 侧至今缺失。
+
+**方法** 仿照蛋白侧 Schmirler et al. (2024) 模板，构建受控矩阵：
+**3 种适配策略（frozen+浅头 / LoRA r=8 / 全参微调）× 5 个
+RNA-LM（10M–99M：RNA-Sc-10M / SpliceBERT / RiNALMo-micro /
+ERNIE-RNA / RNA-FM）× 3 个 BEACON 任务（ncRNA 家族分类 / m6A
+修饰 / 二级结构）× 2 种评测切分（随机 vs 家族簇级）× 3 种子**；
+每个微调格用独立 tuning 种子（101）选学习率，全部臂带零重叠
+断言审计。
+
+**三个发现**
+
+1. **微调有效，但收益大小取决于任务粒度——与切分**。ncRNA
+   序列级分类：LoRA/全参在随机切分下相对 frozen 提升 +0.04~
+   +0.43（五模型），**家族切分下崩溃至近随机（0.06–0.10）**；
+   frozen 仅温和退化。per-base 任务（m6A）：微调双切分均增益
+   （LoRA AUC 0.970→0.995）。结构预测（SSP）：双切分下对
+   k-mer 基线稳健 2–5× 优势。
+2. **任务粒度决定泄漏敏感度**：per-seq 分类的 Δ(随机−家族)
+   达 +0.68~+0.91，per-base m6A 仅 ≈−0.04、SSP +0.003~0.03——
+   即随机切分下序列级任务的"微调收益"大部分是**家族级泄漏**，
+   定量呼应 RNA 基准"simply cheating"批评。
+3. **学习率×策略×规模三重交互**：全参甜区随规模左移
+   （10M:3e-5 → 33M:1e-5；默认 3e-4 灾难性崩溃，含 19M 跨域
+   模型 SpliceBERT 崩至 ln-13 平原）；LoRA 双尺度均需 3e-4。
+   仅 LR 错配即可翻转策略排名 ±0.5。tuned LR 下序列级位次：
+   full ≥ DoRA ≈ LoRA ≫ IA3 > head-only。
+
+**开放资产** 完整 run 级 ledger（200+ runs）、三任务 MMseqs2
+0.8/0.8 家族簇切分、LR 网格、官方 BEACON m6A 切分的泄漏审计
+（**27.3% test 窗口与训练窗同宿主簇**）。
+
+## 一句话结论（电梯陈述）
+
+> 在 RNA 语言模型上，"该不该微调"的第一判据不是模型大小而是
+> **任务粒度**：序列级任务的随机切分收益大半是家族泄漏的假象
+> （家族切分下 5/5 模型崩溃），per-base 任务微调真增益且抗家族
+> 偏移；学习率不调可让任何策略对比结论翻转。
+
+## 审稿防线自查（对照红队报告）
+
+| 红队条目 | 防线状态 |
+|---|---|
+| R1 单任务拼盘 | 结论承载类（结构/功能）已覆盖；E3/E4 类结论标注单任务依据 |
+| R2 统计 | BH FDR 58 对比 + B14 方向一致性过滤已入图；功效墙 limitation 诚实声明 |
+| R5 切分单元 | §3.4 表 + 宿主映射断言（A13）落地 |
+| R6 流程倒挂 | B15/B16 检查点自动报告 + 决策文档 |
+| R7 决策树事后性 | §4.1 预注册规则节（spec §7-8 冻结版） |
+| R11 PEFT 缺全参参照 | E2 六臂含 full（tuned） |
+| R9 口径混乱 | 全部表格自动导出（export_c4/e2/resources/stats） |
