@@ -3,6 +3,33 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 17:05 Day 2 傍晚 III：T2.0 检查点自动化 + B16 勘误 + Supp 骨架
+
+**状态**: ledger 199 行（194 done）；四链健康；新数据点
+ERNIE lora s29 random = 0.9709（G5 整卡队列首 run，与 s17 0.974
+一致——跨种子稳定性好）；ERNIE frozen s29 = 0.8252（= s17）。
+
+**本轮完成**:
+1. **T2.0.1 检查点自动化落地**（rnafteval/checkpoint_report.py）:
+   首跑暴露预注册口径歧义——全格池中位数 -0.024（字面触发）vs
+   每任务最佳模型 +0.154（B15 原判定不触发）
+2. **B16 勘误决策文档**（docs/checkpoint_b16.md）: 主口径固化
+   (a) 每任务最佳模型（R6 原意=防预训练无收益方向性错误，
+   (b) 的负值正是 C4 主结论证据非失败信号）; 附带发现第二支
+   BH后无显著格 在 n=3 功效墙下恒真（预注册缺陷，记入
+   preprint Limitations）
+3. **Supplementary 骨架**（paper/supplementary.md）: S1-S8 节
+   全部映射到自动产物（stats/e2_table/figs/ledger），零手工誊写
+4. **修正 checkpoint_report cells() 解包 bug**（初版误当元组返回）
+
+**Git**: d9ae6d8（Supp）+ 150d4c2（B16 三件套）已推送。
+
+**MIG 复核**: GPU6/7 torch 实测确认仍为 4.75GiB 切片
+（nvidia-smi 19.7G 为宿主整卡视角假象，纪律再次有效）。
+
+**下步**: 队列自然推进（G6 剩 ~11 runs / G7 SpliceBERT full
+5 runs / G5 整卡 15 runs / ssptuned 5 runs）; 守护链自动刷产物;
+明日晨巡检验收。
 ## 2026-09-16 16:40 Day 2 傍晚 II：E2 自动导出 + 终版刷新守护链
 
 **进行中**: 四链并行健康（G6 ERNIE frozen s29 / G7 SpliceBERT full s17 /
