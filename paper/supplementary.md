@@ -44,8 +44,9 @@
   支撑。
 
 ## S7 资源实测（E5/B6）
-- 数据源：ledger.jsonl 每行 wall_sec + peak_mem_mb（187+/198 行
-  覆盖）+ status/e2_table.csv
+- 数据源：status/resources.md（rnafteval/export_resources.py
+  自动导出：按策略 wall 中位数/峰值显存中位数/检查点体积，
+  formal 与 tuning 分池；覆盖 185/186）+ ledger.jsonl 逐 run
 - 用途：策略成本侧写；Schmirler Fig.5 式协议（长度 1024，单卡
   实测）在正文 Methods 摘引。
 
