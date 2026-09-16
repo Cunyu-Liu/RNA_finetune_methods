@@ -150,12 +150,15 @@ across 58 contrasts; 3/3 direction consistency as primary evidence
 cell-level bootstrap CIs in Supp.
 
 ## 3 Methods (summary)
-- Models: RNA-Sc-10M (controlled pretraining family), RiNALMo-micro (33M);
-  first-look additions: ERNIE-RNA (frozen 0.825), RNA-FM (frozen 0.917 —
-  strongest frozen features, near k-mer LGBM 0.900), SpliceBERT (19M,
-  splice-corpus). Tasks: BEACON ncRNA-family (13-class, n=8.5k, dedup'd),
-  modification (m6A per-base, 309k windows), secondary-structure (bpRNA,
-  pair-F1).
+- Models (5, spanning 10M-99M): RNA-Sc-10M (controlled pretraining
+  family, 10M); RiNALMo-micro (33M, 650M-family micro variant);
+  SpliceBERT (19M, splice/pre-mRNA corpus — cross-domain); ERNIE-RNA
+  (86M, base-pairing-constrained attention, 20.4M ncRNAs); RNA-FM
+  (99.5M, 23.7M ncRNAs — strongest frozen features, near k-mer LGBM
+  0.900). Frozen reference scores: ERNIE 0.825, RNA-FM 0.917.
+  Tasks: BEACON ncRNA-family (13-class, n=8.5k, dedup'd),
+  modification (m6A per-base, 309k windows), secondary-structure
+  (bpRNA, pair-F1).
 - Strategies: frozen+MLP(32)/LoRA(r8,α4,qkv+out)/full; AdamW; LR per
   A8 grid on tuning seed 101; formal seeds 17/29/43.
 - Splits: official random arms; family arms = MMseqs2 80/80 cluster-pure
