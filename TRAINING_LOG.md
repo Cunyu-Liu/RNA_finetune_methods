@@ -30,6 +30,109 @@ head-only 0.817 ≈ frozen 0.817
 ### ledger ~185 done；队列：tuned2（G5 m6A full×6 + SSP 复核）、
 ### IA3 s29（G7）、SpliceBERT lora s43（G6）
 
+## 2026-09-16（Day 2 晨巡检：IA3 修复 + ERNIE MIG-OOM 重派 + E1 mod 缺口补齐派发）
+
+### 巡检发现的两类失败（均已处置）
+1. **E2 IA3 三种子全挂**（q_e2_peft_g5.log 02:31-02:32）：
+   `IA3Config` 校验 `feedforward_modules ⊆ target_modules` 抛
+   ValueError——strategies 代码只把 ["query","value"] 设为 target，
+   `intermediate.dense` 在 ffn 却不在 target。修复：
+   `IA3Config(target_modules=target + ffn, ...)`（RiNALMo 侧）；
+   RNA-Sc 分支 ["qkv","ffn"] 本就正确。ledger 3 行僵尸 pending 已清
+   （备份 ledger.jsonl.bak_patrol_20260916），修复后随 G7 队列重跑。
+2. **ERNIE-RNA lora s17 family 在 GPU6（MIG 4.75G）OOM**（q_newfam_g6.log
+   04:55）：显式 attn 矩阵 3.97G 已占满，与既有教训一致（ERNIE LoRA
+   需整卡）。run_queue 逐项独立失败不阻塞队列（正确行为）；ledger 僵尸
+   pending 已清，**重派至 G5 链**：SSP full seeds（PID 630606）排空后
+   自动接续 run_g5_ernie_mod.sh（kill -0 PID 监听，禁 pgrep -f）。
+
+### 服务器状态（05:04-05:17）
+- CUDA 可用（8 卡 torch 视角）；磁盘充裕（/home 31%，/mnt 51%）；
+- GPU0-4 他人满载，G5 我方 SSP full s29 family 训练中（30G），
+  G6 我方 RNA-FM frozen family 训练中，G7 我方 mod 队列已起；
+- ledger 152 行（148 done）；无 CUDA 不可用事件。
+
+### E1/E2 覆盖缺口 → 本批派发（GPU7 + GPU5 链）
+- **RiNALMo-micro 在 modification 任务 0 run（E1 最大缺口）**：
+  G7（MIG）派 frozen/lora × 3 seeds × 2 splits = 12 runs；
+  full × 3 × 2 = 6 runs 排 G5 链（full 需整卡）；
+- 队列脚本带 CUDA/显存预检（派发前 torch.cuda.mem_get_info 验证
+  G7 free 4.46G > 3G 阈值——规则"派发前查 total_memory"落实为运行时断言）；
+- 进程：run_mod_rinalmo_g7.sh PID 1376693（首个 run frozen s17 random
+  已开跑）、chain_g5_ernmod.sh PID 1376694（等 SSP 排空）；
+- G6 queue_gpu6g 剩余项（RNA-FM/SpliceBERT lora family）不干预继续。
+
+### 冒烟矩阵口径澄清
+- `logs/smoke_matrix.log` 尾部是 9月15日 00:09 的 v1 冒烟（OVERLAP
+  拦截记录，B1 防线实战证据，后续 dedup 修复）；当前实验全部为
+  formal 口径（n_train=20000/3000 全量切分、17/29/43 种子），
+  smoke 结果不进结论。
+
+## 2026-09-16（Day 2 10:04 午前巡检：G5/G7 链收官 + E1 mod 矩阵齐 + G6 新模型种子补齐派发）
+
+### 服务器状态
+- CUDA 可用（8 卡 torch 视角，G6/G7 为 MIG 1g.5gb=4.75G 切片，torch
+  实测 G6 free 4.07G / G7 free 2.31G@训练中）；磁盘充裕（/home 31%，/mnt 51%）；
+- GPU0-4 他人满载（gmx 等大任务），G5 我方 SSP 链已排空、G6/G7 我方队列。
+
+### 链条收官确认（自 05:17 晨巡检以来的推进）
+1. **G5 链（chain_g5_ernmod）全部完成 09:27**：ERNIE-RNA lora s17 family
+   整卡重跑 exit 0（ACC 0.0841，与 MIG OOM 前的塌缩值逐位一致 → MIG 环境
+   未污染结论，塌缩为真实行为）+ RiNALMo-micro modification full
+   × 3 seeds × 2 splits = 6 runs 全部 done（AUC 全部 ≈0.497 随机水平）。
+2. **G7 队列（run_mod_rinalmo_g7）modification 12/12 done**：frozen/lora
+   × 3 seeds × 2 splits 收官（10:22 lora_s43_family AUC 0.9953 done），
+   队列自动进入 IA3 修复后重跑 × 3 seeds（10:22 已开跑 s17）。
+3. G6 旧队列（q_newfam_g6）09:31 收官，GPU6 空闲待派。
+
+### E1 矩阵现状（formal，非 smoke）
+- **RiNALMo-micro modification 18/18 格全齐**（frozen 0.92-0.95 random /
+  0.95 family；lora 0.97 random / 0.995 family；full ≈0.50 全塌）；
+- **RNA-Sc-10M modification 18/18 全齐**（frozen 0.92 / lora 0.97 /
+  full 0.30 random-level）；
+- SSP 两模型 frozen/lora/full 全齐（18+18）；
+- ncrna：RiNALMo/RNA-Sc 主力全齐；新模型（SpliceBERT/RNA-FM/ERNIE）
+  仅 s17 → 本轮 G6 补种子。
+
+### 关键科学观察（formal 数据，进结论候选）
+1. **RiNALMo-micro full 微调跨任务一致塌缩**：modification AUC≈0.497
+   （随机水平，3 种子 bit 级一致），SSP F1≈0.006（precision 0.003 /
+   recall 1.0，全预测为正）；random 与 family 切分同塌 → 高 LR(3e-4) 下
+   full FT 不稳定，与 RNA-Sc-10M full（mod 0.30）对照，模型规模越大
+   full 越不稳。E1 结论方向：**lora 是性价比最优臂**。
+2. **ncrna family 切分下梯度微调（lora/full）全线塌缩到多数类**
+   （0.0841=29/345，跨 5 模型一致），frozen 却保留迁移（ERNIE 0.887 /
+   RiNALMo 0.696）且 family ACC ≥ random（+0.06 ERNIE / +0.11 RiNALMo）；
+   random 切分下微调正常（0.90-0.97）。整卡复现一致 → 排除 MIG/代码
+   因素。C4 核心发现：**cluster 切分下梯度更新损害预训练表征，冻结
+   backbone 反而更稳**——微调收益在 family 泛化上不复存在。
+3. 种子协议核验：SSP 各 run 三种子数值互异（随机性生效）；
+   modification 三种子 bit 级一致（AUC 为秩统计量 + 训练近确定性，
+   合理，不判 bug）。
+
+### 本轮派发（GPU6，PID 3098539）
+- `scripts/run_newmodels_seeds_g6.sh`：新模型 E1 种子补齐 s29/s43
+  （SpliceBERT frozen/lora、ERNIE-RNA frozen、RNA-FM frozen/lora）
+  × random/family × 2 seeds = 20 runs，参数与 s17 首探一致
+  （epochs 10 / bs 8 / ncrna）；
+- 显存依据：s17 实测峰值 RNA-FM lora 3.63G / SpliceBERT 1.0G /
+  ERNIE frozen 1.5G，MIG 4.75G 可容纳；**ERNIE lora 不入 MIG 队列**
+  （显式 attn 矩阵需整卡，既有教训）；
+- 派发前按纪律跑 torch.cuda.mem_get_info 实测（G6 free 4.07G > 3G 阈值
+  通过）；setsid nohup 脱离会话；首 run（SpliceBERT frozen s29 random）
+  10:21 已开跑确认。
+- 队列自带 CUDA 断言 + 显存预检 + 逐项 timeout 14400（单项失败不阻塞）。
+
+### 冒烟矩阵口径（不变）
+- `logs/smoke_matrix.log` 尾部为 9月15日 v1 冒烟 OVERLAP 拦截记录
+  （B1 防线实战证据）；当前全部 formal 口径，smoke 不进结论。
+
+### 遗留事项
+- [ ] ERNIE-RNA lora s29/s43 + full（新模型 full 臂）需整卡——等
+  GPU0-5 释放后入整卡队列（观测点：他人任务 98-100% 满载中）；
+- [ ] IA3 重跑结果（G7 进行中）下轮巡检验收；
+- [ ] G6 新模型 20 runs 预计 ~14h，明日晨检验收 + C4 表更新。
+
 ## 2026-09-16（Day 2 凌晨：E2 PEFT 横评上线 + 跨语料模型 LoRA 落地）
 
 ### ★ ERNIE-RNA LoRA = 0.974（跨语料模型首个微调数据点）
