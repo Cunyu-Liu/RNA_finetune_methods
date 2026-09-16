@@ -194,6 +194,11 @@ cell-level bootstrap CIs in Supp.
   0.13 / transformers 5.0 Cache API); documented, not worked around.
 - RiNALMo SSP full tuned arm currently 1 seed (0.176); 5-run backfill
   queued (s29/43 random + 3 family).
+- Preregistered checkpoint rule has two ambiguities discovered at
+  automation (B16): the gain-median population was undefined (fixed:
+  per-task best model, primary; all-cell pool, reported); and the
+  "no BH-significant cell" branch is vacuously true under n=3 sign
+  tests (power wall) — documented, decision unchanged.
 
 ## Data & Code
 github.com/Cunyu-Liu/RNA_finetune_methods; ledger + figures auto-generated
