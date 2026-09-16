@@ -3,6 +3,30 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 00:20 Day 3 凌晨：SSP tuned 5/5 齐全 + 方向翻转
+
+**状态**: ledger 228 行（224 done）; SSP s43 family 0.1829 落地
+——SSP full tuned 5-run 全齐（random 0.151/0.176/0.171 +
+family 0.158/0.189/0.183）。G5/G7/ssptuned 全排空; G6 在收尾
+（RNA-FM frozen s29 family, 剩 ~3 runs）。
+
+**关键判定翻转（B14）**:
+- RiNALMo SSP full: ±(不定) → **↓\***（tuned 协议臂入表:
+  random 0.166 < family 0.177, 3/3 一致——SSP family 侧不降
+  反升, per-base 稳健性再证）
+- RiNALMo SSP 三策略全部可判: frozen ± / full ↓* / lora ↓*
+- RNA-FM full ↑*（0.835 vs 0.081, 3/3）——**C4 崩溃矩阵
+  full 臂 5/5 模型确认**（与 LoRA 臂一致）
+- ERNIE/SpliceBERT full ±: 双侧崩溃值噪声级（0.077/0.085）
+  ——± 正确（崩溃对崩溃无方向意义）
+
+**预刷八产物 PASS**（E2 待 G6 收尾后守护链终刷）。
+
+**预印本更新**: 2.4 节跨架构崩溃 + Limitations SSP 条目
+（1438b94 + 6092611 已推送）。
+
+**下步**: G6 收尾 → 守护链终刷 → 明晨验收（预印本数值
+终版化 + 状态快照更新）。
 ## 2026-09-16 23:15 Day 2 深夜：队列大丰收（+26 runs，三大结论升级）
 
 **状态**: ledger 227 行（223 done）；G7/G5 队列正常排空
