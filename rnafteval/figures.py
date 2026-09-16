@@ -98,21 +98,34 @@ def fig_c4(c, base, outdir):
             continue
         rm = sum(seeds.values()) / len(seeds)
         fm = sum(fam.values()) / len(fam)
-        entries.append((m, t, s, rm - fm))
+        signs = []
+        for sd in seeds:
+            if sd in fam:
+                rv, fv = seeds[sd], fam[sd]
+                signs.append(1 if rv > fv else (-1 if rv < fv else 0))
+        consistent = bool(signs) and (all(x > 0 for x in signs)
+                                      or all(x < 0 for x in signs))
+        entries.append((m, t, s, rm - fm, consistent))
     entries.sort(key=lambda e: (e[1], e[0], e[2]))
     labels = ["%s %s\n%s" % (model_label(m), task_label(t).replace("\n", " "), s)
-              for m, t, s, _ in entries]
+              for m, t, s, _d, _k in entries]
     vals = [e[3] for e in entries]
     fig, ax = plt.subplots(figsize=(9, 0.5 * len(entries) + 1.5))
     colors = ["#c0392b" if v > 0.1 else ("#e67e22" if v > 0.03 else "#27ae60")
               for v in vals]
-    ax.barh(range(len(vals)), vals, color=colors)
-    ax.set_yticks(range(len(vals)), labels, fontsize=7)
+    alphas = [1.0 if e[4] else 0.35 for e in entries]
+    bars = ax.barh(range(len(vals)), vals, color=colors)
+    for b, a in zip(bars, alphas):
+        b.set_alpha(a)
+    marker_labels = ["%s%s" % (lab, "" if e[4] else "  ±")
+                     for lab, e in zip(labels, entries)]
+    ax.set_yticks(range(len(vals)), marker_labels, fontsize=7)
     ax.axvline(0, color="black", lw=1)
     ax.set_xlabel("Δ(random − family): positive = leak-sensitive")
     ax.set_title("C4: leakage × strategy interaction — task granularity "
                  "determines collapse\n(red: collapse >0.1; orange: mild; "
-                 "green: robust)")
+                 "green: robust; faded ± = seed direction inconsistent, "
+                 "B14: excluded from conclusions)")
     ax.invert_yaxis()
     fig.tight_layout()
     for ext in ("png", "pdf"):

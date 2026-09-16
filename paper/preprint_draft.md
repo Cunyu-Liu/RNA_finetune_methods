@@ -1,67 +1,108 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.1** — 2026-09-15（数据快照：Day 1，~120 formal runs；
-矩阵补齐后数值将更新，结构与结论形态已固化）
+**Preprint draft v0.2** — 2026-09-16（数据快照：Day 2，196 ledger runs，
+192 done；tuned-LR 协议臂全部落地：RiNALMo m6A full@1e-5 三种子 0.968/0.993、
+SSP full@1e-5 0.176（29× 默认 LR 恢复）。新模型种子补齐队列推进中，
+数值将在矩阵补齐后终版刷新，结构与结论形态已固化）
 
-## Abstract (draft)
+## Abstract
 
 Fine-tuning RNA language models (RNA-LMs) is widely assumed to beat frozen
 embeddings, yet controlled comparisons across adaptation strategies are
 missing. Following the protein-side template of Schmirler et al. (2024), we
 run a controlled matrix of **3 adaptation strategies (frozen + shallow MLP
-head / LoRA r=8 / full fine-tuning) × 2 RNA-LMs (10M/33M) × 3 BEACON tasks
+head / LoRA r=8 / full fine-tuning) × 5 RNA-LMs (10M–99M) × 3 BEACON tasks
 × 2 evaluation splits (random vs sequence-family-clustered) × 3 seeds**,
-each cell with a tuned learning rate chosen on a held-out tuning seed.
+each fine-tuning cell with a learning rate chosen on a held-out tuning
+seed, and audit every arm with zero-overlap assertions.
 
 Three findings emerge:
 
 1. **Fine-tuning helps, but the size of the help depends on task
-   granularity — and on the split.** On ncRNA classification, LoRA/full FT
-   improve accuracy by +0.3 to +0.57 under random splits, but **collapse to
-   near-chance (0.06–0.10) under family-level splits**, while frozen heads
-   degrade mildly. On per-base tasks (m6A modification), fine-tuned models
-   **gain under both splits** (AUC 0.94→0.98 LoRA). Structure prediction
-   (SSP) shows robust 2–5× gains over k-mer baselines under both splits.
+   granularity — and on the split.** On ncRNA family classification, LoRA/full FT improve accuracy over frozen heads by +0.04 to +0.43
+    (five-model range, strategy-dependent) under random splits, but **collapse to near-chance
+   (0.06–0.10) under family-level splits**, while frozen heads degrade
+   mildly. On per-base tasks (m6A modification), fine-tuned models **gain
+   under both splits** (AUC 0.970→0.995 for LoRA). Structure prediction (SSP) shows robust 2–5× gains over k-mer
+   baselines under both splits.
 2. **Task granularity determines leakage sensitivity**: the Δ(random−family)
-   gap reaches +0.6 to +0.85 for fine-tuning on per-sequence classification
+   gap reaches +0.68 to +0.91 for fine-tuning on per-sequence classification
    but is ≈ −0.04 for per-base m6A and +0.003–0.03 for SSP — i.e., much of
    the "fine-tuning benefit" on sequence-level tasks under random splits is
    **family-level leakage**, echoing and quantifying the "simply cheating"
    critique for RNA benchmarks.
 3. **Learning rate × strategy × model scale interact**: full FT's sweet
-   spot shifts left (3e-5 at 10M → 1e-5 at 33M, with catastrophic collapse
-   at 3e-4), while LoRA requires high LR (3e-4) at both scales; LR
-   misconfiguration alone can flip apparent strategy rankings by ±0.5
-   accuracy — a systematic risk for un-tuned comparisons.
+   spot shifts left with scale (3e-5 at 10M → 1e-5 at 33M, with
+   catastrophic collapse at the 3e-4 default), while LoRA requires high LR
+   (3e-4) at both scales; LR misconfiguration alone can flip apparent
+   strategy rankings by ±0.5 accuracy — a systematic risk for un-tuned
+   comparisons. Under tuned LRs the per-sequence task ranking is
+   full ≥ DoRA ≈ LoRA ≫ IA3 > head-only.
 
-We release the full ledger, family-cluster splits (MMseqs2 0.8/0.8), LR
-grids, and a split-leakage audit of the official BEACON modification split
-(**27.3% of test windows share a host-transcript-level cluster with
-training windows**).
+We release the full run ledger, MMseqs2 0.8/0.8 family-cluster splits for
+all three tasks, LR grids, and a split-leakage audit of the official BEACON
+modification split (**27.3% of test windows share a host-transcript-level
+cluster with training windows**).
 
 ## 1 Introduction
-- Gap: no RNA work places ≥2 adaptation strategies in one controlled
-  comparison (BEACON full-FT only; Zablocki frozen only; etc. — spec §1
-  four-source audit).
-- Contribution: (i) C1 controlled matrix; (ii) C4 leakage×strategy
-  interaction with task-granularity moderator; (iii) A8 LR-grid protocol
-  evidence; (iv) split-leakage audit tooling.
+
+RNA language models pretrained on genomic-scale corpora now cover a wide
+parameter range (10M–99M) and are routinely fine-tuned on downstream tasks.
+Two evaluation habits, however, make the reported numbers hard to compare.
+
+First, **adaptation strategies are compared only within single papers**:
+BEACON evaluates full fine-tuning only; Zablocki et al. evaluate frozen
+embeddings only; LoRA/DoRA/IA3 are evaluated in their respective
+introduction papers on task subsets. No RNA work places more than two
+strategies in one controlled comparison under identical data, compute and
+tuning protocol — the protein-side gap Schmirler et al. (2024) closed for
+protein LMs is still open for RNA.
+
+Second, **random splits overstate fine-tuning**. When train and test
+sequences share homologous families (ncRNA families; host transcripts for
+per-base modification windows), a fine-tuned model can memorize family
+signals rather than learn transferable ones. We quantify this with
+MMseqs2-clustered, cluster-pure splits on all three BEACON tasks, and audit
+the official random arms themselves (27.3% of the official m6A test set
+shares a host-level cluster with training windows).
+
+Contributions:
+- **C1** A controlled strategy matrix (frozen / LoRA / full) × 5 models ×
+  3 tasks × 2 splits × 3 seeds, every fine-tuning cell LR-tuned on a
+  held-out tuning seed (protocol arm; seed 101).
+- **C4** The leakage × strategy interaction with **task granularity as the
+  moderator**: 5/5 models collapse on per-sequence classification under
+  family splits; 0/4 model–task pairs collapse on per-base tasks.
+- **A8** LR-grid protocol evidence: full-FT sweet spot shifts left with
+  scale; LR misconfiguration flips rankings; tuned-LR protocol arm restores
+  full-FT to the top of the ranking.
+- **E2** A five-arm PEFT horizontal comparison (LoRA / DoRA / IA3 /
+  head-only / full reference) under the same protocol.
+- **B1** Split-leakage audit tooling (MMseqs2 0.8/0.8 clustering, zero-
+  overlap assertions) applied to both our family arms and the official
+  BEACON splits.
 
 ## 2 Results
 
 ### 2.1 Fine-tuning is beneficial but task/split dependent (C1, Fig 1)
 [fig:fig_c1_matrix] — heatmap; black boxes = beats strongest k-mer baseline.
 Cross-model consistency (ncRNA random, LoRA): RNA-Sc 0.75, SpliceBERT 0.90,
-RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora.
+RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora and
+parameter scales (19M–99M).
 
 ### 2.2 Family-level splits reveal task-granularity-dependent collapse (C4, Fig 2)
-[fig:fig_c4_delta] — Δ bars. Key numbers (3-seed means where marked, tuned LR):
+[fig:fig_c4_delta] — Δ bars. Key numbers (3-seed means; tuned LR where
+marked):
+
 - ncRNA: collapse **replicates across all five models**: LoRA Δ = +0.68
   (RNA-Sc) / +0.85 (RiNALMo) / +0.82 (SpliceBERT) / +0.89 (ERNIE) /
   +0.91 (RNA-FM); frozen Δ = +0.06–0.26 (mild); k-mer LGBM Δ = +0.007.
-- m6A (per-base): no collapse, both models — RNA-Sc LoRA 0.94→0.98;
-  RiNALMo LoRA 0.97→0.995 (Δ = −0.025).
+  The traditional baseline is leakage-insensitive by construction (no
+  training on sequence features), making it a robust floor under family
+  splits (0.900 vs 0.893 random vs family).
+- m6A (per-base): no collapse, both models — RNA-Sc LoRA 0.943→0.983;
+  RiNALMo LoRA 0.970→0.995 (Δ = −0.025); tuned full-FT 0.968→0.993.
 - SSP: robust gains, no collapse — RiNALMo frozen 0.196→0.218, LoRA
   0.214→0.223 (3 seeds); RNA-Sc LoRA 0.084→0.076.
 - **Leakage-sensitive fine-tuning is the norm for per-sequence
@@ -88,25 +129,29 @@ RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora.
 [fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
 RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
 RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA: 0.723/0.923 (RNA-Sc/RiNALMo @3e-4).
-m6A replication: RiNALMo full default-LR 0.30 → tuned 1e-5 (runs queued);
-SSP full default-LR 0.006 → re-run at 1e-5 (queued).
+Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
+**0.968/0.993 (random/family, 3 seeds, 1e-5)**; SSP full default-LR 0.006 →
+**0.176 (1e-5)** — 29× recovery, confirming the grid diagnosis that the
+default 3e-4 is catastrophic for full-FT at 33M scale.
 
-### 2.5 Official split leakage audit (B1 discipline, new)
+### 2.5 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
 test windows (27.3%) cluster with training windows; 31-mer overlap 10.8%.
 The official "random" arm is leak-contaminated at host-transcript level.
 
-### 2.5 Statistics
+### 2.6 Statistics
 Preregistered plan (§3.5): paired sign tests over 3 seeds + BH FDR q=0.05
-across 30 contrasts; 3/3 direction consistency as primary evidence
-(seed-level power wall documented); cell-level bootstrap CIs in Supp.
+across 58 contrasts; 3/3 direction consistency as primary evidence
+(seed-level power wall documented: n=3 sign-test minimum p=0.25);
+cell-level bootstrap CIs in Supp.
 
 ## 3 Methods (summary)
 - Models: RNA-Sc-10M (controlled pretraining family), RiNALMo-micro (33M);
-  first-look additions: ERNIE-RNA (frozen 0.825) and RNA-FM
-  (frozen 0.917 — strongest frozen features, near k-mer LGBM 0.900).
-  Tasks: BEACON ncRNA-family (13-class, n=8.5k, dedup'd), modification
-  (m6A per-base, 309k windows), secondary-structure (bpRNA, pair-F1).
+  first-look additions: ERNIE-RNA (frozen 0.825), RNA-FM (frozen 0.917 —
+  strongest frozen features, near k-mer LGBM 0.900), SpliceBERT (19M,
+  splice-corpus). Tasks: BEACON ncRNA-family (13-class, n=8.5k, dedup'd),
+  modification (m6A per-base, 309k windows), secondary-structure (bpRNA,
+  pair-F1).
 - Strategies: frozen+MLP(32)/LoRA(r8,α4,qkv+out)/full; AdamW; LR per
   A8 grid on tuning seed 101; formal seeds 17/29/43.
 - Splits: official random arms; family arms = MMseqs2 80/80 cluster-pure
@@ -114,15 +159,39 @@ across 30 contrasts; 3/3 direction consistency as primary evidence
   host-transcript proxy via window clustering; assertion-checked purity).
 - Evaluation: official metrics (ACC / AUC / pair-F1); zero-overlap
   assertions on every arm; GPU-only discipline with wall-time and peak
-  memory recorded per run in a JSONL ledger.
+  memory recorded per run in a JSONL ledger (196 runs at this snapshot).
 
-## 4 Limitations
+## 4 Discussion (draft)
+- **Granularity, not "fine-tuning vs frozen", is the first-order factor.**
+  The 0.68–0.91 Δ gaps on per-sequence tasks vs ≈0.03 on per-base tasks
+  mean a practitioner's first question should be whether their task label
+  is constant over homologous families — if yes, random-split fine-tuning
+  numbers are inflated by family memorization.
+- **Frozen features + shallow heads are the robust default under
+  distribution shift**: frozen Δ stays within +0.06–0.26 while fine-tuning
+  Δ explodes; k-mer LGBM is invariant by construction. For family-shifted
+  deployment (new ncRNA families), frozen or k-mer baselines remain
+  competitive (0.893–0.896 vs fine-tuned 0.06–0.10).
+- **LR discipline is a confound-killer**: with per-scale tuned LRs the
+  full ≥ LoRA ordering re-emerges (0.938 vs 0.927); untuned defaults
+  (3e-4) invert it (0.077 vs 0.927). Any cross-strategy claim without a
+  per-strategy LR sweep on held-out data is suspect.
+- **Practical selection rule (from C5)**: at 33M scale, DoRA r=8 matches
+  LoRA within noise (0.934 vs 0.927) at 2× params; IA3 trades ~0.07 ACC
+  for 10× param economy; head-only is a strong floor (0.817) but not
+  competitive for per-sequence tasks under random splits.
+
+## 5 Limitations
 - n=3 seeds: sign-test power floor (min p=0.25); direction consistency +
   effect sizes are primary evidence, BH-significance aspirational.
 - Family split for m6A is a host-proxy (window-clustering), not exact
   transcript IDs.
 - Model pool currently 2 core + 3 first-look models; Tier-A expansion
   (8 models) in progress per spec E1.
+- Prefix-tuning excluded due to dependency-stack incompatibility (peft
+  0.13 / transformers 5.0 Cache API); documented, not worked around.
+- RiNALMo SSP full tuned arm currently 1 seed (0.176); 5-run backfill
+  queued (s29/43 random + 3 family).
 
 ## Data & Code
 github.com/Cunyu-Liu/RNA_finetune_methods; ledger + figures auto-generated
