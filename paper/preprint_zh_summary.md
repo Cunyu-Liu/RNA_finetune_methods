@@ -40,11 +40,13 @@ ERNIE-RNA / RNA-FM）× 3 个 BEACON 任务（ncRNA 家族分类 / m6A
    达 +0.68~+0.91，per-base m6A 仅 ≈−0.04、SSP +0.003~0.03——
    即随机切分下序列级任务的"微调收益"大部分是**家族级泄漏**，
    定量呼应 RNA 基准"simply cheating"批评。
-3. **学习率×策略×规模三重交互**：全参甜区随规模左移
-   （10M:3e-5 → 33M:1e-5；默认 3e-4 灾难性崩溃，含 19M 跨域
-   模型 SpliceBERT 崩至 ln-13 平原）；LoRA 双尺度均需 3e-4。
-   仅 LR 错配即可翻转策略排名 ±0.5。tuned LR 下序列级位次：
-   full ≥ DoRA ≈ LoRA ≫ IA3 > head-only。
+3. **学习率×策略×规模三重交互，且默认 LR 是不挑架构的陷阱**：
+   全参甜区随规模左移（10M:3e-5 → 33M:1e-5）；LoRA 需 3e-4。
+   默认 3e-4 下全参微调在**三种注意力架构**上全部崩溃为 ln(C)
+   熵平原（标准 attn / ALiBi / 显式配对 attn——各 3/3 种子
+   0.077），唯预训练最充分的 RNA-FM（23.7M ncRNAs）幸存
+   （0.82–0.84）。仅 LR 错配即可翻转策略排名 ±0.5。tuned LR
+   下序列级位次：full ≥ DoRA ≈ LoRA ≫ IA3 > head-only。
 
 **开放资产** 完整 run 级 ledger（200+ runs）、三任务 MMseqs2
 0.8/0.8 家族簇切分、LR 网格、官方 BEACON m6A 切分的泄漏审计
