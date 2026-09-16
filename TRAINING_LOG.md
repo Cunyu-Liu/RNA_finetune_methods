@@ -230,6 +230,42 @@ head-only 0.817 ≈ frozen 0.817
 - 8 训练进程并行：E2 DoRA（G5）/ RNA-FM lora（G6 MIG）/
   SSP 种子链（G2/G5/G7）。
 
+
+## 2026-09-16 16:30 Day 2 傍晚巡检 + v0.2 扩写 + SSP tuned 补齐链
+
+**状态**: ledger 196 行（192 done / 2 pending in-flight）；GPU0-5 他人满载，
+GPU6/7 MIG 4.75G 承接我方任务。
+
+**进行中队列（3 条链并行）**:
+- G6 链 run_newmodels_seeds_g6.sh (PID 3098539): ERNIE frozen s29 在跑
+  （9/20 job），覆盖新模型 frozen/lora MIG 可跑缺口 12 runs
+- G7 链 chain_g7_full3 → run_full3_g7.sh (PID 1923283): SpliceBERT full
+  s17 random 在跑（1/6 job）
+- G5 链 chain_g5_full_ef → run_full_ef_any.sh: 整卡轮询中（暂无空闲整卡，
+  scan #1 15:53），承接 ERNIE lora s29/43 + ERNIE/RNA-FM full 矩阵 16 runs
+
+**新派发**:
+- chain_g7_ssptuned.sh (PID 2192474): 等 G7 full3 排空后自动接 RiNALMo
+  SSP full tuned 补齐 5 runs (s29/43 random + s17/29/43 family @1e-5,
+  参数与 tuned2 复核一致)。依据: s17 random tuned 0.176 vs 默认 0.006
+  (29x); 峰值 1057MB MIG 可跑。
+
+**本轮完成**:
+1. 预印本 v0.2 全文扩写 (paper/preprint_draft.md 129→198 行):
+   Intro 五贡献点 / Discussion 完整四论点 / Limitations 扩至 5 条;
+   数值快照更新至 tuned-LR 协议臂 (m6A 0.968/0.993, SSP 0.176);
+   自查修正 3 处笔误 (0.0.815 / LoRA m6A 数字 / +0.04~0.43 范围核算)
+2. B14 方向一致性过滤接入 figures.py fig_c4: ± 条目半透明+标记,
+   不进结论; 程序化核对 21 consistent / 3 ± 与 c4_table 完全一致
+   (RNA-Sc m6A frozen, RiNALMo SSP frozen/full; SSP full 待 tuned5
+   补齐后重判)
+3. 三图刷新 (fig_c1/c4/lr, png+pdf); export_c4 同步刷新
+
+**Git**: cc9807b 已推送 GitHub。
+
+**下步**: 等队列收尾 → 终版 C4 表/图 + 验收清单核对; E2 五臂表
+随新模型收尾整合; SSP tuned5 落地后重判 RiNALMo SSP full 方向。
+
 ## 2026-09-15（Day 1 夜：tuned-LR formal + 新模型首探 + 预印本骨架）
 
 ### ★ tuned-LR formal runs 落地
