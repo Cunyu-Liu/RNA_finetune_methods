@@ -3,6 +3,39 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-16 18:00 Day 2 傍晚 VI：References 核证 + SpliceBERT full 崩溃观察
+
+**状态**: ledger 200 行（195 done）。
+
+**★ 科学观察: SpliceBERT full s17 random = 0.0769（崩溃至 13 类
+随机水平）**
+- loss 曲线证据: epoch 0 2.49 → epoch 1 起卡死 2.5599 ≈ ln(13)
+  = 2.5649（均匀分布熵, 预测完全随机化）
+- 同管线 frozen 0.619 / lora 0.904 正常 → 排除代码 bug
+- **与 RiNALMo 33M full@3e-4 崩溃 0.077 完全同模式**——A8 LR 网格
+  结论的第 5 个独立证据点: 默认 3e-4 对小模型全参系统性过高,
+  19M 跨域模型也适用; LoRA 同 LR 正常（低秩约束天然稳定）
+- s29 正在跑（种子复制验证中）; 若同崩溃, 该点可入预印本 2.4 节
+  作为"LR 错配翻转策略排名"的跨规模证据
+
+**本轮完成**:
+1. **References 节 14 条上线**（Data&Code 前）: 5 条 Web 核证修正
+   - RiNALMo: Penić et al. Nat Commun 2025, DOI
+     10.1038/s41467-025-60872-5（原误写 Pennington/NMI/参数区间）
+   - RNA-FM: Chen J et al. arXiv:2204.00300 (2022), 100M/23.7M
+     ncRNA（原误写 Nat Commun 2024/96M）
+   - ERNIE-RNA: Yin W et al. Nat Commun 2025, DOI
+     10.1038/s41467-025-64972-0（原误写 Wang/motif 目标）
+   - SpliceBERT: Chen K et al. Brief Bioinform 25(3):bbae163
+     (2024)（原误写 BAI/Nat Commun 2025）
+   - BEACON: Ren Y et al. NeurIPS 2024 D&B（补全作者）
+   - 剩余 4 条待 BibTeX 化条目以可辨识缩写标记
+2. 队列推进: SpliceBERT full s29 接棒 G7; G6/G5 持续
+
+**Git**: e5d91e6 已推送。
+
+**下步**: s29/s43 结果落地后决定 SpliceBERT full 是否需要 tuned-LR
+补跑（1e-5 或 3e-5——按 A8 规模左移规律预判 3e-5）; 明日晨验收。
 ## 2026-09-16 17:40 Day 2 傍晚 V：预印本 4.1 决策树预注册规则节
 
 **状态**: ledger 199 行；三训练并行健康（G6 10/20 job；G7
