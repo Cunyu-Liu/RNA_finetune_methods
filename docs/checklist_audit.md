@@ -14,7 +14,7 @@
 | A5/A7 冒烟矩阵+ledger | ✅ | ledger 196 行 + smoke 全链路 |
 | B9 新模型 smoke 先行 | ✅ | SpliceBERT 前向 GPU 验证 → 正式 runs |
 | B12 任务专用模型语料标注 | ✅ | SpliceBERT 标"跨域任务"（project_rules + preprint） |
-| A13 宿主映射断言 | ✅ | make_family_split_mod 同序列跨侧断言通过 |
+| A13 宿主映射断言 | ✅（独立复算） | 2026-09-16 独立重验：309,460 行 groupby 复核，同序列 0 跨侧 / 同簇 0 跨侧（每簇均值 1.28 序列，max 721）；mod_family_split.log 留痕 241,984 簇 |
 | B14 方向一致性标记（表格） | ✅ | C4 表 dir 列（↑*/↓* 一致；±(不定) 不进结论） |
 | B14 方向一致性过滤（图） | ✅（新） | figures.py fig_c4 ± 条目半透明+标记；程序化核对 21 consistent / 3 ± 与 c4_table 完全一致 |
 | B15 检查点分析 | ✅ | docs/checkpoint_b15.md：增益中位数 +0.15，不触发 |
