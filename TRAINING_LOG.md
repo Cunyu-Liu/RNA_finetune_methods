@@ -2,6 +2,55 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-16（Day 2 15:05 午后巡检：三队列健康推进 + E1 收官批次派发）
+
+### 服务器状态
+- CUDA 可用（8 卡 torch 视角）；磁盘 /home 31% / /mnt 51%，充裕；
+- GPU0-4 他人满载（GPU5 亦有他人 ~38G 作业：reactflow fold 8410MiB x5
+  + RNA-Sc-30M 预训练等），G6/G7（MIG 4.75G）我方队列运行中；
+- ledger ~192 行：无 failed/crashed（早前 IA3 config 修复与 ERNIE MIG-OOM
+  重派均已在前序巡检处置完毕），3 个 pending 均有活跃进程对应：
+  ia3 s43 (G7)、m6A full s43 family lr1e-5 (G5)、ERNIE frozen s29 (G6)。
+
+### 队列推进（自 10:04 午前巡检以来）
+1. G5 tuned2：m6A full lr1e-5 六格已收官（random 3 + family 3，其中
+   s17/s29 family AUC 0.993 已入账，s43 进行中 15:07），SSP s17 复核
+   15:23 开跑（队列末项）；
+2. G7 mod 队列：modification frozen/lora 12/12 全齐后，IA3 修复后重跑
+   s17/s29 done（s43 13:56 起跑中）；
+3. G6 新模型种子队列：SpliceBERT lora s29/s43 family done（0.0841 多数
+   类塌缩，与 s17 一致），ERNIE frozen s29 14:57 起跑，队列还剩
+   ERNIE s43 + RNA-FM s29/s43（预计 ~22:00 排空）。
+
+### E1 覆盖缺口 → 本轮收官派发（22 runs）
+缺口：**新模型 full 臂全部缺失**——SpliceBERT/ERNIE-RNA/RNA-FM 各
+3 seeds x 2 splits = 18 runs；另 ERNIE lora s29/s43（4 runs，整卡臂）。
+派发拓扑（三链，均已 setsid nohup 后台化，链 PID 已记录）：
+- **chain_g7_full3**（PID 1640325）：G7 mod 队列（PID 1376693）排空后
+  接 run_full3_g7.sh：SpliceBERT full x6（MIG 容纳：同模 lora 峰值仅
+  1013MB）；带 CUDA + mem>=2G 预检（10 次重试，间隔 60s）；
+- **chain_g6_full3**（PID 1744894）：G6 队列（PID 3098539）排空后接
+  run_full3_g7.sh 6：SpliceBERT full family 侧（GPU 参数化；与 G7 队列
+  同 run_id 空间，ledger claim 机制自动错峰不重复）；
+- **chain_g5_full_ef**（PID 1725193）：tuned2 队列（PID 830478）排空后
+  接 run_full_ef_any.sh 整卡轮询队列：每 10min 扫 GPU0-5（free>=10G
+  即征用，"未来空闲卡随时征用"落实），承接 ERNIE lora s29/s43 x2 切分
+  + ERNIE/RNA-FM full x 3 seeds x 2 切分 = 16 runs；GPU5 他人 38G 占用
+  为设计输入（轮询等空闲卡而非挤占）。派发前 40G 显示卡显存已实际查证
+  （MIG 6/7 = 4.75G 真实，nvidia-smi 显示会误导）。
+
+### 显存/失败处置经验（新增两条，进规则库）
+1. ssh 单命令内多后台任务：`cmd1 & cmd2 &` 的 `&&` 优先级会把 cd 困在
+   第一个后台任务、第二个在 ~ 下找不到脚本路径——G5 链首发因此失败，
+   已用独立会话重启修复（教训：多任务派发分步独立执行）；
+2. 本地巡检 shell 的 PATH 不含 bash/ssh（zsh 受限环境），用绝对路径
+   /bin/bash / /usr/bin/ssh 绕过。
+
+### 冒烟口径确认
+logs/smoke_matrix.log 尾部为 9-15 v1 冒烟 OVERLAP 拦截历史（B1 防线
+实战证据），当前实验全部 formal 口径，smoke 不进结论。
+
+
 ## 2026-09-16（Day 2 白天：5 模型 C4 泛化 + E2 五臂位次成型）
 
 ### ★★ C4 跨模型泛化：微调崩溃是普遍现象（ncRNA 5/5 模型）
