@@ -135,8 +135,22 @@ RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA @3e-4: RNA-Sc 0.723,
 RiNALMo 0.934 (full grid: status/lr_grid_table.md, auto-exported).
 Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
 **0.968/0.993 (random/family, 3 seeds, 1e-5)**; SSP full default-LR 0.006 →
-**0.176 (1e-5)** — 29× recovery, confirming the grid diagnosis that the
-default 3e-4 is catastrophic for full-FT at 33M scale.
+**0.151–0.176 (3 seeds, 1e-5, direction-consistent ×24–27)** — recovery,
+confirming the grid diagnosis that the default 3e-4 is catastrophic for
+full-FT.
+
+**Cross-architecture collapse at the default LR (new)**: the ln(C)
+loss plateau (prediction entropy saturation) reproduces across three
+attention architectures — RiNALMo (standard), SpliceBERT (ALiBi,
+6/6 runs), ERNIE-RNA (explicit base-pairing-constrained attention,
+6/6, plateau from epoch 0) — all collapsing to 0.077 ACC at 3e-4
+full-FT, while RNA-FM (99.5M, most extensive pretraining, 23.7M
+ncRNAs) is the only survivor (0.82–0.84 random, healthy loss decay
+1.10→0.32). LR misconfiguration is thus architecture-agnostic and
+systematic; pretraining depth appears to confer resilience
+(observational, n=1). Under family splits RNA-FM full also collapses
+(0.06–0.10) — the C4 per-sequence collapse now extends to the full-FT
+arm across all five models.
 
 ### 2.5 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
