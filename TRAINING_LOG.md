@@ -2,6 +2,29 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+
+## 2026-09-16 16:40 Day 2 傍晚 II：E2 自动导出 + 终版刷新守护链
+
+**进行中**: 四链并行健康（G6 ERNIE frozen s29 / G7 SpliceBERT full s17 /
+G5 ERNIE lora s29 @GPU3 / ssptuned 排队中）；ledger 197 行。
+
+**本轮完成**:
+1. export_e2.py 上线: ledger -> E2 五臂表自动导出（md+csv,
+   status/e2_table.md）; 预印本 §2.3 手工表与自动表对齐（LoRA 0.927→0.928
+   舍入修正; 参数列精确化 0.57M/0.55M/0.01M; 修正"2× params"不实表述
+   ——实际 0.57/0.55 ≈ 1.05×）
+2. stats 刷新（58 对比 + bootstrap CI; RiNALMo SSP full random 现为
+   混合协议 CI [0.006, 0.176] —— 待 SSP tuned5 后转纯协议臂）
+3. chain_final_refresh.sh 守护链上线（PID 2380049）: 四队列
+   （2015376/1923283/3098539/2192474）全部排空后自动刷新
+   C4/E2/stats/figures 终版产物——队列收尾不再依赖人工
+4. 红队报告复核: R2（BH FDR+B14）/R5（宿主代理+断言）/R11（full 参照臂）
+   均已设防，v0.2 对齐
+
+**Git**: 409862e + d47e688 已推送。
+
+**下步**: 队列自然推进; 守护链自动刷产物; 明日晨巡检验收
+（G6 20 runs 预计完成 + G7 SpliceBERT full 6 runs + G5 整卡队列）。
 ## 2026-09-16 16:30 Day 2 傍晚巡检 + v0.2 扩写 + SSP tuned 补齐链
 
 **状态**: ledger 196 行（192 done / 2 pending in-flight）；GPU0-5 他人满载，
