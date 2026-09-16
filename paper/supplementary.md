@@ -5,6 +5,24 @@
 > 状态：v0.1（2026-09-16）；队列收尾后由 chain_final_refresh 自动
 > 刷新的产物即"终版数据面"。
 
+
+## S0 产物索引（自动导出链, 8 artifacts）
+
+| 节 | 产物 | 生成器 |
+|---|---|---|
+| S1/S2 | status/stats.md | rnafteval.stats |
+| S3 | status/e2_table.{md,csv} | rnafteval.export_e2 |
+| S4 | status/lr_grid_table.{md,csv} + figs/fig_lr_grid | rnafteval.export_lr_grid + figures |
+| S5 | status/splits_table.md | rnafteval.export_splits |
+| S6 | status/leakage_table.md | rnafteval.export_leakage |
+| S7 | status/resources.md | rnafteval.export_resources |
+| C1/C4 主图 | status/figs/fig_c1_matrix + fig_c4_delta | rnafteval.figures |
+| C4 表 | status/c4_table.{md,csv} | rnafteval.export_c4 |
+
+守护链 scripts/chain_final_refresh.sh 在全部训练队列排空后
+自动重刷以上八件（终版数据面）；每件均可独立重跑（ledger/
+parquet 为唯一数据源，无手工誊写环节）。
+
 ## S1 格级均值 + 种子 bootstrap 95% CI
 - 数据源：`status/stats.md` §格级均值（46+ 格，mean [CI] n）
 - 用途：主文 C1/C4 数值的区间支撑；种子数 3 的 CI 反映训练随机性
