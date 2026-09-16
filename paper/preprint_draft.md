@@ -183,6 +183,39 @@ cell-level bootstrap CIs in Supp.
   for 10× param economy; head-only is a strong floor (0.817) but not
   competitive for per-sequence tasks under random splits.
 
+
+### 4.1 Preregistered decision rules (spec §7-8, frozen before analysis)
+
+To prevent post-hoc narrative, the strategy-recommendation rules were
+frozen in the preregistered spec before any matrix results existed:
+
+| verdict | rule (frozen) |
+|---|---|
+| recommend | gain > +2% AND BH-significant (q<0.05) |
+| neutral | gain in [−?%, +2%] OR seed direction inconsistent |
+| not-recommend | gain < 0 AND BH-significant decline |
+
+Applied to this snapshot (n=3 seeds; sign-test power wall documented
+in Limitations — BH-significance is aspirational at this seed count,
+so direction consistency + effect size carry the primary evidence):
+
+- **ncRNA classification (per-seq), random split**: LoRA/full
+  recommend (gains +0.04..+0.43 across five models, 3/3
+  seed-consistent; full-FT only at tuned LR — the default-3e-4 full
+  arm collapses and is the LR-misconfiguration illustration, not a
+  strategy verdict); under family split, all fine-tuning arms are
+  *not-recommendable* (collapse to 0.06–0.10 vs frozen 0.19–0.92
+  and k-mer 0.893).
+- **m6A (per-base)**: fine-tuning recommend (LoRA +0.05 frozen→0.995;
+  0/3-contrast-significant but 3/3 direction-consistent); frozen head
+  neutral-to-recommend at 33M (+0.39 vs k-mer).
+- **SSP**: LoRA/frozen recommend vs k-mer baselines (2–5× pair-F1);
+  full-FT neutral at default LR, recommend at tuned 1e-5.
+
+The decision tree for practice (which strategy at which label budget)
+arrives with the E3 low-data axis (spec T3.1) — out of this
+preprint scope, rules already frozen.
+
 ## 5 Limitations
 - n=3 seeds: sign-test power floor (min p=0.25); direction consistency +
   effect sizes are primary evidence, BH-significance aspirational.
