@@ -51,6 +51,29 @@ logs/smoke_matrix.log 尾部为 9-15 v1 冒烟 OVERLAP 拦截历史（B1 防线
 实战证据），当前实验全部 formal 口径，smoke 不进结论。
 
 
+## 2026-09-16（Day 2 下午：E2 五臂锁定 + m6A 三模型齐 + B14/B15 验收）
+
+### ★ E2 PEFT 五臂位次锁定（IA3 三种子 0.860×3 完全一致）
+full(tuned) 0.938 > DoRA 0.934 > LoRA 0.927 > IA3 0.860 > head-only ≈ frozen 0.817
+- 位次表 C5 数据齐（LoRA≈DoRA 复现 Schmirler；IA3 参数效率劣势明确）。
+
+### ★ m6A 三模型×三策略×双切分 C4 矩阵完整
+- RiNALMo tuned full：random 0.968 / family 0.993（默认 3e-4 崩 0.30）
+  ——LR 调优协议下 m6A 全模型全策略不崩（LoRA/full 家族侧反而更高）；
+- RiNALMo SSP full@1e-5 = 0.176（默认 0.006 → 29 倍恢复，接近 LoRA 0.214）
+  ——SSP 的"full 崩溃"也是 LR 伪象。
+
+### ★ 验收防线 B 类补齐（证据链）
+- B14 方向一致性标记进 C4 表（±(不定) 不进结论图；ncRNA 崩溃行
+  5 模型全部 ↑* 一致）；
+- B15 预注册检查点决策文档（frozen 增益中位数 +0.15 > 2% 阈值，
+  不触发方案复审）；
+- checklist_audit.md：12 项 ✅ 带证据位置。
+
+### 当前矩阵缺口（仅剩）
+- ERNIE/RNA-FM/SpliceBERT 种子补齐（G6 队列 20 runs 推进中）；
+- 新模型 LoRA family 侧（s29/s43）——已确认模式与 s17 一致。
+
 ## 2026-09-16（Day 2 白天：5 模型 C4 泛化 + E2 五臂位次成型）
 
 ### ★★ C4 跨模型泛化：微调崩溃是普遍现象（ncRNA 5/5 模型）
