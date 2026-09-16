@@ -30,11 +30,14 @@
   LoRA 双尺度均需 3e-4；LR 错配翻转策略排名的定量展示。
 
 ## S5 家族切分构建详情（B4/R5）
-- 数据源：`data/family_splits/*.parquet` + make_family_split_*
-  构建脚本日志（三任务 MMseqs2 0.8/0.8 全量）
-- 内容：簇数（ncrna / secondary-structure / modification
-  241,984 簇）、切分单元映射表（spec §3.4）、同序列跨侧断言记录
-- 用途：R5 地基证据——per-base 任务的宿主代理映射规则。
+- 数据源：`status/splits_table.md`（rnafteval/export_splits.py
+  自动导出：三任务 rows/seqs/簇数/切分尺寸 + 每次导出现场
+  groupby 零重叠复算）+ data/family_splits/*.parquet
+- 关键数字：ncRNA 7,731 簇 / SSP 12,825 簇 / m6A 241,984 簇
+  （rows 309,460 > seqs 308,915 = 宿主代理设计：同转录本多窗口
+  共享簇归属）
+- 用途：R5 地基证据——per-base 任务的宿主代理映射规则
+  （spec §3.4 表）双层验证（构建断言 + 导期复算）。
 
 ## S6 官方切分泄漏审计（B1）
 - 数据源：泄漏审计产物（MMseqs2 0.8/0.8 over 309k modification
