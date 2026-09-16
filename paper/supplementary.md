@@ -40,11 +40,12 @@
   （spec §3.4 表）双层验证（构建断言 + 导期复算）。
 
 ## S6 官方切分泄漏审计（B1）
-- 数据源：泄漏审计产物（MMseqs2 0.8/0.8 over 309k modification
-  windows：327/1200 test 窗口 = 27.3% 宿主级簇重叠；31-mer
-  overlap 10.8%）
+- 数据源：status/leakage_table.md（rnafteval/export_leakage.py
+  可复现自动导出：官方 train/test 对齐全量聚类 parquet；
+  **326/1200 = 27.2% 宿主级簇重叠** + 31-mer 30.6% + exact
+  2.2% 三口径对照；含与首记录的口径差注）
 - 用途：主文 §2.5；"官方 random 臂本身受宿主级泄漏污染"的定量
-  支撑。
+  支撑（可复现，每次导出重算）。
 
 ## S7 资源实测（E5/B6）
 - 数据源：status/resources.md（rnafteval/export_resources.py
