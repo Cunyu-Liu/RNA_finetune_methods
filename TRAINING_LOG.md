@@ -3,6 +3,26 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 22:10 Day 3 深夜 II：References 二轮核证（13/14）
+
+**状态**: E2 RNA-Sc 受控重复推进中（dora s17 训练 5min, 6 runs
+预计 2-4h, 定时巡检覆盖）。
+
+**本轮完成**:
+1. **References 二轮核证修正 3 条**（Web 溯源）:
+   - Zablocki: 完整 6 作者 + arXiv:2410.16212 (2025)——补
+     "cross-family generalization gap"定位（与我们 C4 呼应）
+   - 良渚: 沈宁团队 Nat Commun 2025-12 "Benchmarking pre-trained
+     genomic language models..."（11 gLMs × 4 tasks）
+   - bpRNA: 年份修正 2017 → **2019, NAR 47(10):e57**（自查
+     抓出经验主义错误）
+2. 至此 14 条引用中 13 条已核证（仅 Vishniakov ICLR 2026 留
+   投稿版 BibTeX 化时处理——已有可辨识标记）
+
+**Git**: dc7ed54 已推送。
+
+**下步**: E2 RNA-Sc 6 runs 收尾 → export_e2 双模型扩展 →
+预印本 2.3 节升级（E2 位次双模型验证）。
 ## 2026-09-17 22:15 Day 3 深夜：E2 受控重复派发（GPU3 空余利用）
 
 **状态**: 项目队列此前全部排空（v0.4 终版化完成）; GPU3 实测
