@@ -31,6 +31,10 @@ def cells() -> dict:
             continue  # tuning runs excluded from formal matrix
         if r.get("value") is None:
             continue
+        if "_e3" in r["run_id"]:
+            continue  # E3 small-data rows excluded (QA 2026-09-17:
+                       # _lr+_e3 rows were polluting tuned-protocol
+                       # override with n=1000 values)
         formal.append(r)
     out: dict[tuple, dict[int, float]] = collections.defaultdict(dict)
     # pass 1: default-LR rows (no _lr tag)
