@@ -1,11 +1,7 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.3** — 2026-09-17（数据快照：Day 2 深夜，228
-ledger runs；E1 五模型 full 臂全部落地；跨架构 LR 崩溃新证据：
-三种注意力架构全崩 + RNA-FM 唯一幸存；SSP full tuned 5/5 方向一致
-×24-27；C4 崩溃矩阵 LoRA/full 双臂均 5/5 模型。G6 尾队列收尾中，
-守护链自动刷新八产物）
+**Preprint draft v0.4** — 2026-09-17（数据快照：Day 3 晚，312 ledger runs，全部队列排空；tuned-full 双模型恢复（SpliceBERT 0.910 / ERNIE 0.973）；E3 tuned 曲线非单调：n=1000 full 0.707 峰值后全量崩溃；十产物守护链终刷完成）
 
 ## Abstract
 
@@ -143,18 +139,20 @@ Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
 confirming the grid diagnosis that the default 3e-4 is catastrophic for
 full-FT.
 
-**Cross-architecture collapse at the default LR (new)**: the ln(C)
-loss plateau (prediction entropy saturation) reproduces across three
-attention architectures — RiNALMo (standard), SpliceBERT (ALiBi,
-6/6 runs), ERNIE-RNA (explicit base-pairing-constrained attention,
-6/6, plateau from epoch 0) — all collapsing to 0.077 ACC at 3e-4
-full-FT, while RNA-FM (99.5M, most extensive pretraining, 23.7M
-ncRNAs) is the only survivor (0.82–0.84 random, healthy loss decay
-1.10→0.32). LR misconfiguration is thus architecture-agnostic and
-systematic; pretraining depth appears to confer resilience
-(observational, n=1). Under family splits RNA-FM full also collapses
-(0.06–0.10) — the C4 per-sequence collapse now extends to the full-FT
-arm across all five models.
+**Cross-architecture collapse at the default LR, and tuned recovery
+(new)**: the ln(C) loss plateau (prediction entropy saturation)
+reproduces across three attention architectures — RiNALMo (standard),
+SpliceBERT (ALiBi), ERNIE-RNA (explicit base-pairing-constrained
+attention) — all collapsing to 0.077 ACC at 3e-4 full-FT, while
+RNA-FM (99.5M, most extensive pretraining) is the only survivor
+(0.82–0.84 random). Tuned-LR backfill restores every collapsed arm:
+SpliceBERT full@3e-5 random = 0.910 (3-seed, ×11.8 recovery,
+exceeding its LoRA 0.904); ERNIE full@1e-5 random = 0.973 (×12.6,
+matching LoRA 0.974) — the collapse is an LR artifact, not a
+strategy property. Under family splits both tuned arms still
+collapse (0.06–0.10) — the C4 per-sequence collapse holds across
+all five models in both LoRA and tuned-full arms, ruling out LR
+confounding for the leakage finding.
 
 ### 2.5 Label-budget axis (E3 first data, C3 preview)
 
@@ -177,13 +175,16 @@ not a label-budget effect (tuned-LR backfill queued).
 Three signals: (i) at n=10 full fine-tuning is *best* (3× chance on
 both models) — ten sequences teach class priors, not family
 memorization, and the frozen head (16K params) cannot even fit that;
-(ii) the frozen-vs-LoRA gain flips sign with budget (+0.09 at 100 →
-+0.02 at 1,000 → catastrophic at full data under family splits) —
-collapse is *data-mass dependent*: more labels → stronger family
-memorization → harder collapse, a mechanistic C3×C4 interaction;
-(iii) 1,000 labels recover ~99% of the full-data frozen score —
-practically, a thousand annotations suffice for this task class.
-Full learning-curve figure: fig_e3_curves (per-model panels).
+(ii) the tuned full-FT curve is *non-monotone in label budget*:
+0.16 (n=10) → 0.52 (100) → **0.707 (1,000, best of all strategies)**
+→ 0.083 (6,859, collapse) — more labels first help then *hurt*
+full fine-tuning under family splits, because family memorization
+grows with data mass: the direct C3×C4 mechanism;
+(iii) 1,000 tuned labels recover 99%+ of the full-data frozen score
+and beat every strategy — practically, a thousand annotations
+suffice for this task class. RNA-Sc-10M replicates the n=10/n=100
+full-best pattern at its scale. Full learning curves:
+fig_e3_curves (per-model panels, min-max bands).
 
 ### 2.6 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
