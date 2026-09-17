@@ -3,6 +3,30 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 13:25 Day 3 午间 IV：E3 tuned-full 补跑 + 双守护链
+
+**状态**: ledger 282 行（276 done）; **E3 RiNALMo 首轴 36/36
+完成**（GPU7 排空）; RNA-Sc n=100 档 full=0.154 最优（10M 模型
+默认 LR 不崩, 该轴 C3 曲线无 LR 混杂——比 RiNALMo 轴干净）。
+
+**本轮派发**:
+1. **E3 tuned-full 补跑**（GPU7, PID 1976066, 9 runs）: RiNALMo
+   full @1e-5 × n{10,100,1000} × 3 种子——修 C3 full 列的
+   LR 混杂; 首个 run loss 正常下降（tuned 无崩溃）
+2. **第二轮守护链**（PID 1988246）: 监听五队列
+   （G1/G2/G5-E3/G6/G7-E3tuned 全部 kill -0 写死 PID）
+   排空后终刷十产物
+   - 自查修正: 初版误用 pgrep -f（项目规则禁令）→ 改为
+     派发方查 PID 写死回填
+
+**当前 5 训练 + 2 守护链全景**:
+GPU1 tuned-splice / GPU2 tuned-ernie / GPU5 E3-rnasc-n1000 /
+GPU6 G6-最后run / GPU7 E3-tuned-full + 双守护链
+
+**Git**: 1895b91 已推送。
+
+**下步**: 队列过夜推进; 全排空后守护链 2 终刷十产物 →
+预印本 v0.4 数值终版化（tuned full 入图 + E3 双轴干净曲线）。
 ## 2026-09-17 13:10 Day 3 午间 III：E3 产物链 + 预印本 2.5 C3 节
 
 **状态**: ledger 281 行（275 done）——RNA-Sc n=100 档全齐
