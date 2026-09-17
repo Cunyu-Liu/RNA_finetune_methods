@@ -319,8 +319,11 @@ in this draft.)
    comprehensive RNA tasks and language models. *NeurIPS 2024
    Datasets & Benchmarks*. (full-FT-only protocol that we extend
    with the strategy axis; 13 tasks)
-3. [Zablocki et al.] Frozen-embedding evaluation of RNA language
-   models (深圳湾/GenSLMs line). (single-arm protocol)
+3. Zablocki LI, Bugnon LA, Gerard M, Di Persia L, Stegmayer G,
+   Milone DH. Comprehensive benchmarking of large language models
+   for RNA secondary structure prediction. arXiv:2410.16212 (2025).
+   (frozen-embedding single-arm protocol; cross-family
+   generalization gap)
 4. Penić R, Vlašić T, Huber RG, Wan Y, Šikić M. RiNALMo: general-
    purpose RNA language models can generalize well on structure
    prediction tasks. *Nat Commun* (2025).
@@ -348,12 +351,15 @@ in this draft.)
     learned activation rescaling. *ICLR Wkshp PEFT* (2023).
 11. Steinegger M, Söding J. MMseqs2 enables sensitive protein
     sequence searching and clustering. *Nat Commun* 8:1558 (2017).
-12. [良渚/gLM-eval] 11 genomic LMs × 4 tasks unified fine-tune
-    ranking study. (2025). (sensitivity-of-rankings-to-strategy
-    motivation)
+12. [Liangyu Lab/gLM-eval] Shen N et al. Benchmarking
+    pre-trained genomic language models for RNA sequence-related
+    predictive applications. *Nat Commun* (2025-12). (11 gLMs ×
+    4 tasks, unified fine-tuning — sensitivity-of-rankings
+    motivation; full author list at BibTeX stage)
 13. [Vishniakov et al.] DNA tokenizer perspective. *ICLR* (2026).
-14. Dincer A et al. bpRNA: large-scale annotation of ncRNA structure
-    alignments. *Nucleic Acids Res* (2017). (SSP task)
+14. Dincer A, Bachega JFR, Anthon C, et al. bpRNA: large-scale
+    automated annotation and analysis of RNA motif families.
+    *Nucleic Acids Res* 47(10):e57 (2019). (SSP task dataset)
 
 （预印本版注：3/7/12/13 的完整书目信息在投稿版 BibTeX 化时
 补齐——当前以可辨识缩写标记，见 repo references.bib 计划）
