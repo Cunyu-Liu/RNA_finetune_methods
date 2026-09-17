@@ -2,6 +2,28 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+## 2026-09-17（Day 3 上午巡检：G6 种子补齐链收尾 + E3 轴归零）
+
+**状态**: ledger done 257 行; 唯一 pending = RNA-FM ncrna family lora s43
+（G6, 训练中 epoch 2）; GPU7 的 E3 首轴 02:01 DONE 归零, MIG 空闲;
+git master 已同步 origin/master（Cunyu-Liu/RNA_finetune_methods）。
+
+**G6 种子补齐批（run_newmodels_seeds, random+family × s29/s43, epochs10 bs8, MIG 4.75G）**:
+- SpliceBERT ncrna: family frozen 0.3621 / full 0.064/full,0.095 / lora 0.0841;
+  random frozen 0.6189 / full 0.0769 / lora 0.9033。s29==s43（家族 frozen/full 判定等价, 正常）。
+- ERNIE-RNA ncrna: family frozen 0.8867 / full 0.064/0.095 / lora 0.084/0.095;
+  random frozen 0.8252 / full 0.0769 / lora 0.971/0.977。
+- RNA-FM ncrna: family frozen 0.8598 / full 0.095/0.084 / lora 0.095 + s43 pending;
+  random frozen 0.9172 / full 0.8427 / lora 0.963/0.966。
+- 方向一致: 小模型家族切分碰撞（frozen 高、lora/full 塌）在 SpliceBERT/ERNIE/RNA-FM 复现,
+  与 RiNALMo 及既有 C4 结论同向; 不做单点科学定论（仍以多种子+独立红线为据）。
+
+**GPU7 待命**: E3 36-run 首轴已 DONE; ledger 无后续排队批次。ERNIE-RNA lora 需整卡
+（MIG 4.75G 必 OOM）, 但 GPU0-5 仍被他项目占满, 本轮不臆造批次、不空耗 GPU,
+待整卡释放或明确下一批再派发。本轮无失败/崩溃 run 需修复; 2 条 cancelled 均为
+09-15 ghost smoke claim（已被正式冒烟取代, 非本次损坏）。
+
+
 
 ## 2026-09-17 01:10 Day 3 凌晨 III：E3 小数据首轴提前启动
 
