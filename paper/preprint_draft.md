@@ -356,7 +356,12 @@ in this draft.)
     predictive applications. *Nat Commun* (2025-12). (11 gLMs ×
     4 tasks, unified fine-tuning — sensitivity-of-rankings
     motivation; full author list at BibTeX stage)
-13. [Vishniakov et al.] DNA tokenizer perspective. *ICLR* (2026).
+13. Vishniakov K, Viswanathan K, Medvedev A, Kanithi PK,
+    Pimentel MAF, Rajan R, Khan S. Tokenization to transfer: do
+    genomic foundation models learn good representations? *ICLR*
+    (2026, poster). (random-init baselines surprisingly strong;
+    tokenizer-gated pretraining gains — DNA-domain counterpart to
+    our A8/random-baseline observations)
 14. Dincer A, Bachega JFR, Anthon C, et al. bpRNA: large-scale
     automated annotation and analysis of RNA motif families.
     *Nucleic Acids Res* 47(10):e57 (2019). (SSP task dataset)
