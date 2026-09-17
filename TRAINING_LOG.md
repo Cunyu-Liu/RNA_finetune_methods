@@ -3,6 +3,24 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 22:15 Day 3 深夜：E2 受控重复派发（GPU3 空余利用）
+
+**状态**: 项目队列此前全部排空（v0.4 终版化完成）; GPU3 实测
+18.61G 空闲 → 立即派发 E2 受控重复。
+
+**派发**: run_e2_rnasc_g3.sh（PID 见日志, GPU3 整卡）——
+RNA-Sc-10M {dora, ia3} × s{17,29,43} × random = 6 runs
+- 依据: spec v1.4 E2 设计 = RiNALMo micro + RNA-Sc 受控重复;
+  现缺 dora/ia3 两臂（loRa/full/head-only 已有正式矩阵行）
+- head-only 不跑（frozen 代码路径相同, 数值逐位一致——规则）
+- 口径对齐 RiNALMo E2（epochs 10 / bs 8 / 默认 LR）
+- 首个 run（dora s17）已在跑, dedup 8573 正常
+
+**价值**: E2 位次表（full ≥ DoRA ≈ LoRA ≫ IA3 > head-only）
+升级为双模型验证——"Schmirler 蛋白侧结论 RNA 复现"声明加硬。
+
+**下步**: 6 runs 预计 2-4h 完成 → export_e2 扩展双模型 →
+E2 表/预印本 2.3 节更新。
 ## 2026-09-17 21:50 Day 3 晚：全队列排空 + v0.4 终版化（三大升级）
 
 **状态**: ledger 312 行（310 done）; 全部队列排空; 守护链 2 于
