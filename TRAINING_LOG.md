@@ -3,6 +3,27 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 22:45 Day 3 深夜 III：References 14/14 全核证
+
+**状态**: E2 RNA-Sc 受控重复推进中（dora s17 训练 40min+）;
+export_e2 双模型版已就绪（RiNALMo 面板验证通过, RNA-Sc 面板
+等 6 runs 落地自动填充）。
+
+**本轮完成**:
+1. **References 14/14 全部 Web 核证**（最后一条 Vishniakov
+   ICLR 2026 = "Tokenization to Transfer: Do Genomic Foundation
+   Models Learn Good Representations?", 7 作者, openreview
+   4UY1NHG5Ge）——发现与本项目 A8/随机基线观察 DNA 域对应
+   （tokenizer-gated 预训练增益）, 已在引用注中标注呼应
+2. **export_e2 双模型重写**: 自查抓出补丁孤儿代码（双
+   ranked 段）→ 完整干净版（单 main + 双模型循环 + 每模型
+   协议注）; RiNALMo 面板五臂验证通过
+3. References 尾注更新（弃用过时占位文本）
+
+**Git**: 348522f → eac08fb 系列（4 笔）。
+
+**下步**: E2 RNA-Sc 队列完成 → 重刷 export_e2 得双模型表 →
+预印本 2.3 节升级 → 导师评审。
 ## 2026-09-17 22:10 Day 3 深夜 II：References 二轮核证（13/14）
 
 **状态**: E2 RNA-Sc 受控重复推进中（dora s17 训练 5min, 6 runs
