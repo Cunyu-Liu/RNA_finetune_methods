@@ -2,6 +2,43 @@
 
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
+
+## 2026-09-17 12:45 Day 3 午间：GPU1/2/5 三队列派发（用户提示空余）
+
+**用户提示 GPU 1/2/5 有空余 → torch 实测确认各 13.6-13.8G 真实空闲
+（整卡 40G, 他人任务占 26G）→ 立即派发三队列:**
+
+### 1. GPU1: SpliceBERT full tuned-LR 补跑（关键科学缺口）
+- 背景: 默认 3e-4 全崩 6/6（ln-13 平原）——C1/C4 图 full 列对
+  该模型显示崩溃值不公平, tuned 协议臂缺失
+- 协议（B1 合规）: s101 tuning 双档（1e-5 vs 3e-5）→ ledger 读值
+  选优 → formal 17/29/43 × random/family（6 runs）
+- 合计 8 runs; s101 @1e-5 已在跑
+
+### 2. GPU2: ERNIE full tuned-LR 补跑
+- 同背景（86M 显式配对 attn, 默认 3e-4 崩 6/6, epoch 0 即卡死）
+- 同协议: tuning 2 + formal 6 = 8 runs; 峰值预算 ~7G < 13.6G
+
+### 3. GPU5: E3 第二模型轴（RNA-Sc-10M 受控对照, 36 runs）
+- C3 翻转点的模型间对照: 与 RiNALMo 首轴同构
+  （n ∈ {10,100,1000,full} × {frozen,lora,full} × 3 种子）
+- 协议不变量: epochs 10 / bs 8 与首轴一致; 子集文件通用
+- n=10 frozen/lora 已完（exit 0）, full s17 在跑
+
+### 当前 5 卡并行全景
+| 卡 | 队列 | 状态 |
+|---|---|---|
+| GPU1 | SpliceBERT tuned full | s101 @1e-5 tuning |
+| GPU2 | ERNIE tuned full | s101 @1e-5 tuning |
+| GPU5 | E3 RNA-Sc 轴 | n=10 full s17 |
+| GPU6 MIG | G6 RNA-FM lora s43 family | 收尾中 |
+| GPU7 MIG | E3 RiNALMo 首轴 | 36 runs 推进 |
+
+**Git**: 49aa007 已推送。
+
+**下步**: 队列推进; tuned full 结果落地后 C1/C4 图刷新
+（SpliceBERT/ERNIE full 列从崩溃值换 tuned 协议臂值）;
+E3 双轴完成后 C3 翻转点首证 + 学习曲线图。
 ## 2026-09-17（Day 3 上午巡检：G6 种子补齐链收尾 + E3 轴归零）
 
 **状态**: ledger done 257 行; 唯一 pending = RNA-FM ncrna family lora s43
