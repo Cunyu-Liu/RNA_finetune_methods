@@ -366,8 +366,8 @@ in this draft.)
     automated annotation and analysis of RNA motif families.
     *Nucleic Acids Res* 47(10):e57 (2019). (SSP task dataset)
 
-（预印本版注：3/7/12/13 的完整书目信息在投稿版 BibTeX 化时
-补齐——当前以可辨识缩写标记，见 repo references.bib 计划）
+（注：14/14 条均已按原始出处逐一核证（作者/年份/DOI/venue
+经 web 溯源）；投稿版直接 BibTeX 化即可。）
 
 ## Data & Code
 github.com/Cunyu-Liu/RNA_finetune_methods; ledger + figures auto-generated
