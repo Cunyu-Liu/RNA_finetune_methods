@@ -3,6 +3,29 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-17 23:05 Day 3 深夜 IV：GPU3 双队列并行（m6A E2 派发）
+
+**用户提示 GPU3 空闲**（实测 15.97G free, E2-RNA-Sc 队列仅占 ~2G）
+→ 立即叠加派发第二队列。
+
+**新派发**: run_e2_mod_g3.sh（PID 3895172, GPU3）——
+RiNALMo m6A {dora, ia3} × s{17,29,43} × random = 6 runs
+- 依据: spec v1.4 E2 = 2 任务——ncRNA(per-seq) + m6A(per-base)
+  粒度对照; m6A 的 DoRA/IA3 此前缺失（只有 frozen/lora/full）
+- 口径 = 正式 m6A runs（epochs 3 / n-train 20000 / bs 32 /
+  默认 LR 3e-4）
+- 完成后 E2 将是双模型 × 双任务的全因子 PEFT 横评
+
+**首个 E2-RNA-Sc 数据点**: DoRA s17 = **0.760**（vs LoRA 均值
+0.746）——DoRA > LoRA 方向与 RiNALMo 一致（Schmirler 复现加强）
+
+**当前 GPU3 双队列**: E2-RNA-Sc（dora s29 跑中, 剩 4 runs）+
+E2-m6A（dora s17 加载中, 6 runs）。
+
+**Git**: e1cdfa5 后已推送（本节为最新）。
+
+**下步**: 双队列过夜（~3-4h）→ export_e3/e2 全因子刷新 →
+预印本 2.3 节 E2 升级（双模型双任务）。
 ## 2026-09-17 22:45 Day 3 深夜 III：References 14/14 全核证
 
 **状态**: E2 RNA-Sc 受控重复推进中（dora s17 训练 40min+）;
