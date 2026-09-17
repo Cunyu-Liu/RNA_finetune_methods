@@ -156,7 +156,7 @@ systematic; pretraining depth appears to confer resilience
 (0.06–0.10) — the C4 per-sequence collapse now extends to the full-FT
 arm across all five models.
 
-### 2.7 Label-budget axis (E3 first data, C3 preview)
+### 2.5 Label-budget axis (E3 first data, C3 preview)
 
 With cluster-level subsampling (draw clusters, keep them whole —
 seed-matched subsets at n ∈ {10, 100, 1000} + full 6,859) on the
@@ -185,12 +185,12 @@ memorization → harder collapse, a mechanistic C3×C4 interaction;
 practically, a thousand annotations suffice for this task class.
 Full learning-curve figure: fig_e3_curves (per-model panels).
 
-### 2.5 Official split leakage audit (B1 discipline)
+### 2.6 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
 test windows (27.3%) cluster with training windows; 31-mer overlap 10.8%.
 The official "random" arm is leak-contaminated at host-transcript level.
 
-### 2.6 Statistics
+### 2.7 Statistics
 Preregistered plan (§3.5): paired sign tests over 3 seeds + BH FDR q=0.05
 across 58 contrasts; 3/3 direction consistency as primary evidence
 (seed-level power wall documented: n=3 sign-test minimum p=0.25);
