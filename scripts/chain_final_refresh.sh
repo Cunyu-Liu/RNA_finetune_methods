@@ -29,4 +29,6 @@ $PY -m rnafteval.export_resources >> $LOG 2>&1
 $PY -m rnafteval.export_lr_grid >> $LOG 2>&1
 $PY -m rnafteval.export_splits >> $LOG 2>&1
 $PY -m rnafteval.export_leakage >> $LOG 2>&1
+$PY -m rnafteval.export_e3 >> $LOG 2>&1
+$PY -m rnafteval.fig_e3 >> $LOG 2>&1
 echo "FINAL REFRESH DONE $(date)" >> $LOG

@@ -156,6 +156,35 @@ systematic; pretraining depth appears to confer resilience
 (0.06–0.10) — the C4 per-sequence collapse now extends to the full-FT
 arm across all five models.
 
+### 2.7 Label-budget axis (E3 first data, C3 preview)
+
+With cluster-level subsampling (draw clusters, keep them whole —
+seed-matched subsets at n ∈ {10, 100, 1000} + full 6,859) on the
+family split, the strategy ranking flips with label budget
+(RiNALMo-micro, 3-seed means; RNA-Sc-10M replicates the n=10
+pattern):
+
+| n | frozen | LoRA | full | best |
+|---|---|---|---|---|
+| 10 | 0.103 | 0.131 | **0.229** | full |
+| 100 | 0.424 | **0.509** | 0.076† | LoRA |
+| 1,000 | 0.664 | **0.685** | 0.076† | LoRA |
+| 6,859 (full) | **0.696** | 0.081 | 0.083† | frozen |
+
+† full-FT small-n arms at the default LR (3e-4) — the A8 collapse;
+not a label-budget effect (tuned-LR backfill queued).
+
+Three signals: (i) at n=10 full fine-tuning is *best* (3× chance on
+both models) — ten sequences teach class priors, not family
+memorization, and the frozen head (16K params) cannot even fit that;
+(ii) the frozen-vs-LoRA gain flips sign with budget (+0.09 at 100 →
++0.02 at 1,000 → catastrophic at full data under family splits) —
+collapse is *data-mass dependent*: more labels → stronger family
+memorization → harder collapse, a mechanistic C3×C4 interaction;
+(iii) 1,000 labels recover ~99% of the full-data frozen score —
+practically, a thousand annotations suffice for this task class.
+Full learning-curve figure: fig_e3_curves (per-model panels).
+
 ### 2.5 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
 test windows (27.3%) cluster with training windows; 31-mer overlap 10.8%.
