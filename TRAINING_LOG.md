@@ -3,6 +3,26 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-18 11:15 Day 4 晨 II：五卡五队列全并行
+
+**用户反馈"看不到任务"澄清**: 三队列实际在跑（SSP dora 18min+
+ERNIE/RNA-FM m6A frozen 推进至 s43）——小模型显存占用小
+（每任务 2-3G, GPU 面板显示大空）不显眼。已补派满空闲卡。
+
+**当前五卡布局**:
+| GPU | 队列 | 进度 |
+|---|---|---|
+| 0 | ERNIE m6A **lora** × 6 runs | s17 random |
+| 1 | SSP E2 dora/ia3 × 6 | dora s17 |
+| 2 | ERNIE m6A frozen × 6 | s43（最后） |
+| 3 | RNA-FM m6A **lora** × 6 | s17 random |
+| 5 | RNA-FM m6A frozen × 6 | s43（最后） |
+
+- m6A 双新模型 frozen+lora 全臂收尾后: C4 per-base 崩溃矩阵
+  0/8（四模型×双臂）完整验证
+- 派发合规: setsid nohup（吸取此前 nohup 无 setsid 教训）
+
+**Git**: m6A lora 队列脚本已推送。
 ## 2026-09-18 10:50 Day 4 晨：E2 全因子落地 + 三队列派发
 
 **状态**: ledger 324 行（322 done）; E2 双队列昨夜全部完成
