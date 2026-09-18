@@ -27,6 +27,26 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-19 00:30 Day 5 凌晨：四队列补派（用户指令 gpu1245 显存空余太多）
+
+**前置核查**：昨日全部队列自然收官（ERNIE SSP frozen 13:17 / RNA-Sc
+SSP dora,ia3 14:52 各 6/6 与 12/12 done）。torch 实测 GPU1/2/4/5 均为
+真实 A100-40G，空闲 8.0/7.4/10.1/4.0G。
+
+**ledger 缺口分析后四路补派**（全部零行新 run，无 claim 冲突）:
+| GPU | 队列 | 科学价值 | 验证 |
+|---|---|---|---|
+| 1 | SpliceBERT m6A **lora** ×6 | 补齐 5 模型×双臂 m6A C4 矩阵 | s17 已完成, s29 在跑 ✓ |
+| 2 | ERNIE-RNA SSP **lora** ×6 | SSP 双臂扩展 | s17 epoch0 loss 0.689 ✓ |
+| 4 | RNA-FM SSP **frozen** ×6 | SSP frozen 覆盖第 5 模型 | s17 epoch1 loss 0.720 ✓ |
+| 5 | SpliceBERT SSP **lora** ×6 | SSP 双臂扩展 | s17 加载完成 ✓ |
+
+**当前 per-base 矩阵进度**：m6A 双臂（frozen+lora）4/5 模型已齐，
+SpliceBERT lora 本轮补齐第 5；SSP lora 臂 2/5（RNA-Sc/RiNALMo 已有），
+ERNIE/SpliceBERT 本轮补至 4/5；SSP frozen 本轮从 4 模型补至 5 模型。
+
+队列脚本全部复用现有（q_m6a_lora.sh / q_ssp_generic.sh），无新脚本。
+
 ## 2026-09-18 11:15 Day 4 晨 II：五卡五队列全并行
 
 **用户反馈"看不到任务"澄清**: 三队列实际在跑（SSP dora 18min+
