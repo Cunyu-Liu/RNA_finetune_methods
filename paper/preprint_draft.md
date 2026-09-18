@@ -110,20 +110,26 @@ marked):
   classification (5/5 models), and the exception for per-base tasks (0/4
   model-task pairs).**
 
-### 2.3 E2 PEFT horizontal comparison (C5, 5 arms, RiNALMo ncRNA random)
-| arm | 3-seed mean | trainable params |
-|---|---|---|
-| full FT (LR-tuned 1e-5) | 0.938 | 33.5M |
-| DoRA r=8 | 0.934 | ~0.57M |
-| LoRA r=8 | 0.928 | ~0.55M |
-| IA3 | 0.860 | ~0.01M |
-| head-only | 0.817 | 0 (+16K head) |
+### 2.3 E2 PEFT horizontal comparison (C5: 2 models × 2 tasks, full factorial)
 
-(auto-exported from ledger: status/e2_table.md, export_e2.py)
+Auto-exported (status/e2_table.md); per-seed values in Supp S3.
 
-- DoRA ≈ LoRA at r=8 (Schmirler's protein-side observation replicates in
-  RNA); IA3 trails by ~0.07 with 10× fewer params; full FT wins only with
-  tuned LR (default 3e-4 collapses to 0.077).
+| panel | ranking (3-seed means, random split) |
+|---|---|
+| RiNALMo-33M, ncRNA | full(tuned) 0.938 > **DoRA 0.934** > LoRA 0.928 > IA3 0.860 > head-only 0.817 |
+| RNA-Sc-10M, ncRNA | **DoRA 0.765** > LoRA 0.746 > full 0.670 > IA3 0.579 > head-only 0.375 |
+| RiNALMo-33M, m6A | **DoRA 0.979** > LoRA 0.970 > full(tuned) 0.968 > IA3 0.941 |
+
+- **DoRA is the best arm in 3/4 panels** — full fine-tuning wins only on
+  the 33M model at the per-sequence task with tuned LR; at 10M scale and
+  on per-base tasks the parameter-efficient arms dominate outright.
+  "Small model + PEFT vs large model + full-FT" equivalence lines (C5's
+  second question) get a concrete RNA data point: RNA-Sc-10M DoRA
+  (0.765, ~0.57M trainable) vs RiNALMo-33M full (0.938) — the corpus/
+  scale gap dominates, PEFT alone does not close it.
+- IA3 is task-granularity sensitive: trails by 0.078 on per-sequence
+  classification but only 0.027 behind LoRA on per-base m6A (0.941) —
+  the cheapest adapter is viable where labels are dense per position.
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.
