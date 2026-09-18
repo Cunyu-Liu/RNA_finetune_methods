@@ -1,0 +1,35 @@
+#!/bin/bash
+# 通用 SSP 队列: <model> {dora,ia3} 或 frozen × s{17,29,43} = 6 runs
+# 用法: q_ssp_generic.sh <model> <gpu> <arms:"dora,ia3"|"frozen">
+R=/mnt/cunyuliu/rna-ft-eval
+export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+PY=/home/cunyuliu/llr_env/bin/python
+MODEL=$1
+GPU=$2
+ARMS=$3
+TAG=$(echo $MODEL | tr -d "-")
+LOG=$R/logs/q_ssp_${TAG}_g${GPU}.log
+cd /home/cunyuliu/rna-ft-eval
+
+$PY -c "import torch; assert torch.cuda.is_available()" || exit 2
+timeout 300 $PY -c "
+import torch
+free, _ = torch.cuda.mem_get_info($GPU)
+assert free > 2.5e9, 'free %.2fG' % (free/1e9)
+print('GPU$GPU OK')" >> $LOG 2>&1 || exit 2
+
+IFS=',' read -ra ARM_LIST <<< "$ARMS"
+for strat in "${ARM_LIST[@]}"; do
+  for split in random family; do
+    for seed in 17 29 43; do
+      echo "=== $MODEL SSP $strat s$seed $split GPU$GPU $(date +%T) ===" >> $LOG
+      timeout 21600 $PY -m rnafteval.finetune_ssp --model $MODEL \
+        --strategy $strat --seed $seed --split $split --device $GPU \
+        --epochs 3 --n-train 3000 --n-test 500 --batch-size 4 >> $LOG 2>&1
+      echo "--- exit $? $(date +%T) ---" >> $LOG
+    done
+  done
+done
+echo "SSP $MODEL [$ARMS] DONE $(date)" >> $LOG
