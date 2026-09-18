@@ -3,6 +3,30 @@
 > 本文件记录每次训练过程与结论（用户要求）。日期用服务器时间。
 
 
+## 2026-09-18 11:20 Day 4 晨 III：六卡填满（用户指令 gpu012345 显存空余太多）
+
+**torch 实测**：GPU0-5 全为真实 A100-40G（无 MIG 切片）；派发前空闲
+16.2/19.5/23.9/17.0/10.8/26.1G。第一批批量派发中后三个 ssh 被吞
+（历史模式再现），已逐个补派并逐一验证启动。
+
+**六卡布局（全部 setsid nohup 合规）**:
+| GPU | 队列 | 内容 | 验证 |
+|---|---|---|---|
+| 0 | ERNIE m6A lora ×6 + **SpliceBERT m6A frozen** ×6 | 新：q_m6a_model.sh SpliceBERT 0 | epoch0 loss 0.0717 ✓ |
+| 1 | RiNALMo SSP dora s29 + **RNA-Sc SSP dora,ia3** ×6 | E2 第六面板 | dora s17 ✓ |
+| 2 | ERNIE m6A frozen ×6 | s29 family | ✓ |
+| 3 | RNA-FM m6A lora ×6 | s29 random | ✓ |
+| 4 | **SpliceBERT SSP frozen** ×6 | q_ssp_generic.sh SpliceBERT 4 frozen（跨语料首探） | epoch0 loss 1.0792 ✓ |
+| 5 | RNA-FM m6A frozen ×6 + **ERNIE SSP frozen** ×6 | q_ssp_generic.sh ERNIE-RNA 5 frozen | pos_weight 加载 ✓ |
+
+**ledger 核查**：SpliceBERT 既有 26 行全为 ncRNA（E1 已收），m6A/SSP
+零行无 claim 冲突；ERNIE/SpliceBERT SSP 零行。
+
+**科学目标**：C4 per-base 崩溃矩阵 0/8 → 扩展验证（SpliceBERT m6A
+frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
+dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
+b067361 并推送 GitHub。
+
 ## 2026-09-18 11:15 Day 4 晨 II：五卡五队列全并行
 
 **用户反馈"看不到任务"澄清**: 三队列实际在跑（SSP dora 18min+
