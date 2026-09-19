@@ -27,6 +27,23 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-19 15:40 Day 5 午后：per-base 全量 26 组收官 + E2 四面板 + 预印本 v0.5-core
+
+**RNA-FM SSP lora 6/6 完成**（15:07）——per-base 矩阵全量：
+- m6A：5 模型×{frozen,lora} + RNA-Sc/RiNALMo full = 12 组，比值 1.007-1.645
+- SSP：5 模型×{frozen,lora} + RNA-Sc {full,dora,ia3} + RiNALMo full = 14 组，比值 0.956-1.110
+- **26 组 0 崩溃** vs ncRNA per-seq 5/5 崩溃——粒度×泄漏交互 claim 全量锁定
+
+**E2 第四面板**（export_e2.py PANELS +RNA-Sc SSP）：full 0.097 > LoRA 0.084
+> DoRA 0.081 > IA3 0.042 > head-only 0.033；DoRA 最优口径修正 2/4 面板。
+
+**预印本 v0.5-core**（3413caa）：2.2 节 0/26 全量 + 摘要数值口径 + 2.3 节
+四面板表。C4/E2 表已终版刷新。
+
+**本地交接文档全部更新**（5 文件）：STATUS_SNAPSHOT_20260919.md 新建
+（Day 5 收官锚点）；tasks.md v2.7（监控表+Day5 交接说明）；checklist.md
+v1.7（B12 勾选）；spec.md 进度注记（冻结口径不变）；红队报告历史保留。
+
 ## 2026-09-19 12:25 Day 5 午间：四队列收官 + per-base 矩阵全量完成 + 补派 RNA-FM SSP lora
 
 **四队列全部完成**（凌晨 01:03-02:09，24/24 runs done，零 OOM）：
