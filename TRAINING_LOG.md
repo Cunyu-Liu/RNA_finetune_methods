@@ -27,6 +27,27 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-19 12:25 Day 5 午间：四队列收官 + per-base 矩阵全量完成 + 补派 RNA-FM SSP lora
+
+**四队列全部完成**（凌晨 01:03-02:09，24/24 runs done，零 OOM）：
+- SpliceBERT m6A lora 6/6：fam AUROC=0.988 / rnd=0.955
+- ERNIE SSP lora 6/6：fam MCC=0.345 / rnd=0.337
+- RNA-FM SSP frozen 6/6：fam=0.184 / rnd=0.181
+- SpliceBERT SSP lora 6/6：fam=0.169 / rnd=0.168
+
+**C4 per-base 全量矩阵结论（本轮核心成果）**：
+- m6A 5 模型×双臂（frozen+lora）全部 ratio ≥ 1.007 —— 0 崩溃；
+- SSP frozen 5 模型 + lora 4 模型全部 ratio ∈ [0.82, 1.11] —— 0 崩溃
+  （RNA-Sc 0.82-0.98 为 MCC 小值种子噪声，远高于 0.3 崩溃阈值）；
+- 对照 ncRNA per-seq 的 5/5 崩溃（Δ≥0.68），粒度×泄漏交互结论
+  完整成立：per-seq 崩溃 / per-base 免疫，跨 5 模型 3 任务 19 组。
+
+**补派**：RNA-FM SSP lora ×6（GPU2，torch 实测 20G 空余）——补齐
+SSP lora 第 5 模型，s17 random 在跑（PID 1242151），ETA ~2h。
+
+**十产物刷新链已跑**（chain_final_refresh.sh 旧 PID 守护全过即刷）：
+c4_table.md 已含全部新行（ERNIE/RNA-FM m6A 双臂 + SSP lora 行）。
+
 ## 2026-09-19 00:30 Day 5 凌晨：四队列补派（用户指令 gpu1245 显存空余太多）
 
 **前置核查**：昨日全部队列自然收官（ERNIE SSP frozen 13:17 / RNA-Sc
