@@ -63,7 +63,8 @@ def main() -> int:
 
     # run_id 编码 LR 维度（A8 协议，与 finetune_one 一致）
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    extra = ("_smoke" if args.smoke else "") + lr_tag
+    e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
+    extra = ("_smoke" if args.smoke else "") + e3_tag + lr_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -89,24 +90,61 @@ def main() -> int:
             return 3
         t = pq.read_table(fam).to_pydict()
         by_side = {}
-        for seq, lab, sd in zip(t["seq"], t["labels"], t["split"]):
+        for seq, lab, sd, cid in zip(t["seq"], t["labels"], t["split"],
+                                     t["cluster_id"]):
             if sd == "train":
                 by_side.setdefault("train", []).append(
                     {"seq": seq, "labels": [int(x) for x in str(lab).split()],
-                     "subset": "family_%s" % sd})
+                     "subset": "family_%s" % sd, "cluster": cid})
             elif sd == "test":
                 by_side.setdefault("test", []).append(
                     {"seq": seq, "labels": [int(x) for x in str(lab).split()],
-                     "subset": "family_%s" % sd})
+                     "subset": "family_%s" % sd, "cluster": cid})
         train, test = by_side["train"], by_side["test"]
-        rng = random.Random(17)
-        train = rng.sample(train, min(args.n_train, len(train)))
+        if 0 < args.n_train < len(train) and args.n_train != 20000:
+            # E3: 宿主簇级整簇采样（随机抽簇→整簇纳入，对齐 e3_subsampler）
+            by_cl = {}
+            for i, row in enumerate(train):
+                by_cl.setdefault(row["cluster"], []).append(i)
+            cls = sorted(by_cl)
+            rng = random.Random(17)
+            rng.shuffle(cls)
+            picked = []
+            for cc in cls:
+                picked.extend(by_cl[cc])
+                if len(picked) >= args.n_train:
+                    break
+            train = [train[i] for i in picked]
+        else:
+            rng = random.Random(17)
+            train = rng.sample(train, min(args.n_train, len(train)))
     else:
         sp = mod_task.load_official_split()
         train = sp["train"]
         test = sp["test"]
-        rng = random.Random(17)
-        train = rng.sample(train, min(args.n_train, len(train)))
+        if 0 < args.n_train < len(train) and args.n_train != 20000:
+            # E3: 用家族表 seq->cluster 映射做宿主簇级整簇采样
+            tp = pq.read_table(
+                os.path.join(ROOT, "data", "family_splits",
+                             "modification.parquet"),
+                columns=["seq", "cluster_id"]).to_pydict()
+            seq2cl = dict(zip(tp["seq"], tp["cluster_id"]))
+            by_cl = {}
+            for i, row in enumerate(train):
+                by_cl.setdefault(seq2cl.get(row["seq"], "c_solo_%d" % i),
+                                 []).append(i)
+            cls = sorted(by_cl)
+            rng = random.Random(17)
+            rng.shuffle(cls)
+            picked = []
+            for cc in cls:
+                picked.extend(by_cl[cc])
+                if len(picked) >= args.n_train:
+                    break
+            train = [train[i] for i in picked]
+        else:
+            rng = random.Random(17)
+            train = rng.sample(train, min(args.n_train, len(train)))
     if args.smoke:
         train = train[:320]
         test = test[:320]

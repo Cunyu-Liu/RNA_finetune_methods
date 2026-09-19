@@ -27,6 +27,31 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 09:00 Day 6 晨：E3-m6A 启动 + 资源冲突修复 + 下载断点续传
+
+**E3-m6A 跨粒度验证启动**（用户确认执行）：
+- finetune_base.py 补丁：run_id 加 `_e3<n>` 标签 + 宿主簇级整簇采样
+  （family 分支直接用 cluster_id；random 分支用 parquet seq→cluster
+  映射；随机抽簇→整簇纳入，对齐 e3_subsampler 语义；n=20000 正式
+  协议路径不变——保持历史可复现性）
+- 队列 q_e3_m6a.sh GPU4：RiNALMo {full@1e-5, lora, frozen} ×
+  n{100,1000,10000} × {random,family} × s{17,29,43} = 54 runs
+- 预测：per-base 曲线单调（无家族记忆峰）vs ncRNA 非单调——若成立
+  则 C4×E3 机制闭环（家族记忆假说直接验证）
+
+**昨夜问题修复（3 项）**：
+1. 100M LoRA s17 GPU5 OOM（ERNIE m6A 12.9G + 其他用户 13.5G 叠加
+   挤爆）→ 队列迁 GPU3（孤儿行清理 + 重 claim），GPU5 留给 ERNIE
+2. 650M 下载 16 并发被 hf-mirror 限流（part0-7 反复断流且整块重下）
+   → 改断点续传版（4 并发 + Range 续传），1.6G/2.6G 推进中
+3. kill 队列时再次确认 pgrep -f 自匹配风险——改用 ps+正则字符类
+   断字（"100[M]"）与精确 PID，避免杀掉自己会话
+
+**当前八卡布局**：GPU0 RNA-FM m6A full / GPU1 其他用户 / GPU2 1M
+tuned 链（BEST=3e-5 formal 中）/ GPU3 100M LoRA + 650M waiter /
+GPU4 SpliceBERT m6A tuned 链 + E3-m6A / GPU5 ERNIE m6A full /
+GPU6-7 MIG 不可用。
+
 ## 2026-09-20 00:00 Day 5 深夜：A8 跨任务补全（m6A full × 3 模型）+ 650M 并行下载
 
 **用户问题**：表A（A8）/表B（E3）只在 ncRNA 单任务上测，是否不足？
