@@ -27,6 +27,36 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 00:00 Day 5 深夜：A8 跨任务补全（m6A full × 3 模型）+ 650M 并行下载
+
+**用户问题**：表A（A8）/表B（E3）只在 ncRNA 单任务上测，是否不足？
+
+**盘点（已有跨任务证据）**：
+- A8 m6A：RiNALMo default 0.302 崩 → tuned 0.968 恢复；RNA-Sc default
+  0.940 不崩（模型依赖性一致）
+- A8 SSP：RiNALMo default 0.006 双侧崩 → tuned 0.166 弱恢复（低于
+  frozen 0.218——SSP 上 tuned 全参仍不及 frozen，本身是新数据点）
+- E3：确为 ncRNA 单任务——真实缺口
+
+**本轮补全（三队列）**：q_m6a_full.sh <model> <gpu>（条件逻辑：
+default 6 runs → random 均值 <0.75 判崩 → s101 网格 {1e-5,3e-5} →
+tuned 6 runs；幸存者自动跳过 tuned 臂）：
+- GPU4: SpliceBERT m6A full（epoch 1 在跑）
+- GPU0: RNA-FM m6A full（加载中——幸存者假说检验）
+- GPU5: ERNIE m6A full（与 100M LoRA 等价线同卡）
+
+**650M 下载**：单流仅 40KB/s（18h ETA）→ 重写 16 分块 Range 并行
+下载（3 分钟 692MB，提速 ~30×）；GPU3 waiter 自动衔接。
+
+**再次踩坑（pgrep -f 自匹配）**：pkill -f dl_rinalmo.py 匹配到 ssh
+壳自身命令行 → kill 了自己的会话（与 13:35 事故同型——规则明令
+禁止，执行时又犯）。正确做法：lsof 文件找 PID。
+
+**E3-m6A（下一项）**：设计已定——n ∈ {100,1000,10000}+全量 ×
+{tuned-full, lora, frozen} × 双切分；预测 per-base 单调（无家族记忆
+峰）vs ncRNA 非单调——C4×E3 机制打通的关键对照。需 finetune_base
+加 _e3 tag + 宿主级簇采样（代码改动，下轮实施）。
+
 ## 2026-09-19 23:35 Day 5 夜：等价线三路启动（C5b）+ PPT 术语细化
 
 **用户指令**：33M full ≈ 651M LoRA 等价线启动。
