@@ -33,6 +33,7 @@ class ModelSpec:
 MODEL_SPECS: dict[str, ModelSpec] = {
     "RiNALMo-micro": ModelSpec("RiNALMo-micro", "multimolecule/rinalmo-micro",
                                640, 33.4, "tierA"),
+    "RiNALMo-650M": ModelSpec("RiNALMo-650M", "multimolecule/rinalmo-giga", 1280, 650.0, "tierA"),
     "ERNIE-RNA": ModelSpec("ERNIE-RNA", "multimolecule/ernierna", 768,
                            86.0, "tierA"),
     "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),

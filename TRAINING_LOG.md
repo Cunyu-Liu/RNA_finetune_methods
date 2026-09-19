@@ -27,6 +27,36 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-19 23:35 Day 5 夜：等价线三路启动（C5b）+ PPT 术语细化
+
+**用户指令**：33M full ≈ 651M LoRA 等价线启动。
+
+**三路队列**（等价线 = 双家族：官方系 RiNALMo 33M↔650M + 受控系 RNA-Sc 1M↔100M）：
+| GPU | 队列 | 内容 |
+|---|---|---|
+| 5 | q_eq_lora.sh RNA-Sc-100M | 100M LoRA × {random,family} × 3 种子 = 6 runs |
+| 2 | q_eq_1m_tuned.sh | 1M 全参：s101 LR 网格 {1e-5,3e-5,1e-4,3e-4} → 选优 → formal 3 种子 × 2 切分 |
+| 3 | q_eq_lora650m.sh | **650M LoRA × 6**（下载等待链：multimolecule/rinalmo-giga 下载完成自动开跑） |
+
+**踩坑记录（本轮 2 个）**：
+1. sed 注册 650M 时插入点落在 RiNALMo-micro ModelSpec() 调用中间 → 语法错误
+   → 全部 finetune 导入失败（首轮 100M/1M 队列 exit 1 秒败）。修复：git
+   checkout 恢复 + 正确位置插入（micro 完整条目之后）+ import 验证。教训：
+   sed 后必须立即语法检查。
+2. multimolecule/rinalmo（无后缀）与 lmzb-bupt/RiNALMo 均 401 gated；
+   正确仓库名 = **multimolecule/rinalmo-giga**（650M，未 gated）。
+   HF search API 确认命名体系：micro 33M / mega 148M / giga 650M。
+   首轮失败残留 16 行 pending 孤儿已 flock 清理（同 run_id 保留最新）。
+
+**PPT 细化（本地 20 页版）**：per-seq/per-base 术语定义入第 4 页怎么看
+引导；第 5 页表A 数值口径讲明（ncRNA 单任务/random/3 种子均值/非跨任务
+平均）；表B 补全参@默认行（0.229/0.076/0.076/0.083）+ E3 主轴四臂
+说明（frozen/LoRA/全参默认/全参 tuned；DoRA/IA3 属 E2 维度）。
+
+**等价线科学口径**：33M full(tuned) random ncRNA = 0.938 已有（E2 面板）；
+650M LoRA / 100M LoRA / 1M full(tuned) 本轮补齐后即可成图——C5b 核心图
+「33M 全参 ≈ 651M LoRA」（官方系）与「1M 全参 ≈ 100M LoRA」（受控系）。
+
 ## 2026-09-19 17:00 Day 5 傍晚：T0 立项任务集中补执行 + 导师汇报 PPT 结果版更新
 
 **用户指令**：tasks.md 大量 T0 未执行项逐个补执行 + PPT 过期内容更新。
