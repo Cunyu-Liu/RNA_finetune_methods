@@ -27,6 +27,34 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-19 17:00 Day 5 傍晚：T0 立项任务集中补执行 + 导师汇报 PPT 结果版更新
+
+**用户指令**：tasks.md 大量 T0 未执行项逐个补执行 + PPT 过期内容更新。
+
+**T0.2 服务器验证（全部通过）**：
+- ledger 单测 8/8（固化 tests/test_ledger.py 入仓库）：strategy 维度 /
+  同组合重复启动拒绝（done+running）/ pending 崩溃恢复 / update 指标 /
+  10 线程并发 claim 无丢行（flock）
+- S0 held-out split 核验：release22_cluster_split.parquet 3,357,201 行，
+  五分位 90.02/6.79/1.35/0.92/0.92%，MD5 94bc4152167c036595cba949bb86897f
+- RNA-Sc checkpoint 15 目录清点：100M 三种子各 19.46GB + 650M_s17
+  7.45GB + 全部 manifest.json 在位（MD5 已记 T0_交付物文档）
+
+**T0.0 监控检索（M1-M5 真实执行）**：零命中无触发。良渚 Nat Commun
+2025-12 benchmark 确认统一微调单臂（非策略对比）；GRAPE-LM（NBT 2026
+适配体生成）非竞争。AIDO.RNA-1.6B HF checkpoint 存活验证。
+
+**T0.1 交付物成文**：交接文档 T0_交付物_差异清单与预注册_20260919.md
+（Schmirler 差异清单 / PEFT 四方法笔记含实测结论 / 预注册稿摘要 /
+复现性记录 / 监控记录 / T0.2 验证记录六节）。
+
+**tasks.md v2.8**：T0 段 24 项勾选（附证据），仅剩 T0.3.1/3.2 待导师会议。
+
+**导师汇报 PPT 更新为 19 页结果版**（本地）：新增 4 页结果页（执行进度
+速览 / C4 粒度×泄漏 / A8+E3 非单调 / E2 四面板）插入概要后；slide2
+一页结论改为结果口径 + 请求评审；E2/E3/E4/总览四个设计页贴 09-19
+实测注记（预注册设计保留作对照）；更新前备份已存。
+
 ## 2026-09-19 15:40 Day 5 午后：per-base 全量 26 组收官 + E2 四面板 + 预印本 v0.5-core
 
 **RNA-FM SSP lora 6/6 完成**（15:07）——per-base 矩阵全量：
