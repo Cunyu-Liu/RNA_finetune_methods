@@ -25,7 +25,8 @@ Three findings emerge:
    baselines under both splits.
 2. **Task granularity determines leakage sensitivity**: the Δ(random−family)
    gap reaches +0.68 to +0.91 for fine-tuning on per-sequence classification
-   but is ≈ −0.04 for per-base m6A and +0.003–0.03 for SSP — i.e., much of
+   but is −0.007 to −0.042 for per-base m6A and −0.005 to +0.027 for SSP
+  (0/26 cells collapse, 5 models × 2 tasks × 5 arms) — i.e., much of
    the "fine-tuning benefit" on sequence-level tasks under random splits is
    **family-level leakage**, echoing and quantifying the "simply cheating"
    critique for RNA benchmarks.
@@ -102,13 +103,18 @@ marked):
   The traditional baseline is leakage-insensitive by construction (no
   training on sequence features), making it a robust floor under family
   splits (0.900 vs 0.893 random vs family).
-- m6A (per-base): no collapse, both models — RNA-Sc LoRA 0.943→0.983;
-  RiNALMo LoRA 0.970→0.995 (Δ = −0.025); tuned full-FT 0.968→0.993.
-- SSP: robust gains, no collapse — RiNALMo frozen 0.196→0.218, LoRA
-  0.214→0.223 (3 seeds); RNA-Sc LoRA 0.084→0.076.
+- m6A (per-base): no collapse across all five models — LoRA family/random
+  ratios 1.007–1.042 (RNA-Sc 0.943→0.983; RiNALMo 0.970→0.995; ERNIE
+  0.989→0.997; RNA-FM 0.982→0.996; SpliceBERT 0.955→0.988); family
+  sides are slightly *higher* than random (dense per-position labels
+  dilute family memorization).
+- SSP (per-base): no collapse across all five models — ratios 0.956–1.110
+  (ERNIE LoRA 0.337→0.345; RNA-FM 0.221→0.211; RNA-Sc 0.084→0.076;
+  RiNALMo 0.214→0.223; SpliceBERT 0.168→0.169).
 - **Leakage-sensitive fine-tuning is the norm for per-sequence
-  classification (5/5 models), and the exception for per-base tasks (0/4
-  model-task pairs).**
+  classification (5/5 models), and the exception for per-base tasks:
+  0/26 model–task–arm cells collapse (ratio < 0.7), across 5 models ×
+  2 tasks × {frozen, LoRA, full, DoRA, IA3}.**
 
 ### 2.3 E2 PEFT horizontal comparison (C5: 2 models × 2 tasks, full factorial)
 
@@ -119,10 +125,12 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
 | RiNALMo-33M, ncRNA | full(tuned) 0.938 > **DoRA 0.934** > LoRA 0.928 > IA3 0.860 > head-only 0.817 |
 | RNA-Sc-10M, ncRNA | **DoRA 0.765** > LoRA 0.746 > full 0.670 > IA3 0.579 > head-only 0.375 |
 | RiNALMo-33M, m6A | **DoRA 0.979** > LoRA 0.970 > full(tuned) 0.968 > IA3 0.941 |
+| RNA-Sc-10M, SSP | full 0.097 > LoRA 0.084 > DoRA 0.081 > IA3 0.042 > head-only 0.033 |
 
-- **DoRA is the best arm in 3/4 panels** — full fine-tuning wins only on
-  the 33M model at the per-sequence task with tuned LR; at 10M scale and
-  on per-base tasks the parameter-efficient arms dominate outright.
+- **DoRA is the best arm in 2/4 panels, and full-FT never wins without
+  caveats** — full wins on RiNALMo-33M ncRNA only with tuned LR (A8), and
+  on RNA-Sc SSP at default LR where the 10M model is A8-robust; at 10M
+  scale and on m6A the parameter-efficient arms dominate outright.
   "Small model + PEFT vs large model + full-FT" equivalence lines (C5's
   second question) get a concrete RNA data point: RNA-Sc-10M DoRA
   (0.765, ~0.57M trainable) vs RiNALMo-33M full (0.938) — the corpus/

@@ -29,6 +29,7 @@ PANELS = [
     ("rinalmomicro", "noncoding-rna-family", "RiNALMo-micro (33M), ncRNA", "33.5M"),
     ("rnasc10m", "noncoding-rna-family", "RNA-Sc-10M (10M, controlled), ncRNA", "10M"),
     ("rinalmomicro", "modification", "RiNALMo-micro (33M), m6A (per-base)", "33.5M"),
+    ("rnasc10m", "secondary-structure", "RNA-Sc-10M (10M, controlled), SSP (per-base)", "10M"),
 ]
 
 
