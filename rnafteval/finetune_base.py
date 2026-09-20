@@ -124,6 +124,7 @@ def main() -> int:
         test = sp["test"]
         if 0 < args.n_train < len(train) and args.n_train != 20000:
             # E3: 用家族表 seq->cluster 映射做宿主簇级整簇采样
+            import pyarrow.parquet as pq
             tp = pq.read_table(
                 os.path.join(ROOT, "data", "family_splits",
                              "modification.parquet"),

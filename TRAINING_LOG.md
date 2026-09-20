@@ -27,6 +27,34 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 13:45 Day 6 午后：昨夜六队列全部收官 + 重大机制发现 + 修复重跑
+
+**昨夜收成（六队列 DONE）**：
+1. **A8 m6A full 臂补全**：SpliceBERT 0.649 崩→tuned 0.930；ERNIE
+   0.508 崩→0.963；RNA-FM 0.992 幸存（5/6 done，s17 补跑中）；
+   RiNALMo 0.302→0.968（已有）；RNA-Sc 0.940 不崩（已有）
+   —— **A8 跨任务成立：m6A 与 ncRNA 崩溃模型集合一致**
+   （SpliceBERT/ERNIE/RiNALMo 崩；RNA-FM 幸存；RNA-Sc 部分免疫）
+2. **E3-m6A family 曲线（27 runs）**：三臂全部单调递增
+   - frozen 0.474→0.621→0.928→0.949（全量）
+   - lora 0.491→0.817→0.987→0.995
+   - full@tuned 0.615→0.816→0.986→0.993
+   —— **预测验证：per-base 无家族记忆峰、无全量崩**，与 ncRNA
+   非单调（0.16→0.52→0.707→0.083）完美对照——C4×E3 机制闭环
+3. **等价线数据齐**：100M LoRA rnd 0.795 / 1M full@tuned rnd 0.693
+   （BEST=3e-5）/ 33M full@tuned 0.938（已有）
+4. 650M 下载完成（2.6G）但 LoRA 6 runs 因 GPU3 其他用户挤压全部
+   OOM
+
+**修复与重跑（3 项）**：
+- E3 random 27 runs 秒败根因：pq import 在 family 分支内部（条件
+  导入）→ random 分支 UnboundLocalError。已修复（random 分支内加
+  import）+ 清 27 pending 行 + 重派（GPU4）
+- 650M LoRA 重派 GPU5（15.8G free，s17 已过 s29 在跑）
+- RNA-FM s17 random 补跑（GPU0，清 pending 行）
+
+**C4 表已刷新**：新 m6A full 臂（tuned 覆盖）入表。
+
 ## 2026-09-20 09:00 Day 6 晨：E3-m6A 启动 + 资源冲突修复 + 下载断点续传
 
 **E3-m6A 跨粒度验证启动**（用户确认执行）：
