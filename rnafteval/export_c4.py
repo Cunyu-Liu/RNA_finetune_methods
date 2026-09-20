@@ -54,7 +54,8 @@ def cells() -> dict:
 
 def baselines() -> dict:
     b = {}
-    for task in ("noncoding-rna-family", "modification", "secondary-structure"):
+    for task in ("noncoding-rna-family", "modification",
+                 "secondary-structure", "mrl"):
         for split in ("random", "family"):
             p = os.path.join(ROOT, "artifacts",
                              "baseline_%s_%s.json" % (task, split))
@@ -64,7 +65,7 @@ def baselines() -> dict:
                     vals = []
                     for v in d.get("results", {}).values():
                         if isinstance(v, dict):
-                            vals.append(v.get("f1", v.get("auc", 0)))
+                            vals.append(v.get("f1", v.get("auc", v.get("pearson_r", 0))))
                         else:
                             vals.append(v)
                     if vals:

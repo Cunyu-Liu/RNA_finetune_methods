@@ -76,10 +76,15 @@ def main() -> int:
                if isinstance(kv[1], dict) else -9)
     out = {"task": "mrl", "split": args.split, "metric": "PEARSON_R",
            "best": best[0], "best_value": best[1]["pearson_r"],
-           "all": results}
-    os.makedirs(os.path.join(ROOT, "status"), exist_ok=True)
-    path = os.path.join(ROOT, "status", "baseline_mrl_%s.json" % args.split)
+           "all": results,
+           "results": {k: {"pearson_r": v["pearson_r"], "mse": v["mse"]}
+                       for k, v in results.items() if isinstance(v, dict)}}
+    os.makedirs(os.path.join(ROOT, "artifacts"), exist_ok=True)
+    path = os.path.join(ROOT, "artifacts", "baseline_mrl_%s.json" % args.split)
     with open(path, "w") as f:
+        json.dump(out, f, indent=1)
+    p2 = os.path.join(ROOT, "status", "baseline_mrl_%s.json" % args.split)
+    with open(p2, "w") as f:
         json.dump(out, f, indent=1)
     print(json.dumps(out))
     return 0

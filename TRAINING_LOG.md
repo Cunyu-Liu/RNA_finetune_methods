@@ -27,6 +27,26 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 17:25 Day 6 傍晚 III：MRL 全参默认 LR 崩溃（A8 第四任务维度）
+
+**MRL full@3e-4 默认（s17/random 首批）**：
+- RiNALMo-33M: Pearson r = **-0.001**（彻底崩）
+- SpliceBERT: r = 0.098（崩）
+- **RNA-Sc-10M: r = 0.169（崩！）**——m6A/ncRNA 上稳健的 RNA-Sc 在
+  MRL 回归任务上也崩
+- ERNIE/RNA-FM 在跑
+
+**含义（A8 口径再细化）**：
+1. 崩溃集合是**任务依赖**的：ncRNA 3 崩 / m6A 3 崩 / MRL 目前 3/3 崩
+  （含 RNA-Sc——回归任务更脆弱）
+2. 与 diag 机制一致：MRL 25nt 短序列 + 连续标签，梯度信号更集中
+3. 条件 tuned 链将自动触发（阈值 r<0.45）——四模型 tuned 恢复
+   对照在途，A8 表格将扩至三任务
+
+**export_c4 已扩展**：baselines() 加 mrl 任务 + pearson_r 键；
+baselines_mrl 输出对齐 artifacts/baseline_mrl_<split>.json 约定
+（results 结构）；基线重启（Ridge α{1,10,100}+LGBM）。
+
 ## 2026-09-20 17:20 Day 6 傍晚 II：MRL full 臂三路上线 + 五卡并行填满
 
 **MRL full 臂（A8 三任务扩展，条件 tuned 链）五路并行**：
