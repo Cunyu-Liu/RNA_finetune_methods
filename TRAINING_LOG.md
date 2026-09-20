@@ -27,6 +27,24 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 17:20 Day 6 傍晚 II：MRL full 臂三路上线 + 五卡并行填满
+
+**MRL full 臂（A8 三任务扩展，条件 tuned 链）五路并行**：
+| GPU | 队列 | 状态 |
+|---|---|---|
+| 0 | q_mrl_c4.sh（frozen/lora 60 runs）| 21/60 推进中 |
+| 1 | RiNALMo MRL full default→条件 tuned | s17 random 在跑 |
+| 2 | SpliceBERT MRL full | s29 random 在跑 |
+| 4 | RNA-Sc-10M MRL full | s17 random 在跑 |
+| 5 | ERNIE MRL full + 650M LoRA（等价线收尾）| 双任务同卡 |
+
+- ERNIE 原派 GPU3 被其他用户抢占（gate 3.1G<4G 拒绝）——灵活改派 GPU5
+- 判崩阈值：MRL random Pearson < 0.45 触发 tuned 链（frozen 参照 ~0.72）
+- MRL k-mer 基线（Ridge α{1,10,100} + LGBM，random/family）CPU 在跑
+
+**交接文档（本地）**：STATUS_SNAPSHOT_20260920.md 新建（Day 6 机制闭环 +
+MRL 三任务 + 防坑累计五条新增）；tasks.md v2.9。
+
 ## 2026-09-20 16:00 Day 6 傍晚：MRL per-seq 第二任务上线 + D4 阴性结果 + PPT 双任务表
 
 **用户指令**：PPT 第 4 页补 A8 双任务表 + E3-m6A 表（已做，仅动该页）；
