@@ -27,6 +27,20 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 20:05 Day 6 夜：MRL 三面板扩展全线铺开
+
+**MRL C4 收官**：60/60 runs 全齐（frozen s29 补跑 0.717）——per-seq
+第二任务 frozen/lora 全臂完成。
+
+**新派两队列（填满 GPU3/4）**：
+- GPU3: E2-MRL 面板（RiNALMo/RNA-Sc × {dora,ia3} × random × 3 种子
+  = 12 runs）——E2 任务维度扩展至回归任务
+- GPU4: E3-MRL 标注量轴（RiNALMo {full@1e-5, lora, frozen} ×
+  n{100,1000,10000} × 双切分 × 3 种子 = 54 runs）——E3 三任务全因子
+  （预测：单例簇任务单调，如 m6A）
+- GPU1: frozen s29 补跑完成（0.7173）
+- 650M 等价线：s29 family 在跑（剩 s43 最后一个）
+
 ## 2026-09-20 19:55 Day 6 晚：MRL 全矩阵收官——A8 5/5 + 单例簇发现
 
 **A8-MRL：5/5 全参默认崩 → tuned 全恢复（Pearson r）**：
