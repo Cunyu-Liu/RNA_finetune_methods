@@ -48,6 +48,16 @@ MODEL_SPECS: dict[str, ModelSpec] = {
                             custom_loader="rnasc"),
     "RNA-Sc-30M": ModelSpec("RNA-Sc-30M", "", 480, 30.0, "controlled",
                             custom_loader="rnasc"),
+    "RNA-Sc-10M-ck1": ModelSpec("RNA-Sc-10M-ck1", "", 512, 10.0, "controlled",
+                                custom_loader="rnasc"),
+    "RNA-Sc-10M-ck5": ModelSpec("RNA-Sc-10M-ck5", "", 512, 10.0, "controlled",
+                                custom_loader="rnasc"),
+    "RNA-Sc-10M-ck10": ModelSpec("RNA-Sc-10M-ck10", "", 512, 10.0, "controlled",
+                                 custom_loader="rnasc"),
+    "RNA-Sc-10M-ck15": ModelSpec("RNA-Sc-10M-ck15", "", 512, 10.0, "controlled",
+                                 custom_loader="rnasc"),
+    "RNA-Sc-10M-ck20": ModelSpec("RNA-Sc-10M-ck20", "", 512, 10.0, "controlled",
+                                 custom_loader="rnasc"),
     "RNA-Sc-100M": ModelSpec("RNA-Sc-100M", "", 768, 100.0, "controlled",
                              custom_loader="rnasc"),
 }
@@ -191,10 +201,16 @@ def load_rnasc(model_name: str, device: str):
         "RNA-Sc-30M": "RNA-Sc-30M_s17",
         "RNA-Sc-100M": "RNA-Sc-100M_s17",
     }
-    run_dir = os.path.join(RNASC_RUNS, run_map[model_name])
+    if "-ck" in model_name:
+        base, idx = model_name.rsplit("-ck", 1)
+        n_ck = int(idx)
+    else:
+        base, n_ck = model_name, None
+    run_dir = os.path.join(RNASC_RUNS, run_map[base])
     cks = sorted([f for f in os.listdir(run_dir) if f.startswith("ckpt_")],
                  key=lambda f: int(f.split("_nt")[1].split("_")[0]))
-    ck = torch.load(os.path.join(run_dir, cks[-1]), map_location="cpu",
+    ck_file = cks[n_ck - 1] if n_ck is not None else cks[-1]
+    ck = torch.load(os.path.join(run_dir, ck_file), map_location="cpu",
                     weights_only=False)
     mcfg = ck["cfg"]["arch"]
     model = RNAMLMEncoder(d_model=mcfg["d_model"], n_layers=mcfg["n_layers"],

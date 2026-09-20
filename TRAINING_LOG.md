@@ -27,6 +27,42 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 14:10 Day 6 午后 II：A8 机制诊断——崩溃=瞬时表示秩坍缩
+
+**用户问题**：为什么有些模型默认 LR 崩、有些不崩？原理是什么？
+
+**诊断工具**（本轮新增）：
+- rnafteval/diag_a8.py：显微镜脚本（复刻 m6A 训练环，首 100 步
+  记录梯度范数/分桶权重漂移/last-hidden 有效秩与余弦一致性）
+- models/__init__.py loader 支持 RNA-Sc-10M-ckN（19 ckpt 同架构
+  d192/L20/8.9M——纯预训练进度剂量，无架构混杂）
+
+**核心发现（5 模型 × 100 步）**：
+| 模型 | effrank 0→100 | drift_late | 任务表现 |
+|---|---|---|---|
+| SpliceBERT(崩) | 329→**1**（s5 即 31→s10=2） | 0.032 | m6A 0.649 |
+| RiNALMo-33M(崩) | 302→2（s2 即 42） | 0.048 | m6A 0.302 |
+| ERNIE-86M(崩) | 500→1（s5 即 1） | 0.041 | m6A 0.508 |
+| RNA-FM(幸存) | 287→9(s20)→**回升 51**(s100) | 0.030 | m6A 0.992 |
+| RNA-Sc-ck1(早) | 32→3，drift **0.140**(3×) | — | D4 待出 |
+
+**机制结论**：
+1. 崩溃 ≠ 过拟合，是**瞬时表示秩坍缩**：3-5% 的相对权重漂移在
+   5-10 步内把 last-hidden 有效秩从 300-500 打到 1（所有 token
+   同一方向），loss 直接落多数类平台 0.032
+2. 区分器不是参数量/架构（三种 attn 都崩；86M 崩 96M 幸存）——
+   是**预训练深度**：RNA-FM（RNAcentral 36M 序列最深）独有
+   「坍缩后回弹」（effrank 9→51），同幅度漂移下可逆
+3. 崩溃模型处在 3e-4 步长的「不稳定区」；tuned 3e-5/1e-5 =
+   步长缩小 10-30 倍即安全——盆地锐度差异
+4. ck1 早期特征 drift 3×且初始低秩——预训练早期脆弱（D4 任务级
+   剂量曲线 GPU4 在跑：ck1/5/10/15 + 最终参照）
+5. Caveat：RNA-Sc wrapper 的 last_hidden 坍缩但任务不崩（0.940）
+   ——判别信息可能在中层；diag 需补 output_hidden_states=True
+
+**文献对照**：与 Kumar et al. ICML 2022（fine-tuning distorts
+pretrained features）同族——RNA LM 上呈极端形态（步数级坍缩）。
+
 ## 2026-09-20 13:45 Day 6 午后：昨夜六队列全部收官 + 重大机制发现 + 修复重跑
 
 **昨夜收成（六队列 DONE）**：
