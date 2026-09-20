@@ -27,6 +27,37 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 16:00 Day 6 傍晚：MRL per-seq 第二任务上线 + D4 阴性结果 + PPT 双任务表
+
+**用户指令**：PPT 第 4 页补 A8 双任务表 + E3-m6A 表（已做，仅动该页）；
+第 3 页 C4 表A per-seq 只有一个任务要对齐——启动 MRL。
+
+**MRL per-sep 第二任务（C4 对齐）**：
+- tasks/mrl.py + finetune_mrl.py（回归 runner：SeqMLPHead(d,1) + MSE +
+  Pearson r；协议对齐 m6A：epochs 3 / n-train 20000 / bs 32）
+- 家族切分已生成：91,519 条 → 90,403 簇（25nt UTR 多单例簇），
+  train 73217 / val 9152 / test 9150
+- 队列 GPU0：5 模型 × {frozen, lora} × 双切分 × 3 种子 = 60 runs
+- 首分：RiNALMo frozen random Pearson r=0.717 ✓（量级合理）
+
+**D4 剂量实验结果（阴性——诚实记录）**：
+- RNA-Sc-10M ck{1,5,10,15}（nt100M→1.5B）ncRNA@3e-4 默认全参：
+  0.730/0.815/0.779/0.724——**各剂量均不崩**（无 0.077 式崩溃）
+- m6A：ck1-15 全部 0.94-0.95 不崩
+- **结论修正**：预训练进度不是崩溃抗性的调制因子（RNA-Sc 家族
+  全程稳健）；抗性是配方/架构家族属性——ALiBi 窄模型（d192）稳健，
+  BERT 系中层模型脆弱，RNA-FM（最深预训练）稳健
+- 结合 diag：RNA-Sc 表示层也瞬时坍缩（effrank 9→1）但任务恢复
+  （0.94）——机制统一为「**坍缩后回弹能力**」：RNA-FM 百步内回弹、
+  RNA-Sc 三 epoch 内回弹（各剂量）、三崩溃模型无回弹
+
+**E3-m6A random 切分补跑完成**：三臂单调（frozen 0.51→0.55→0.90；
+lora 0.47→0.94→0.95；full@tuned 0.72→0.94→0.95）——双切分均验证
+per-base 单调性预测。
+
+**PPT（本地，仅第 4 页）**：表A 升级双任务 × 5 模型（ncRNA+m6A 默认/
+tuned 全列）；表B 合并 E3 双任务 9 列对照（ncRNA 非单调 vs m6A 单调）。
+
 ## 2026-09-20 14:10 Day 6 午后 II：A8 机制诊断——崩溃=瞬时表示秩坍缩
 
 **用户问题**：为什么有些模型默认 LR 崩、有些不崩？原理是什么？

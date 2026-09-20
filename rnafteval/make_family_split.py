@@ -29,8 +29,13 @@ MMSEQS = "/home/cunyuliu/mmseqs/bin/mmseqs"
 
 
 def load_task_seqs(task: str) -> list[dict]:
-    from .tasks import ncrna
     from .tasks.dedup import dedup
+    if task == "mrl":
+        from .tasks import mrl
+        recs = mrl.load_mrl(
+            os.path.join(BEACON_RAW, "mean-ribosome-loading", "data"))
+        return dedup(recs)
+    from .tasks import ncrna
     recs = ncrna.load_ncrna(
         os.path.join(BEACON_RAW, "noncoding-rna-family", "data"))
     return dedup(recs)
