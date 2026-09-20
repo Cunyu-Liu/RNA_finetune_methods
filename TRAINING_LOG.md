@@ -27,6 +27,32 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 19:55 Day 6 晚：MRL 全矩阵收官——A8 5/5 + 单例簇发现
+
+**A8-MRL：5/5 全参默认崩 → tuned 全恢复（Pearson r）**：
+| 模型 | 默认 random | tuned random | tuned family |
+|---|---|---|---|
+| RiNALMo-33M | -0.001 | 0.796 | 0.696 |
+| SpliceBERT | 0.098 | 0.803 | 0.732 |
+| ERNIE-RNA | 0.028 | 0.784 | 0.685 |
+| RNA-FM | **0.181（ncRNA/m6A 唯一幸存者在 MRL 也崩）** | 0.794 | 0.688 |
+| RNA-Sc-10M | 0.159 | 0.525 | 0.479 |
+- tuned 最优 LR：RiNALMo/ERNIE 1e-5；SpliceBERT/RNA-FM/RNA-Sc 3e-5
+- **A8 崩溃集合任务依赖且 MRL 上全员崩**（回归任务最脆弱）
+
+**C4-MRL（per-seq 第二任务）：LoRA family 温和退化非崩溃**：
+- RiNALMo 0.797/0.698（ratio 0.87）/ SpliceBERT 0.800/0.723（0.90）/
+  ERNIE 0.791/0.694（0.88）/ RNA-FM 0.799/0.678（0.85）/ RNA-Sc 0.49/0.45
+- **机制发现：MRL 90,403 簇几乎全单例（91,519 条）——家族结构密度
+  才是 per-seq 崩溃的必要条件**；单例簇任务 family≈random。
+  粒度（per-seq/per-base）× 家族密度共同决定泄漏敏感性——C4 结论
+  细化为二维判据
+- RNA-Sc-10M 在 MRL 全面偏弱（tuned full 0.53 vs 其他 0.78-0.80）——
+  ALiBi 模型未编码 UTR 翻译效率特征（观察性）
+
+**MRL frozen/lora 队列 57/60（剩 RNA-Sc lora family）**；650M 等
+价线剩 s43 family；k-mer 基线重跑中（-u 无缓冲）。
+
 ## 2026-09-20 17:25 Day 6 傍晚 III：MRL 全参默认 LR 崩溃（A8 第四任务维度）
 
 **MRL full@3e-4 默认（s17/random 首批）**：
