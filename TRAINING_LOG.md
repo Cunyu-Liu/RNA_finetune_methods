@@ -27,6 +27,34 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 22:35 Day 6 深夜：等价线核心结论 + E2-MRL 收官 + C4 三任务全表
+
+**C5b 等价线（官方系 RiNALMo 33M↔650M，ncRNA）**：
+- 650M LoRA random：s29 0.960 / s43 0.967（s17 watcher 补跑中，
+  两次被其他用户抢卡 OOM——已部署 13G 门槛耐心 watcher）
+- **33M 全参 tuned 0.938 < 650M LoRA 0.964（均值）——「小全参 ≈
+  大 LoRA」等价线在 RNA 侧 33M↔650M 不成立**：大模型 LoRA 仍占优
+  （+0.026）。与蛋白侧 Schmirler 150M 交点对比：RNA 侧交点若存在
+  则更小或不存在
+- **650M LoRA family 0.076-0.166 也崩——C4 家族崩溃扩展至第 6 个
+  模型（最大模型）**：651M 大容量/深预训练不提供家族切分抗性；
+  LoRA 不受 A8 LR 崩溃影响，此为纯 C4 现象
+- 受控系：1M full@tuned 0.693 / 10M 0.808 / 100M LoRA 0.795——
+  100M LoRA ≈ 10M full（+0.13 内），受控系等价点在 10M-100M 之间
+
+**E2-MRL（第五/六面板）12/12 收官**：
+- RiNALMo MRL：dora 0.797 ≈ lora 0.797 ≈ full@tuned 0.796 >
+  ia3 0.752 > frozen 0.717
+- RNA-Sc MRL：full@tuned 0.525 > dora 0.49 > lora 0.49 >> ia3 0.17
+- IA3 模型依赖：RiNALMo 上 0.752 可行 / RNA-Sc 上 0.17 弱
+
+**C4 表三任务全量刷新**：MRL Δ(rand−fam) = 0.07-0.16（温和）——
+三任务梯度：ncRNA 0.68-0.91（多成员家族崩溃）/ MRL ~0.1（单例簇
+温和）/ m6A ≈0（per-base 免疫）。基线入表（LGBM random 0.778）。
+
+**E3-MRL 54 runs GPU4 重派成功在跑**（首 dispatch 因故未执行，
+log 空——重派后 2/54 推进）。
+
 ## 2026-09-20 20:05 Day 6 夜：MRL 三面板扩展全线铺开
 
 **MRL C4 收官**：60/60 runs 全齐（frozen s29 补跑 0.717）——per-seq
