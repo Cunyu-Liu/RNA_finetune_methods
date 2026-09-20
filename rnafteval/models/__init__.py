@@ -34,6 +34,9 @@ MODEL_SPECS: dict[str, ModelSpec] = {
     "RiNALMo-micro": ModelSpec("RiNALMo-micro", "multimolecule/rinalmo-micro",
                                640, 33.4, "tierA"),
     "RiNALMo-650M": ModelSpec("RiNALMo-650M", "multimolecule/rinalmo-giga", 1280, 650.0, "tierA"),
+    "RiNALMo-mega": ModelSpec("RiNALMo-mega", "multimolecule/rinalmo-mega", 640, 148.0, "tierA"),
+    "RNA-Sc-650M": ModelSpec("RNA-Sc-650M", "", 768, 650.0, "controlled",
+                             custom_loader="rnasc"),
     "ERNIE-RNA": ModelSpec("ERNIE-RNA", "multimolecule/ernierna", 768,
                            86.0, "tierA"),
     "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),
@@ -200,6 +203,7 @@ def load_rnasc(model_name: str, device: str):
         "RNA-Sc-10M": "RNA-Sc-10M_s17",
         "RNA-Sc-30M": "RNA-Sc-30M_s17",
         "RNA-Sc-100M": "RNA-Sc-100M_s17",
+        "RNA-Sc-650M": "RNA-Sc-650M_s17",
     }
     if "-ck" in model_name:
         base, idx = model_name.rsplit("-ck", 1)

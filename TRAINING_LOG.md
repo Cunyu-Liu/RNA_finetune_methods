@@ -27,6 +27,31 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-20 22:50 Day 6 深夜 II：等价线补档设计（用户指令）+ 三 watcher 体系
+
+**用户设计指令**：(1) 650M LoRA 对比「比 33M 大一档」的 RiNALMo 全参
+——即 mega-148M（官方系 33M/148M/650M 中间档，checkpoint 已本地）；
+(2) 受控系 RNA-Sc-300M/650M 训完后补测 full+lora 值。
+
+**落地**：
+- GPU0: q_mega_full.sh —— RiNALMo-mega-148M 全参 tuned 链
+  （s101 网格 {1e-5,3e-5} → formal 双切分 × 3 种子）在跑
+  （s101 lr1e-5 训练中）。若 mega full ≈ 650M LoRA（0.964），则
+  RNA 侧等价点落在 33M-148M 之间——与蛋白侧 Schmirler ~150M 交点
+  呼应
+- RiNALMo-mega + RNA-Sc-650M 已注册 MODEL_SPECS（17 specs）
+- watcher v2（650M s17）：重试前清 run_id 行防 ledger 污染，
+  GPU0-5 扫描 >13G 每 3 分钟
+- 预训练 watcher：kill -0 监听 rna_sc.train RNA-Sc-650M（PID
+  422582）——退出即自动触发 q_rnasc650_tests.sh：相位1 frozen+lora
+  ×双切分×3 种子（GPU>=14G 门槛）；相位2 full tuned 链（GPU>=28G
+  门槛）。用户指令覆盖 B7 的 full<=100M 分层——650M 受控全参按
+  用户要求开测（等价线需要）
+- RNA-Sc-300M：runs 目录尚无该档（机理篇未开训）——待出现后同样
+  补测（定时巡检捕获，TRAINING_LOG 此处留痕提醒）
+
+**E3-MRL 16/54 推进中**（GPU4）。
+
 ## 2026-09-20 22:35 Day 6 深夜：等价线核心结论 + E2-MRL 收官 + C4 三任务全表
 
 **C5b 等价线（官方系 RiNALMo 33M↔650M，ncRNA）**：
