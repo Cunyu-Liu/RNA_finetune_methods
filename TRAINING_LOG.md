@@ -2062,3 +2062,12 @@ vs frozen 0.645；full FT 进行中。
 - **账实**：ledger 912 done / 2 cancelled，pending 为在跑活行（smalllora 30M s17 family + biglora mega s43 random）；账实一致
 - **健康项**：650M 预训练 422582（2-17:14）+ watcher 3578696 在岗，tests 链待退出自动触发；本轮无新 OOM/CUDA 异常（patch2/patch3 日志尾部 OOM 均为已处置历史事件）
 - **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）全部收口；GPU4 曾现 26.8G 空闲 → 已用于 smalllora 补臂；GPU1/2/5 忙于 biglora/预训练，GPU0/3 被 honghui 波动持有——无更多缺口可派
+
+## Day 8 2026-09-22 01:50 巡检：mrl_big 错模块双跑事故处置 + 第四/五波全收工 + 导出链重刷
+- **事故发现与处置（重要）**：并行 session 在 frozen_patch 收口后由 watcher 链自动启动的 /tmp/mrl_big.sh（bash -c 'while ps aux | grep [f]rozen_patch...' 触发）**错用 finetune_one 模块跑 MRL**（650M 全部 skip 幸免；mega s29/s43 family 实跑了 ncRNA 13 分类数据，loss 2.49-2.77 签名，向 artifacts 写入 ACC 0.084/0.096 污染 result.json），与 biglora G5（正确 finetune_mrl）在同 3 个 mega family run_id 上双跑。**数值未污染**：biglora 后完成（01:33:47），ledger 最终值均为正确 PEARSON_R 0.7082/mse 0.5053；但留 3 对重复行（4 行混入 n_classes/head_params 分类 schema）+ 磁盘 2 个污染 result.json
+- **清账**：flock 去重净化——移除 4 行 mixed-schema + 1 行纯重复；s29/s43 family 两行均为混合行被清后按 biglora 日志 exit-0 证据（12/12 全 exit 0）恢复 done 行（沿 23:58 巡检先例，note 标注 restored）；污染 result.json 隔离至 artifacts/quarantine_mrl_big_badmodule_20260922/。ledger 现 923 done / 2 cancelled / 0 pending，账实一致（活进程仅剩 650M 预训练 422582 + watcher 3578696 + 外部下载任务）
+- **第四/五波全收工**：biglora G5 12/12（650M lora random 0.8013 x3 / family 0.6979 x3；mega lora random 0.7964 x3 / family 0.7082 x3）；smalllora G4 12/12（30M lora random 0.521-0.545 / family 0.464-0.484；100M lora random 0.548-0.573 / family 0.475-0.508）——00:50 认定的 12 run 孤儿缺口全部补齐，MRL lora 全谱（10M/30M/100M/650M/mega x 双切分 x 3 种子）闭环，random-family Δ 稳定 0.06-0.10 温和带
+- **导出链重刷（00:50 遗留要求完成）**：C4/E2/stats/figures/resources/lr_grid/splits/leakage/e3/fig_e3 十产物 02:02:30 全刷成功；C4 表A mrl lora family 旧污染值 0.066-0.075 已替换为正确值（30M 0.473 / 100M 0.488 / mega 0.708 / 650M 0.698）——21:15 commit 4cc9daf 的 preprint 数据源污染风险解除
+- **健康项**：650M 预训练 422582（2-18:00+，GPU2 18.65G）+ watcher 3578696 在岗，q_rnasc650_tests.sh 链待退出自动触发；本轮无新 OOM/CUDA 降级（patch2/patch3 日志尾部 OOM 均为历史已处置事件；旧 4.75G 小卡 GPU6/7 的 OOM 与 A100 无关）
+- **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）全收口；第五波 smalllora/biglora 也已闭环；GPU0 15.8G/1 19.7G/3 21.7G/5 15.7G 名义空闲但被 honghui 波动持有，MRL 矩阵余下缺口（dora/ia3/full 大档）为设计范围外——无新缺口可派，本轮不续派
+- **教训入库**：①守护链自动续派脚本必须显式指定任务专属模块（finetune_one 是分类入口，MRL 必须 finetune_mrl）；②双 runner 同 run_id 竞态下 ledger 行会被后写者覆盖成混合 schema——写入器应整行替换而非字段合并；③恢复行必须带 note 标注证据来源
