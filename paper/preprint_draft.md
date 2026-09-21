@@ -113,7 +113,7 @@ marked):
   (ERNIE LoRA 0.337→0.345; RNA-FM 0.221→0.211; RNA-Sc 0.084→0.076;
   RiNALMo 0.214→0.223; SpliceBERT 0.168→0.169).
 - MRL (per-seq, singleton clusters): mild degradation only -- LoRA
-  family/random ratios 0.85-0.91 across 5 models; delta = 0.07-0.16
+  family/random ratios 0.85-0.92 across 5 models; delta = 0.04-0.12
   vs ncRNA 0.68-0.91. **Collapse requires multi-member family
   structure: the MRL task has 90,403 near-singleton clusters,
   leaving no family overlap to leak.**
