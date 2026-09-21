@@ -1993,3 +1993,12 @@ vs frozen 0.645；full FT 进行中。
 - **SSP fulltuned 新数据（3 模型 x 双切分 x 3 种子，LR 1e-5）**：ERNIE 0.24-0.27（vs 默认 0.006 档恢复 x40+）/ RNA-FM 0.14-0.16 / SpliceBERT 0.049-0.052（低但方向一致）——A8 恢复叙事扩展至 SSP 三模型
 - **MRL 新数据**：30M/100M frozen random 0.128-0.132 family 0.184-0.204（family 侧反升——per-seq 单例簇温和特性复现）；650M frozen random 0.744 family 0.654；lora 30M/100M family 0.066-0.075（带内）
 - commit 4cc9daf push 完成
+
+## Day 7 21:55 巡检：mrl_patch OOM 假完成事故处置 + 队列收工盘点
+- **事故认定：mrl_patch（G5）于 21:17 因外部挤压 OOM 崩溃后"假完成"**。traceback 留证：GPU5 被他人进程 410151 占 14.99G，650M lora 自身 19.16G 时 OOM（仅差 32MiB）；脚本无显存门控无重试，后续 11 run 逐条秒失败滑过，最后打印 MRL_PATCH_DONE 假标记。12 条孤儿 pending 行（650M/mega mrl lora x3 种子 x2 切分）已 flock 双校验精确清除（现 pending 仅 2，均为在跑活行）
+- **famlora_audit（G3）20:41 收工**：10M-100M 档 done 全 skip；新落账 1M lora family 3 种子 0.144/0.075/0.160——1M 档自身分化越带。全谱 lora family 形态：10M-100M 稳定带内(0.064-0.096)，两端分化（1M / 148M 0.139-0.334 / 650M s43 0.166 半越带）——崩溃带表述修订方向不变，等 preprint 修订链
+- **ssp_fulltuned（G4 链）推进**：ERNIE 20:42 收工 → RNA-FM 21:21 收工 → SpliceBERT 21:21 开跑（21:34 epoch1 loss 0.96 正常）
+- **mrl_fill（G1）**：frozen 30M/100M 全齐，650M frozen s17 random done（PEARSON 0.187）/s29 family 在跑；GPU1
+- **frozen_patch（G2）**：RiNALMo-650M ncRNA family frozen s17 在跑（21:00 起）
+- **续派 mrl_patch2（PID 1268309）**：门控改为 torch.mem_get_info 全 0-5 卡扫描取最大空闲（650M>=20G / mega>=12G），done 跳过 + 失败清行 + 重试 x3 + 300s 等卡；首轮无合格卡（最大 GPU1 15.5G）已进入等卡轮询，日志 q_mrl_patch2.log
+- 其余健康项：650M 预训练 422582 存活（2-14:44）+ watcher 3578696 在岗；无 CUDA 不可用/CPU 降级证据（GPU6/7 OOM 文件均为 09-15/16 旧事件）；ledger 873 done / 2 cancelled / 2 pending
