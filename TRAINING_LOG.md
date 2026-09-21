@@ -2002,3 +2002,10 @@ vs frozen 0.645；full FT 进行中。
 - **frozen_patch（G2）**：RiNALMo-650M ncRNA family frozen s17 在跑（21:00 起）
 - **续派 mrl_patch2（PID 1268309）**：门控改为 torch.mem_get_info 全 0-5 卡扫描取最大空闲（650M>=20G / mega>=12G），done 跳过 + 失败清行 + 重试 x3 + 300s 等卡；首轮无合格卡（最大 GPU1 15.5G）已进入等卡轮询，日志 q_mrl_patch2.log
 - 其余健康项：650M 预训练 422582 存活（2-14:44）+ watcher 3578696 在岗；无 CUDA 不可用/CPU 降级证据（GPU6/7 OOM 文件均为 09-15/16 旧事件）；ledger 873 done / 2 cancelled / 2 pending
+
+## Day 7 22:05 第三波补位（micro head-only family s29/s43）+ 队列收工汇总
+- ledger 884 行（done 880 / pending 2 = 在跑）；GPU 全忙态（0-5）
+- SSP fulltuned 链全收工：ERNIE 0.24-0.27 / RNA-FM 0.14-0.16 / SpliceBERT 0.05（LR 1e-5 恢复，方向一致 3/3）
+- MRL fill G1 进行中（650M frozen family s43 在跑，10 分钟内落账）
+- micro head-only family s29/s43 补位队列派发 G3（etc_audit ASYM 残余缺口最后一个）
+- 650M 预训练 alive（最新 ckpt nt12.0B step127928）
