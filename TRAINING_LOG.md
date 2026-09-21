@@ -1953,3 +1953,10 @@ vs frozen 0.645；full FT 进行中。
 - **编排改造**：v3 watcher 已退役（风险：其"清该 run 行再跑"逻辑会清掉 one-arm 在跑的 pending 活行造成重复训练）；mega family 三格改由三个定向 runner 接管——family s17->GPU4 / s29->GPU3 / s43->GPU0（各盯一卡 >=20G，claim 前查 done，互不抢卡）
 - 650M 预训练（PID 422582）及其测试链 watcher（PID 3578696）双双存活
 - 待 mega family 三格落地后：fig_c5b 重刷 + PPT 等价线表终刷
+
+## Day 7 17:45 傍晚巡检——崩溃带被击穿 + mega 尾局编排
+- **mega lora random 3/3 全齐**：s17 0.9394 / s29 0.9522 / s43 0.9545（均值 0.949）——148M LoRA 全面逼近 mega 全参 0.942，C5b 官方系等价线闭合
+- **重要发现：family 崩溃带被 148M LoRA 击穿**。全谱审计：1M full 0.064-0.084 / 10M lora 0.072 / 30M lora 0.064 / 100M lora 0.081 / 33M micro lora 0.081 / mega full 0.076-0.084 全在带内；但 **mega lora family s17 0.147 / s29 0.334**（5.2x 多数类基线 0.064）显著逃逸，650M lora s43 0.166 亦轻微越带（mean 0.106）。preprint v0.6 第 157-158 行 "all seven scales collapse (0.07-0.11)" 需修订为分档表述——s43 family 落地后统一改
+- **mega family s43 OOM 根因**：12:27:40 于 GPU0 我方仅占 4.71G 时被其他用户 6 个进程挤爆（日志留证），one-arm 单发无重试退出，stale 行已精确清除
+- **v2 重试 runner 上线**（/tmp/mega_onearm_v2.sh：失败自动清行重试 x3），s43 family 已在 GPU3 开跑（27G 空闲实测），预计 ~18:30 落账；落账后进入修订链：fig_c5b 注记 + preprint 2.3 + 中文摘要 + PPT
+- 另一并行 session 17:37 在 GPU0 派 micro lora family n-train 3000 run（--lr 3e-4），非本 session 队列，不干预
