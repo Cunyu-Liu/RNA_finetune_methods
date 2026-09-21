@@ -1967,3 +1967,8 @@ vs frozen 0.645；full FT 进行中。
 - **mega lora family 3/3 全齐**（s43 OOM 后 v2 重试成功 0.139）——C5b 官方系 family 侧闭合
 - 服务器态：8 卡忙（0-5 各有我方 + 他人任务）；650M 预训练 watcher（3578696）在岗；GPU 真实性按 torch.mem_get_info 核对
 - 本 session 队列 PID：684919（famlora audit G3）/ 685100+686792（m6A family G4+G1）/ 703087（SSP fulltuned ERNIE G4）+ 707027（chain 接续 RNA-FM/SpliceBERT）
+
+## Day 7 20:30 famlora_audit 首个数据点 + 崩溃带证据形态更新
+- **RNA-Sc-1M lora family s17 = 0.1437**（242s/514MB，G3）——重测复现越带（非 148M 孤点）！注意：ledger 此前无 1M lora family 行（原七档全崩1M 档证据是 full arm）——famlora_audit 是**首次补齐 lora 全档 family 数据**，非重跑
+- 全谱 lora family 证据现状（3 种子）：1M s17 0.1437（重测中 s29 在跑）/ 10M 0.064-0.076 带内 / 30M 0.064 带内 / 100M 0.072-0.096 带内 / 148M 0.139-0.334 越带 / 650M 0.076-0.166 半越带（s43 0.166）——**带边界不齐整，修订表述需逐档精确引用，等 audit 3 种子全齐后定稿**
+- e3_subsampler 前挂修改已提交（6981254：levels +3000 / seeds +101）
