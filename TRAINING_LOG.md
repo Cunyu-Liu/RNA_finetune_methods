@@ -2028,3 +2028,12 @@ vs frozen 0.645；full FT 进行中。
 - 巡检发现并行 session 22:11 已派 q_mrl_biglora.sh（G5）——与 patch3 目标完全相同（650M/mega mrl lora x3 种子 x2 切分，finetune_mrl 模块+门控+重试，配置一致）；另有 q_mrl_fulltuned.sh（G0，30M/100M mrl full tuned 1e-5）。**patch3（PID 1320380）主动退役避免同 run_id 双跑**，stale claim 行已清；biglora 接管（650M lora s17 random 在 GPU5 跑中，~22:35 落账）
 - 新落账：mega mrl frozen s29 random **0.708**；rnasc30m mrl full tuned s17/s29 random 0.585/0.526；micro headonly s43 family 0.681
 - 本 session 队列最终态：famlora_audit/m6a_family/ssp_fulltuned/mrl_patch(污染清污)全部收口；在跑均属并行 session 队列（biglora/fulltuned/mrl_fill/frozen_patch 等）；ledger 账实一致（pending 2 ↔ 活进程 2）
+
+## Day 7 22:50 巡检:第二轮 claim 竞态处置(mrl_fill 双副本)+ 650M frozen 对照落账
+
+- **事故**:并行 session 的 q_mrl_fill 存在 G1/G3 双副本(同脚本同任务表),skip 门只查 done 不查 pending → 与 fulltuned G0 在三个 run 上双跑:rnasc30m full s43 family / rnasc100m full s17 random / mega frozen s43 random(device 1+3 同 out_dir 并写)。均已双跑至完成,ledger 留 3 对同值重复 done 行(数值一致,无矛盾数据)
+- **处置**:kill fill G1(887010)/G3(1337422)wrapper 防续跑重试;flock 精确去重 3 条重复 done 行;清后 ledger 888 done / 3 pending / 2 cancelled(账实一致:pending 3 ↔ 活进程 3)
+- **650M frozen 对照(重要结果)**:ncRNA family frozen 三种子 random 0.906/0.906(结构稳定)/family 0.645/0.645——与 LoRA 0.10 档崩溃带形成鲜明对照,佐证崩溃带是 LoRA x 小规模适配问题而非 650M 表征本身
+- **在跑全景**:biglora G5(650M lora s29 random,GPU5)/fulltuned G0(100M full s29 random,GPU0,其后 100M family x3)/frozen_patch G2(650M fam s43 random 在跑,后接 650M s43 family + mega 8 runs);GPU0 20G/4 18.9G 空闲,其余忙
+- 健康项:650M 预训练 422582 + watcher 3578696 在岗;无当前 OOM/CUDA 异常(带 OOM 字样日志均为历史已处置事件)
+- mrl_fill 教训沉淀:多实例队列必须以 pending 互斥(或实例间任务表预分割),done-skip 门在并行场景不够
