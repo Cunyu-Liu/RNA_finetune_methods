@@ -2079,3 +2079,9 @@ vs frozen 0.645；full FT 进行中。
 - 650M 预训练 + watcher 双活（预训练完成后自动触发测试链：frozen/lora 12 runs + full tuned 链）
 - 产物刷新：c4/e2/stats 重跑（MRL 大档 + mega frozen + micro headonly 全部进表）
 - 预印本 v0.6.2 增量：摘要补充 head-only family 证据（崩溃需要骨干更新——C4 新证据点，3bcab01）
+
+## Day 8 02:50 第五波派发（等价线/池对称收官波）
+- etc_audit 复审后剩余真缺口（排除 _lr 误报）：1M lora random + 1M frozen 双切分 + 100M full tuned（受控系等价线大端 full 参照缺失）+ m6A head-only family + MRL E2 family 侧
+- **q_eq_fill（G0）**：1M lora random x3 + 1M frozen x6 + 100M full@3e-5 x6 = 15 runs
+- **q_e2_familyfill（G1+G4）**：m6A headonly family x3 + MRL dora/ia3 family x 12 = 15 runs
+- 至此交接审计的全部 ASYM/MISS 缺口均已派发（ck1-15 剂量档 MISS 属 D4 阴性实验设计内，不补）
