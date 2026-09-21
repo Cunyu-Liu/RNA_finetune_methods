@@ -2100,3 +2100,12 @@ vs frozen 0.645；full FT 进行中。
 - **q_eq_fill 进度 10/15**：1M lora random 0.622-0.647 x3 + 1M frozen 双切分 6/6（random 0.27-0.30 / family 0.18-0.22）全落；100M full tuned 在跑（s17 random 0.803 已落，s29/s43 + family 侧排至 ~07:00）
 - ledger 953 行（1 pending = 在跑）
 - 受控系等价线数据版图（random 侧，tuned 口径）：1M lora 0.64 / 10M lora 0.75 / 30M lora 0.77 / 100M lora 0.80 + 1M full 0.70 / 10M full 0.81 / 30M full 0.86 / 100M full 0.80x（在补）——full@30M 0.862 仍是最优，等价点叙事等待 100M full 3 种子落齐后判读
+
+## Day 8 06:05 巡检：第五波尾段推进（100M full random 三种子落齐）+ 显存 churn 假窗口识别
+
+- **eq_fill 12/15**：100M full@3e-5 random 三种子全落账（s17 0.803 / s29 0.8217 / s43 0.8473，06:02 最后落账）——受控系等价线大端 full 参照 random 侧闭合（05:05 等待点兑现）。对照链：1M full 0.70 / 10M full 0.81 / 30M full 0.862 / 100M full 0.824±0.02——30M 档仍最优但 100M 已进入等价带，等价点叙事待 family 侧 3 runs 落齐后终判
+- **在跑**：eq_fill 唯一尾部 s17 family（GPU0，06:02:37 起跑，~65 min/run 串行 x3，预计 ~09:10 EQ-FILL DONE）；ledger 952 done / 2 cancelled / 1 pending（= 活行，账实一致）
+- **watcher 链**：650M 预训练 422582（2-23:15，GPU2 18.65G）+ watcher 3578696 双活在岗，q_rnasc650_tests.sh 待退出自动触发；无 OOM / 无 CUDA 降级 / 无 CPU 静默降级证据（patch2/3 日志尾部 OOM 为历史已处置事件）
+- **显存 churn 假窗口（本轮新证据）**：06:04 GPU4 36.0G 空闲 → 60 秒内被 honghui run_tiger_binary 三进程（18.4G+9.4G+4.9G）填满；GPU1 也同步释放 35.8G。honghui 任务为分钟级短批 churn 模式（02:55:20~07:45:09 生命周期梯度 8 进程），任何瞬时 ≥10G 读数不可作为续派依据——05:05 记录的"GPU0 15.8G/1 19.7G/3 21.7G/5 15.7G 名义空闲"同属此类
+- **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）+ 第五波（eq_fill/e2_familyfill）均收口或按设计收尾中；交接审计全部 ASYM/MISS 缺口已派发（02:50 口径），MRL 大档 dora/ia3/full family 为设计范围外——无新缺口可派，本轮不续派（沿用 03:30/05:05 判断先例）
+- MRL E2 面板双侧对称完成态确认（micro dora 0.700 x3 / ia3 0.650 x3；10M dora 0.45 x3 / ia3 0.25 x3，family 侧）
