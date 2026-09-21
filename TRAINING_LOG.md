@@ -2017,3 +2017,9 @@ vs frozen 0.645；full FT 进行中。
 - **mrl_patch3（PID 1320380）正确重派**：finetune_mrl --strategy lora x 650M/mega x 3 种子 x 2 切分 = 12 runs；门控 mem_get_info 全卡扫描（650M>=20G/mega>=12G）+ done 跳过（小写 slug 匹配已修）+ 失败清行（语法已修）+ 重试 x3 + 300s 等卡。22:14 首跑 650M lora s17 random @GPU3 已进入训练
 - patch3 首轮在 GPU0 曾被外部进程 45 秒竞态挤压 OOM 一次（重试机制按设计兜底，换卡续跑成功）；pick-verify 竞态窗口已知，后续如再发作可做原子化选卡
 - ssp_fulltuned 三模型链 21:53:59 全收工（ERNIE/RNA-FM/SpliceBERT 18 runs）；famlora_audit G3 20:41 收工
+
+## Day 7 22:20 第四波派发 + 双跑事故处理
+- **GPU 空闲潮利用**：他方任务退场（GPU0/1/3/5 各 10-36G 空闲）→ 派发 q_mrl_biglora（G5：650M+mega lora 12 runs）/ q_mrl_fulltuned（G0：30M/100M full@1e-5 12 runs）/ q_mrl_fill G3 副本（30M frozen 加速）
+- **双跑事故（已处理）**：q_mrl_fill G3 副本与 q_mrl_biglora G5 同时 claim 了 650M mrl lora s17 random（ledger claim 竞态，两进程同 run）——kill G3 副本的 650M 进程并清其 pending 行，G5 主跑存活（PID 1317828，96.7% CPU 在跑）。教训：同一 run 家族的队列互斥需在派发前核对 claim 目标集合（已记入防坑）
+- **stale 行清理**：650M mrl lora s17 random（22:08 OOM 后 mrl_patch3 清行脚本括号语法错误未清成）——服务器端 python 精确清行成功
+- mrl_patch3/patch2 残留 bug 记录：清行内联 python 有 SyntaxError（前 session 遗留，本 session 的 v2 队列已用 heredoc 修复该模式）
