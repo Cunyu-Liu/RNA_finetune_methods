@@ -19,8 +19,8 @@ import pandas as pd
 ROOT = "/mnt/cunyuliu/rna-ft-eval"
 SRC = os.path.join(ROOT, "data/family_splits/noncoding-rna-family.parquet")
 OUT = os.path.join(ROOT, "data/e3_subsets")
-LEVELS = [10, 100, 1000]
-SEEDS = [17, 29, 43]
+LEVELS = [10, 100, 1000, 3000]
+SEEDS = [17, 29, 43, 101]
 
 
 def main() -> int:
