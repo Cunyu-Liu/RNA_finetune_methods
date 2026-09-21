@@ -2071,3 +2071,11 @@ vs frozen 0.645；full FT 进行中。
 - **健康项**：650M 预训练 422582（2-18:00+，GPU2 18.65G）+ watcher 3578696 在岗，q_rnasc650_tests.sh 链待退出自动触发；本轮无新 OOM/CUDA 降级（patch2/patch3 日志尾部 OOM 均为历史已处置事件；旧 4.75G 小卡 GPU6/7 的 OOM 与 A100 无关）
 - **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）全收口；第五波 smalllora/biglora 也已闭环；GPU0 15.8G/1 19.7G/3 21.7G/5 15.7G 名义空闲但被 honghui 波动持有，MRL 矩阵余下缺口（dora/ia3/full 大档）为设计范围外——无新缺口可派，本轮不续派
 - **教训入库**：①守护链自动续派脚本必须显式指定任务专属模块（finetune_one 是分类入口，MRL 必须 finetune_mrl）；②双 runner 同 run_id 竞态下 ledger 行会被后写者覆盖成混合 schema——写入器应整行替换而非字段合并；③恢复行必须带 note 标注证据来源
+
+## Day 8 02:45 第四波全收工 + MRL 大档三任务判据完整版
+- **q_mrl_biglora 全收工（12/12）**：650M mrl lora random 0.801 x3 / family 0.698 x3（Δ=0.10）；mega lora random 0.796 x3 / family 0.708 x3（Δ=0.09）——MRL 大档 LoRA 温和退化复现（单例簇 per-seq 特性跨 148M-650M 成立）
+- **frozen_patch 全收工**：mega ncRNA frozen 6/6（random 0.836 x3 / family 0.724 x3，Δ=0.11 温和）——等价线 frozen 大档闭合；100M frozen 亦齐
+- **本 session 全部队列排空**（ledger 927 行，零 pending）；GPU0-5 空闲等待新任务（他方在跑）
+- 650M 预训练 + watcher 双活（预训练完成后自动触发测试链：frozen/lora 12 runs + full tuned 链）
+- 产物刷新：c4/e2/stats 重跑（MRL 大档 + mega frozen + micro headonly 全部进表）
+- 预印本 v0.6.2 增量：摘要补充 head-only family 证据（崩溃需要骨干更新——C4 新证据点，3bcab01）
