@@ -2023,3 +2023,8 @@ vs frozen 0.645；full FT 进行中。
 - **双跑事故（已处理）**：q_mrl_fill G3 副本与 q_mrl_biglora G5 同时 claim 了 650M mrl lora s17 random（ledger claim 竞态，两进程同 run）——kill G3 副本的 650M 进程并清其 pending 行，G5 主跑存活（PID 1317828，96.7% CPU 在跑）。教训：同一 run 家族的队列互斥需在派发前核对 claim 目标集合（已记入防坑）
 - **stale 行清理**：650M mrl lora s17 random（22:08 OOM 后 mrl_patch3 清行脚本括号语法错误未清成）——服务器端 python 精确清行成功
 - mrl_patch3/patch2 残留 bug 记录：清行内联 python 有 SyntaxError（前 session 遗留，本 session 的 v2 队列已用 heredoc 修复该模式）
+
+## Day 7 22:25 收口：patch3 让位 biglora（并行 session 已覆盖同一 12 runs）
+- 巡检发现并行 session 22:11 已派 q_mrl_biglora.sh（G5）——与 patch3 目标完全相同（650M/mega mrl lora x3 种子 x2 切分，finetune_mrl 模块+门控+重试，配置一致）；另有 q_mrl_fulltuned.sh（G0，30M/100M mrl full tuned 1e-5）。**patch3（PID 1320380）主动退役避免同 run_id 双跑**，stale claim 行已清；biglora 接管（650M lora s17 random 在 GPU5 跑中，~22:35 落账）
+- 新落账：mega mrl frozen s29 random **0.708**；rnasc30m mrl full tuned s17/s29 random 0.585/0.526；micro headonly s43 family 0.681
+- 本 session 队列最终态：famlora_audit/m6a_family/ssp_fulltuned/mrl_patch(污染清污)全部收口；在跑均属并行 session 队列（biglora/fulltuned/mrl_fill/frozen_patch 等）；ledger 账实一致（pending 2 ↔ 活进程 2）
