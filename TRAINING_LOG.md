@@ -2051,3 +2051,14 @@ vs frozen 0.645；full FT 进行中。
 - **mega ncRNA frozen 4/6**（random 0.836 x2 + family 0.724 x2，s43 在 G0 跑）——等价线 frozen 大档补臂推进中
 - **micro head-only family 3/3**（0.696/0.681/0.681）——head-only family 侧不崩（与 LoRA/full 崩溃对照：崩溃需要骨干更新）——**C4 新证据点：冻结骨干+可训头的家族侧保持 0.68，骨干更新（LoRA/full）才触发 0.06-0.12 崩溃带**
 - ledger 909 行；GPU0-5 全部有任务在跑（frozen_patch G0 mega s43 + biglora G5 mega）
+
+## Day 8 2026-09-22 00:50 巡检：孤儿缺口发现与续派（30M/100M mrl lora）+ frozen_patch 收口
+- **孤儿缺口认定（重要）**：22:15 清污移除 12 条 mrl_patch v1 错模块污染行（30M/100M mrl lora）后，patch3/biglora 只接管 650M/mega——30M/100M x lora x 双切分 x 3 种子 = 12 runs 成无人认领缺口。artifacts 下残留 12 个污染目录（metric=ACC/n_classes=13 签名，合法 MRL 应为 PEARSON_R/n_train=20000）已整体隔离至 artifacts/quarantine_mrl_lora_badmodule_20260922/ 留证
+- **导出链污染残留警示**：21:15 的 export_c4/preprint 修订（commit 4cc9daf）发生在清污之前——C4 表A 中 "lora 30M/100M family 0.066-0.075" 即污染值；smalllora 收口后必须重刷导出链再定稿
+- **续派 q_mrl_smalllora（G4，PID 1892844，v2）**：正确模块 finetune_mrl + 门控 mem_get_info>=10G + done 跳过 + pgrep 活性互斥 + 失败清行 + 重试 x3 + 300s 等卡。v1 的外层预 claim 与 runner 内建 ledger.claim 双写造成 3 条重复 done 行（已 flock 去重；教训：claim 应交给 runner 自身，外层只做活性检查）
+- **首批落账（30M lora random 三种子）**：s17 0.5452 / s29 0.5270 / s43 0.5212（PEARSON_R，3min/run 零 OOM）——对照 10M lora 0.488 / 30M full 0.585 / 650M lora 0.8013，小档 LoRA 修复臂补齐中
+- **frozen_patch（G2）收口**：FROZEN_PATCH_DONE，mega frozen 8/8 全落账（random 0.8357 x3 / family 0.7243 x3）——ncRNA-family frozen 全谱 24/24 完成（30M 0.29-0.32 / 100M 0.39-0.40 / 650M 0.906/0.645 / mega 0.836/0.724）
+- **biglora（G5）推进 7/12**：650M 段 6/6 全 done（random 0.8013 x3 / family 0.6979 x3）；mega 段 s29 random **0.7964** done（新数据点），s43 random 在跑
+- **账实**：ledger 912 done / 2 cancelled，pending 为在跑活行（smalllora 30M s17 family + biglora mega s43 random）；账实一致
+- **健康项**：650M 预训练 422582（2-17:14）+ watcher 3578696 在岗，tests 链待退出自动触发；本轮无新 OOM/CUDA 异常（patch2/patch3 日志尾部 OOM 均为已处置历史事件）
+- **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）全部收口；GPU4 曾现 26.8G 空闲 → 已用于 smalllora 补臂；GPU1/2/5 忙于 biglora/预训练，GPU0/3 被 honghui 波动持有——无更多缺口可派
