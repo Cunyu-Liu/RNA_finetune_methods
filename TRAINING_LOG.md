@@ -27,6 +27,27 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-21 10:20 Day 7 晨 II：等价线坐标轴补齐四队列 + 一次清行失误与恢复
+
+**四队列（补齐等价线坐标轴）**：
+- GPU5(watcher>16G): mega-148M LoRA ×6（官方系 LoRA 轴：33M 0.929 /
+  mega ? / 650M 0.969）
+- GPU3: RNA-Sc-30M full tuned 链（受控系中间档：1M 0.693 / 10M 0.788 /
+  30M ? / 100M LoRA 0.795）
+- GPU4: RNA-Sc-30M LoRA ×6
+- GPU1: RNA-Sc-10M m6A {dora,ia3} ×6（E2 三任务对称面板）
+
+**事故与恢复（诚实记录）**：mega LoRA 队列被 GPU5 其他用户挤爆后，
+清行模式误用 "rinalmomega" 全匹配——把已完成的 8 行 mega full
+结果一并删除。**已从 q_mega_full_g0.log 解析 8 个结果 JSON 块全量
+回填**（值逐一核对：random 0.943/0.949/0.943，family 0.084/0.076/
+0.084，与预印本 v0.6 数字一致——预印本无需改动）。教训：清行模式
+必须含 strategy 维度（本次应为 rinalmomega+lora），删后必须立即
+对账；恢复来源=训练日志结果块+artifacts 目录。
+
+**mega LoRA watcher**：GPU>=16G 门槛自动派发整队（GPU5 争抢频繁，
+12.9G/9.5G 级其他用户进程反复出现）。
+
 ## 2026-09-21 10:10 Day 7 晨：等价线双系收官 + E3 三任务闭环（重大）
 
 **C5b 等价线（ncRNA random，全链条 7 档）**：
