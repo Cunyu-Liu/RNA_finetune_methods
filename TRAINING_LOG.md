@@ -1944,3 +1944,12 @@ vs frozen 0.645；full FT 进行中。
 - 修复落地：micro e3100 redo 于 GPU6(MIG) 完成 **done 0.469**（74s，峰值 1.7G——MIG 切片对小 run 足够）；100M s29 family redo 由等卡 watcher 抢到 GPU1（10:52:26 开跑，预计 ~31min）
 - **mega lora 提速**：v3 watcher 单 run 串行需 ~8-10h，补两个定向单 run runner——family s17 盯 GPU4、family s29 盯 GPU3（各要求 ≥20G 空闲，claim 前查 done 防与 v3 扫描顺序冲突）；v3 继续 random s17(在跑)->s29->s43->family s43。收尾后 C5b 表 148M 行 3 种子全齐
 - 其余在途：30M lora s43 random@GPU4（family 侧队列自动接续）；650M 预训练 PID 422582 存活，watcher 在岗
+
+## Day 7 12:12 午间大收割 + mega family 编排改造
+- **RNA-Sc-30M full 6/6 全齐**（queue 12:03:29 DONE）：random tuned-3e-5 三种子 0.881/0.838/0.868（均值 0.862）；family 0.064 x3（逐位相同=坍缩到常数预测，与 7 档规模崩溃线一致）
+- **RNA-Sc-30M lora 6/6 全齐**：random 0.776/0.787/0.756（均值 0.773）；family 0.064 x3。30M 档 full(0.862) > lora(0.773)，且 full@30M 已超过 lora@100M(0.795)——等价线交点叙事新证据
+- **100M lora family 3/3 补全**（s29 修复 0.0759，与 s17 0.072/s43 0.096 同档）——规模崩溃线 100M 档闭合
+- **mega lora random 2/3**：s17 0.9394 / s29 0.9522（148M lora 显著超 33M full 0.938，逼近 mega full 0.942）；s43 random 在跑（v3 子进程，自然落账）
+- **编排改造**：v3 watcher 已退役（风险：其"清该 run 行再跑"逻辑会清掉 one-arm 在跑的 pending 活行造成重复训练）；mega family 三格改由三个定向 runner 接管——family s17->GPU4 / s29->GPU3 / s43->GPU0（各盯一卡 >=20G，claim 前查 done，互不抢卡）
+- 650M 预训练（PID 422582）及其测试链 watcher（PID 3578696）双双存活
+- 待 mega family 三格落地后：fig_c5b 重刷 + PPT 等价线表终刷
