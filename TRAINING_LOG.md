@@ -27,6 +27,16 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-21 10:15 Day 7 晨 III：watcher v3 + C5b 成图
+
+- mega LoRA watcher v2 设计缺陷（exec 替换自身——队列全 OOM 即死）
+  → v3：单 run 粒度循环（找未 done 的 (split,seed) → 等卡>14G →
+  清该行 → 跑 → 重查），直到 6/6
+- fig_c5b.py 上线：双家族等价线图（30M 等在跑档位落账后重跑自动入图）
+  status/figs/fig_c5b.png 产出
+- 其余三队列健康：30M full(g3, epoch2) / 30M lora(g4, epoch1) /
+  RNA-Sc m6A dora s29(g1)
+
 ## 2026-09-21 10:20 Day 7 晨 II：等价线坐标轴补齐四队列 + 一次清行失误与恢复
 
 **四队列（补齐等价线坐标轴）**：
