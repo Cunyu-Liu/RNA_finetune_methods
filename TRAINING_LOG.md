@@ -2044,3 +2044,10 @@ vs frozen 0.645；full FT 进行中。
 - **frozen_patch（G2）**：30M/100M/650M frozen 18 runs 全落账（650M family 三种子 0.645-0.659 / random 0.906 结构稳定）；mega 段 2/8（s17 random done 23:48，s17 family 在跑），预计 3-4h 收口
 - **健康项**：650M 预训练 422582（2-16:56）+ watcher 3578696 在岗，tests 链待退出自动触发；q_mrl_patch3.log 的 exit 143 为 22:18 patch3 主动退役（让位 biglora）非新事故；本轮无新 OOM/CUDA 异常
 - **续派判断**：本 session 派发队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）中前四者全收口，frozen_patch 仍在推进；GPU0/1/3 名义空闲 13-18G 但被 honghui 用户 batch-128 任务持有波动大，GPU5 忙于 biglora——无未 claim 缺口 + 无稳定空闲卡，不续派，下一轮巡检再评估
+
+## Day 8 00:30 第四波收工快照 + MRL 大档数据判读
+- **q_mrl_fulltuned 全收工**（12/12，G0）：30M random 0.526-0.585 / family 0.474-0.526；100M random 0.543-0.713 / family 0.486-0.660——MRL tuned full 不崩（per-seq 单例簇特性，与 ncRNA per-seq 崩溃形成对照）
+- **q_mrl_biglora 650M 半收工**（6/6 random+family 齐）：random 0.801 x3 / family 0.698 x3（Δ=0.10 温和——MRL 三任务判据再添 650M 档证据）；mega lora 6 runs 在 G5 跑（s17 random 04:26 时长）
+- **mega ncRNA frozen 4/6**（random 0.836 x2 + family 0.724 x2，s43 在 G0 跑）——等价线 frozen 大档补臂推进中
+- **micro head-only family 3/3**（0.696/0.681/0.681）——head-only family 侧不崩（与 LoRA/full 崩溃对照：崩溃需要骨干更新）——**C4 新证据点：冻结骨干+可训头的家族侧保持 0.68，骨干更新（LoRA/full）才触发 0.06-0.12 崩溃带**
+- ledger 909 行；GPU0-5 全部有任务在跑（frozen_patch G0 mega s43 + biglora G5 mega）
