@@ -1985,3 +1985,11 @@ vs frozen 0.645；full FT 进行中。
 - **famlora_audit 进度**：1M 三种子全齐（0.144/0.075/0.160——1M 档部分越带，中位 0.144）；10M/30M/100M done 行扫描跳过中（带内不动）；G3 继续
 - **MRL fill 队列派发（G1）**：frozen x4 模型 x6 组合 = 24 runs（30M/100M/650M/mega）；full tuned 1e-5 x 30M/100M x 12 runs 待 frozen 完成后接续（650M/mega full 不做——B7 分层纪律）
 - 队列图（20:45）：G0 frozen_patch(ncRNA 大档)/G1 mrl_fill/MRL_G5 mrl_patch/G2 SSP-ERNIE(排空后接 RNA-FM/SpliceBERT)+650M 预训练/G3 famlora_audit/G4 已收工
+
+## Day 7 21:15 崩溃带修订链完成（B19 门禁解除后三改一刷一 push）
+- **audit 判读（famlora_audit 全档落地）**：lora family 3 种子均值全谱 = 1M 0.126 / 10M 0.072 / 30M 0.064 / 100M 0.081 / 33M 0.081 / 148M 0.207 / 650M 0.106——1M-100M 档维持带内（0.064-0.126），**148M 三种子全越带（0.139-0.334）**，1M/650M 单种子越带——定性：崩溃带「大体规模无关 + 148M 结构化例外」，部分逃逸与 LoRA×预训练充分度相关（非规模单调）
+- **修订落地**：preprint 2.3 节「七档全崩 0.07-0.11」→「0.06-0.12 带 + 148M 三种子逃逸」逐档精确引用；摘要 near-chance 区间同步；中文摘要同步；fig_c5b.py caption 修改并重出图
+- **产物刷新**：export_c4/export_e2/stats/export_e3 全链重跑（m6A family dora/ia3 12 runs + SSP fulltuned 18 runs + MRL 30M/100M/650M 新数据全部进表）
+- **SSP fulltuned 新数据（3 模型 x 双切分 x 3 种子，LR 1e-5）**：ERNIE 0.24-0.27（vs 默认 0.006 档恢复 x40+）/ RNA-FM 0.14-0.16 / SpliceBERT 0.049-0.052（低但方向一致）——A8 恢复叙事扩展至 SSP 三模型
+- **MRL 新数据**：30M/100M frozen random 0.128-0.132 family 0.184-0.204（family 侧反升——per-seq 单例簇温和特性复现）；650M frozen random 0.744 family 0.654；lora 30M/100M family 0.066-0.075（带内）
+- commit 4cc9daf push 完成
