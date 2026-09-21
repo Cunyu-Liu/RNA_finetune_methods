@@ -2085,3 +2085,12 @@ vs frozen 0.645；full FT 进行中。
 - **q_eq_fill（G0）**：1M lora random x3 + 1M frozen x6 + 100M full@3e-5 x6 = 15 runs
 - **q_e2_familyfill（G1+G4）**：m6A headonly family x3 + MRL dora/ia3 family x 12 = 15 runs
 - 至此交接审计的全部 ASYM/MISS 缺口均已派发（ck1-15 剂量档 MISS 属 D4 阴性实验设计内，不补）
+
+## Day 8 2026-09-22 03:30 巡检：m6A head-only family 侧闭合（E2 对称）+ 第五波推进中段
+
+- **重要结果落账**：m6A RNA-Sc-10M head-only family 3/3 done（ACC 0.726/0.717/0.653）——与 frozen 逐位近一致（0.726/0.717/0.653），E2 对称表闭合：m6A family 切分 7 策略全谱中，**frozen≈head-only≈0.72 < ia3 0.93 < lora/full/dora 0.98-0.984**——m6A family 不出现 ncRNA-family 式 LoRA 崩溃带（C4 崩溃为 ncRNA-family x LoRA 特异性，跨任务对照证据点）
+- **MRL E2 family 侧推进**：micro dora family 3/3 done（0.7001 x3，seed 无关性），ia3 family 2/3 done（0.6503 x2）+ s43 在 GPU4 跑（03:13 起跑，PENDING 1 行账实一致）；其后 10M dora/ia3 family x6
+- **第五波队列推进**：q_eq_fill G0 前 3 run 落账（1M lora random 0.622/0.647/0.647——1M 档 LoRA random 不崩，对齐 lora family 0.075-0.16 崩溃带与 650M/mega random 0.80/0.796 等价线），1M frozen 首个 s17 random done（0.2716），frozen s29/s43 random 等卡中（GPU0 被 honghui 波动持有 7.77-16.06G）；q_e2_familyfill G1 m6A 段完成
+- **账实**：ledger 937 done / 2 cancelled / 1 pending（ia3 s43 活行）——账实一致；无 OOM / 无 CUDA 异常（新一波日志零 OOM 记录）
+- **健康项**：650M 预训练 422582（2-20:15+，GPU2）+ watcher 3578696 在岗，tests 链待退出自动触发；GPU5 15.17G 真实空闲（无归属进程），其余 GPU 被在跑/他方持有
+- **续派判断**：fifth-wave 已派队列（q_eq_fill 15 + q_e2_familyfill 15）均在跑；GPU5 空闲但 MRL 大档 dora/ia3/full 家族缺口为设计范围外；GPU0 等卡任务（1M frozen x5 + 100M full x6）受 honghui 占用阻塞中，暂以等卡门控（≥10G 派发条件）自持，**不另续派**
