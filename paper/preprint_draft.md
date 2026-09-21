@@ -20,8 +20,9 @@ Three findings emerge:
    granularity — and on the split.** On ncRNA family classification, LoRA/full FT improve accuracy over frozen heads by +0.04 to +0.43
     (five-model range, strategy-dependent) under random splits, but **collapse to near-chance
    (0.06–0.12 band; partial LoRA escape at 148M: 0.14–0.33) under
-   family-level splits**, while frozen heads degrade
-   mildly. On per-base tasks (m6A modification), fine-tuned models **gain
+   family-level splits** (frozen and
+   head-only heads hold at 0.68-0.72 on the same split — the collapse
+   requires backbone updates, not the task itself). On per-base tasks (m6A modification), fine-tuned models **gain
    under both splits** (AUC 0.970→0.995 for LoRA). Structure prediction (SSP) shows robust 2–5× gains over k-mer
    baselines under both splits.
 2. **Task granularity determines leakage sensitivity**: the Δ(random−family)
