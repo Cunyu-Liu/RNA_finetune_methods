@@ -26,7 +26,8 @@ Three findings emerge:
 2. **Task granularity determines leakage sensitivity**: the Δ(random−family)
    gap reaches +0.68 to +0.91 for fine-tuning on per-sequence classification
    but is −0.007 to −0.042 for per-base m6A and −0.005 to +0.027 for SSP
-  (0/26 cells collapse, 5 models × 2 tasks × 5 arms) — i.e., much of
+  (0/39 cells outside multi-member-family per-seq tasks; 5 models × 3
+   tasks × 5 arms; collapse is granularity × family-density dependent) — i.e., much of
    the "fine-tuning benefit" on sequence-level tasks under random splits is
    **family-level leakage**, echoing and quantifying the "simply cheating"
    critique for RNA benchmarks.
@@ -146,6 +147,15 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
 - IA3 is task-granularity sensitive: trails by 0.078 on per-sequence
   classification but only 0.027 behind LoRA on per-base m6A (0.941) —
   the cheapest adapter is viable where labels are dense per position.
+- **Equivalence line (C5b, dual-family): "small full-FT = large LoRA"
+  is family-dependent.** Controlled family (RNA-Sc, same recipe): 10M
+  full-FT 0.788 = 100M LoRA 0.795 -- the crossover sits between 10M and
+  100M. Official family (RiNALMo): mega-148M full-FT (0.942, LR-tuned)
+  still trails 650M LoRA (0.969) by +0.027, and full-FT gains only
+  +0.004 from 33M to 148M -- no crossover up to 148M. Clean-scaling
+  models reach equivalence early; officially released families retain a
+  large-model advantage. On family splits, all seven scales (1M-650M)
+  collapse (0.07-0.11) -- leakage sensitivity is scale-invariant.
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.
