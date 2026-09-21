@@ -27,6 +27,19 @@ frozen + ERNIE/SpliceBERT SSP frozen）；E2 第六面板（RNA-Sc SSP
 dora/ia3）补全三任务×双模型全因子。q_ssp_generic.sh 已提交
 b067361 并推送 GitHub。
 
+## 2026-09-21 10:25 Day 7 晨 IV：预印本 v0.6 数字对账（ledger 权威重算）
+
+对账范围：C4 三任务 delta/ratio、A8 三任务 default-tuned、等价线 7 档、
+E3 峰值、650M family。结果：
+- 等价线/A8/E3/650M 全部精确一致（0.693/0.788/0.795/0.938/0.942/
+  0.969；A8 15 格逐一吻合；E3 0.156/0.519/0.707）
+- 修正 2 处：MRL LoRA ratio 0.85-0.91 -> 0.85-0.92（RNA-Sc 0.915）；
+  MRL delta 0.07-0.16 -> 0.04-0.12（RNA-Sc 0.041 / RNA-FM 0.121）
+  已提交 f732491
+- 注：ncRNA LoRA delta 下界 RNA-Sc 0.669（含 E2 附加 run 的 n=4 均值）
+  与 C4 表 formal 三种子口径 0.675 一致（舍入同 0.67-0.68）——预印本
+  0.68 口径取 C4 表为准，无冲突
+
 ## 2026-09-21 10:15 Day 7 晨 III：watcher v3 + C5b 成图
 
 - mega LoRA watcher v2 设计缺陷（exec 替换自身——队列全 OOM 即死）
