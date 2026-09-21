@@ -111,10 +111,18 @@ marked):
 - SSP (per-base): no collapse across all five models — ratios 0.956–1.110
   (ERNIE LoRA 0.337→0.345; RNA-FM 0.221→0.211; RNA-Sc 0.084→0.076;
   RiNALMo 0.214→0.223; SpliceBERT 0.168→0.169).
-- **Leakage-sensitive fine-tuning is the norm for per-sequence
-  classification (5/5 models), and the exception for per-base tasks:
-  0/26 model–task–arm cells collapse (ratio < 0.7), across 5 models ×
-  2 tasks × {frozen, LoRA, full, DoRA, IA3}.**
+- MRL (per-seq, singleton clusters): mild degradation only -- LoRA
+  family/random ratios 0.85-0.91 across 5 models; delta = 0.07-0.16
+  vs ncRNA 0.68-0.91. **Collapse requires multi-member family
+  structure: the MRL task has 90,403 near-singleton clusters,
+  leaving no family overlap to leak.**
+- **Leakage sensitivity = granularity × family density.** 0/39
+  model–task–arm cells collapse outside multi-member-family
+  per-seq classification (5 models × 3 tasks × 5 arms): ncRNA collapses
+  5/5; m6A/SSP (per-base) and MRL (singleton per-seq) are immune.
+  The family-split collapse holds at every scale tested -- 1M
+  through 650M LoRA, including RiNALMo-650M (0.969 random ->
+  0.106 family).
 
 ### 2.3 E2 PEFT horizontal comparison (C5: 2 models × 2 tasks, full factorial)
 
@@ -143,6 +151,21 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   limitation.
 
 ### 2.4 LR grids: scale × strategy × LR triple interaction (A8, Fig 3)
+
+Default-LR (3e-4) full-FT collapse is **task-dependent and extends to all
+five models on regression**: ncRNA 3/5 collapse (SpliceBERT/ERNIE/RiNALMo),
+m6A 3/5, MRL **5/5** (RiNALMo -0.001, SpliceBERT 0.098, ERNIE 0.028,
+RNA-Sc 0.169, RNA-FM 0.181 -- the only ncRNA/m6A survivor collapses on
+MRL); tuned LR recovers every cell (MRL 0.79-0.80 except RNA-Sc 0.53).
+LoRA never collapses at default LR on any task -- the phenomenon is
+full-FT-specific. Mechanistically (100-step diagnostics), collapse is an
+instant representation rank collapse: last-hidden effective rank drops
+300-500 -> 1 within 5-10 steps at only 3-5% weight drift; RNA-FM survives
+via post-collapse rebound (rank 9 -> 51) and RNA-Sc recovers within
+epochs -- collapse resistance is a recipe-family property (ALiBi-narrow
+robust, BERT-family mid-size fragile), not a monotone function of
+pretraining progress (dose experiment over RNA-Sc ck1-ck15 shows no
+dose effect).
 [fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
 RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
 RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA @3e-4: RNA-Sc 0.723,
