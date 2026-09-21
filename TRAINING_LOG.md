@@ -1937,3 +1937,10 @@ vs frozen 0.645；full FT 进行中。
 
 ## M5 监控
 见 docs/m5_monitoring.md（首轮 2026-09-15：无触发，四源仍单臂）。
+
+## Day 7 11:05 等价线队列午间巡检 + stale 行清理
+- **RNA-Sc-30M full s17 random lr3e-05 done 0.881**（s101 tuning 0.858 -> formal 首种子），s29 已接续（GPU3）
+- ledger 全量甄别：发现 2 个 stale pending——(a) 100M lora s29 family（凌晨 03:43 GPU3 被挤 OOM，队列后续正常但该 run 遗漏）；(b) micro m6A lora s17 random e3100（E3-m6A pq bug 27 失败 run 中唯一未重派）。两次甄别确认无活跃进程后精确清行（run_id 全匹配 + status=pending 双校验）
+- 修复落地：micro e3100 redo 于 GPU6(MIG) 完成 **done 0.469**（74s，峰值 1.7G——MIG 切片对小 run 足够）；100M s29 family redo 由等卡 watcher 抢到 GPU1（10:52:26 开跑，预计 ~31min）
+- **mega lora 提速**：v3 watcher 单 run 串行需 ~8-10h，补两个定向单 run runner——family s17 盯 GPU4、family s29 盯 GPU3（各要求 ≥20G 空闲，claim 前查 done 防与 v3 扫描顺序冲突）；v3 继续 random s17(在跑)->s29->s43->family s43。收尾后 C5b 表 148M 行 3 种子全齐
+- 其余在途：30M lora s43 random@GPU4（family 侧队列自动接续）；650M 预训练 PID 422582 存活，watcher 在岗
