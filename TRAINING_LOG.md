@@ -2037,3 +2037,10 @@ vs frozen 0.645；full FT 进行中。
 - **在跑全景**:biglora G5(650M lora s29 random,GPU5)/fulltuned G0(100M full s29 random,GPU0,其后 100M family x3)/frozen_patch G2(650M fam s43 random 在跑,后接 650M s43 family + mega 8 runs);GPU0 20G/4 18.9G 空闲,其余忙
 - 健康项:650M 预训练 422582 + watcher 3578696 在岗;无当前 OOM/CUDA 异常(带 OOM 字样日志均为历史已处置事件)
 - mrl_fill 教训沉淀:多实例队列必须以 pending 互斥(或实例间任务表预分割),done-skip 门在并行场景不够
+
+## Day 7 2026-09-21 23:58 巡检：ledger 补账修复（biglora s17 random 0.8013）+ 在跑队列健康
+- **补账修复**：650M mrl lora s17 random（PEARSON 0.8013 / MSE 0.2884，MRL LoRA 新高）此前在 ledger 无行——时间线：22:13 biglora 复用 patch3 遗留 claim 行起跑该 run，22:20 上一轮巡检做 stale 清行时误删该活 claim，22:34 exit 0 完成后 runner 无行可写（日志有完整 result JSON，artifacts/head.pt 22:31 在）。已按日志证据 flock 校验去重后恢复 done 行；ledger 现 900 done / 2 pending / 2 cancelled，pending 2 ↔ 活进程 2 账实一致。教训：stale 清行前须核对 claim 行是否有活进程正在写（kill -0 / fd 检查），不能只看 wrapper 归属
+- **biglora G5 推进**：12 run 中 4 个已 exit 0 零 OOM：650m_mrl_lora_s17_random=0.8013, 650m_mrl_lora_s29_random=0.8013, 650m_mrl_lora_s43_random=0.8013, 650m_mrl_lora_s17_family=0.6979；当前在跑第 5 run（650M lora s29 family，GPU5）；其后 650M s43 family + mega x6
+- **frozen_patch（G2）**：30M/100M/650M frozen 18 runs 全落账（650M family 三种子 0.645-0.659 / random 0.906 结构稳定）；mega 段 2/8（s17 random done 23:48，s17 family 在跑），预计 3-4h 收口
+- **健康项**：650M 预训练 422582（2-16:56）+ watcher 3578696 在岗，tests 链待退出自动触发；q_mrl_patch3.log 的 exit 143 为 22:18 patch3 主动退役（让位 biglora）非新事故；本轮无新 OOM/CUDA 异常
+- **续派判断**：本 session 派发队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）中前四者全收口，frozen_patch 仍在推进；GPU0/1/3 名义空闲 13-18G 但被 honghui 用户 batch-128 任务持有波动大，GPU5 忙于 biglora——无未 claim 缺口 + 无稳定空闲卡，不续派，下一轮巡检再评估
