@@ -2094,3 +2094,9 @@ vs frozen 0.645；full FT 进行中。
 - **账实**：ledger 937 done / 2 cancelled / 1 pending（ia3 s43 活行）——账实一致；无 OOM / 无 CUDA 异常（新一波日志零 OOM 记录）
 - **健康项**：650M 预训练 422582（2-20:15+，GPU2）+ watcher 3578696 在岗，tests 链待退出自动触发；GPU5 15.17G 真实空闲（无归属进程），其余 GPU 被在跑/他方持有
 - **续派判断**：fifth-wave 已派队列（q_eq_fill 15 + q_e2_familyfill 15）均在跑；GPU5 空闲但 MRL 大档 dora/ia3/full 家族缺口为设计范围外；GPU0 等卡任务（1M frozen x5 + 100M full x6）受 honghui 占用阻塞中，暂以等卡门控（≥10G 派发条件）自持，**不另续派**
+
+## Day 8 05:05 第五波近全收工 + E2/等价线对称收官
+- **q_e2_familyfill 全收工**（15/15）：m6A head-only family 0.65-0.73（3 种子）；MRL E2 family 侧全齐（micro dora 0.700 x3 / ia3 0.650 x3；10M dora 0.45 x3 / ia3 0.25 x3）——MRL E2 面板 random+family 双侧对称完成
+- **q_eq_fill 进度 10/15**：1M lora random 0.622-0.647 x3 + 1M frozen 双切分 6/6（random 0.27-0.30 / family 0.18-0.22）全落；100M full tuned 在跑（s17 random 0.803 已落，s29/s43 + family 侧排至 ~07:00）
+- ledger 953 行（1 pending = 在跑）
+- 受控系等价线数据版图（random 侧，tuned 口径）：1M lora 0.64 / 10M lora 0.75 / 30M lora 0.77 / 100M lora 0.80 + 1M full 0.70 / 10M full 0.81 / 30M full 0.86 / 100M full 0.80x（在补）——full@30M 0.862 仍是最优，等价点叙事等待 100M full 3 种子落齐后判读
