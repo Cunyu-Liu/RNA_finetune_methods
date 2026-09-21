@@ -2009,3 +2009,11 @@ vs frozen 0.645；full FT 进行中。
 - MRL fill G1 进行中（650M frozen family s43 在跑，10 分钟内落账）
 - micro head-only family s29/s43 补位队列派发 G3（etc_audit ASYM 残余缺口最后一个）
 - 650M 预训练 alive（最新 ckpt nt12.0B step127928）
+
+## Day 7 22:15 事故升级：mrl_patch 用错模块污染 ledger（已清污）+ patch3 正确重派
+- **二次发现：原 mrl_patch.sh 不但被挤 OOM，模块本身就派错了**。它用 finetune_one --task mrl，而 finetune_one 是 ncRNA-family 专用入口（内部写死 13 类分类数据）——task 只进 run_id/ledger 不进数据管线。后果：rnasc30m/rnasc100m mrl lora 12 条"done"行实为 ncRNA 分类结果（metric=ACC/n_classes=13 签名），冒充 MRL 回归（合法行应为 PEARSON_R/n_train 20000）
+- **清污**：按 (task=mrl & strategy=lora & status=done & metric=ACC) 精确签名移除 12 条污染行 + 1 条孤儿 pending；清后 mrl lora 全表 54 行均为 PEARSON_R 合法行。m6a/ssp 面板抽查无同类污染（各队列模块/入口匹配正确）
+- **本 session 自身也踩了同一坑**：巡检续派 mrl_patch2 时沿用原脚本 finetune_one——开跑 2 分钟内从日志 "classes 13" 识破（ncRNA 数据形状），立即终止（误跑未落账，仅清 1 条 claim 行）。教训入库：MRL 任务必须用 finetune_mrl 模块
+- **mrl_patch3（PID 1320380）正确重派**：finetune_mrl --strategy lora x 650M/mega x 3 种子 x 2 切分 = 12 runs；门控 mem_get_info 全卡扫描（650M>=20G/mega>=12G）+ done 跳过（小写 slug 匹配已修）+ 失败清行（语法已修）+ 重试 x3 + 300s 等卡。22:14 首跑 650M lora s17 random @GPU3 已进入训练
+- patch3 首轮在 GPU0 曾被外部进程 45 秒竞态挤压 OOM 一次（重试机制按设计兜底，换卡续跑成功）；pick-verify 竞态窗口已知，后续如再发作可做原子化选卡
+- ssp_fulltuned 三模型链 21:53:59 全收工（ERNIE/RNA-FM/SpliceBERT 18 runs）；famlora_audit G3 20:41 收工
