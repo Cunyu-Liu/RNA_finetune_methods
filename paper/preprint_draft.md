@@ -19,7 +19,8 @@ Three findings emerge:
 1. **Fine-tuning helps, but the size of the help depends on task
    granularity — and on the split.** On ncRNA family classification, LoRA/full FT improve accuracy over frozen heads by +0.04 to +0.43
     (five-model range, strategy-dependent) under random splits, but **collapse to near-chance
-   (0.06–0.10) under family-level splits**, while frozen heads degrade
+   (0.06–0.12 band; partial LoRA escape at 148M: 0.14–0.33) under
+   family-level splits**, while frozen heads degrade
    mildly. On per-base tasks (m6A modification), fine-tuned models **gain
    under both splits** (AUC 0.970→0.995 for LoRA). Structure prediction (SSP) shows robust 2–5× gains over k-mer
    baselines under both splits.
@@ -154,8 +155,15 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   still trails 650M LoRA (0.969) by +0.027, and full-FT gains only
   +0.004 from 33M to 148M -- no crossover up to 148M. Clean-scaling
   models reach equivalence early; officially released families retain a
-  large-model advantage. On family splits, all seven scales (1M-650M)
-  collapse (0.07-0.11) -- leakage sensitivity is scale-invariant.
+  large-model advantage. On family splits, all seven scales
+  (1M-650M) collapse to the 0.06-0.12 band *on average* (LoRA arm,
+  3-seed means: 1M 0.126, 10M 0.072, 30M 0.064, 100M 0.081,
+  33M 0.081, 148M 0.207, 650M 0.106) -- leakage sensitivity is
+  largely scale-invariant, with one structured exception: the
+  148M mega checkpoint escapes the band in all three seeds
+  (0.139-0.334, mean 0.207) and 1M/650M escape in single seeds --
+  partial escape is LoRA x pretraining-sufficiency dependent, not
+  a monotone function of scale.
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.

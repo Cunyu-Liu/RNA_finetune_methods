@@ -73,8 +73,8 @@ def main():
     fig.suptitle("C5b: small full-FT vs large LoRA — equivalence is family-dependent",
                  fontsize=12)
     fig.text(0.5, 0.01,
-             "family splits: all 7 scales collapse (0.07-0.11) — "
-             "leakage sensitivity is scale-invariant",
+             "family splits: 7 scales in 0.06-0.12 band on average; 148M LoRA escapes (0.14-0.33) — "
+             "largely scale-invariant, partial LoRA escape at high pretraining sufficiency",
              ha="center", fontsize=9, style="italic")
     fig.tight_layout(rect=(0, 0.04, 1, 0.94))
     out = os.path.join(OUT, "fig_c5b.png")
