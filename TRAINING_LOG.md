@@ -1979,3 +1979,9 @@ vs frozen 0.645；full FT 进行中。
 - **形态初判（待 audit 队列收尾后定稿）**：崩溃带并非 148M 孤点逃逸，亦非全谱 U 形——1M 档自身分化，小模型带随机噪声；结论暂取「带内 10M-100M 稳定 + 两端（1M/148M/650M）越带或半越带」的边界不齐整形态
 - audit 队列（G3）现状：10M s17/s29 已 skip（done），队列将在 10M s43 后依次处理 30M/100M（均已 done 预计全 skip）后自然收尾
 - 巡检健康：五队列在跑（audit G3 / m6a G1 / ssp G4+chain / mrl_patch G5 / frozen_patch G2），GPU0-5 显存正常，650M watcher（3578696）与预训练（422582）存活，无新 OOM/CUDA 异常（GPU6/7 历史 OOM 均为 09-15/16 旧事件）
+
+## Day 7 20:45 交接补位第二波 + 队列收工快照
+- **m6A family E2 对称补全两队列全收工**：RNA-Sc-10M 6 runs + RiNALMo-micro 6 runs 全部 exit 0（ledger 落账：rnasc10m dora family 3 种子 0.982/0.984/... + micro dora s17 0.996 等）——E2 m6A 面板 family 侧补齐
+- **famlora_audit 进度**：1M 三种子全齐（0.144/0.075/0.160——1M 档部分越带，中位 0.144）；10M/30M/100M done 行扫描跳过中（带内不动）；G3 继续
+- **MRL fill 队列派发（G1）**：frozen x4 模型 x6 组合 = 24 runs（30M/100M/650M/mega）；full tuned 1e-5 x 30M/100M x 12 runs 待 frozen 完成后接续（650M/mega full 不做——B7 分层纪律）
+- 队列图（20:45）：G0 frozen_patch(ncRNA 大档)/G1 mrl_fill/MRL_G5 mrl_patch/G2 SSP-ERNIE(排空后接 RNA-FM/SpliceBERT)+650M 预训练/G3 famlora_audit/G4 已收工
