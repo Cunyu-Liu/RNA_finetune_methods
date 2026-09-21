@@ -1960,3 +1960,10 @@ vs frozen 0.645；full FT 进行中。
 - **mega family s43 OOM 根因**：12:27:40 于 GPU0 我方仅占 4.71G 时被其他用户 6 个进程挤爆（日志留证），one-arm 单发无重试退出，stale 行已精确清除
 - **v2 重试 runner 上线**（/tmp/mega_onearm_v2.sh：失败自动清行重试 x3），s43 family 已在 GPU3 开跑（27G 空闲实测），预计 ~18:30 落账；落账后进入修订链：fig_c5b 注记 + preprint 2.3 + 中文摘要 + PPT
 - 另一并行 session 17:37 在 GPU0 派 micro lora family n-train 3000 run（--lr 3e-4），非本 session 队列，不干预
+
+## Day 7 20:05 交接核查 + 三队列补位派发（新 session 接手）
+- **全谱审计（etc_audit）**：modification dora/ia3 family 缺 12 runs（正在补，G1+G4）；SSP full tuned 缺 ERNIE/RNA-FM/SpliceBERT 三模型 18 runs（正在补，G4 链式：ERNIE→RNA-FM→SpliceBERT）；MRL RNA-Sc-30M lora 差 5 runs（前 session mrl_patch 在 G5 续跑中，30M frozen 6 runs 由 frozen_patch G2 续跑）
+- **崩溃带修订数据**：148M LoRA family 击穿（s17 0.147/s29 0.334/s43 0.139）触发预印本 157-158 行修订需求——派发 famlora_audit 队列（G3）：RNA-Sc 1M/10M/30M/100M family lora 全档重测 x3 种子（带 done 跳过），验证击穿是否为 148M 特有或全谱线形逃逸。若 1M-100M 维持 0.06-0.11 带 → 结论改写为「崩溃带规模无关但 LoRA+预训练充分模型可部分逃逸」
+- **mega lora family 3/3 全齐**（s43 OOM 后 v2 重试成功 0.139）——C5b 官方系 family 侧闭合
+- 服务器态：8 卡忙（0-5 各有我方 + 他人任务）；650M 预训练 watcher（3578696）在岗；GPU 真实性按 torch.mem_get_info 核对
+- 本 session 队列 PID：684919（famlora audit G3）/ 685100+686792（m6A family G4+G1）/ 703087（SSP fulltuned ERNIE G4）+ 707027（chain 接续 RNA-FM/SpliceBERT）
