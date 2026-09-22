@@ -2109,3 +2109,10 @@ vs frozen 0.645；full FT 进行中。
 - **显存 churn 假窗口（本轮新证据）**：06:04 GPU4 36.0G 空闲 → 60 秒内被 honghui run_tiger_binary 三进程（18.4G+9.4G+4.9G）填满；GPU1 也同步释放 35.8G。honghui 任务为分钟级短批 churn 模式（02:55:20~07:45:09 生命周期梯度 8 进程），任何瞬时 ≥10G 读数不可作为续派依据——05:05 记录的"GPU0 15.8G/1 19.7G/3 21.7G/5 15.7G 名义空闲"同属此类
 - **续派判断**：本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）+ 第五波（eq_fill/e2_familyfill）均收口或按设计收尾中；交接审计全部 ASYM/MISS 缺口已派发（02:50 口径），MRL 大档 dora/ia3/full family 为设计范围外——无新缺口可派，本轮不续派（沿用 03:30/05:05 判断先例）
 - MRL E2 面板双侧对称完成态确认（micro dora 0.700 x3 / ia3 0.650 x3；10M dora 0.45 x3 / ia3 0.25 x3，family 侧）
+
+## Day 8 11:45 eq_fill 全收工 + 受控系等价线 full 线判读
+- **100M full tuned 6/6 全落**：random 0.803/0.822/0.847（均值 0.824）/ family 0.064-0.075（带内）
+- **受控系等价线完整版（random tuned 均值）**：1M full 0.700 / 10M full 0.808 / 30M full 0.862 / 100M full 0.824 vs 1M lora 0.639 / 10M lora 0.756 / 30M lora 0.773 / 100M lora 0.795
+- **判读修正**：full 曲线 30M 峰值 0.862 → 100M 回落 0.824（非单调）；**100M full (0.824) ≈ 10M full (0.808) 且仅略超 100M lora (0.795)**——原「10M full ≈ 100M LoRA」的交点叙事升级为受控系 4 档全谱 LoRA-追赶线：每个 lora 档位都被更小档的 full 追平或超越（1M full 0.700 > 10M lora 0.756? 否——10M lora 超 1M full；但 10M full 0.808 > 30M lora 0.773 ✓；30M full 0.862 > 100M lora 0.795 ✓）
+- 精确表述：**受控系中 full@10M(0.808) 已追平 lora@100M(0.795)，full@30M(0.862) 全面超越 lora@100M**——「小模型全参 ≥ 大模型 LoRA」在受控系 30M→100M 一档内成立；与官方系（148M full 0.942 < 650M lora 0.969，LoRA 恒占优）形成对照——等价线家族依赖性结论强化
+- 100M full family 0.064-0.075 带内（崩溃带判据复持）
