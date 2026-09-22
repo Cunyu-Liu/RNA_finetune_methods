@@ -2198,3 +2198,14 @@ vs frozen 0.645；full FT 进行中。
 - **m6A 官方系等价线（完整版）**：micro full@1e-5 0.968/0.993（rand/fam）≈ mega full@1e-5 0.981/0.996 ≈ mega lora 0.986/0.997——**per-base 任务天花板效应确认：三档差异 <0.02，等价线在 m6A 上不可辨识（本身即结论——任务粒度决定等价线可辨识度，与 ncRNA 强分化对照）**
 - giga lora m6A（队列接续中）+ 受控系 m6A（G3 在跑）落地后 m6A 双轨完整
 - 队列：G1 giga full random 轮询 / G4 giga m6A lora / G3 受控系 m6A / G2 650M 预训练（nt18B+）
+
+## Day 9 04:15 巡检：双轨续派波（giga random 补缺 G4 + 受控系 full 并行 G5）
+- **本 session 五队列终态（再确认）**：famlora_audit / m6a_family / ssp_fulltuned / mrl_patch / frozen_patch 全部收口；ledger 1030 done / 2 cancelled / 2 pending ↔ 2 活跃 finetune（650M m6A lora s43 random + 650M ncRNA family full s29）账实一致
+- **双轨波实盘进度**：
+  - m6A 官方系：micro full@1e-5 6/6（random 0.968 / family 0.993）+ mega full@1e-5 6/6（random 0.981 / family 0.996）+ **mega lora 6/6（random 0.986 / family 0.997）**——33M 与 148M full 已基本打平、大模型 lora 略优；**giga lora random 3/3 收官（0.9925 x3）**，giga lora family 3/3 进行中（s17 done 0.9969 @03:56，s29 训练中 epoch2，s43 排队）
+  - ncRNA giga full bs8：family s17 done 0.084（带内崩溃，与家族依赖性结论一致）；**random 3 种子 9 次 attempt 全被 GPU1 他方 churn 挤爆 OOM（06:05 已证假窗口）后 MAX ATTEMPTS 放弃——真缺口**
+- **续派（本轮）**：
+  - **q_giga_full_rand_g4**（PID 3750634）：giga-650M full random 3 种子补缺，GPU4 守门 >=24G 等 dualtrack G4 段（giga lora family）收尾释放；bs8 协议对齐 q_giga_full_bs8
+  - **q_m6a_ctrl_full_g5**（PID 3750635）：受控系 full@3e-5 轨 18 runs 逆序并行（100M→10M，与主队列 G3 正序对开），已开跑即落 2 done：**100M full random s43 0.9392 / s29 0.9458**（受控系 100M 侧 m6A 等价线首 2 点）——与官方系 giga lora 0.9925 的档位差已现，双系对照成形中
+- **健康项**：650M 预训练 422582 alive（4-02:xx，GPU2，watcher 3578696 在岗，tests 链待退出触发）；无 CUDA 降级 / 无 CPU 静默降级 / OOM 证据已记录（GPU1 churn 挤爆——非协议问题，日志 9 次留证）
+- 队列图（04:15）：G1 giga full family s29（训中）/ G2 650M 预训练 / G3 受控系 full 排队（主队列）/ G4 giga lora s29 family（训中）+ giga random 补缺（守门）/ G5 受控系 full 逆序（训中）
