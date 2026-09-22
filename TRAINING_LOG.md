@@ -2116,3 +2116,9 @@ vs frozen 0.645；full FT 进行中。
 - **判读修正**：full 曲线 30M 峰值 0.862 → 100M 回落 0.824（非单调）；**100M full (0.824) ≈ 10M full (0.808) 且仅略超 100M lora (0.795)**——原「10M full ≈ 100M LoRA」的交点叙事升级为受控系 4 档全谱 LoRA-追赶线：每个 lora 档位都被更小档的 full 追平或超越（1M full 0.700 > 10M lora 0.756? 否——10M lora 超 1M full；但 10M full 0.808 > 30M lora 0.773 ✓；30M full 0.862 > 100M lora 0.795 ✓）
 - 精确表述：**受控系中 full@10M(0.808) 已追平 lora@100M(0.795)，full@30M(0.862) 全面超越 lora@100M**——「小模型全参 ≥ 大模型 LoRA」在受控系 30M→100M 一档内成立；与官方系（148M full 0.942 < 650M lora 0.969，LoRA 恒占优）形成对照——等价线家族依赖性结论强化
 - 100M full family 0.064-0.075 带内（崩溃带判据复持）
+
+## Day 8 11:50 等价线 4 档判读入稿（v0.6.2）+ 第六波派发
+- **preprint 2.3 升级（252df7a）**：受控系等价线 4 档全谱表述——full 1M 0.700 / 10M 0.808 / 30M 0.862 / 100M 0.824 vs LoRA 1M 0.639 / 10M 0.756 / 30M 0.773 / 100M 0.795；full@10M 追平 LoRA@100M、full@30M 全面超越；full 曲线非单调（30M 峰值）；fig_c5b 重出
+- **审计修正（ASYM 复核三遍）**：SSP full MISS 三模型为 _lr 误报（6/6 tuned 已在）；mrl 30M full 7 行含 1 重复（s29 family 双行同值）；mega mrl frozen 3+1 双行（pending 残留已被队列吸收）；ncRNA head-only 10M random 只有 s17（random=1 family=3 为真缺口）
+- **第六波派发（G3+G4）**：10M headonly random s29/s43 + 10M dora/ia3 family 6 runs + micro dora/ia3 family 6 runs = 14 runs——E2 ncRNA 面板 family 侧最后对称缺口
+- 650M 预训练 alive（最新 ckpt nt15.0B step159984）
