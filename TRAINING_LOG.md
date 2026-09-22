@@ -2155,3 +2155,10 @@ vs frozen 0.645；full FT 进行中。
 - q_headonly_final（G3+G4+G5 三卡并行）：m6A head-only 12 + MRL head-only 12 + SSP head-only 12（micro 双切 x3 + 10M 补 s29/s43）= 36 runs——E2 六臂（lora/dora/ia3/head-only/full/frozen）x 四任务 x 双模型 x 双切分的完备矩阵最后缺口
 - 至此本 session（Day 7 晚起）累计派发 7 波 + 2 重试链，~170 runs；ledger 971 行（第七波进行中）
 - 队列图：G1 SSP micro fam / G2 650M 预训练 / G3 m6A headonly / G4 MRL headonly / G5 SSP headonly
+
+## Day 8 19:25 ★ E2 六臂完备矩阵收官 + head-only 全任务数据判读
+- **wave7 + wave7b 全收工**（SSP micro fam 6/6 + head-only 全任务 34 runs）：**E2 完备性审计 = 0 missing cells**——6 臂 {frozen, lora, full, dora, ia3, head-only} x 4 任务 x 2 模型 x 2 切分 x 3 种子全矩阵闭合（ncRNA + m6A + SSP + MRL）
+- ledger 1005 行（本 session 净增 ~167 runs，Day 7 晚 838 → 1005）
+- head-only 新数据判读（MRL/m6A/SSP 双模型双切分）：MRL micro/10M head-only random 0.29-0.62 / family 0.25-0.60（温和退化复现 per-seq 单例簇特性）；m6A head-only random 0.63-0.83 / family 0.62-0.75（per-base 免疫复现）；SSP head-only 与 micro 家族侧数据齐
+- **产物四刷完成**（e2/c4/e3/stats 全部含完备矩阵数据）
+- 650M 预训练 alive；下一步：预印本 v0.7 整合（E2 完备版 + 逃逸梯度 + 等价线 4 档全谱 + head-only 证据矩阵）
