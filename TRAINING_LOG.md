@@ -2192,3 +2192,9 @@ vs frozen 0.645；full FT 进行中。
 - **giga full bs8**：random 3 种子被他人挤占 OOM 各 3 次（日志留证，等待轮询），s17 family 正在 GPU1 训练（13min+，loss 正常下降）——随机侧稍后随等显空窗重试（队列自动）
 - **m6A 官方系双轨数据（大半已落）**：micro full@1e-5 random 0.968 x3 / family 0.993 x3；mega full@1e-5 random 0.981 x3 / family 0.996 x3；mega lora random 0.986 x3（family 在跑）——**m6A 第二任务等价线初步形态：33M full 0.968 ≈ 148M full 0.981 ≈ 148M lora 0.986（任务天花板效应，各档差异 <0.02）**——与 ncRNA 的强分化形成对照（per-base 任务天花板下等价线区分度低，本身即结论：任务粒度决定等价线可辨识度）
 - 待补：giga lora m6A 6 runs（M6A-DUALTRACK 队列接续）+ 受控系 m6A 等价线（G3 在跑 10M full@3e-5）
+
+## Day 9 03:35 双轨数据中判
+- **giga full family s17 = 0.0841（带内）**——650M full 也崩进家族崩溃带，与全谱一致；giga full random 侧仍在等显存窗口（他人挤占频繁，队列自动轮询）
+- **m6A 官方系等价线（完整版）**：micro full@1e-5 0.968/0.993（rand/fam）≈ mega full@1e-5 0.981/0.996 ≈ mega lora 0.986/0.997——**per-base 任务天花板效应确认：三档差异 <0.02，等价线在 m6A 上不可辨识（本身即结论——任务粒度决定等价线可辨识度，与 ncRNA 强分化对照）**
+- giga lora m6A（队列接续中）+ 受控系 m6A（G3 在跑）落地后 m6A 双轨完整
+- 队列：G1 giga full random 轮询 / G4 giga m6A lora / G3 受控系 m6A / G2 650M 预训练（nt18B+）
