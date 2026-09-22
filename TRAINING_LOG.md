@@ -2128,3 +2128,12 @@ vs frozen 0.645；full FT 进行中。
 - **micro dora s17/s29 family OOM**（12:33 GPU4 被他方 12.5G 进程挤占——日志留证）→ 重试队列 G3 已开跑（带等显存+重试 x3）
 - **E2 ncRNA family 侧全景（新数据判读）**：10M {dora 带内, ia3 0.22-0.25 半逃逸, headonly 0.19-0.23} vs micro {dora 待补, ia3 0.70 强逃逸, headonly 0.68}——**逃逸梯度 = 预训练充分度 × adapter 类型**（ia3 重标定 > lora > dora？s43 micro dora 0.075 在带内与 mega lora 0.139-0.334 对照——DoRA 分解方向更新可能更受家族记忆影响）——待 s17/s29 补齐后统一判读，暂不写入预印本
 - 650M 预训练 alive（nt16.0B step170697）
+
+## Day 8 2026-09-22 15:21 巡检：第六波全收工 + E2 ncRNA family 逃逸梯度终判 + ledger 双写去重
+
+- **micro dora retry 收口（第六波 14/14）**：s17/s29 family 0.0666 x2（带内，retry G3 零 OOM）——micro dora 三种子全落，E2 ncRNA family 面板闭合
+- **E2 ncRNA family 逃逸梯度终判（新结论，暂不写预印本）**：micro {ia3 0.704 强逃逸 > head-only 0.681-0.696 > dora 0.067-0.075 带内} vs 10M {ia3 0.245-0.247 半逃逸 > head-only 0.19-0.23 > dora 带内}——**逃逸梯度 = 预训练充分度 x adapter 类型双因子**：IA3 激活重标定最易逃逸（跨 10M/micro 均成立），head-only 居中，LoRA/DoRA 依赖骨干低秩/分解更新的策略在大档才逃逸（mega lora 0.139-0.334）小档全陷带；DoRA 分解方向更新在 micro 也不逃逸（0.067，与 10M 同带）——adapter 类型对家族记忆的敏感性排序初现
+- **ledger 双写去重（本轮处置）**：micro dora s17/s29 family 各现 2 行 done（device 4 vs 3、updated_utc 差 30us、value/wall_sec 全同）——根因：ledger.update() 无差别刷新所有同 run_id 行，wave6 12:33 OOM 遗留 stale pending 行（device4）与 retry 新 claim 行（device3）被同次 done update 双刷。flock 去重移除 device4 残留行各 1 条（备份 ledger.jsonl.bak_patrol_20260922），ledger 现 969 done / 2 cancelled / 0 pending 账实一致
+- **教训入库**：④ OOM 失败后 stale pending 行若不被清行逻辑覆盖（retry 脚本 clean 步骤只在 RC!=0 时执行，RC=0 的 claim 会新开行），同 run_id 双行会让 update 双写——claim 应复用 pending 行或清行逻辑应在成功路径也核行数
+- **健康项**：650M 预训练 422582（3-08:15，GPU2，nt16.0B step170697 最新 ckpt）+ watcher 3578696 在岗，tests 链待退出自动触发；本轮无新 OOM / 无 CUDA 降级 / 无 CPU 静默降级（patch2/3 与 GPU6/7 旧 4.75G 卡 OOM 均为历史已处置事件）
+- **续派判断**：本 session 全队列（五队列 + 第五波 + 第六波含 retry）全部收工；etc_audit 11:44 剩余 MISS/ASYM 已于 11:50 分诊（_lr 误报 + D4 阴性设计内 + 设计范围外），无未派发真缺口；GPU0/1/4/5 名义空闲 15-22G 但被 honghui run_tiger_binary 分钟级 churn 持有（06:05 已证假窗口），GPU2 被预训练持有——不续派，等 650M 预训练退出触发 tests 链
