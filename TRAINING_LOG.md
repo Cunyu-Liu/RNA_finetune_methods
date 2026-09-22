@@ -2150,3 +2150,8 @@ vs frozen 0.645；full FT 进行中。
 - q_ssp_micro_fam（G1）：micro SSP dora/ia3 family x3 种子 = 6 runs——SSP 面板最后对称缺口（10M 侧已齐）
 - 队列图（17:05）：G1 SSP micro fam / G2 650M 预训练（nt16.0B step170697）/ G3-G5 空闲（他方退场后巡检自动续派）/ watcher 在岗
 - 全部六波 86+ runs 已收工落账；ledger 971 行
+
+## Day 8 17:10 第七波b派发（head-only 全任务对称收官，E2 六臂完备性）
+- q_headonly_final（G3+G4+G5 三卡并行）：m6A head-only 12 + MRL head-only 12 + SSP head-only 12（micro 双切 x3 + 10M 补 s29/s43）= 36 runs——E2 六臂（lora/dora/ia3/head-only/full/frozen）x 四任务 x 双模型 x 双切分的完备矩阵最后缺口
+- 至此本 session（Day 7 晚起）累计派发 7 波 + 2 重试链，~170 runs；ledger 971 行（第七波进行中）
+- 队列图：G1 SSP micro fam / G2 650M 预训练 / G3 m6A headonly / G4 MRL headonly / G5 SSP headonly
