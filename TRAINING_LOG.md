@@ -2215,3 +2215,11 @@ vs frozen 0.645；full FT 进行中。
 - **m6A 受控系（tuned full@3e-5）**：10M 0.815-0.957 / 30M 0.930-0.964 / 100M 0.925-0.985（lora 侧在跑）——受控系 10M full 已达 0.91-0.96，接近官方 mega/giga 档（0.98+）——「小模型全参跨配方逼近大模型 LoRA」的 m6A 侧证据（差距 ~0.03-0.06 = 语料/配方差距，规模无关）
 - **giga full ncRNA family s17/s29 = 0.0841 x2（带内）**——650M full 家族侧崩进带，全谱闭合；random 侧在跑（s17 pending，等显存窗口）
 - **双轨判读初步形态（等 giga full random 落地后定稿）**：官方系 ncRNA 无交点（giga lora 0.969 > mega full 0.945 > micro full 0.938——已发表大模型 LoRA 恒占优）vs 受控系交点在 10M-30M（full@30M 0.862 > lora@100M 0.795）——「小全参 ≥ 大LoRA」是**自训受控系的配方现象，不迁移到官方系**——这正是双轨验证的价值：用户问题（官方三档是否存在该结论）答案为否，且受控系显示该结论依赖配方家族属性
+
+## Day 9 06:15 巡检：m6A 双轨 66/66 全收官 + giga full random 唯一缺口在飞
+- **m6A 双轨完备性确认（66/66）**：官方系（micro/mega full@1e-5 + mega/giga lora）与受控系（10M/30M/100M {full@3e-5, lora}）全部 done，0 缺格
+- **受控系 lora 侧最后 6 格落地（06:01:24）**：10M lora random 0.941/0.944/0.943 family 0.985/0.983/0.981；30M lora random 0.940-0.945 family 0.961-0.973；100M lora random 0.947 family 0.984——**受控系 10M lora family 0.983 ≈ 官方系 giga lora 0.997，且受控系 lora 三档（10/30/100M）random 侧 0.94-0.95 几乎无规模分化**——m6A 等价线在受控系 lora 侧同样扁平（与 full 侧、与官方系一致），per-base 天花板在双系双策略下均成立
+- **双轨判读（数据已齐，等 giga full random 定稿）**：官方系 ncRNA 无交点（giga lora 0.969 > mega full 0.945 > micro full 0.938）vs 受控系交点在 10M-30M（full@30M 0.862 > lora@100M 0.795）——「小全参 ≥ 大 LoRA」是自训受控系配方现象，不迁移到官方系
+- **唯一在飞缺口**：giga full random s17（GPU4，epoch 4/10，loss 0.066，06:13）+ s29/s43 排队；giga_bs8 队列 (G1) 仍在轮询等 GPU1 窗口
+- **健康项**：650M 预训练 422582 alive（4-01:xx，GPU2，watcher 3578696 在岗）；GPU1 torch probe OOM 转痕（他方 39.6G 挤满，非本方事故）；无 CUDA 降级 / 无 CPU 静默降级
+- ledger 1029 done / 2 cancelled / 2 pending（ncRNA giga full s43 family + m6A ctrl lora s43 random——后者实际已 done，ledger 行被 06:01 完成后 02:xx 的 s41 家族行遗落，待 06:30 巡检复核）——账实一致性待复核
