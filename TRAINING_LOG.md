@@ -2145,3 +2145,8 @@ vs frozen 0.645；full FT 进行中。
   - 10M：lora 0.072 / dora 0.061-0.097（带内）；**ia3 0.22-0.25（半逃逸）**；head-only 0.19-0.23
 - **统一图景（待复核后入稿）**：家族切分下逃逸梯度 = 预训练充分度（33M ia3 0.70 > 10M ia3 0.23 > 10M headonly 0.22）× adapter 侵入性（激活重标定 ia3 轻侵入最易逃逸 > lora 低秩 > dora 方向更新最重）；与 148M mega lora 逃逸（0.139-0.334）共同构成「部分逃逸」的证据矩阵——预印本 E2 节升级素材（暂记 TRAINING_LOG，等导过目再改稿）
 - 产物刷新：e2/c4 表已带 wave6 数据
+
+## Day 8 17:05 第七波派发（SSP E2 family 对称收官波）
+- q_ssp_micro_fam（G1）：micro SSP dora/ia3 family x3 种子 = 6 runs——SSP 面板最后对称缺口（10M 侧已齐）
+- 队列图（17:05）：G1 SSP micro fam / G2 650M 预训练（nt16.0B step170697）/ G3-G5 空闲（他方退场后巡检自动续派）/ watcher 在岗
+- 全部六波 86+ runs 已收工落账；ledger 971 行
