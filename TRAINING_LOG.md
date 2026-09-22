@@ -2162,3 +2162,10 @@ vs frozen 0.645；full FT 进行中。
 - head-only 新数据判读（MRL/m6A/SSP 双模型双切分）：MRL micro/10M head-only random 0.29-0.62 / family 0.25-0.60（温和退化复现 per-seq 单例簇特性）；m6A head-only random 0.63-0.83 / family 0.62-0.75（per-base 免疫复现）；SSP head-only 与 micro 家族侧数据齐
 - **产物四刷完成**（e2/c4/e3/stats 全部含完备矩阵数据）
 - 650M 预训练 alive；下一步：预印本 v0.7 整合（E2 完备版 + 逃逸梯度 + 等价线 4 档全谱 + head-only 证据矩阵）
+
+## Day 8 22:30 双轨验证波派发（用户指令：官方系三档等价线 + m6A 双系第二任务等价线）
+- **用户双轨验证设计**：先在已发表模型（RiNALMo 33M/148M/650M 三档）上测「小模型全参 ≥ 大模型 LoRA」，再到受控系（RNA-Sc 同配方）验证——双系互证增强说服力
+- **现状核查（三遍）**：ncRNA 官方系等价线已有 micro full 0.938 / mega full 0.945 / mega lora 0.949 / giga lora 0.969——**唯一缺格：giga-650M full（B7 分层决策：650M full 一直未做）**。经评估：650M full@1e-5 bf16 批 8 显存约 25-30G，A100-40G 单卡可承受（ERNIE 整卡纪律不适用于 RiNALMo 架构）；作为官方系 3x3 网格完备性最后一格补测（预注册范围外增量，如实标注）
+- **m6A 双系等价线（第二任务）**：官方系缺 micro/mega full@1e-5（现有 default 3e-4 崩溃版）+ mega/giga lora；受控系缺 10M/30M/100M {full@3e-5, lora}——共 ~48 runs 派发 G0+G2
+- **预判（派发前不写结论）**：若官方系 giga full < giga lora（如受控系 100M full 回落模式）→ 官方系也无交点，「小全参 ≥ 大LoRA」仅在受控系成立 → 家族依赖性结论的第二任务复现；若 giga full ≈ giga lora → 官方系在 650M 档出现交点——两种结果都是有效双轨证据
+- 队列：G0 giga full 6 runs + G2 m6A 48 runs；650M 预训练 alive（nt18.0B）
