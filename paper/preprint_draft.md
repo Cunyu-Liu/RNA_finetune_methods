@@ -155,11 +155,22 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   0.862 / 100M 0.824 vs LoRA 1M 0.639 / 10M 0.756 / 30M 0.773 / 100M
   0.795 -- full@10M already matches LoRA@100M, and full@30M outright
   beats it (crossover within one 3.3x scale step; full-FT curve is
-  non-monotone with a 30M peak). Official family (RiNALMo): mega-148M full-FT (0.942, LR-tuned)
-  still trails 650M LoRA (0.969) by +0.027, and full-FT gains only
-  +0.004 from 33M to 148M -- no crossover up to 148M. Clean-scaling
+  non-monotone with a 30M peak). Official family (RiNALMo, all three
+  published sizes now complete): micro-33M full 0.938 < mega-148M
+  full 0.945 < giga-650M full 0.966 vs giga-650M LoRA 0.969 -- even
+  full-FT at the largest released scale does not beat LoRA on the
+  same checkpoint, and the 33M->650M full-FT gain is only +0.028:
+  no crossover anywhere in the official family. Clean-scaling
   models reach equivalence early; officially released families retain a
-  large-model advantage. On family splits, all seven scales
+  large-model advantage. A dual-track reading (user-requested
+  validation): on the official three published RiNALMo scales the
+  small full-FT large LoRA pattern does NOT hold -- giga-650M
+  full-FT 0.966 still trails giga LoRA 0.969 -- whereas the controlled
+  family shows the crossover at 10M-30M; the pattern is a
+  recipe-family property, not a general RNA-LM law. On the per-base
+  m6A task the same dual-track line saturates (all tiers 0.94-0.997,
+  gap < 0.05): equivalence-line identifiability itself is
+  task-granularity dependent. On family splits, all seven scales
   (1M-650M) collapse to the 0.06-0.12 band *on average* (LoRA arm,
   3-seed means: 1M 0.126, 10M 0.072, 30M 0.064, 100M 0.081,
   33M 0.081, 148M 0.207, 650M 0.106) -- leakage sensitivity is
