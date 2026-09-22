@@ -2226,3 +2226,10 @@ vs frozen 0.645；full FT 进行中。
 
 ### 更正（06:16）：上节 ledger 待复核项已核清
 - 2 条 pending = ncRNA giga full s43 family（GPU1 在飞，PID 3882388）+ s17 random（GPU4 在飞，PID 3972489）——**账实一致，无需复核**；上节「m6A ctrl lora s43 random pending」为误读（m6A 双轨 66/66 无任何 pending），特此更正
+
+### 更正（06:18）+ 650M 预训练收官事件（本节为 06:15 节的事实修正与重大事件补记）
+- 更正 06:15 节两处笔误：① 预训练 etime 应为 3-23:xx（非 4-01:xx）；② 「受控系 lora 最后 6 格落地 06:01:24」有误——ctrl lora 18 runs 实由 q_m6a_ctrl_lora_g5 并行轨于 02:31 前全部落地，06:01 的 dualtrack 尾段是 RID 大小写不匹配触发 finetune_base 内部 done 跳过的快扫（exit 0）；m6A 双轨 66/66 的最后一格实为 ctrl full 100M family s43（05:46:08，q_m6a_ctrl_full_g5）
+- **650M 预训练收官（422582 于 06:16:25 CST 退出）**：manifest status DONE——final_nt 2.0B（2,000,003,270）/ final_step 213514 / best_val_loss 0.7757（best ckpt nt19.0B step202784）/ wall 343,291s（≈95.4h）/ peak_vram 15.6G / **cpu_fallback_count 0（全程无 CPU 静默降级）**；watcher 3578696 按设计退出
+- **q_rnasc650_tests.sh 自动启动（链条衔接验证 ✓）**：watcher 检出退出即拉起测试链（PID 41162），phase1 选 GPU0（06:16:32），RNA-Sc-650M frozen s17 random 已开跑（train 6858 / classes 13；d_model 自校正 768→1408 与 ckpt 一致）；phase2（full s101 lr 网格）守门 ≥28G 轮询——GPU6 有 38.7G 空闲但 pick_gpu 只扫 GPU0-5，phase2 可能需等 giga 卡位释放
+- 巡检终局（06:20）：GPU1 giga full s43 family（在飞，第 3 天家族带）+ GPU4 giga full s17 random（epoch 4/10，loss 0.066）+ GPU0 测试链 phase1 在飞；dualtrack 队列只剩 GPU3 ≥6G 等待的无效尾扫（skip 后自退，不干预）；无本方 CUDA 降级 / 无本方 OOM 事故（GPU1 torch probe OOM 系他方 39.6G 挤满的查询副作用，训练本体 epoch 正常推进）
+- **本轮续派判断：不派**——五队列全排空 ✓，但唯一剩余缺口（giga full random s29/s43）已在 q_giga_full_rand_g4 队列守门（bs8 协议需 ≥24G，GPU2 仅 15.1G / GPU5 已被外方回占至 7.1G，无匹配窗口）；等 giga x3 + 测试链自然推进
