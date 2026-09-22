@@ -2223,3 +2223,6 @@ vs frozen 0.645；full FT 进行中。
 - **唯一在飞缺口**：giga full random s17（GPU4，epoch 4/10，loss 0.066，06:13）+ s29/s43 排队；giga_bs8 队列 (G1) 仍在轮询等 GPU1 窗口
 - **健康项**：650M 预训练 422582 alive（4-01:xx，GPU2，watcher 3578696 在岗）；GPU1 torch probe OOM 转痕（他方 39.6G 挤满，非本方事故）；无 CUDA 降级 / 无 CPU 静默降级
 - ledger 1029 done / 2 cancelled / 2 pending（ncRNA giga full s43 family + m6A ctrl lora s43 random——后者实际已 done，ledger 行被 06:01 完成后 02:xx 的 s41 家族行遗落，待 06:30 巡检复核）——账实一致性待复核
+
+### 更正（06:16）：上节 ledger 待复核项已核清
+- 2 条 pending = ncRNA giga full s43 family（GPU1 在飞，PID 3882388）+ s17 random（GPU4 在飞，PID 3972489）——**账实一致，无需复核**；上节「m6A ctrl lora s43 random pending」为误读（m6A 双轨 66/66 无任何 pending），特此更正
