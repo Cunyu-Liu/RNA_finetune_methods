@@ -2187,3 +2187,8 @@ vs frozen 0.645；full FT 进行中。
 - **续派（本轮判断）**：GPU5 他方两进程（8.8G+7.0G）已退，稳定空闲 12.6-15.2G ≥ 10G 阈值 + 本 session 五队列排空 → 派 **q_m6a_ctrl_lora_g5**（G5 受控系 LoRA 轨并行加速：10M/30M/100M lora x 双切分 x 3 seed = 18 runs，模型逆序与主队列 G3 正序对开 + done 跳过双保险防碰撞）→ 100M lora s43 random 已开跑（epoch0 loss 0.0551，13G 窗口稳定）
 - **健康项**：650M 预训练 alive（PID 422582，nt18.0B step192108 最新 ckpt）+ watcher 3578696 在岗；无 CUDA 降级 / 无 CPU 静默降级
 - 队列图（00:50）：G1 giga full(等待≥24G) / G2 650M 预训练 / G3 m6A 受控系 full(排队) / G4 m6A 官方系 mega lora(在跑) / G5 m6A 受控系 lora(新派)
+
+## Day 9 01:30 双轨队列进度（ncRNA giga full 训练中 + m6A 官方系大半收工）
+- **giga full bs8**：random 3 种子被他人挤占 OOM 各 3 次（日志留证，等待轮询），s17 family 正在 GPU1 训练（13min+，loss 正常下降）——随机侧稍后随等显空窗重试（队列自动）
+- **m6A 官方系双轨数据（大半已落）**：micro full@1e-5 random 0.968 x3 / family 0.993 x3；mega full@1e-5 random 0.981 x3 / family 0.996 x3；mega lora random 0.986 x3（family 在跑）——**m6A 第二任务等价线初步形态：33M full 0.968 ≈ 148M full 0.981 ≈ 148M lora 0.986（任务天花板效应，各档差异 <0.02）**——与 ncRNA 的强分化形成对照（per-base 任务天花板下等价线区分度低，本身即结论：任务粒度决定等价线可辨识度）
+- 待补：giga lora m6A 6 runs（M6A-DUALTRACK 队列接续）+ 受控系 m6A 等价线（G3 在跑 10M full@3e-5）
