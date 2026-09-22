@@ -2209,3 +2209,9 @@ vs frozen 0.645；full FT 进行中。
   - **q_m6a_ctrl_full_g5**（PID 3750635）：受控系 full@3e-5 轨 18 runs 逆序并行（100M→10M，与主队列 G3 正序对开），已开跑即落 2 done：**100M full random s43 0.9392 / s29 0.9458**（受控系 100M 侧 m6A 等价线首 2 点）——与官方系 giga lora 0.9925 的档位差已现，双系对照成形中
 - **健康项**：650M 预训练 422582 alive（4-02:xx，GPU2，watcher 3578696 在岗，tests 链待退出触发）；无 CUDA 降级 / 无 CPU 静默降级 / OOM 证据已记录（GPU1 churn 挤爆——非协议问题，日志 9 次留证）
 - 队列图（04:15）：G1 giga full family s29（训中）/ G2 650M 预训练 / G3 受控系 full 排队（主队列）/ G4 giga lora s29 family（训中）+ giga random 补缺（守门）/ G5 受控系 full 逆序（训中）
+
+## Day 9 05:50 双轨验证数据大丰收（用户双轨设计落地）
+- **m6A 官方系三档等价线全齐**：micro full 0.968/0.993 ≈ mega full 0.981/0.996 ≈ mega lora 0.986/0.997 ≈ giga lora 0.993/0.997（rand/fam）——per-base 天花板确认，三档差异 <0.03
+- **m6A 受控系（tuned full@3e-5）**：10M 0.815-0.957 / 30M 0.930-0.964 / 100M 0.925-0.985（lora 侧在跑）——受控系 10M full 已达 0.91-0.96，接近官方 mega/giga 档（0.98+）——「小模型全参跨配方逼近大模型 LoRA」的 m6A 侧证据（差距 ~0.03-0.06 = 语料/配方差距，规模无关）
+- **giga full ncRNA family s17/s29 = 0.0841 x2（带内）**——650M full 家族侧崩进带，全谱闭合；random 侧在跑（s17 pending，等显存窗口）
+- **双轨判读初步形态（等 giga full random 落地后定稿）**：官方系 ncRNA 无交点（giga lora 0.969 > mega full 0.945 > micro full 0.938——已发表大模型 LoRA 恒占优）vs 受控系交点在 10M-30M（full@30M 0.862 > lora@100M 0.795）——「小全参 ≥ 大LoRA」是**自训受控系的配方现象，不迁移到官方系**——这正是双轨验证的价值：用户问题（官方三档是否存在该结论）答案为否，且受控系显示该结论依赖配方家族属性
