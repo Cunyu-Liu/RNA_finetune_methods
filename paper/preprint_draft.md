@@ -150,9 +150,12 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   classification but only 0.027 behind LoRA on per-base m6A (0.941) —
   the cheapest adapter is viable where labels are dense per position.
 - **Equivalence line (C5b, dual-family): "small full-FT = large LoRA"
-  is family-dependent.** Controlled family (RNA-Sc, same recipe): 10M
-  full-FT 0.788 = 100M LoRA 0.795 -- the crossover sits between 10M and
-  100M. Official family (RiNALMo): mega-148M full-FT (0.942, LR-tuned)
+  is family-dependent.** Controlled family (RNA-Sc, same recipe, full
+  4-scale spectrum now complete): full-FT 1M 0.700 / 10M 0.808 / 30M
+  0.862 / 100M 0.824 vs LoRA 1M 0.639 / 10M 0.756 / 30M 0.773 / 100M
+  0.795 -- full@10M already matches LoRA@100M, and full@30M outright
+  beats it (crossover within one 3.3x scale step; full-FT curve is
+  non-monotone with a 30M peak). Official family (RiNALMo): mega-148M full-FT (0.942, LR-tuned)
   still trails 650M LoRA (0.969) by +0.027, and full-FT gains only
   +0.004 from 33M to 148M -- no crossover up to 148M. Clean-scaling
   models reach equivalence early; officially released families retain a
