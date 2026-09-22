@@ -2175,3 +2175,15 @@ vs frozen 0.645；full FT 进行中。
 - **修复**：杀原队列 + 清 3 个 stale pending 行；派 q_giga_full_bs8（G1 等 ≥24G，batch 8 对齐 q_rnasc650_tests.sh 的 650M 协议）；m6A 双轨部分独立成 q_m6a_dualtrack（G4 官方系 + G3 受控系），避免单队列串行阻塞
 - 当前队列：G1 giga full bs8（等显存）/ G4 m6A 官方系 micro full 已开跑 / G3 m6A 受控系 / G2 650M 预训练
 - 经验追加：大模型 full FT 的 batch 必须按模型档位缩放（650M:8 / 148M:32 / 33M:32）
+
+## Day 9 00:50 巡检：双轨波推进（mega full 6/6 收官）+ 受控系 LoRA 并行轨派发（G5）
+
+- **本 session 五队列终态确认**：famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch 全部收口（进程表零存活、ledger 1011 行 / pending 1 ↔ 活 finetune 1 账实一致）
+- **双轨波 G4 官方系 m6A 进展（q_m6a_dualtrack）**：
+  - micro full@1e-5 6/6 done（已 skip 秒过：random 0.9678 / family 0.9933）
+  - **mega full@1e-5 6/6 收官（23:57-00:43）**：random 0.981 x3 / family 0.9961 x3——官方系 m6A 侧「33M 全参 0.993 vs 148M 全参 0.996」family 切分几乎打平、random 侧大模型略优——与 mega lora 段（已开跑，s17 random 在飞）对照后构成等价线官方系第二任务证据
+  - 受控系 G3（10M/30M/100M full@3e-5）在主队列串行排队中
+- **giga_full_bs8 G1 异常追踪（非新 OOM 协议问题）**：9 次 attempt 已烧 8 次全部 OOM——每次启动时 GPU1 free 26-35G 达标，30-60 秒内被他方进程（7.8G/6.3G 波动）挤爆，bs8 协议本身显存需求 ~25G 无问题；末次 attempt（s43 random）在等 ≥24G 循环——若持续被挤考虑换卡或后半夜重试，暂不干预
+- **续派（本轮判断）**：GPU5 他方两进程（8.8G+7.0G）已退，稳定空闲 12.6-15.2G ≥ 10G 阈值 + 本 session 五队列排空 → 派 **q_m6a_ctrl_lora_g5**（G5 受控系 LoRA 轨并行加速：10M/30M/100M lora x 双切分 x 3 seed = 18 runs，模型逆序与主队列 G3 正序对开 + done 跳过双保险防碰撞）→ 100M lora s43 random 已开跑（epoch0 loss 0.0551，13G 窗口稳定）
+- **健康项**：650M 预训练 alive（PID 422582，nt18.0B step192108 最新 ckpt）+ watcher 3578696 在岗；无 CUDA 降级 / 无 CPU 静默降级
+- 队列图（00:50）：G1 giga full(等待≥24G) / G2 650M 预训练 / G3 m6A 受控系 full(排队) / G4 m6A 官方系 mega lora(在跑) / G5 m6A 受控系 lora(新派)
