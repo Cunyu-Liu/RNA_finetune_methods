@@ -2169,3 +2169,9 @@ vs frozen 0.645；full FT 进行中。
 - **m6A 双系等价线（第二任务）**：官方系缺 micro/mega full@1e-5（现有 default 3e-4 崩溃版）+ mega/giga lora；受控系缺 10M/30M/100M {full@3e-5, lora}——共 ~48 runs 派发 G0+G2
 - **预判（派发前不写结论）**：若官方系 giga full < giga lora（如受控系 100M full 回落模式）→ 官方系也无交点，「小全参 ≥ 大LoRA」仅在受控系成立 → 家族依赖性结论的第二任务复现；若 giga full ≈ giga lora → 官方系在 650M 档出现交点——两种结果都是有效双轨证据
 - 队列：G0 giga full 6 runs + G2 m6A 48 runs；650M 预训练 alive（nt18.0B）
+
+## Day 8 23:10 双轨队列修复重派（OOM 根因处理）
+- **giga full OOM 根因**：默认 batch 32 需 ~26G PyTorch 分配（33M-148M 模型批 32 无碍，650M 激活层峰值超限），叠加他方 9.5G 进程必炸——q_dualtrack 原队列 3 次 attempt 全 OOM（日志留证）
+- **修复**：杀原队列 + 清 3 个 stale pending 行；派 q_giga_full_bs8（G1 等 ≥24G，batch 8 对齐 q_rnasc650_tests.sh 的 650M 协议）；m6A 双轨部分独立成 q_m6a_dualtrack（G4 官方系 + G3 受控系），避免单队列串行阻塞
+- 当前队列：G1 giga full bs8（等显存）/ G4 m6A 官方系 micro full 已开跑 / G3 m6A 受控系 / G2 650M 预训练
+- 经验追加：大模型 full FT 的 batch 必须按模型档位缩放（650M:8 / 148M:32 / 33M:32）
