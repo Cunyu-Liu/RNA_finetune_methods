@@ -2122,3 +2122,9 @@ vs frozen 0.645；full FT 进行中。
 - **审计修正（ASYM 复核三遍）**：SSP full MISS 三模型为 _lr 误报（6/6 tuned 已在）；mrl 30M full 7 行含 1 重复（s29 family 双行同值）；mega mrl frozen 3+1 双行（pending 残留已被队列吸收）；ncRNA head-only 10M random 只有 s17（random=1 family=3 为真缺口）
 - **第六波派发（G3+G4）**：10M headonly random s29/s43 + 10M dora/ia3 family 6 runs + micro dora/ia3 family 6 runs = 14 runs——E2 ncRNA 面板 family 侧最后对称缺口
 - 650M 预训练 alive（最新 ckpt nt15.0B step159984）
+
+## Day 8 14:15 第六波收工 + micro dora OOM 重试
+- **wave6 主体收工（12/14）**：10M headonly random s29/s43 落账（0.352/0.337——head-only random 3/3 齐）；10M dora family 3 种子（0.061-0.097 带内）/ 10M ia3 family 3 种子（0.220-0.247）；micro ia3 family 3 种子（0.704 x3——**IA3 激活重标定也逃逸崩溃带！与 LoRA mega 同向**）；micro dora s43 family 0.075（带内）
+- **micro dora s17/s29 family OOM**（12:33 GPU4 被他方 12.5G 进程挤占——日志留证）→ 重试队列 G3 已开跑（带等显存+重试 x3）
+- **E2 ncRNA family 侧全景（新数据判读）**：10M {dora 带内, ia3 0.22-0.25 半逃逸, headonly 0.19-0.23} vs micro {dora 待补, ia3 0.70 强逃逸, headonly 0.68}——**逃逸梯度 = 预训练充分度 × adapter 类型**（ia3 重标定 > lora > dora？s43 micro dora 0.075 在带内与 mega lora 0.139-0.334 对照——DoRA 分解方向更新可能更受家族记忆影响）——待 s17/s29 补齐后统一判读，暂不写入预印本
+- 650M 预训练 alive（nt16.0B step170697）
