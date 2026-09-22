@@ -2137,3 +2137,11 @@ vs frozen 0.645；full FT 进行中。
 - **教训入库**：④ OOM 失败后 stale pending 行若不被清行逻辑覆盖（retry 脚本 clean 步骤只在 RC!=0 时执行，RC=0 的 claim 会新开行），同 run_id 双行会让 update 双写——claim 应复用 pending 行或清行逻辑应在成功路径也核行数
 - **健康项**：650M 预训练 422582（3-08:15，GPU2，nt16.0B step170697 最新 ckpt）+ watcher 3578696 在岗，tests 链待退出自动触发；本轮无新 OOM / 无 CUDA 降级 / 无 CPU 静默降级（patch2/3 与 GPU6/7 旧 4.75G 卡 OOM 均为历史已处置事件）
 - **续派判断**：本 session 全队列（五队列 + 第五波 + 第六波含 retry）全部收工；etc_audit 11:44 剩余 MISS/ASYM 已于 11:50 分诊（_lr 误报 + D4 阴性设计内 + 设计范围外），无未派发真缺口；GPU0/1/4/5 名义空闲 15-22G 但被 honghui run_tiger_binary 分钟级 churn 持有（06:05 已证假窗口），GPU2 被预训练持有——不续派，等 650M 预训练退出触发 tests 链
+
+## Day 8 16:55 第六波全收工 + E2 ncRNA family 对称版完成
+- **micro dora family 重试成功（3/3）**：s17 0.067 / s29 0.067 / s43 0.075（带内）——wave6 14/14 全落
+- **E2 ncRNA family 侧完整判读（micro + 10M 双模型 x 4 adapter）**：
+  - micro：lora 0.081 / dora 0.067-0.075（带内）；**ia3 0.704 x3（强逃逸）**；head-only 0.68（不崩）
+  - 10M：lora 0.072 / dora 0.061-0.097（带内）；**ia3 0.22-0.25（半逃逸）**；head-only 0.19-0.23
+- **统一图景（待复核后入稿）**：家族切分下逃逸梯度 = 预训练充分度（33M ia3 0.70 > 10M ia3 0.23 > 10M headonly 0.22）× adapter 侵入性（激活重标定 ia3 轻侵入最易逃逸 > lora 低秩 > dora 方向更新最重）；与 148M mega lora 逃逸（0.139-0.334）共同构成「部分逃逸」的证据矩阵——预印本 E2 节升级素材（暂记 TRAINING_LOG，等导过目再改稿）
+- 产物刷新：e2/c4 表已带 wave6 数据
