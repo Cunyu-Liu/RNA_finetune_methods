@@ -2233,3 +2233,11 @@ vs frozen 0.645；full FT 进行中。
 - **q_rnasc650_tests.sh 自动启动（链条衔接验证 ✓）**：watcher 检出退出即拉起测试链（PID 41162），phase1 选 GPU0（06:16:32），RNA-Sc-650M frozen s17 random 已开跑（train 6858 / classes 13；d_model 自校正 768→1408 与 ckpt 一致）；phase2（full s101 lr 网格）守门 ≥28G 轮询——GPU6 有 38.7G 空闲但 pick_gpu 只扫 GPU0-5，phase2 可能需等 giga 卡位释放
 - 巡检终局（06:20）：GPU1 giga full s43 family（在飞，第 3 天家族带）+ GPU4 giga full s17 random（epoch 4/10，loss 0.066）+ GPU0 测试链 phase1 在飞；dualtrack 队列只剩 GPU3 ≥6G 等待的无效尾扫（skip 后自退，不干预）；无本方 CUDA 降级 / 无本方 OOM 事故（GPU1 torch probe OOM 系他方 39.6G 挤满的查询副作用，训练本体 epoch 正常推进）
 - **本轮续派判断：不派**——五队列全排空 ✓，但唯一剩余缺口（giga full random s29/s43）已在 q_giga_full_rand_g4 队列守门（bs8 协议需 ≥24G，GPU2 仅 15.1G / GPU5 已被外方回占至 7.1G，无匹配窗口）；等 giga x3 + 测试链自然推进
+
+## Day 9 08:00 ★ 双轨验证核心数据落地 + 650M 预训练测试链自启
+- **giga-650M full random s17 = 0.9662**——官方系等价线最后一格核心数据落地（s29/s43 在跑）
+- **双轨定稿判读（ncRNA random, tuned）**：
+  - 官方系：micro full 0.938 < mega full 0.945 < giga full 0.966（s17） vs giga lora 0.969——**官方系无交点维持**：即便 650M 全参（0.966）仍不敌自身 LoRA（0.969），且 33M→650M 全参增益仅 +0.028——「已发表 RiNALMo 三档不存在小模型全参 ≥ 大模型 LoRA」用户问题答案 = **否**
+  - 受控系：交点在 10M-30M（full@30M 0.862 > lora@100M 0.795）——双轨对照确认「小全参 ≥ 大LoRA」是受控系配方家族属性，不迁移到官方系
+- **m6A 双轨完整收官**（M6A-DUALTRACK DONE 06:17）：官方三档 0.968-0.997（天花板）；受控系 lora 10M/30M/100M random 0.940-0.947 / family 0.961-0.985——per-base 任务上受控系小模型 lora 即达 0.94+，跨配方差距 <0.05
+- **650M 预训练退出 + watcher 自动触发测试链成功**（07:54 起在 GPU0 跑 RNA-Sc-650M frozen，d_model 1408 新模型确认）——受控系大端等价线（650M lora/frozen/full tuned 链）自动推进中
