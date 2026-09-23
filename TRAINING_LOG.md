@@ -2250,3 +2250,13 @@ vs frozen 0.645；full FT 进行中。
 - **续派决策**：frozen_patch 意图格（30M/100M/mega frozen）已被 ledger 全 6/6 覆盖，唯一真实缺口 = RNA-Sc-650M 受控系大端等价线 lora/frozen/full 全部 11 格 → 自动链正填 frozen/lora 12 格（正向序，GPU0 单卡 ~19h）+ phase2 full@28G 守门 → **续派 GPU2 反向序补 lora 6 格**（lora family s43→s17 → random s43→s17，与自动链会师点靠 claim done 幂等 + fresh-pending(≤3h) 互斥，无双跑风险；lora 峰值预算 17G，守门 ≥20G）
 - **G2 队列启动**：PID 765816，attempt 1 = lora s43 family 09:38:59 开跑（train 6859/classes 13/d_model 1408 自校正正常）；初版全局 GPU0-busy hold 有设计缺陷（会在自动链后空等 ~19h 使续派失效），已 kill 替换为逐格互斥版，无遗留 pending
 - **健康项**：无 CUDA 不可用 / 无 CPU 静默降级 / 无活跃 OOM（q_giga_full_bs8_g1 的 OOM 全为 06:25 前历史记录，系 GPU1 第三方 churn，该队列已 DONE 且由 G4 队列改道接管）
+
+## Day 9 12:23 巡检：650M 等价线三线推进 + 受控系 lora family 崩溃带首证
+- 在飞三线：giga full random s43（GPU4 epoch 8/10 loss 0.0716）；测试链 phase1 frozen family s17（GPU0 epoch 9/10 loss 1.5356，链 PID 41162）；G2 反向序 lora family s29（GPU2 epoch 5/10 loss 2.3952，PID 765816）
+- **新落地（11:18）**：ft_rnasc650m_noncodingrnafamily_lora_s43_family ACC=0.0643——低于 1/13 随机基线 0.0769，受控系 650M lora 家族切分崩溃首证；与官方系 RiNALMo-650M full family（0.0759-0.0841）崩溃带同构 → 大端家族切分崩溃跨配方/跨策略出现首例（同配方 random 切分 frozen 0.71+，切分方式为主导变量）；在飞 lora s29 family loss 回升（2.10→2.45）疑似第二例，落地后复核；对照 frozen family s17 loss 1.66 仍在正常下降
+- giga full random s29=0.9394（09:29 落账；s17=0.9662，s43 在飞）——官方系随机线收官带种子方差 ~0.027
+- 账实一致：ledger 1063 done / 2 cancelled（09-15 smoke ghost 历史行）/ 3 pending ↔ 3 在飞进程 ✓；watcher 3578696 DEAD + 422582 退出均为 06:16 预训练收官既定事实，q_rnasc650_tests.sh 自动衔接已验证 ✓
+- 本 session 五队列（famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch）维持排空 ✓；剩余待填：frozen family s29/s43、lora family s17、lora random x3（6 格，链正向 + G2 反向双向覆盖）+ full phase2 8 格（2 格 s101 网格 + 6 格 formal，链 ≥28G 守门）——无未认领缺口
+- **续派判断：不派**——GPU2 探测瞬时空闲 32G（第三方 20.5G 进程退出所致，该卡 churn 高）为当前唯一 ≥28G 窗口，但手工注入 full s101 网格会与 G2 在飞 lora 格挤兑 GPU2 且有第三方回占 OOM 风险；phase2 由链自动守门，维持链协议；下轮巡检若 phase1 仍在磨、G2 已让位且 GPU0/2 持稳 ≥28G，再评估提前手工开 s101 网格（ledger done 幂等，链后续自动跳过）
+- 健康项：无 CUDA 不可用 / 无 CPU 静默降级 / 无在飞 OOM——GPU4/7 torch probe OOM 系满卡上探测进程分配查询缓冲失败的假象（训练本体 epoch 正常推进）；全部 OOM 证据均为历史（giga_bs8 G1 队列 06:25 前第三方挤兑，队列已 DONE 并由 G4 改道接管；mrl_patch2 22:06 OOM 已被后续补齐，ledger RiNALMo-650M mrl 12/12 done），无需停队
+- 附注：status/ 目录存在每 30 分钟自动状态文件（10:27-11:57，来源为既有监控 cron，与本巡检互补）
