@@ -162,12 +162,24 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   same checkpoint, and the 33M->650M full-FT gain is only +0.028:
   no crossover anywhere in the official family. Clean-scaling
   models reach equivalence early; officially released families retain a
-  large-model advantage. A dual-track reading (user-requested
-  validation): on the official three published RiNALMo scales the
-  small full-FT large LoRA pattern does NOT hold -- giga-650M
-  full-FT 0.966 still trails giga LoRA 0.969 -- whereas the controlled
-  family shows the crossover at 10M-30M; the pattern is a
-  recipe-family property, not a general RNA-LM law. On the per-base
+  large-model advantage. Dual-track validation
+  (user-requested): on the official three published RiNALMo scales the
+  "small full-FT >= large LoRA" pattern does NOT hold -- micro-33M
+  full (0.938) trails mega-148M LoRA (0.949) by -0.011, and even
+  giga-650M full-FT (0.957, 3-seed mean: 0.966/0.939/0.964) trails
+  giga LoRA (0.969) -- whereas the controlled family shows the
+  crossover at 10M-30M. **We explicitly do NOT claim the equivalence
+  crossover as a general RNA-LM law: it is evidenced in exactly one
+  model family (our controlled RNA-Sc recipe) and absent in the
+  official RiNALMo family and in the wider model pool at comparable
+  scales (ERNIE-86M full 0.973 vs LoRA 0.974 tie; RNA-FM-99M full
+  0.835 < LoRA 0.962; SpliceBERT-19M full 0.910 ≈ LoRA 0.903). The
+  honest reading: whether small-model full-FT matches large-model LoRA
+  is recipe-dependent and currently single-family-evidenced. The
+  robust, replicable finding is the direction -- released families
+  retain a large-model LoRA advantage -- and the controlled family
+  serves as the existence-proof counter-example bounding the claim,
+  the role spec v1.7 pre-assigned to it.** On the per-base
   m6A task the same dual-track line saturates (all tiers 0.94-0.997,
   gap < 0.05): equivalence-line identifiability itself is
   task-granularity dependent. On family splits, all seven scales
