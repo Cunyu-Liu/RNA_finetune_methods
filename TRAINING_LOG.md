@@ -2285,3 +2285,27 @@ vs frozen 0.645；full FT 进行中。
 - **续派判断：不派**——GPU4 free 27.03G<28G（phase2 full 守门 28G 不满足，且 300M 训练（1441172，已 20:52:33）下轮 300M 应可让出 GPU4）/ GPU5 free 14.24G<20G（lora 预算 17G 不满足）；Phase1 lora 6 格由测试链（正向序）+ G2 反向序双向覆盖，无未认领缺口
 - **健康项**：无 CUDA 不可用 / 无 CPU 静默降级 / 无在飞 OOM；G0 100% util 15.6G / G2 82% util 34.1G（第三方共存）；全部日志尾部正常推进（epoch 0-1，非静默挂死）
 - 附注：famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch 五队列维持排空 ✓（ledger 全 done）；frozen s43 family 最后 3 行 = pending（在飞对应进程）
+
+## 2026-09-23 16:10 RNA-Sc-650M 测试链干预：杀主链接管 phase2
+
+**背景**：主链 q_rnasc650_tests.sh 相位1 循环无 done-skip 检查——frozen 6/6 与 lora family 3/3 已落地
+（g2 补格队列 + 孤儿进程覆盖），主链会把已完成格子全部重跑（~10h 浪费），phase2（full tuned）
+要等相位1 重跑完才开始（预计明天凌晨）。
+
+**干预**：杀主链 bash（41162），保留孤儿子进程 s17 lora random（PGID 独立不受影响）；
+派发 q_rnasc650_full.sh 专用队列：s101 LR 网格(1e-5/3e-5) → BEST → formal 6 runs，
+带幂等 done-skip、全卡位选择(>=24G)、失败清 pending 重试、bs8 协议。
+与 g2（lora 剩余格）claim 集不相交，队列互斥 OK。
+
+**当前三链并行**：
+- GPU0: lora s17 random（孤儿，~17:40 落）
+- GPU2: g2 lora s43 random（~17:50 落）→ s29 random
+- GPU1: full s101 网格 lr1e-5（16:08 起跑，~19:30 落）→ lr3e-5 → formal
+
+**链完成后的核心判读**（存在性反例的大端检验）：
+受控系 650M lora random vs 30M full 0.862——若 650M lora > 30M full 则受控系交点
+被大端「追回」，交点窗口窄化到 30M-650M；若 < 则反例更锐利（单调优势扩大）。
+
+**崩塌带新证据**：受控系 650M lora family 3/3 = 0.0642（三种子完全一致，退化到同一
+多数类）——比官方 RiNALMo-650M lora family（0.076-0.166）更彻底。崩塌带阈值随
+pretraining 充分度上移的假设获得大端确认。
