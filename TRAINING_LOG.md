@@ -2241,3 +2241,12 @@ vs frozen 0.645；full FT 进行中。
   - 受控系：交点在 10M-30M（full@30M 0.862 > lora@100M 0.795）——双轨对照确认「小全参 ≥ 大LoRA」是受控系配方家族属性，不迁移到官方系
 - **m6A 双轨完整收官**（M6A-DUALTRACK DONE 06:17）：官方三档 0.968-0.997（天花板）；受控系 lora 10M/30M/100M random 0.940-0.947 / family 0.961-0.985——per-base 任务上受控系小模型 lora 即达 0.94+，跨配方差距 <0.05
 - **650M 预训练退出 + watcher 自动触发测试链成功**（07:54 起在 GPU0 跑 RNA-Sc-650M frozen，d_model 1408 新模型确认）——受控系大端等价线（650M lora/frozen/full tuned 链）自动推进中
+
+## Day 9 09:30 巡检：五队列确认排空 + 续派 G2（RNA-Sc-650M lora 补格）
+- **在飞任务**：giga-650M full random s29（GPU4，epoch 7/10，loss 0.053——s43 排队，q_giga_full_rand_g4 守门）+ 650M 测试链 phase1（GPU0，frozen s29 random，epoch 5/10，loss 1.16，PID 41162）
+- **watcher/预训练终态确认**：3578696 DEAD + 422582 EXITED 均为预期（预训练 06:16 DONE，已落账）；q_rnasc650_tests.sh 检出退出即自启 ✓，链条衔接协议验证通过
+- **本 session 五队列全排空 ✓**：famlora_audit（09-21 20:41）/ m6a_family（20:41）/ ssp_fulltuned（21:53）/ mrl_patch2→patch3（SyntaxError 修复链，已 cleaned）/ frozen_patch（FROZEN_PATCH_DONE）；ledger 1058 done / 2 pending（= 两个在飞行，账实一致）
+- **GPU 空闲**：G1 18.6G / G2 25.2G（后实测升至 38G，honghuiyang 3 个 benchmark 小进程已退）≥10G；**G1 弃用**（第三方 2 大进程 churn 在飞 + G1 队列 9 attempt 全 OOM 历史）；G3 5.5G / G4 1.0G / G5 3.8G 不足
+- **续派决策**：frozen_patch 意图格（30M/100M/mega frozen）已被 ledger 全 6/6 覆盖，唯一真实缺口 = RNA-Sc-650M 受控系大端等价线 lora/frozen/full 全部 11 格 → 自动链正填 frozen/lora 12 格（正向序，GPU0 单卡 ~19h）+ phase2 full@28G 守门 → **续派 GPU2 反向序补 lora 6 格**（lora family s43→s17 → random s43→s17，与自动链会师点靠 claim done 幂等 + fresh-pending(≤3h) 互斥，无双跑风险；lora 峰值预算 17G，守门 ≥20G）
+- **G2 队列启动**：PID 765816，attempt 1 = lora s43 family 09:38:59 开跑（train 6859/classes 13/d_model 1408 自校正正常）；初版全局 GPU0-busy hold 有设计缺陷（会在自动链后空等 ~19h 使续派失效），已 kill 替换为逐格互斥版，无遗留 pending
+- **健康项**：无 CUDA 不可用 / 无 CPU 静默降级 / 无活跃 OOM（q_giga_full_bs8_g1 的 OOM 全为 06:25 前历史记录，系 GPU1 第三方 churn，该队列已 DONE 且由 G4 队列改道接管）
