@@ -2309,3 +2309,16 @@ vs frozen 0.645；full FT 进行中。
 **崩塌带新证据**：受控系 650M lora family 3/3 = 0.0642（三种子完全一致，退化到同一
 多数类）——比官方 RiNALMo-650M lora family（0.076-0.166）更彻底。崩塌带阈值随
 pretraining 充分度上移的假设获得大端确认。
+
+## 2026-09-23 17:22 MIG 切片陷阱：torch device 6/7 是 4.75G 小卡
+
+**事故**：v2 并行队列硬编码 GPU6 跑 full lr3e-5 → 连续 2 次 OOM。
+**根因**：nvidia-smi 显示 GPU6 = 40G 卡（33G 空闲），但 torch.cuda 枚举中
+device 6/7 是 **4.75G MIG 切片**——nvidia-smi 索引与 torch 索引不对应。
+**修复**（v3，e7b3ea5）：pick_gpu 增加 total<20G 过滤（MIG 切片永不选中）；
+一切派单走 pick_gpu 动态选卡，禁止硬编码 GPU 索引；v3 网格等双 LR 格齐才算 BEST。
+**规则沉淀**（写入 project_rules.md）：硬编码 GPU 前必须 torch.cuda.mem_get_info
+校验 total 容量。
+
+**v3 当前布局**：GPU0 lora s17（epoch 9，快落地）→ 落地后 GPU0 空 → v3 的
+lr3e-5 网格将自动抢卡。GPU1 孤儿 lr1e-5、GPU2 lora s29（g2）。全链今晚收口。
