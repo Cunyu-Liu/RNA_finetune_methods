@@ -151,13 +151,17 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   the cheapest adapter is viable where labels are dense per position.
 - **Equivalence line (C5b, dual-family): "small full-FT = large LoRA"
   is family-dependent.** Controlled family (RNA-Sc, same recipe, full
-  4-scale spectrum now complete): full-FT 1M 0.700 / 10M 0.808 / 30M
-  0.862 / 100M 0.824 vs LoRA 1M 0.639 / 10M 0.756 / 30M 0.773 / 100M
-  0.795 -- full@10M already matches LoRA@100M, and full@30M outright
-  beats it (crossover within one 3.3x scale step; full-FT curve is
-  non-monotone with a 30M peak). Official family (RiNALMo, all three
-  published sizes now complete): micro-33M full 0.938 < mega-148M
-  full 0.945 < giga-650M full 0.966 vs giga-650M LoRA 0.969 -- even
+  5-scale spectrum 1M-650M now complete): full-FT 1M 0.700 / 10M 0.808
+  / 30M 0.862 / 100M 0.824 / 650M 0.896 vs LoRA 1M 0.639 / 10M 0.746
+  / 30M 0.773 / 100M 0.795 / 650M 0.855 -- full@10M already matches
+  LoRA@100M, full@30M outright beats it (crossover within one 3.3x
+  scale step), and the advantage is not recovered at the large end:
+  full@30M (0.862) ties LoRA@650M (0.855, +0.007), and full@650M
+  (0.896) beats same-scale LoRA by +0.040 -- full-FT wins the
+  controlled family at all five scales (full-FT curve is non-monotone
+  with a 30M peak). Official family (RiNALMo, all three published
+  sizes complete): micro-33M full 0.938 < mega-148M full 0.945 <
+  giga-650M full 0.957 vs giga-650M LoRA 0.969 -- even
   full-FT at the largest released scale does not beat LoRA on the
   same checkpoint, and the 33M->650M full-FT gain is only +0.028:
   no crossover anywhere in the official family. Clean-scaling
@@ -168,7 +172,10 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   full (0.938) trails mega-148M LoRA (0.949) by -0.011, and even
   giga-650M full-FT (0.957, 3-seed mean: 0.966/0.939/0.964) trails
   giga LoRA (0.969) -- whereas the controlled family shows the
-  crossover at 10M-30M. **We explicitly do NOT claim the equivalence
+  crossover at 10M-30M and holds it through the largest controlled
+  scale (650M full 0.896 > 650M LoRA 0.855; 30M full 0.862 ~
+  650M LoRA 0.855): the two families are directionally opposite
+  on every scale tested. **We explicitly do NOT claim the equivalence
   crossover as a general RNA-LM law: it is evidenced in exactly one
   model family (our controlled RNA-Sc recipe) and absent in the
   official RiNALMo family and in the wider model pool at comparable
@@ -182,15 +189,21 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   the role spec v1.7 pre-assigned to it.** On the per-base
   m6A task the same dual-track line saturates (all tiers 0.94-0.997,
   gap < 0.05): equivalence-line identifiability itself is
-  task-granularity dependent. On family splits, all seven scales
-  (1M-650M) collapse to the 0.06-0.12 band *on average* (LoRA arm,
-  3-seed means: 1M 0.126, 10M 0.072, 30M 0.064, 100M 0.081,
-  33M 0.081, 148M 0.207, 650M 0.106) -- leakage sensitivity is
+  task-granularity dependent. On family splits, all eight LoRA cells
+  (controlled 1M/10M/30M/100M/650M + official 33M/148M/650M)
+  collapse to the 0.06-0.12 band *on average* (3-seed means: 1M 0.126,
+  10M 0.072, 30M 0.064, 100M 0.081, controlled 650M 0.064, 33M 0.081,
+  148M 0.207, official 650M 0.106) -- leakage sensitivity is
   largely scale-invariant, with one structured exception: the
   148M mega checkpoint escapes the band in all three seeds
   (0.139-0.334, mean 0.207) and 1M/650M escape in single seeds --
   partial escape is LoRA x pretraining-sufficiency dependent, not
-  a monotone function of scale.
+  a monotone function of scale. The controlled 650M shows the most
+  complete collapse observed: all three LoRA seeds return the
+  identical degenerate value 0.064 (majority-class prediction), and
+  tuned full-FT (0.064-0.096) joins the band while frozen reaches
+  0.516 -- backbone-updating arms destroy the frozen family-level
+  representation rather than transfer it.
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.
