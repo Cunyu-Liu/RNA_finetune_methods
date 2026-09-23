@@ -2260,3 +2260,6 @@ vs frozen 0.645；full FT 进行中。
 - **续派判断：不派**——GPU2 探测瞬时空闲 32G（第三方 20.5G 进程退出所致，该卡 churn 高）为当前唯一 ≥28G 窗口，但手工注入 full s101 网格会与 G2 在飞 lora 格挤兑 GPU2 且有第三方回占 OOM 风险；phase2 由链自动守门，维持链协议；下轮巡检若 phase1 仍在磨、G2 已让位且 GPU0/2 持稳 ≥28G，再评估提前手工开 s101 网格（ledger done 幂等，链后续自动跳过）
 - 健康项：无 CUDA 不可用 / 无 CPU 静默降级 / 无在飞 OOM——GPU4/7 torch probe OOM 系满卡上探测进程分配查询缓冲失败的假象（训练本体 epoch 正常推进）；全部 OOM 证据均为历史（giga_bs8 G1 队列 06:25 前第三方挤兑，队列已 DONE 并由 G4 改道接管；mrl_patch2 22:06 OOM 已被后续补齐，ledger RiNALMo-650M mrl 12/12 done），无需停队
 - 附注：status/ 目录存在每 30 分钟自动状态文件（10:27-11:57，来源为既有监控 cron，与本巡检互补）
+
+### 补记（12:26）：受控系 650M frozen family s17 = 0.5187（12:22:57 落地，链 PID 41162 自动进入 frozen s29 family）
+- 家族切分对 frozen 仅中度衰减（random 0.72 → family 0.52），而 lora family 崩溃至 0.064 → 上节崩溃带判读收窄为「lora × family」组合特异，非家族切分普适效应；lora s29 family 在飞（epoch 5/10 loss 2.40 回升中），若同样 <0.08 则崩溃带对种子稳定
