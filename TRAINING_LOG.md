@@ -2276,3 +2276,12 @@ vs frozen 0.645；full FT 进行中。
 - **giga full 6/6 全落**：random 0.966/0.939/0.964（均值 0.957）/ family 0.076-0.084（带内）——官方系 3x3 网格完备闭合，v0.6.4 表述与最终数据一致（无需改稿）
 - **RNA-Sc-650M 测试链推进**（预训练 nt2.0B val 0.7757 后自动触发）：frozen 5/6 落账——random 0.706-0.721 / family 0.519-0.527（受控系 650M frozen 与 30M frozen 0.305 对照：预训练充分度提升 frozen 表征质量 +0.41）；lora family 已落 2 档（0.064 带内——受控系 650M 也进崩溃带，与 RiNALMo-650M lora family 0.076-0.166 同向）；lora random 在跑
 - 等链完成后判读：受控系 650M lora random vs 30M full 0.862（存在性反例的大端检验——若 650M lora > 30M full 则受控系交点被大端「追回」，交点窗口窄化到 30M-100M 之间；若 < 则反例更锐利）
+
+## Day 9 14:55 巡检：lora×family 崩溃带三种子闭合（0.0643 完全同值）+ frozen 6/6 收官
+- **受控系 650M lora family 崩溃带闭合**：s43/s29/s17 三种子全落 ACC=0.0643（完全同值，wall 5613-5992s，peak 5651MB）——低于 1/13=0.0769 随机基线，与官方系 RiNALMo-650M lora family 崩溃带（0.076-0.166）同构；12:23 巡检预测（s29 loss 回升疑似第二例）确认为种子稳定现象，非单例噪声
+- **frozen 6/6 收官**（Phase1 顺位）：random 0.706-0.721 / family 0.519-0.527（06:38-04:22 落账）——家族切分对 frozen 仅中度衰减（-0.2），对 lora 是崩溃（-0.65）；档位逃逸（650M frozen family 0.52 >  RiNALMo 小档 lora family）成立
+- **在飞双线**：测试链 lora s17 random（GPU0，链 PID 41162，epoch 0-1/10，loss 1.84）+ G2 反向序 lora s43 random（GPU2，PID 765816，epoch 0-1/10，loss 1.65）——正在填补 lora random x3 最后一档：即正在填的大端等价线最后非 full 网格
+- **账实一致**：ledger 1058 done（+2 frozen 06:38 前为 1056）/ 2 pending ↔ 2 在飞 finetune 进程；watcher 3578696 DEAD + 422582 EXITED 均为 06:16 预训练收官既定事实，q_rnasc650_tests.sh 自动衔接已验证 ✓（14:38 起在 GPU0 推进 phase1 lora）
+- **续派判断：不派**——GPU4 free 27.03G<28G（phase2 full 守门 28G 不满足，且 300M 训练（1441172，已 20:52:33）下轮 300M 应可让出 GPU4）/ GPU5 free 14.24G<20G（lora 预算 17G 不满足）；Phase1 lora 6 格由测试链（正向序）+ G2 反向序双向覆盖，无未认领缺口
+- **健康项**：无 CUDA 不可用 / 无 CPU 静默降级 / 无在飞 OOM；G0 100% util 15.6G / G2 82% util 34.1G（第三方共存）；全部日志尾部正常推进（epoch 0-1，非静默挂死）
+- 附注：famlora_audit/m6a_family/ssp_fulltuned/mrl_patch/frozen_patch 五队列维持排空 ✓（ledger 全 done）；frozen s43 family 最后 3 行 = pending（在飞对应进程）
