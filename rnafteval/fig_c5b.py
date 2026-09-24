@@ -52,7 +52,7 @@ def collect():
                     or r.get("split") != "random" or r.get("seed") not in (17, 29, 43)):
                 continue
             rid = r.get("run_id", "")
-            if "_smoke" in rid or r.get("value") is None:
+            if "_smoke" in rid or "_e3" in rid or r.get("value") is None:
                 continue
             latest[rid] = r
     tuned, plain = {}, {}
