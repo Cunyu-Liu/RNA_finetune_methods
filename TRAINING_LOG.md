@@ -2436,3 +2436,28 @@ dev6/7 是 4.75G 小卡）；② mem_get_info 返回序 (free,total) 非 (total,
 **当前布局**：GPU0 full s29（孤儿）+ GPU1 full s43（修复版 sweeper）；
 修复版 sweeper 3-pass 会兜底 full s17 + lora/frozen s43 剩余格。
 已落 4/9：frozen 0.913×2 / lora 0.947×2。
+
+## 2026-09-25 03:35 m6A 补格巡检：15/18，ends 功成身退、sweep 兜底中
+
+**新落地**（01:10 条目之后）：full s29 0.9443（01:46，GPU0 孤儿完赛）/
+full s43 0.9113（03:22，sweep pass1）。当前 15/18：
+- 650M frozen 0.9133/0.9137（s17/s29）· lora 0.9470/0.9478（s17/s29）
+  · full 0.9443/0.9113（s29/s43）
+**在跑**：lora s43（GPU1 bs32，03:22:39 起）；**待跑**：frozen s43（pass1
+队尾）+ full s17（2 行陈旧 pending 已过期 4.5h，pass2 兜底）
+**队列判定**：finetune 在跑，不满足巡检重启条件，不重启。ends 主队列
+01:00:44 后无日志（陷阱③空参数双烧 attempt 后沉默退场），接力棒在
+修复版 sweep（3-pass 幂等）手上。
+**异常（待人工处理）**：ends 脚本第四个陷阱——RID 大小写。脚本内拼
+`ft_RNASc650M_...`（大写），ledger.run_id 规范化为全小写，故 ends 的
+cell_state/clean_pending 永不匹配：① 失败格 pending 残行清不掉
+（full_s17 现存 2 行陈旧 pending）；② 幂等门整体失效（19:20 重启后
+1M 9 格全重派，仅靠 finetune_base 内层 claim() 拒绝才免重训）。
+sweep 脚本小写无此问题。claim() 容忍 stale pending（只拒 running/done，
+full_s29 复跑成功即为实证），功能不阻塞、仅污染计数。修 ends 时 RID
+须按 ledger.run_id 约定小写化；full_s17 的 2 行陈旧 pending 可人工清除。
+**谱线初判**（非终判，等 18/18）：受控系 random 侧 lora 1M→650M 全
+0.947 级完全平坦；full 0.911-0.948；frozen 0.689(1M)→0.914(650M)
+单调改善。「0.94-0.997 全饱和」lora 侧铁证；full 侧 650M s43 0.9113
+为当前最低点（<0.94，终判时须明确表述）。1M 首端无规模效应迹象
+（1M lora 0.947 ≥ 10M lora 0.941-0.944，未触发 <0.90 告警线）。
