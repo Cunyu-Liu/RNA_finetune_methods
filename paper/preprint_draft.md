@@ -44,6 +44,16 @@ Three findings emerge:
    alone can flip apparent strategy rankings by ±0.5 accuracy. Under
    tuned LRs the per-sequence task ranking is
    full ≥ DoRA ≈ LoRA ≫ IA3 > head-only.
+4. **Whether small-model full-FT matches large-model LoRA is
+   recipe-dependent — the two families point in opposite directions on
+   every scale tested.** On the controlled RNA-Sc family (same recipe,
+   1M–650M, five scales) full-FT beats same-scale LoRA at all five
+   scales and a 30M full-FT model (0.862) matches the largest 650M
+   LoRA (0.855); on the officially released RiNALMo family (33M/148M/
+   650M) LoRA stays ahead at every scale (650M: 0.969 vs 0.957). We
+   do not claim the equivalence crossover as a general RNA-LM law; the
+   replicable finding is the direction, with the controlled family as
+   an existence-proof counter-example bounding the claim.
 
 We release the full run ledger, MMseqs2 0.8/0.8 family-cluster splits for
 all three tasks, LR grids, and a split-leakage audit of the official BEACON
