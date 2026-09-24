@@ -2422,3 +2422,17 @@ per-base 任务等价线可辨识度低的结论获五档全谱加固（1M/10M/3
 校准为 lora/frozen 15G + full bs8 18G（共 6 次重试自愈中成功起跑 2 格）。
 **工程教训**（入规则）：GPU 门必须用同任务×同模型的历史 peak_mem 校准，
 禁止跨任务套用（ncRNA 24G ≠ m6A 13.7G）。
+
+## 2026-09-25 01:10 第三个 torch 枚举陷阱：mem_get_info 自身可抛 CUDA OOM
+
+**事故**：主队列 3 次 '--device: expected one argument' exit 2（23:00/00:55/01:00）。
+**根因**：torch.cuda.mem_get_info(i) 在查询**被占满的设备**时自身抛
+RuntimeError: CUDA error: out of memory——不是返回小值而是异常崩溃 →
+pick_gpu 输出空串 → bash G='' → --device 空参数。
+**修复**（d976344）：pick_gpu per-device try/except continue。
+**三大 torch 枚举陷阱全集**：① MIG 切片（nvidia-smi 索引 ≠ torch 索引，
+dev6/7 是 4.75G 小卡）；② mem_get_info 返回序 (free,total) 非 (total,free)；
+③ mem_get_info 查满卡自身抛 OOM。三者都源于「想当然假设 API 行为」。
+**当前布局**：GPU0 full s29（孤儿）+ GPU1 full s43（修复版 sweeper）；
+修复版 sweeper 3-pass 会兜底 full s17 + lora/frozen s43 剩余格。
+已落 4/9：frozen 0.913×2 / lora 0.947×2。
