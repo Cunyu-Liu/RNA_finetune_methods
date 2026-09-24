@@ -37,7 +37,10 @@ import sys, torch
 need=int(sys.argv[1])
 best=-1; best_free=0
 for i in range(torch.cuda.device_count()):
-    free, total = torch.cuda.mem_get_info(i)
+    try:
+        free, total = torch.cuda.mem_get_info(i)
+    except Exception:
+        continue
     if total < 20*2**30: continue
     if free>best_free: best_free=free; best=i
 print(best if best_free>=need*1e9 else -1)
@@ -102,10 +105,10 @@ for S in 17 29 43; do
 done
 echo "QUEUE-A (1M) DONE $(date)" >> $LOG
 
-# Queue B: 650M（大，门 24G；full bs8）
+# Queue B: 650M（门校准：m6A 历史峰值 13.7G→lora/frozen 门 15G；full bs8 门 18G）
 for S in 17 29 43; do
-  run_m6a RNA-Sc-650M frozen $S random "" 32 24
-  run_m6a RNA-Sc-650M lora   $S random "" 32 24
-  run_m6a RNA-Sc-650M full   $S random 3e-05 8 24
+  run_m6a RNA-Sc-650M frozen $S random "" 32 15
+  run_m6a RNA-Sc-650M lora   $S random "" 32 15
+  run_m6a RNA-Sc-650M full   $S random 3e-05 8 18
 done
 echo "M6A-ENDS DONE $(date)" >> $LOG

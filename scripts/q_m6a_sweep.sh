@@ -36,7 +36,10 @@ import sys, torch
 need=int(sys.argv[1])
 best=-1; best_free=0
 for i in range(torch.cuda.device_count()):
-    free, total = torch.cuda.mem_get_info(i)
+    try:
+        free, total = torch.cuda.mem_get_info(i)
+    except Exception:
+        continue
     if total < 20*2**30: continue
     if free>best_free: best_free=free; best=i
 print(best if best_free>=need*1e9 else -1)
