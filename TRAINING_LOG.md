@@ -2388,3 +2388,12 @@ LR 网格：s101 lr1e-5 0.8578 < lr3e-5 0.8963 → BEST=3e-5（与 30M/100M 受�
 **规则**：torch API 返回元组必须核对文档序，禁止凭记忆解包；GPU 门控
 逻辑改动后必须用「小门槛 + 实际空卡」冒烟验证一次。
 **在跑**：m6A 受控系首尾补格（1M 9 runs GPU5 起跑 → 650M 9 runs 等大卡窗口）。
+
+## 2026-09-24 17:15 D-group PPT 等价线页交付（pptx_lint PASS）
+
+**产物**：status/figs/equivalence_line.pptx（单页 16:9）——fig_c5b v2 终版图 +
+大端判读三点（①两系方向全尺度相反 ②存在性反例大端不回吐 ③严谨边界）+
+底部崩塌带注记栏（8 格带内 + 148M 唯一逃逸 + 受控 650M 最彻底崩塌 + 发现⑤
+frozen 不崩）+ 数据源脚注（口径与 commit 锚）。
+**校验**：pptx_lint 自检通过（5 shapes / 1 pic / 4 textboxes / 728 chars /
+无出界无图文重叠）。D-group gate 达成。
