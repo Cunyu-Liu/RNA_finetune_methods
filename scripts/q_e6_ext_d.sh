@@ -57,6 +57,18 @@ print(best if bf>=need*1e9 else -1)
 PYEOF
 }
 
+pick_gpu_at() {
+  $PY - "$1" "$MING" <<'PYEOF'
+import sys, torch
+i=int(sys.argv[1]); need=int(sys.argv[2])
+try:
+    free, total = torch.cuda.mem_get_info(i)
+except Exception:
+    print(0); sys.exit()
+print(1 if (total >= 20*2**30 and free >= need*1e9) else 0)
+PYEOF
+}
+
 clear_pending() {
   $PY - "$RID" <<'PYEOF'
 import fcntl, json, sys
@@ -71,6 +83,8 @@ with open(P,"w") as f:
 PYEOF
 }
 
+GCARD=""
+trap 'rmdir "$LK/gpu_${GCARD:-none}" 2>/dev/null' EXIT
 if ! mkdir "$LK/$RID" 2>/dev/null; then
   echo "skip-lock $RID $(date +%T)" >> $LOG; exit 0
 fi
@@ -88,16 +102,25 @@ while [ $A -lt 400 ]; do
   else
     G=$(pick_gpu)
     if [ "$G" != "-1" ]; then
-      A=$((A+1))
-      echo "=== [extD] attempt $A $RID GPU$G bs$BS need${MING}G $(date +%T) ===" >> $LOG
-      timeout $TO $PY -m rnafteval.e6_forget --model $MODEL \
-        --strategy $STRAT --seed $SEED --lr $LR --device $G \
-        --epochs 10 --batch-size $BS --n-holdout 2000 \
-        --out-suffix "_lr3e-05" >> $LOG 2>&1
-      RC=$?
-      echo "--- [extD] exit $RC $(date +%T) ---" >> $LOG
-      if [ $RC -eq 0 ]; then rmdir "$LK/$RID" 2>/dev/null; exit 0; fi
-      clear_pending
+      if ! mkdir "$LK/gpu_$G" 2>/dev/null; then
+        echo "gpu$G busy by peer worker $(date +%T)" >> $LOG
+      elif [ "$(pick_gpu_at $G)" != "1" ]; then
+        echo "gpu$G shrank after lock $(date +%T)" >> $LOG
+        rmdir "$LK/gpu_$G" 2>/dev/null
+      else
+        GCARD=$G
+        A=$((A+1))
+        echo "=== [extD] attempt $A $RID GPU$G bs$BS need${MING}G $(date +%T) ===" >> $LOG
+        timeout $TO $PY -m rnafteval.e6_forget --model $MODEL \
+          --strategy $STRAT --seed $SEED --lr $LR --device $G \
+          --epochs 10 --batch-size $BS --n-holdout 2000 \
+          --out-suffix "_lr3e-05" >> $LOG 2>&1
+        RC=$?
+        echo "--- [extD] exit $RC $(date +%T) ---" >> $LOG
+        rmdir "$LK/gpu_$G" 2>/dev/null; GCARD=
+        if [ $RC -eq 0 ]; then rmdir "$LK/$RID" 2>/dev/null; exit 0; fi
+        clear_pending
+      fi
     else
       echo "wait $RID (need ${MING}G) $(date +%T)" >> $LOG
     fi

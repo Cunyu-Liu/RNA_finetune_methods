@@ -2685,3 +2685,13 @@ q_m6a_ends.log 永缺 M6A-ENDS DONE，收口以 M6A-SWEEP DONE + ledger
 ### 交接补位（0926）：C6 导出链端点收口
 - **export_e6.py 硬编码 ORDER 仅含 10M/30M/100M/micro → 静默丢弃 1M/650M 端点格**（collect() `if m not in ORDER: continue`）——即已落地的 1M 6/6 未进 e6_table。已修：ORDER/LABEL/CALENDAR 扩为 1M→650M 全谱（谱线升序）。重导后 e6_table 由 24 格 → 30 格（含 1M 行；650M 待落）。
 - 新增 **rnafteval/fig_e6.py** → status/figs/fig_e6_spectrum.{png,pdf}：受控系 ΔNLL vs 规模（1M→650M log 轴，LoRA/full-FT 两线 + 逐种子散点 + 0 线）。仅受控系（因果 NLL）；官方 micro 为 MLM 口径不入图（跨系绝对值不可比）。
+
+### 修复（0926 00:37）：worker D 同卡碰撞 → 逐卡原子锁
+- 现象：00:30 GPU1 空闲 25.9GB 时，D 三实例同周期都 pick 到 GPU1 → s29 起训，
+  s43/s17 OOM（exit 1；各 clear_pending 后下轮重试）。根因：pick_gpu 各实例
+  独立、仅取「最空」卡 → 空闲大卡被并发抢占（外部进程亦同抢）。
+- 修复：q_e6_ext_d.sh 增 pick_gpu_at(G) 抢锁后复核 + 训练前 mkdir $LK/gpu_$G
+  逐卡原子锁（持锁覆盖整段训练）+ EXIT trap 兜底释放 → 多实例自然分散到
+  不同空闲卡，同卡最多一个 D 作业。
+- 已重启 s43/s17 实例（s29 训练中未动，保留进度）。
+- 首个 650M full 格：s29 → GPU1（00:30 起，pending，训练中）。
