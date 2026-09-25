@@ -2620,3 +2620,33 @@ controlled 因果 NLL（基线 ~4.5）与 official MLM 全上下文（基线 ~0.
 
 ### 提交
 - scripts/q_e6_ext_b.sh, scripts/q_e6_ext_c.sh 入仓
+
+## 2026-09-26 凌晨 · E6-EXT 谱线端点收口（worker D 并行补位）
+
+### 背景
+E6-EXT 12 格中，除 650M lora(s17/s29/s43 三卡并行中) 外，唯一未落地科学格
+= 650M full × {s17,s29,s43}（ledger 里 650M full 尚无任何行）。
+主队列 q_e6_ext.sh / 侧翼 q_e6_ext_b.sh 的 full 门仍为 24GiB（不可达），
+worker C 的 full 是**串行**——三格无法并行，会拖慢全谱收口。
+
+### 处置
+新建专用并行 worker q_e6_ext_d.sh：
+- 一实例=一种子；本 session 起 3 实例（seed 43/29/17，00:08）
+- gate：pick_gpu free >= 14e9 bytes (~13GiB)；保留 total<20GiB 过滤排除 MIG
+- 同格互斥（确定性）：与 q_e6_ext_c.sh 共用锁目录 /tmp/e6ext_c_locks
+  （每格 mkdir 原子锁）→ 任一 full 格任何时刻最多一个 worker 真正启动；
+  另由 ledger fresh_pending 兜底
+- 三实例已持有 3 个 full 格锁；任一卡空闲 >=13GB 即启
+
+### 就绪判定（3 遍核查）
+1. 拓扑：torch 0-5=常规 A100-40GB(39.49GiB)、6/7=MIG 1g.5gb(4.75GiB) — 复核第 3 次一致
+2. 在跑：650M lora s43→GPU0(B)、s29→GPU2(C)、s17→GPU5(A) 三进程在跑
+3. 锁：/tmp/e6ext_c_locks 下 full_s17/s29/s43 三锁 + C 的 lora_s29 锁
+4. 巡检升级：cron_status.sh 增「E6 未完成格 + e6_forget/队列进程」（30min）
+
+### 提交
+- scripts/q_e6_ext_d.sh 入仓
+- scripts/cron_status.sh（巡检升级）入仓
+
+### 状态
+- 待 650M lora 三格释放显存 → 三 full 格并行启动
