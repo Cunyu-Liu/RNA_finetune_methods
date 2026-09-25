@@ -2527,6 +2527,27 @@ ledger run_id 规范化为全小写（ft_rnasc650m_...），大小写敏感所�
 缺 M6A-ENDS DONE，收口标记以 M6A-SWEEP DONE（sweep log）+ ledger
 18/18 为准；④ 本班 ssh 两次 kex 255 瞬断（已知模式，重试即愈）。
 
+## 2026-09-25 18:30 m6A 补格链第 4 班巡检（终态静默，无动作）
+
+**状态**：18/18 静默复核通过——按 15:10 勘误口径（task=modification &
+model∈{RNA-Sc-1M,RNA-Sc-650M} & smoke=false，run_id 去重）18 全 done、
+pending 0、11:23 收口后零新增；ends/sweep 进程双清零，GPU 已移交 E6
+并行队列（q_e6_par，par:s29 full 在跑）。12:20 终判 + 15:10 复核均已
+随提交推送（master=origin，工作树净）。本班不重启不补跑（队列为完成
+态死亡而非等卡挂起，同前班判定）。
+
+**1M 首端终确认**：lora 0.9467 / full 0.9393（3 种子均值）均 ≥0.90 且
+1M lora ≥ 10M lora（0.9427）——首端无规模效应，<0.90 通知线未触发，
+「m6A 等价线不可辨识」结论维持，v0.6.4 表述无需修订，不通知用户。
+
+**异常（待人工处理，承前不变）**：① ends 脚本 RID 大写 bug + 第三个
+torch 枚举陷阱（mem_get_info 可抛 OOM 致 pick_gpu 空返回→--device 空
+参数）均未修——直接重启会把 18 个 done 格全重派（仅靠 claim() 内层
+兜底防重训）；② ledger full_s17 同微秒同值 done 行 ×3（无害竞态，
+统计须按 run_id 去重）；③ q_m6a_ends.log 永缺 M6A-ENDS DONE，收口
+标记以 M6A-SWEEP DONE + ledger 18/18 为准。第 4 班起 m6A 补格链转入
+静默终态：后续巡检可降频或停摆，待人工销项上述三项后归档。
+
 ## 0925 E6 灾难性遗忘矩阵（C6）：并行分流 + 官方系修复 + 首批判读
 
 ### 进展
