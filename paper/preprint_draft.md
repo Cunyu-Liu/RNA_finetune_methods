@@ -197,9 +197,17 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   retain a large-model LoRA advantage -- and the controlled family
   serves as the existence-proof counter-example bounding the claim,
   the role spec v1.7 pre-assigned to it.** On the per-base
-  m6A task the same dual-track line saturates (all tiers 0.94-0.997,
-  gap < 0.05): equivalence-line identifiability itself is
-  task-granularity dependent. On family splits, all eight LoRA cells
+  m6A task the dual-track line saturates across the full controlled
+  spectrum (LoRA 1M-650M, six scales: 0.941-0.948, spread < 0.006;
+  1M already reaches the ceiling, gap to 650M < 0.006) and the
+  official family (all tiers 0.94-0.997): equivalence-line
+  identifiability itself is task-granularity dependent. The 650M
+  controlled point adds a task-granularity x strategy mirror: on
+  m6A, LoRA (0.948) beats full-FT (0.927) by +0.021 while on ncRNA
+  the same checkpoint reverses (full 0.896 > LoRA 0.855, +0.040) --
+  per-base tasks favor adapters, per-sequence tasks (in this
+  family) favor full-FT, an orthogonal confirmation that the best
+  strategy is a property of task granularity, not of the model. On family splits, all eight LoRA cells
   (controlled 1M/10M/30M/100M/650M + official 33M/148M/650M)
   collapse to the 0.06-0.12 band *on average* (3-seed means: 1M 0.126,
   10M 0.072, 30M 0.064, 100M 0.081, controlled 650M 0.064, 33M 0.081,
