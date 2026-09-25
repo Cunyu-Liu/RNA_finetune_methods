@@ -2650,3 +2650,34 @@ worker C 的 full 是**串行**——三格无法并行，会拖慢全谱收口�
 
 ### 状态
 - 待 650M lora 三格释放显存 → 三 full 格并行启动
+
+## 2026-09-26 00:20 m6A 补格链第 5 班巡检（终态静默，无动作；死因复证）
+
+**状态**：18/18 静默复核通过——按 15:10 勘误口径（task=modification &
+model∈{RNA-Sc-1M,RNA-Sc-650M} & smoke=false，run_id 去重）18 全 done、
+pending 0、09-25 11:23 sweep 收口后零新增；ends/sweep 进程双清零，GPU
+已移交 E6-EXT worker B/C/D（650M lora×3 + full×3 并行中，同 llr_env）。
+12:20 终判 + 15:10/18:30 复核均已随提交推送（master=origin，工作树净）。
+本班不重启不补跑（队列为完成态死亡而非等卡挂起，承前班判定）。
+
+**死因复证（本班增量）**：q_m6a_ends.sh 末段三连崩根因为 pick_gpu 子进程
+间歇性空输出（torch.cuda.mem_get_info 在 dev1 抛 CUDA OOM 异常且 stderr
+输出未捕获）→ attempt 行出现「GPU bs8」（GPU 编号空）→ --device 空参
+→ argparse exit 2 → 2 次尝试耗尽。23:00/23:06 frozen s29 attempt1 空
+G + attempt2 GPU1 成功即旁证；00:55/01:00 full s29 两连空 G 队列死亡。
+本班 3 次重放 pick_gpu(18G)：dev1 稳定抛 OOM、dev4 12.07G 稳定可选中
+（llr_env mem_get_info 返回序 (free,total) 已校验）。sweep 脚本同
+pick_gpu 但 3-pass 兜底 + 11 格已在 ledger → 存活收口。**修复优先级：
+把 pick_gpu stderr/stdout 捕获后判空 + -1 兜底重试**（与 RID 小写化
+一并人工销项）。
+
+**1M 首端确认**：lora 0.9467 / full 0.9393（3 种子均值），均 ≥0.90 且
+1M lora ≥ 10M lora（0.9427）——首端无规模效应，<0.90 通知线未触发，
+「m6A 等价线不可辨识」结论维持，v0.6.4 表述无需修订，不通知用户。
+
+**异常（待人工处理，承前不变）**：① ends 脚本 RID 大写 bug + pick_gpu
+空输出缺陷未修——直接重启会把 18 个 done 格全重派（仅 claim() 兜底）；
+② ledger full_s17 同微秒同值 done 行 ×3（去重后 0.9250 无害）；③
+q_m6a_ends.log 永缺 M6A-ENDS DONE，收口以 M6A-SWEEP DONE + ledger
+18/18 为准；④ frozen s29 双实例竞态 23:06-23:27（22:50 清 pending 后
+队列与 sweep 并发选中 GPU1，同值 0.9137 done 无害）。
