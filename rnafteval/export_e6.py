@@ -60,7 +60,7 @@ def main() -> int:
              "controlled 系 = 因果 NLL（基线 ~4.5）；official = MLM 全上下文",
              "（基线 ~0.09）。ΔNLL = post − pre；正 = 遗忘，负 = 反向增益。",
              "forget_ratio = mean ΔNLL(full) / mean ΔNLL(lora)（系内）。", "",
-             "| model | pre NLL | Δ lora | Δ full | forget_ratio | n(l/f) | lora forgot | full forgot |",
+             "| model | pre NLL | Δ lora (s17/s29/s43) | Δ full (s17/s29/s43) | forget_ratio | n(l/f) | lora forgot | full forgot |",
              "|---|---|---|---|---|---|---|---|"]
     for m in ORDER:
         dl = data.get((m, "lora"), {})
@@ -81,9 +81,15 @@ def main() -> int:
             ratio_s = "—"
         fl = "%d/%d" % (sum(1 for r in dl.values() if r["forgot"]),
                         sum(1 for r in df.values() if r["forgot"]))
+        def cells_str(d):
+            if not d:
+                return "—"
+            return "/".join("%+.2f" % r["delta_nll"]
+                            for _, r in sorted(d.items()))
+
         lines.append("| %s | %.4f | %s | %s | %s | %d/%d | %s | %s |" % (
             LABEL[m], pre_v,
-            fmt(l_mean), fmt(f_mean), ratio_s, len(dl), len(df),
+            cells_str(dl), cells_str(df), ratio_s, len(dl), len(df),
             "/".join(("Y" if r["forgot"] else "n")
                      for _, r in sorted(dl.items())) or "—",
             "/".join(("Y" if r["forgot"] else "n")
