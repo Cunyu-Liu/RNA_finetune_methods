@@ -101,8 +101,8 @@ for PASS in 1 2 3; do
   run_m6a full 43 3e-05 8 18
   run_m6a lora 43 "" 32 15
   run_m6a lora 29 "" 32 15
-  run_m6a frozen 43 "" 32 15
-  run_m6a frozen 29 "" 32 15
+  run_m6a frozen 43 "" 32 7
+  run_m6a frozen 29 "" 32 7
   ND=$($PY -c "
 import json
 n=0
