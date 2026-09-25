@@ -2502,3 +2502,27 @@ full@tuned-3e-5} × 3 种子 + RiNALMo-micro {lora, full@1e-5} × 3 种子
 **工程**：踩坑 4 个全修（S0 数据定位三层：cluster_split 无序列→r22 全
 train→release22_split_8080 全量表；forward 返回 2/3 元组兼容；device
 int 转换；空 --out-suffix argparse 吞参数）。三 torch 陷阱在队列中全修。
+
+## 2026-09-25 15:10 m6A 补格链第 3 班巡检（收口复核，无动作）
+
+**状态**：18/18 复核通过——ledger 唯一 run_id 18 个全 done、pending 0、
+11:23 后零新增；12:20 终判段已随此前提交推送（master=origin，工作树
+净）。m6A 相关进程清零（ends/sweep 均退场），GPU 已移交 E6 遗忘矩阵
++ rnajepa 队列，本班不重启不补跑（重启条件按字面虽似命中，但队列为
+「完成态死亡」而非等卡挂起）。
+
+**巡检口径勘误**：grep 'RNASc(1M|650M)_modification' 命中 0 行——
+ledger run_id 规范化为全小写（ft_rnasc650m_...），大小写敏感所致；本班
+改按 task=modification & model∈{RNA-Sc-1M,RNA-Sc-650M} & smoke=false
+统计（20 行→按 run_id 去重后 18）。后续巡检沿用字段过滤口径。
+
+**1M 首端复核**：lora 0.9467 / full 0.9393（3 种子均值），均 ≥0.90 且
+1M lora ≥ 10M lora（0.9427）——首端无规模效应，<0.90 通知线未触发，
+「等价线不可辨识」维持，v0.6.4 表述无需修订。
+
+**异常（待人工处理，承前）**：① ends 脚本 RID 大写 bug 仍未修——直接
+重启会把 18 个 done 格全重派（仅靠 finetune_base claim() 内层兜底防
+重训）；② ledger full_s17 存在同微秒同值 done 行 ×3（09:10 起并发实例
+竞态，值 0.9250 x3 无害，统计须按 run_id 去重）；③ q_m6a_ends.log 永
+缺 M6A-ENDS DONE，收口标记以 M6A-SWEEP DONE（sweep log）+ ledger
+18/18 为准；④ 本班 ssh 两次 kex 255 瞬断（已知模式，重试即愈）。
