@@ -2479,3 +2479,26 @@ lora 0.9476（0.947-0.948）/ full@3e-5 0.9269（0.911-0.944）。
 放弃后由 sweeper 3-pass 兜底（11:23 done 0.925，含 1 次双跑同值无害竞态）；
 frozen 门 15G→7G（历史峰值 5.1G，frozen 无优化器状态）；mem_get_info
 自身可抛 CUDA OOM（第 3 个枚举陷阱）。
+
+## 2026-09-25 13:45 E6 灾难性遗忘实验启动（v1 协议，spec §3 E6 提前执行）
+
+**动机**：双轨全链收口后 GPU 空闲（用户显存占满纪律）；E6 原列 v2 范围，
+提前启动让导师评审意见回来时已有 C6 遗忘数据在手。
+
+**协议**（e6_forget.py，自校验通过）：
+- 遗忘度量 = ncRNA 微调（10 epoch，同 finetune_one 协议）前后 S0 held-out
+  （release22 80/80 簇切分 test+family_test 档）nt 级平均 NLL
+- 噪声带对照 = 同 backbone 重排 eval 两遍（seed 201/707）——实测
+  噪声带 ~1.6e-8（确定性 eval，重排不引入方差——**噪声带在本协议下
+  退化为数值精度级，遗忘声明门槛极低即有效**）
+- 自校验：frozen ΔNLL = 0.0（精确零，backbone 未动的最强管线证明）
+
+**基线**：RNA-Sc-10M S0 heldout pre-NLL 4.3153（2000 seqs）
+
+**矩阵**（q_e6.sh，24 runs）：受控 10M/30M/100M × {lora@3e-4,
+full@tuned-3e-5} × 3 种子 + RiNALMo-micro {lora, full@1e-5} × 3 种子
+（官方系对照——lora vs full 的遗忘量对比直接检验「适配器防遗忘」卖点）
+
+**工程**：踩坑 4 个全修（S0 数据定位三层：cluster_split 无序列→r22 全
+train→release22_split_8080 全量表；forward 返回 2/3 元组兼容；device
+int 转换；空 --out-suffix argparse 吞参数）。三 torch 陷阱在队列中全修。
