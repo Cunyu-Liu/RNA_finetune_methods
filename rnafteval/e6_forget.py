@@ -53,8 +53,7 @@ def encode(tok, seqs, device, max_len=512):
     if hasattr(tok, "mask_token_id"):
         ids, mask = [], []
         for s in seqs:
-            t = tok(s[:max_len], truncation=True, max_length=max_len + 2)
-            t = t["input_ids"] if isinstance(t, dict) else t
+            t = tok.encode(s[:max_len])
             ids.append(t)
             mask.append([1] * len(t))
         ml = max(len(x) for x in ids)
