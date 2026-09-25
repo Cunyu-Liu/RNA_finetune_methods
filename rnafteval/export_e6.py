@@ -15,13 +15,17 @@ import re
 
 ROOT = "/mnt/cunyuliu/rna-ft-eval"
 ART = os.path.join(ROOT, "artifacts", "e6")
-ORDER = ["RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M", "RiNALMo-micro"]
-LABEL = {"RNA-Sc-10M": "RNA-Sc-10M", "RNA-Sc-30M": "RNA-Sc-30M",
-         "RNA-Sc-100M": "RNA-Sc-100M", "RiNALMo-micro": "RiNALMo-micro (official)"}
+ORDER = ["RNA-Sc-1M", "RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M", "RNA-Sc-650M", "RiNALMo-micro"]
+LABEL = {"RNA-Sc-1M": "RNA-Sc-1M", "RNA-Sc-10M": "RNA-Sc-10M",
+         "RNA-Sc-30M": "RNA-Sc-30M", "RNA-Sc-100M": "RNA-Sc-100M",
+         "RNA-Sc-650M": "RNA-Sc-650M",
+         "RiNALMo-micro": "RiNALMo-micro (official)"}
 # controlled 系 NLL 为因果口径（非均匀基线 ~4.5），official 为 MLM 全上下文
 # 口径（基线 ~0.09）——绝对值跨系不可比，判读只看系内 ΔNLL 与倍率。
-CALENDAR = {"RNA-Sc-10M": "causal", "RNA-Sc-30M": "causal",
-            "RNA-Sc-100M": "causal", "RiNALMo-micro": "mlm-full-context"}
+CALENDAR = {"RNA-Sc-1M": "causal", "RNA-Sc-10M": "causal",
+            "RNA-Sc-30M": "causal", "RNA-Sc-100M": "causal",
+            "RNA-Sc-650M": "causal",
+            "RiNALMo-micro": "mlm-full-context"}
 
 
 def collect() -> dict:
