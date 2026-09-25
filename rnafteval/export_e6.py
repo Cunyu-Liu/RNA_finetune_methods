@@ -84,10 +84,10 @@ def main() -> int:
         lines.append("| %s | %.4f | %s | %s | %s | %d/%d | %s | %s |" % (
             LABEL[m], pre_v,
             fmt(l_mean), fmt(f_mean), ratio_s, len(dl), len(df),
-            "/".join(("Y" if r["forgot"] else "n") for r in
-                     sorted(dl.items())) or "—",
-            "/".join(("Y" if r["forgot"] else "n") for r in
-                     sorted(df.items())) or "—"))
+            "/".join(("Y" if r["forgot"] else "n")
+                     for _, r in sorted(dl.items())) or "—",
+            "/".join(("Y" if r["forgot"] else "n")
+                     for _, r in sorted(df.items())) or "—"))
     lines += ["", "seed 顺序 = 17/29/43；Y=遗忘超噪声带, n=未遗忘。", ""]
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w") as f:
