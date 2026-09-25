@@ -2526,3 +2526,29 @@ ledger run_id 规范化为全小写（ft_rnasc650m_...），大小写敏感所�
 竞态，值 0.9250 x3 无害，统计须按 run_id 去重）；③ q_m6a_ends.log 永
 缺 M6A-ENDS DONE，收口标记以 M6A-SWEEP DONE（sweep log）+ ledger
 18/18 为准；④ 本班 ssh 两次 kex 255 瞬断（已知模式，重试即愈）。
+
+## 0925 E6 灾难性遗忘矩阵（C6）：并行分流 + 官方系修复 + 首批判读
+
+### 进展
+- E6 主队列（q_e6.sh 24 格）串行推进至 100M full s17 后判读首批判读：
+  - **30M: full ΔNLL +4.12 vs lora +1.93（遗忘倍率 2.13×）——适配器防遗忘假设获直接支持**
+  - **10M: 双臂负遗忘（full -1.44 / lora -0.93）——小模型欠拟合任务数据有 S0 迁移增益**
+  - 100M lora +0.86 已落地，full 运行中
+- 串行太慢（剩 18 格 ≈13h）：拆 q_e6_par.sh 三并行流（s29/s43/micro, a6e495e）
+  + 主队列 = 4 路并行，run_e6 逻辑原样复用（幂等/互斥/pick_gpu 三陷阱防御）。
+- **官方系修复（第 5 个工程陷阱谱系）**：e6_forget.py 原实现只支持 RNA-Sc：
+  1. AutoModel 加载 RiNALMo 无 LM 头（lm_head 全 UNEXPECTED）→ NLL 无从计算
+     → 改 RiNALMoForMaskedLM 直接类加载（28 词表, model+lm_head）
+  2. 官方 tokenizer 返回 BatchEncoding → torch.tensor 失败 → tok.encode()
+  3. peft 解包顺序：PeftModel.__getattr__ 转发让 hasattr(core,'model')
+     先命中 MaskedLM 层 → 必须先剥 base_model 再降 .model 拿 RiNALMoModel
+  4. lm_head.decoder.bias checkpoint 缺失 → zero_() 补齐
+  - 官方系 NLL 口径：MLM 全上下文（双向模型不能 shift-by-1）；
+    lora 臂训练后 merge_and_unload 原地回迁再评 post（已冒烟验证：
+    frozen Δ=0.0 精确 / lora merge 链路 pre 0.09326 完全一致）
+- export_e6.py 矩阵导出器落地（markdown+csv, 8 格已验证）
+- 提交：a6e495e, 5cd9842, da28c99, c45fc64, e2c1…（均已 push）
+
+### 判读口径警示
+controlled 因果 NLL（基线 ~4.5）与 official MLM 全上下文（基线 ~0.09）
+**绝对值跨系不可比**——只看系内 ΔNLL 与 forget_ratio。
