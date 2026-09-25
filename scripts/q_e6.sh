@@ -59,11 +59,16 @@ run_e6() {
     G=$(pick_gpu $MING)
     if [ "$G" != "-1" ]; then
       ATT=$((ATT+1))
-      echo "=== attempt $ATT $RID GPU$G bs$BS $(date +%T) ===" >> $LOG
+      if [ "$LR" != "3e-4" ]; then
+        SUF=$(python3 -c "print('_lr%g' % $LR)")
+      else
+        SUF=""
+      fi
+      echo "=== attempt $ATT $RID GPU$G bs$BS suffix='$SUF' $(date +%T) ===" >> $LOG
       timeout 21600 $PY -m rnafteval.e6_forget --model $MODEL \
         --strategy $STRAT --seed $S --lr $LR --device $G \
         --epochs 10 --batch-size $BS --n-holdout 2000 \
-        --out-suffix $( [ "$LR" != "3e-4" ] && python3 -c "print('_lr%g' % $LR)" || echo "" ) >> $LOG 2>&1
+        --out-suffix "$SUF" >> $LOG 2>&1
       RC=$?
       echo "--- exit $RC $(date +%T) ---" >> $LOG
       [ $RC -eq 0 ] && return 0
