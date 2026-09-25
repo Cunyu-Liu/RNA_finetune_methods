@@ -84,12 +84,16 @@ OFFICIAL = {"RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"}
 
 
 def _official_encoder(lm):
-    """从 lm/RNA-Sc wrapper/peft 包装中取出返回 last_hidden_state 的 encoder。"""
+    """取出返回 last_hidden_state 的 RiNALMoModel（剥 peft 再降到 .model）。
+
+    注意顺序：PeftModel 的 __getattr__ 转发会让 hasattr(core,"model")
+    先命中被包装的 RiNALMoForMaskedLM——必须先剥 peft 层再降级，
+    否则拿到的是 MaskedLM 输出对象（无 last_hidden_state）。"""
     core = lm.m if hasattr(lm, "m") else lm
+    if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
+        core = core.base_model.model
     if hasattr(core, "model") and hasattr(core.model, "encoder"):
         return core.model
-    if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
-        return core.base_model.model
     return core
 
 
@@ -225,8 +229,6 @@ def main():
 
     # --- finetune (same loop as finetune_one) ---
     backbone, n_trainable = apply_strategy(backbone, args.strategy)
-    if is_official and hasattr(backbone, "merge_and_unload"):
-        pass  # peft 已注入 lm.model；训练后统一 merge 回迁
     head = make_head("per-seq", d_model, len(labels)).to(device)
     tp = [p for p in head.parameters() if p.requires_grad]
     if hasattr(backbone, "m"):
