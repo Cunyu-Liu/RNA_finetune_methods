@@ -2573,3 +2573,17 @@ torch 枚举陷阱（mem_get_info 可抛 OOM 致 pick_gpu 空返回→--device �
 ### 判读口径警示
 controlled 因果 NLL（基线 ~4.5）与 official MLM 全上下文（基线 ~0.09）
 **绝对值跨系不可比**——只看系内 ΔNLL 与 forget_ratio。
+
+## 0925 E6 收口（21:06）+ preprint v0.8
+
+- **E6 矩阵 24/24 全落地**（10M/30M/100M/官方micro × lora/full × 3 种子；
+  4 路并行 13:38-21:06，含一次竞争 OOM 自愈重试）
+- 终判读（status/e6_table.md，噪声带 <2.5e-8 全格显著）：
+  - 10M 双臂负遗忘（全 6 格 n）——任务数据 = 小模型预训练增益
+  - 30M 遗忘峰值带：full +4.12/+26.24/+22.67 vs lora +1.93/−0.84/+3.38
+    ——尾部压缩 8×（决策量 = 最差种子）
+  - 100M 反转：full 均值≈0（s43 −1.61）而 lora 恒正 Y/Y/Y
+  - 官方 micro 6/6 遗忘 +0.11~+0.16（MLM 口径）
+- preprint v0.8（5c4d5a0）：摘要第 5 点 + §2.8 + Methods + Discussion +
+  Limitations；中文摘要发现 6 同步；数字 15/15 对照 result.json 零误差
+- EXT 队列在跑（1M+650M 谱线端点 12 格，21:21 起）
