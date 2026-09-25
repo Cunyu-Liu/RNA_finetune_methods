@@ -2587,3 +2587,36 @@ controlled 因果 NLL（基线 ~4.5）与 official MLM 全上下文（基线 ~0.
 - preprint v0.8（5c4d5a0）：摘要第 5 点 + §2.8 + Methods + Discussion +
   Limitations；中文摘要发现 6 同步；数字 15/15 对照 result.json 零误差
 - EXT 队列在跑（1M+650M 谱线端点 12 格，21:21 起）
+
+## 0925 E6-EXT 谱线端点补全（1M/650M × lora/full × 3）+ 三路并行 worker
+
+### 目标
+补齐 C6 遗忘轴谱线两端点（受控系 1M 与 650M），共 12 格：
+1M/650M × {lora@3e-4, full@3e-5} × seeds{17,29,43}，协议同 E6-v1
+（S0 held-out NLL, test+family_test, n=2000 + 重排噪声带）。
+
+### 进度
+- 1M 6/6 已落地（21:57）：artifacts/e6/RNA-Sc-1M/{lora,full}_s{17,29,43}
+- 650M lora 三格并行推进中：
+  - s17 → 主队列 q_e6_ext.sh（GPU5）
+  - s43 → 旁路 q_e6_ext_b.sh（GPU0）
+  - s29 → 新增旁路 q_e6_ext_c.sh（GPU2）
+- 650M full 三格（s17/s29/s43）：待单卡空闲 >=14GB 即启动
+
+### 关键工程修正（第 6 陷阱谱系：显存 gate 过保守 → 显存空转）
+1. GPU 拓扑实测：torch.cuda 暴露 8 设备——0-5 为常规 A100-40GB
+   (total~39.5GB)；6/7 为 MIG 1g.5gb 切片 (total~4.75GB，对 650M 不可用)。
+   nvidia-smi -L 另示 GPU6=7xMIG 1g.5gb、GPU7=2xMIG 3g.20gb，
+   但 3g/1g 切片未作为独立可用大卡暴露给 CUDA 上下文。
+2. 实测足迹（ledger.peak_mem_mb）远低于队列假设：
+   - RNA-Sc-650M lora ~8.5GB（modification peak 4492MB）
+   - RNA-Sc-650M full ~13.2-14.0GB（peak_mem_mb 13247-14044）
+   原 pick_gpu 门 lora 20GB / full 24GB（~2x 实测）→ GPU2/GPU4 各 ~12GB
+   空闲显存长期无法利用，且 24GB 门几乎拿不到。
+3. 修复：新建 q_e6_ext_c.sh，按真实足迹放宽 gate（lora 10GB、full 14GB），
+   并延长 full 轮询（150x240s 不轻言放弃）；保留 total<20GB 过滤
+   （该过滤恰好正确排除 MIG 小切片）。经验：显存 gate 必须用 ledger
+   实测足迹标定，不得沿用保守估计。
+
+### 提交
+- scripts/q_e6_ext_b.sh, scripts/q_e6_ext_c.sh 入仓
