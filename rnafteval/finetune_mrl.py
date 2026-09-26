@@ -112,6 +112,7 @@ def main() -> int:
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
     lossf = torch.nn.MSELoss()
+    torch.cuda.reset_peak_memory_stats(device)
 
     def run_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
@@ -159,12 +160,14 @@ def main() -> int:
 
     ck_path = os.path.join(out_dir, "head.pt")
     torch.save(head.state_dict(), ck_path)
+    peak = torch.cuda.max_memory_allocated(device) / (1 << 20)
     ledger.update(rid, "done",
                   metric="PEARSON_R", value=r, mse=mse,
                   n_train=len(train), n_test=len(test),
                   epochs=args.epochs, lr=args.lr,
                   backbone_trainable=n_trainable,
-                  wall_s=round(time.time() - t0, 1),
+                  wall_sec=round(time.time() - t0, 1),
+                  peak_mem_mb=round(peak, 1),
                   ckpt_bytes=os.path.getsize(ck_path))
     print(json.dumps({"run_id": rid, "pearson_r": round(r, 4),
                       "mse": round(mse, 4)}), flush=True)
