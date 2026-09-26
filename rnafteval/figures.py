@@ -173,7 +173,8 @@ def fig_lr(outdir):
         rid = r["run_id"]
         if "_lr" not in rid:
             continue
-        lr = float(rid.split("_lr")[1])
+        rest = rid.split("_lr")[1]
+        lr = float(rest.split("_")[0])  # lr may be followed by extra suffixes (e.g. _e31000)
         data[(r["model"], r["strategy"], r["task"])].append((lr, r["value"]))
     fig, ax = plt.subplots(figsize=(7, 5))
     palette = {("RNA-Sc-10M", "full"): "#2980b9",
