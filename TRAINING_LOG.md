@@ -3032,3 +3032,31 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
   预注册判定；`--list` 全量导出。已在 ncRNA/family（NOT-RECOMMEND）、
   SSP/random（LoRA RECOMMEND、full NOT-RECOMMEND）、m6A 验证。
 - GitHub HEAD 6fb32fe。
+
+## 2026-09-26 深夜 · P2 AIDO.RNA-1.6B 接入成功（无 pip，隔离 vendored loader）
+
+### 背景
+- GB.RNA-1.6B（=AIDO.RNA-1.6B 别名）config `model_type=rnabert`，HF 仓**无 auto_map、无建模 .py**；
+  直接装 `modelgenerator==0.1.3.post0` 会带入 numpy<2 / peft<=0.13.2 等 38 项依赖 → 毁在跑管线（禁）。
+- 转机：ModelGenerator **GitHub 仓**内含 HF 兼容代码 `huggingface/gb.rna/gb_rna/models/{modeling,configuration,tokenization}_rnabert.py + vocab.txt`。
+
+### 处置（全程零 pip、零共享 env 改动）
+1. 从 GitHub API 取上述 4 文件 → checkpoint 目录（/mnt）；
+2. 为 transformers≥5 打补丁：`find_pruneable_heads_and_indices` / `prune_linear_layer` 内联回退实现；
+3. 新 `load_gbrna()`（rnafteval/models/__init__.py，custom_loader="gbrna"）：
+   - 复制到 `/mnt/cunyuliu/gbrna_pkg` 以**包**方式 import（修相对 import）；
+   - config 默认补齐（transformers5 删了 `is_decoder` 等 → AttributeError）；
+   - tokenizer 直接实例化 `RNABertTokenizer(vocab_file=...)`（AutoTokenizer 走 fast 后端需要 sentencepiece）；
+   - **手工 safetensors 分片加载**（HF≥5 因 CVE 在 torch<2.6 下拒 .bin；仓内分片名为 `pytorch_model-*`，
+     HF resolver 不认 → `safetensors.load_file` 直读）；
+   - fp32（本管线 head/optim 为 fp32，bf16 会 dtype 不匹配）。
+4. 加 `get_head_mask` / `warn_if_padding_and_no_attention_mask` 等 v5 缺失方法 shim。
+
+### 验证与派发
+- CUDA forward `(2,18,2048)`；runner smoke **frozen exit 0**；LoRA 需小 bs（1.6B fp32）→ q_fill.py 增
+  per-run `bs`/`max_len` 覆盖，AIDO 用 bs 8。
+- AIDO plan：ncRNA+modification × {frozen,lora} × {random,family} × 3 种子 = **24 runs**，已派发（need 24GB）。
+- GitHub HEAD de17561。
+
+### 队列（约 16:55）
+- P1 **64/111**；UTR-LM 30/36；mRNABERT 40/54；AIDO 0/24（刚起）。
