@@ -3026,3 +3026,9 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 ### 队列（约 16:35）
 - P1 51/111（在跑 SSP 长格）；UTR-LM 21/36；mRNABERT 14/54。
 - GitHub：HEAD a15236f。
+
+## 2026-09-26 晚间（续2）· T4.3.4 决策树查询 CLI
+- 新 rnafteval/recipe_query.py：`--task X --split Y` 打印该场景的配对增益 +
+  预注册判定；`--list` 全量导出。已在 ncRNA/family（NOT-RECOMMEND）、
+  SSP/random（LoRA RECOMMEND、full NOT-RECOMMEND）、m6A 验证。
+- GitHub HEAD 6fb32fe。
