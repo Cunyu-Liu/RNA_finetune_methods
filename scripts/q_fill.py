@@ -88,7 +88,7 @@ def grab(g, need):
         try: os.rmdir(lk)
         except Exception: pass
     return None
-def build_cmd(task, model, strat, seed, split, lr, dev):
+def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None):
     if task == "mrl":
         mod = "rnafteval.finetune_mrl"; extra = ["--epochs", "3", "--n-train", "20000", "--batch-size", "32"]
     elif task == "modification":
@@ -102,6 +102,8 @@ def build_cmd(task, model, strat, seed, split, lr, dev):
     cmd = [PY, "-m", mod, "--model", model, "--strategy", strat, "--seed", str(seed),
            "--split", split, "--device", str(dev)] + extra
     if lr is not None: cmd += ["--lr", lr]
+    if bs is not None: cmd += ["--batch-size", str(bs)]
+    if max_len is not None: cmd += ["--max-len", str(max_len)]
     return cmd
 
 assert torch.cuda.is_available(), "CUDA not available - stopping"
@@ -125,7 +127,8 @@ for rr in todo:
         try:
             log("RUN", tag, "GPU%d need%dG" % (g, need))
             t0 = time.time()
-            p = subprocess.run(build_cmd(task, model, strat, seed, split, lr, g),
+            p = subprocess.run(build_cmd(task, model, strat, seed, split, lr, g,
+                                         rr.get("bs"), rr.get("max_len")),
                                cwd="/home/cunyuliu/rna-ft-eval", timeout=14400,
                                stdout=LOG, stderr=subprocess.STDOUT)
             log("exit", p.returncode, tag, "%.0fs" % (time.time() - t0))

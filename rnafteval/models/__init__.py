@@ -42,6 +42,7 @@ MODEL_SPECS: dict[str, ModelSpec] = {
     "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),
     "UTR-LM": ModelSpec("UTR-LM", "multimolecule/utrlm-mrl", 128, 1.2, "tierB", notes="P2 integrated 2026-09-26; UtrLmModel d_model=128 L6"),
     "mRNABERT": ModelSpec("mRNABERT", "YYLY66/mRNABERT", 768, 86.0, "tierB", custom_loader="mrnabert", notes="P2 integrated 2026-09-26; MosaicBERT, bert. prefix strip"),
+    "AIDO.RNA-1.6B": ModelSpec("AIDO.RNA-1.6B", "genbio-ai/GB.RNA-1.6B", 2048, 1600.0, "tierA", strategies=("frozen", "lora"), custom_loader="gbrna", notes="P2 integrated 2026-09-26; RNABert/MegatronBERT, HF4 to 5 patched, no pip"),
     "SpliceBERT": ModelSpec("SpliceBERT", "multimolecule/splicebert", 512,
                             19.2, "tierB"),
     "SpliceBERT-human510": ModelSpec(
@@ -271,10 +272,80 @@ def load_mrnabert(spec: ModelSpec, device: str):
     return tok, _MosaicBertWrapper(model.to(device))
 
 
+def load_gbrna(spec, device):
+    """Load GB.RNA / AIDO.RNA (model_type rnabert). The HF repo ships the
+    modeling/tokenizer code but no auto_map; we vendored the files into the
+    checkpoint dir, patched them for transformers>=5, and load as a local
+    package. No pip install -> shared env untouched."""
+    import os, sys, shutil, importlib, torch
+    base = hf_path(spec.repo)
+    assert os.path.isdir(base), "model dir missing: %s" % base
+    pkg = "/mnt/cunyuliu/gbrna_pkg"
+    os.makedirs(pkg, exist_ok=True)
+    if not os.path.exists(os.path.join(pkg, "__init__.py")):
+        open(os.path.join(pkg, "__init__.py"), "w").write("")
+    for f in ("configuration_rnabert.py", "modeling_rnabert.py",
+              "tokenization_rnabert.py", "vocab.txt"):
+        src = os.path.join(base, f)
+        if os.path.exists(src):
+            shutil.copy(src, os.path.join(pkg, f))
+    if "/mnt/cunyuliu" not in sys.path:
+        sys.path.insert(0, "/mnt/cunyuliu")
+    mm = importlib.import_module("gbrna_pkg.modeling_rnabert")
+    tt = importlib.import_module("gbrna_pkg.tokenization_rnabert")
+    # transformers>=5 removed PreTrainedModel helpers the vendored code calls.
+    if not hasattr(mm.RNABertModel, "get_head_mask"):
+        def _get_head_mask(self, head_mask, num_hidden_layers,
+                           is_attention_chunked=False):
+            if head_mask is not None:
+                raise NotImplementedError("head_mask shim unsupported")
+            return [None] * num_hidden_layers
+        mm.RNABertModel.get_head_mask = _get_head_mask
+    if not hasattr(mm.RNABertModel, "_convert_head_mask_to_5d"):
+        def _convert5d(self, head_mask, num_hidden_layers):
+            raise NotImplementedError
+        mm.RNABertModel._convert_head_mask_to_5d = _convert5d
+    for _c in (mm.RNABertPreTrainedModel, mm.RNABertModel, mm.RNABertForMaskedLM):
+        if not hasattr(_c, "warn_if_padding_and_no_attention_mask"):
+            setattr(_c, "warn_if_padding_and_no_attention_mask",
+                    lambda self, *a, **k: None)
+    cfg = mm.RNABertConfig.from_pretrained(base)
+    # transformers>=5 dropped several PretrainedConfig defaults the vendored
+    # (transformers 4.x) modeling code reads directly; supply encoder defaults.
+    for _k, _v in (("is_decoder", False), ("add_cross_attention", False),
+                   ("chunk_size_feed_forward", 0), ("output_attentions", False),
+                   ("output_hidden_states", False), ("pruned_heads", {}),
+                   ("tie_word_embeddings", True), ("use_cache", False)):
+        try:
+            if getattr(cfg, _k, "_missing_") == "_missing_":
+                setattr(cfg, _k, _v)
+        except Exception:
+            try:
+                setattr(cfg, _k, _v)
+            except Exception:
+                pass
+    tok = tt.RNABertTokenizer(vocab_file=os.path.join(pkg, "vocab.txt"))
+    # load weights manually: transformers>=5 refuses .bin (CVE, torch<2.6) and
+    # the repo's safetensors shards use the pytorch_model- prefix, which the HF
+    # resolver does not match. safetensors.safe_load_file bypasses both.
+    import glob
+    from safetensors.torch import load_file
+    model = mm.RNABertModel(cfg)
+    sd = {}
+    for f in sorted(glob.glob(os.path.join(base, "*.safetensors"))):
+        sd.update(load_file(f))
+    assert sd, "no safetensors shards in %s" % base
+    missing, unexpected = model.load_state_dict(sd, strict=False)
+    model = model.to(torch.float32).to(device)  # head/optim are fp32 in this pipeline
+    return tok, model
+
+
 def load_model(name: str, device: str):
     spec = MODEL_SPECS[name]
     if spec.custom_loader == "rnasc":
         return spec, *load_rnasc(name, device)
     if spec.custom_loader == "mrnabert":
         return spec, *load_mrnabert(spec, device)
+    if spec.custom_loader == "gbrna":
+        return spec, *load_gbrna(spec, device)
     return spec, *load_hf(spec, device)
