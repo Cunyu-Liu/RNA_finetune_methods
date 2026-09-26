@@ -3000,3 +3000,29 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 队列状态（约 16:20）
 - P1 51/111；UTR-LM 19/36；mRNABERT 7/54；P1 6 worker + P2 6 worker 在跑。
+
+## 2026-09-26 晚间（续）· P3 T4.3 决策树引擎 + 配方草稿
+
+### 交付
+- 新 rnafteval/decision_tree.py（预注册规则 spec §7.8）：
+  配对口径 = 同 (task, model, split, seed) 内比较；相对增益 = (A−B)/|B|×100；
+  配对 sign test → p；BH-FDR q=0.05 跨全部比较；三分类
+  （>2%+显著=RECOMMEND / <0+显著=NOT-RECOMMEND / 其余 NEUTRAL）。
+- 产物：status/decision_tree.md/csv + status/recipe.md（T4.3.3 草稿）；
+  已加入 q_refresh_when_done.sh 自动重刷链。
+- T4.3.0（导师签字）仍待办 → 产物顶部已标注"草稿，非签字发布版"。
+
+### 判读（formal 种子，ledger 实测）
+- **modification（per-base）**：LoRA vs frozen 双切分 RECOMMEND（+9.1% / +15.1%）；
+  full vs LoRA NEUTRAL（−0.5% / −0.1%）→ 适配器够用。
+- **mrl（per-seq 回归）**：LoRA RE COMMEND（+50.9% / +54.3%）；full vs LoRA NEUTRAL。
+- **noncoding-rna-family（per-seq）**：random 全推荐（+18.9%/+21.2%）；
+  **family 切分 NOT-RECOMMEND（−73.9% / −9.7%）**——复现崩溃故事于决策层。
+- **secondary-structure（per-base）**：LoRA vs frozen RECOMMEND（+25.7% / +17.0%）；
+  **full vs LoRA NOT-RECOMMEND（−25.0% / −25.8%）**——结构任务全参过强反而更差。
+- 修复：recipe 生成的 dict key 用 arm 单键导致 full−lora 行被 full−frozen 覆盖
+  （3 遍核查发现）→ 改为 (a,b) 键。
+
+### 队列（约 16:35）
+- P1 51/111（在跑 SSP 长格）；UTR-LM 21/36；mRNABERT 14/54。
+- GitHub：HEAD a15236f。
