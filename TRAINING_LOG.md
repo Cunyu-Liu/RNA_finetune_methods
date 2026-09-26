@@ -2958,3 +2958,23 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - P1 49/111；P2 UTR-LM 15/36；P2 mRNABERT 0/54（刚起）。
 - 下载：UTR-LM ✓；mRNABERT ✓（435MB）；GB.RNA-1.6B 3.9GB（进行中）；RiboSpan-1K-40 3.2GB（进行中）。
 - GitHub：HEAD b4b677f。
+
+## 2026-09-26 下午（续3）· P2 AIDO/RiboSpan 阻塞登记 + 队列状态
+
+### AIDO.RNA-1.6B / RiboSpan：外部依赖阻塞（如实登记，不硬跑）
+- 已下全：genbio-ai/GB.RNA-1.6B（= AIDO.RNA-1.6B 别名，13G / 9 文件，分片 bin）；
+  SII-GAIR-NLP/RIBOSPAN-1K-40（6.45G）。
+- 两者 config 分别为 `model_type=rnabert`（arch RNABertForMaskedLM）与
+  `model_type=ribospan`（arch RiboSpanForMaskedLM），**均无 auto_map、仓库内无
+  建模 .py**（隐藏 2048 / 32 层 / swiglu / rope / vocab 16，同属 ModelGenerator 家族）。
+- 直接 `AutoConfig/AutoModel(trust_remote_code=True)` 报 "Transformers does not
+  recognize this architecture"；`modelgenerator` 包在所有候选 env 中均未安装。
+- **决策（纪律优先）**：不在共享 `llr_env` 强行 pip 安装（在跑的 P1/P2 队列
+  全依赖该 env，污染风险 > 收益）。P2.3/P2.5 标记为「阻塞·外部依赖」，
+  后续路径 = 克隆 genbio-ai/ModelGenerator 到 /mnt + 写隔离 custom_loader
+  （不改共享 env）。
+- 已接入成功：UTR-LM（P2.1）、mRNABERT（P2.2）；P2.4 HydraRNA 仍待做（GitHub 单 ckpt）。
+
+### 队列状态（约 16:10）
+- P1 51/111；P2 UTR-LM 15/36；P2 mRNABERT 1/54（在跑）。
+- 巡检 cron 覆盖 P1 + 全部 p2_*.json（自动补位 + CPU 降级扫描），在岗。
