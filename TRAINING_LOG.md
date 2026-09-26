@@ -2902,3 +2902,32 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - smoke/proxy/训练集结果均未写成结论；P1 全为 test 集口径。
 - GPU 训练真 CUDA（worker 起始 assert torch.cuda.is_available()）。
 - 新脚本已提交 GitHub（HEAD c5627b6）。
+
+## 2026-09-26 下午（续）· P3 T4.1.2/T4.1.3 + P2 UTR-LM 入 E1 + MRL 资源记录修复
+
+### P3 终端交付物（T4.1.2/T4.1.3 完成）
+- 新 rnafteval/export_resources_matrix.py → status/resources_matrix.md（per-(model,strategy)
+  wall/peak 中位数与最大值 + fits 24GB/40GB 速查）+ status/resources_costbenefit.csv。
+- 新 rnafteval/fig_resources.py → status/figs/fig_resources_costbenefit.{png,pdf}（三任务面板：
+  ncRNA ACC / SSP F1 / m6A AUC；x=GPU wall 中位数 log 轴；色=策略；已本地目检）。
+- 关键可跑性结论（ledger 实测 peak_max）：**RiNALMo-650M full 25014MB 仅 40GB 卡可容**
+  （24GB 卡不可）；其余已测配置均 ≤24GB 可容。
+- **数据质量修复（3 遍核查发现）**：
+  ① 导出器按 run_id 去重（ledger 有同值重复 done 行）；
+  ② wall/peak ≤0 视为未记录（排除 -1 哨兵）；
+  ③ **finetune_mrl 未记录 wall/peak**（旧代码写 wall_s 字段名错误 + 无 peak）→ 已修
+     （reset_peak_memory_stats + wall_sec + peak_mem_mb），fresh smoke 验证
+     wall_sec=7.4 / peak_mem_mb=48.0。既有 MRL 行仍缺，E5 侧如实在表注说明。
+
+### P2 新模型入 E1（P2.6 进行中）
+- 通用 plan 驱动 worker scripts/q_fill.py（读 worklist JSON；独立 lockdir + slots；
+  同 q_p1_fill 的 done-skip/pending-clear/真 CUDA 断言）+ scripts/q_plan_need.py
+  （通用进度）；plan scripts/p2_utrlm_plan.json = UTR-LM × {ncRNA,SSP} ×
+  {frozen,lora,full} × {random,family} × {17,29,43} = 36 runs（full LR 1e-5，need 4GB）。
+- 3 shard 已启动；监控脚本 q_p1_monitor.sh 已扩为覆盖 P1 + 全部 p2_*.json（含自动补位）。
+
+### 队列进度（15:42）
+- P1：24/111 done；6 worker 在跑（跨 GPU）。
+- P2 UTR-LM：3/36 done；3 worker 在跑。
+- 下载：UTR-LM 完成；mRNABERT 47MB/456MB；GB.RNA-1.6B 下载中；RiboSpan-1K-40 排队。
+- GitHub：HEAD 588297f → **8e8e26e**（P3 资源矩阵+图）→（本次）MRL 修复。
