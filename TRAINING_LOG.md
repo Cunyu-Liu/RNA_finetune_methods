@@ -2978,3 +2978,25 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 ### 队列状态（约 16:10）
 - P1 51/111；P2 UTR-LM 15/36；P2 mRNABERT 1/54（在跑）。
 - 巡检 cron 覆盖 P1 + 全部 p2_*.json（自动补位 + CPU 降级扫描），在岗。
+
+## 2026-09-26 晚间 · P2 剩余架构依赖核查（证据在案）+ 并发提升
+
+### 并发提升（落实"显存占满"）
+- q_p1_fill.py SLOTS 2→3（env P1_SLOTS 可覆盖）；P2 plans slots 1→2。
+- 清理一次自伤事故：`pkill -f "scripts/q_fill.py"` 会**自匹配当前 shell**（命令行含该串）
+  → shell 被杀、P1 worker 全停 + 孤儿 run + 泄漏锁。处置：按 ppid==1 精确回收孤儿、
+  清 /tmp/p1_locks 重锁、重启 6 shard。**教训**：pkill -f 一律用 `[b]racket` 防自匹配。
+
+### 剩余架构依赖核查（3/5 阻塞，证据在案，不硬跑）
+- **AIDO.RNA-1.6B / GB.RNA-1.6B**：checkpoint 全；`model_type=rnabert`，无 auto_map/建模 .py。
+  PyPI `modelgenerator==0.1.3.post0` 的 38 项 requires 含 `numpy<2`、`peft<=0.13.2`、
+  `tiledb==0.33.6`、`bionty==1.3.2`、`lightning` → **与在跑 llr_env 管线冲突，禁装**。
+- **RiboSpan-1K-40**：同族（`model_type=ribospan`）→ 同一阻塞。
+- **HydraRNA**：官方 https://github.com/GuipengLi/HydraRNA；README 明确需独立
+  conda env（py3.9.12/torch2.3.1+cu118）+ mamba-ssm[causal-conv1d] + flash-attn +
+  自装 fairseq；权重在 Google Drive；embedding 走 model.encoder.extract_features。
+  属重型集成且仅为 SSM 观察臂（B11）→ 暂缓，/mnt 隔离 env 方案待排期。
+- 已成功接入并出数：**UTR-LM（P2.1）、mRNABERT（P2.2）**。
+
+### 队列状态（约 16:20）
+- P1 51/111；UTR-LM 19/36；mRNABERT 7/54；P1 6 worker + P2 6 worker 在跑。

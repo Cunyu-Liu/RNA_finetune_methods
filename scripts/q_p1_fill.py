@@ -15,7 +15,7 @@ usage: q_p1_fill.py <shard> <nshards>
 import os, sys, json, time, fcntl, subprocess, datetime
 
 SHARD = int(sys.argv[1]); NS = int(sys.argv[2])
-SLOTS = 2
+SLOTS = int(os.environ.get("P1_SLOTS", "3"))
 R = "/mnt/cunyuliu/rna-ft-eval"
 LEDGER = R + "/ledger.jsonl"
 PY = "/home/cunyuliu/llr_env/bin/python"
