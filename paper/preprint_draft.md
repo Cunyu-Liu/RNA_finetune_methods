@@ -1,7 +1,7 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.9** — 2026-09-26（数据快照：ledger 1146 runs / 1137 done；C6 受控系遗忘谱线端点补全——1M→650M 全 6 档 × {LoRA, full-FT} × 3 种子 = 36 格全落地，非单调谱线闭合（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
+**Preprint draft v0.95（P1/P2 扩展中·外部架构验证臂）** — 2026-09-26（数据快照：ledger 1346 runs；E1 缺口补齐 109/111 组；新架构验证臂 UTR-LM 36/36、mRNABERT 18/18（tokenizer 修复后，per-seq 限定）已收口，AIDO.RNA-1.6B / RiboSpan-1K-40 在飞；C6 受控系遗忘谱线 36 格全落地（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）C6 受控系遗忘谱线端点补全——1M→650M 全 6 档 × {LoRA, full-FT} × 3 种子 = 36 格全落地，非单调谱线闭合（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
 
 ## Abstract
 
@@ -9,7 +9,7 @@ Fine-tuning RNA language models (RNA-LMs) is widely assumed to beat frozen
 embeddings, yet controlled comparisons across adaptation strategies are
 missing. Following the protein-side template of Schmirler et al. (2024), we
 run a controlled matrix of **3 adaptation strategies (frozen + shallow MLP
-head / LoRA r=8 / full fine-tuning) × 5 RNA-LMs (10M–99M) × 3 BEACON tasks
+head / LoRA r=8 / full fine-tuning) × 5 core RNA-LMs (10M–99M) + 6 external-architecture validation arms (UTR-LM 1.2M / mRNABERT 3-mer tokenizer / AIDO.RNA-1.6B / RiboSpan-1K-40 / SpliceBERT / ERNIE-RNA, + controlled RNA-Sc 1M-650M family) × 3 BEACON tasks
 × 2 evaluation splits (random vs sequence-family-clustered) × 3 seeds**,
 each fine-tuning cell with a learning rate chosen on a held-out tuning
 seed, and audit every arm with zero-overlap assertions.
@@ -120,6 +120,35 @@ Contributions:
 Cross-model consistency (ncRNA random, LoRA): RNA-Sc 0.75, SpliceBERT 0.90,
 RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora and
 parameter scales (19M–99M).
+
+### 2.1a External-architecture validation arms (new in v0.95)
+
+Six additional architectures beyond the core five test whether the C1/C4
+findings are corpus/architecture-specific. Status and rules: only cells
+recorded in the run ledger as done (non-smoke) are reported as results;
+in-flight arms are marked [PENDING] and excluded from all aggregates.
+
+- **UTR-LM (1.2M params)** — ncRNA only, 3 strategies × 2 splits × 3 seeds
+  (36/36 cells done). Frozen 0.503 / LoRA 0.684 / full 0.495 (random,
+  3-seed means). Note full-FT *under-performs* LoRA on this 1.2M model —
+  consistent with the scale×strategy interaction in §2.4 (tiny models
+  cannot afford full-FT representation damage).
+- **mRNABERT (MosaicBERT, DNA 3-mer tokenizer)** — ncRNA only (3-mer
+  tokens are not base-aligned; per-base tasks are invalid for this
+  tokenizer — B20 gate). 18/18 cells done. Frozen 0.488 / LoRA 0.759 /
+  full 0.782 (random): a k-mer-token model needs backbone adaptation far
+  more than nucleotide-token models.
+- **AIDO.RNA-1.6B / RiboSpan-1K-40 (1.6B)** — [PENDING: 48 runs in flight,
+  ~7 h/run, ETA 09-27~28]. Baseline assertion: single-nucleotide
+  tokenization verified (B20 gate), per-base arms valid.
+- **A tokenizer-pathology case study (new)**: mRNABERT's published
+  tokenizer maps raw RNA input to [UNK] (DNA alphabet, space-separated
+  3-mer wordpieces) — every run scored at chance (ncRNA ACC 0.077 = 1/13,
+  m6A AUC 0.50) until input preprocessing was fixed (U→T + 3-mer spacing).
+  We quarantined all 58 invalid runs and re-ran. This is a concrete
+  instance of "zero-overlap split audits are necessary but not
+  sufficient" — input-path validation must be part of the evaluation
+  protocol (checklist B20).
 
 ### 2.2 Family-level splits reveal task-granularity-dependent collapse (C4, Fig 2)
 [fig:fig_c4_delta] — Δ bars. Key numbers (3-seed means; tuned LR where
