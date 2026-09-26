@@ -62,6 +62,7 @@ def _lora_targets(core) -> list[str]:
     """Target module names for LoRA-family adapters (HF BERT-style first)."""
     names = {n for n, _ in core.named_modules()}
     for cand in (["query", "key", "value", "dense"],
+                 ["Wqkv", "attention.output.dense"],
                  ["qkv_proj", "out_proj"], ["q", "k", "v", "o"]):
         if all(any(c in n for n in names) for c in cand):
             return cand

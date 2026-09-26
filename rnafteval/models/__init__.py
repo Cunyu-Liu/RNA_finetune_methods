@@ -41,6 +41,7 @@ MODEL_SPECS: dict[str, ModelSpec] = {
                            86.0, "tierA"),
     "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),
     "UTR-LM": ModelSpec("UTR-LM", "multimolecule/utrlm-mrl", 128, 1.2, "tierB", notes="P2 integrated 2026-09-26; UtrLmModel d_model=128 L6"),
+    "mRNABERT": ModelSpec("mRNABERT", "YYLY66/mRNABERT", 768, 86.0, "tierB", custom_loader="mrnabert", notes="P2 integrated 2026-09-26; MosaicBERT, bert. prefix strip"),
     "SpliceBERT": ModelSpec("SpliceBERT", "multimolecule/splicebert", 512,
                             19.2, "tierB"),
     "SpliceBERT-human510": ModelSpec(
@@ -227,8 +228,53 @@ def load_rnasc(model_name: str, device: str):
     return _RnaScTok(), _RnaScWrapper(model).to(device)
 
 
+class _MosaicBertWrapper:
+    """Wrap MosaicBERT BertModel (returns a tuple) into the HF contract."""
+    def __init__(self, model):
+        self.m = model
+    def __getattr__(self, name):
+        return getattr(self.m, name)
+    def to(self, device):
+        self.m = self.m.to(device); return self
+    def parameters(self):
+        return self.m.parameters()
+    def train(self, mode=True):
+        self.m.train(mode)
+    def eval(self):
+        self.m.eval()
+    def __call__(self, input_ids, attention_mask=None, token_type_ids=None, **kw):
+        import torch
+        if token_type_ids is None:
+            token_type_ids = torch.zeros_like(input_ids)
+        out = self.m(input_ids=input_ids, attention_mask=attention_mask,
+                     token_type_ids=token_type_ids)
+        h = out[0] if isinstance(out, (tuple, list)) else out.last_hidden_state
+        return type("O", (), {"last_hidden_state": h})
+
+
+def load_mrnabert(spec: ModelSpec, device: str):
+    """Load mRNABERT (MosaicBERT custom code). Checkpoint keys carry a
+    bert. prefix while BertModel expects them unprefixed; forward returns a
+    tuple (sequence_output, pooled) -> wrap to .last_hidden_state."""
+    import torch
+    from transformers import AutoConfig, AutoTokenizer
+    path = hf_path(spec.repo)
+    assert os.path.isdir(path), "model dir missing: %s" % path
+    cfg = AutoConfig.from_pretrained(path, trust_remote_code=True)
+    import transformers_modules.main.bert_layers as bl
+    tok = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
+    model = bl.BertModel(cfg)
+    sd = torch.load(os.path.join(path, "pytorch_model.bin"),
+                    map_location="cpu", weights_only=False)
+    sd = {(k[5:] if k.startswith("bert.") else k): v for k, v in sd.items()}
+    model.load_state_dict(sd, strict=False)
+    return tok, _MosaicBertWrapper(model.to(device))
+
+
 def load_model(name: str, device: str):
     spec = MODEL_SPECS[name]
     if spec.custom_loader == "rnasc":
         return spec, *load_rnasc(name, device)
+    if spec.custom_loader == "mrnabert":
+        return spec, *load_mrnabert(spec, device)
     return spec, *load_hf(spec, device)

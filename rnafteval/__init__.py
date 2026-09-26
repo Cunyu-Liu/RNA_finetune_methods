@@ -90,6 +90,7 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
             # multimolecule RiNALMo/ERNIE expose query/key/value/dense (BERT-style)
             names = {n for n, _ in core.named_modules()}
             for cand in (["query", "key", "value", "dense"],
+                         ["Wqkv", "attention.output.dense"],
                          ["qkv_proj", "out_proj"],
                          ["q", "k", "v", "o"]):
                 if all(any(c in n for n in names) for c in cand):
