@@ -3112,3 +3112,12 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
   （ledger_rows.jsonl + README.md 说明；明确标注"非科学结果"）。ledger 1347 → **1293 行**。
 - p2_mrnabert_plan.json 收敛为 **ncRNA only（18 runs）**，已重启 3 shard。
 - 教训：接入新 tokenizer 必须**先验 token 化**（是否 [UNK]/是否与标签网格对齐）再放量。
+
+## 2026-09-27 00:00 (CST 17:32) · 队列状态 + AIDO/RiboSpan 吞吐评估
+
+- mRNABERT 修复后首格落地：ncRNA frozen s43 = **0.4988**（chance 0.077）→ tokenizer 修复有效。
+- AIDO/RiboSpan：6 格在跑（各 3），单格 etime 已 20 min、AIDO 仅到 epoch 0（1.6B fp32 + bs8 + 6858 训练序列）→
+  预计单格 1-3h；48 runs / ~4-6 并发 → 需十余小时。属预期，队列夜间继续。
+- P1 余 15 组全部为 SSP（RNA-Sc-100M 等长格）。
+- 巡检双 cron 在岗（*/20 监控+补位、*/20 收口重刷）；refresh marker 未触发（正确，AIDO/RiboSpan/mRNABERT 未收口）。
+- 无 GAVEUP/TIMEOUT；ledger 1298。
