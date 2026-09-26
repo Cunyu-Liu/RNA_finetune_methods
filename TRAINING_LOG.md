@@ -2931,3 +2931,30 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - P2 UTR-LM：3/36 done；3 worker 在跑。
 - 下载：UTR-LM 完成；mRNABERT 47MB/456MB；GB.RNA-1.6B 下载中；RiboSpan-1K-40 排队。
 - GitHub：HEAD 588297f → **8e8e26e**（P3 资源矩阵+图）→（本次）MRL 修复。
+
+## 2026-09-26 下午（续2）· P2 mRNABERT 接入 + 54 runs 派发
+
+### mRNABERT 接入（P2.2 完成）
+- 候选仓库 YYLY66/mRNABERT（config: hidden 768 / 12 层 / vocab 74，MosaicBERT 自定义代码）。
+- 集成障碍与修复（3 遍核查）：
+  ① HF `from_pretrained(trust_remote_code=True)` 在 transformers 5.x 下报
+     "Tensor on device meta" → 绕过：AutoConfig + `transformers_modules.main.bert_layers.BertModel(cfg)`
+     直接实例化 + 手动 load_state_dict；
+  ② 权重键带 `bert.` 前缀（136/142），BertModel 期望无前缀 → 去前缀后
+     missing 2（pooler）/ unexpected 6（MLM head），干净；
+  ③ 自定义 forward 返回 tuple → 新增 `_MosaicBertWrapper` 暴露 `.last_hidden_state=out[0]`；
+  ④ LoRA 目标选择器先命中松散候选 ["q","k","v","o"] → 新增 MosaicBERT 目标
+     ["Wqkv","attention.output.dense"]（仅当这些模块名存在时命中，不影响既有模型）。
+- 验证：frozen（trainable=0）/ lora（442368）/ full（113979648）ncRNA smoke 全 exit 0。
+- **发现的坑（已记录）**：owner 运行器 `from .strategies import apply_strategy`，而顶层
+  `rnafteval/__init__.py` 另有一份同名函数——首轮误改无效文件；已改真正的
+  `rnafteval/strategies/__init__.py`，两份同步（避免后续误用）。
+
+### 派发
+- scripts/p2_mrnabert_plan.json：mRNABERT × {ncRNA, SSP, modification} × {frozen,lora,full}
+  × {random,family} × {17,29,43} = **54 runs**（full LR 1e-5，need 10GB）；3 shard 已启动。
+
+### 队列进度（约 16:00）
+- P1 49/111；P2 UTR-LM 15/36；P2 mRNABERT 0/54（刚起）。
+- 下载：UTR-LM ✓；mRNABERT ✓（435MB）；GB.RNA-1.6B 3.9GB（进行中）；RiboSpan-1K-40 3.2GB（进行中）。
+- GitHub：HEAD b4b677f。
