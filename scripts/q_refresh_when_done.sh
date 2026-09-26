@@ -23,7 +23,7 @@ nw=$(ps -ef | grep -E "[q]_p1_fill.py|[q]_fill.py" | wc -l)
 [ "$allzero" -ne 1 ] && exit 0
 echo "===== $(date) ALL QUEUES DONE -> refresh product chain =====" >> $LOG
 cd $REPO
-for mod in export_c4 export_e2 export_e3 export_e6 export_resources export_resources_matrix export_splits export_leakage export_lr_grid stats; do
+for mod in export_c4 export_e2 export_e3 export_e6 export_resources export_resources_matrix export_splits export_leakage export_lr_grid stats decision_tree; do
   echo "--- $mod ---" >> $LOG
   $PY -m rnafteval.$mod >> $LOG 2>&1 && echo "ok $mod" >> $LOG || echo "FAIL $mod" >> $LOG
 done
