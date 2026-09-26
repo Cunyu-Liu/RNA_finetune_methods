@@ -40,6 +40,7 @@ MODEL_SPECS: dict[str, ModelSpec] = {
     "ERNIE-RNA": ModelSpec("ERNIE-RNA", "multimolecule/ernierna", 768,
                            86.0, "tierA"),
     "RNA-FM": ModelSpec("RNA-FM", "multimolecule/rnafm", 640, 96.0, "tierA"),
+    "UTR-LM": ModelSpec("UTR-LM", "multimolecule/utrlm-mrl", 128, 1.2, "tierB", notes="P2 integrated 2026-09-26; UtrLmModel d_model=128 L6"),
     "SpliceBERT": ModelSpec("SpliceBERT", "multimolecule/splicebert", 512,
                             19.2, "tierB"),
     "SpliceBERT-human510": ModelSpec(
