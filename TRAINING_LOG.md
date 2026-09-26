@@ -2727,3 +2727,38 @@ q_m6a_ends.log 永缺 M6A-ENDS DONE，收口以 M6A-SWEEP DONE + ledger
 18/18 为准；④ frozen s29 双实例竞态（同值 0.9137 无害）。
 
 **提交**：TRAINING_LOG.md（本班巡检条目）
+
+## 2026-09-26 09:26 m6A 补格链第 7 班巡检（终态静默，无动作）
+
+**状态**：18/18 静默复核通过（task=modification & model∈{RNA-Sc-1M,
+RNA-Sc-650M} & smoke=false & split=random & 去重）。ends/sweep/finetune_base
+进程三清零；q_m6a_ends.log mtime 冻结 09-25 00:58，modification 全账本
+276 行零新增（max updated_utc 2026-09-25T03:23Z）。新落地 run：无。
+
+**队列判定**：完成态死亡，维持第 5/6 班判定不重启——①非 wait 循环卡
+死（死亡点为 09-26 01:00:44 pick_gpu 空输出 → 裸 --device → argparse
+exit 2 ×2 耗尽重试）；②重启条件不满足（未出现 wait 循环 >1h 且空卡
+≥4G）；③ends 脚本 RID 大写 bug + pick_gpu 空输出缺陷未修，重启会把
+18 个 done 格全重派。收口以 M6A-SWEEP DONE 09-25 11:23 + ledger 18/18
+为准。本班 mem_get_info 抽验 gpu4 (29.8G free, 42.4G total)，返回序
+(free,total) 确认无误。
+
+**谱线终态复核（承 12:20 终判，本班全量重算确认无漂移，只引 test 集
+value 字段，无 smoke 行）**：lora 5 档均值 1M 0.9468 / 10M 0.9427 /
+30M 0.9415 / 100M 0.9469 / 650M 0.9476——全 5 档 ∈[0.941,0.948]，极差
+0.006；1M 首端 lora 0.9468 ≥ 10M 0.9427，无首端规模效应。full 侧均值
+0.9393/0.9181(口径混合)/0.9342/0.9367/0.9269。**对照 v0.6.4「m6A 全
+饱和 0.94-0.997」：受控系 lora 侧 0.941-0.948 成立（与官方系
+0.968-0.997 合成 0.94-0.997 全谱段）；full 侧 650M s43 0.9113 低于
+0.94 下界，为种子方差非规模效应（650M 3 种子极差 0.033、mean
+0.9269，与 1M/30M/100M full 置信重叠）——v0.6.4 表述无需修订，
+「m6A 等价线不可辨识」结论维持，1M<0.90 通知线未触发（1M lora
+0.9468，lora/full 两臂均 >0.90），不通知用户。**
+
+**异常（待人工处理，承 00:20 清单不变）**：① ends 脚本 RID 大写 bug +
+pick_gpu 空输出缺陷未修（修复方向：捕获 stderr + 判空 -1 兜底重试）；
+② ledger full_s17 同微秒同值 done 行 ×3（去重后 0.9250 无害）；③
+q_m6a_ends.log 永缺 M6A-ENDS DONE，收口以 M6A-SWEEP DONE + ledger
+18/18 为准；④ frozen s29 双实例竞态（同值 0.9137 无害）。
+
+**提交**：TRAINING_LOG.md（第 7 班巡检条目）
