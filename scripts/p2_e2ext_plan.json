@@ -1,0 +1,199 @@
+{
+ "lockdir": "/tmp/e2ext_locks",
+ "slots": 1,
+ "timeout_s": 14400,
+ "runs": [
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "ERNIE-RNA",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "dora",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 17,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 29,
+   "need": 6
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "ia3",
+   "split": "random",
+   "seed": 43,
+   "need": 6
+  }
+ ]
+}

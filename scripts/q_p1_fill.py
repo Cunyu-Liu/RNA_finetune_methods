@@ -81,23 +81,13 @@ def is_done(task, model, strat, seed, split, lr):
     return False
 
 def clear_pending(task, model, strat, seed, split):
-    with open(LEDGER) as f:
-        fcntl.flock(f, fcntl.LOCK_EX); rows = [l for l in f]
-    out = []
-    for l in rows:
-        s = l.strip()
-        if not s:
-            continue
-        try:
-            r = json.loads(s)
-        except Exception:
-            out.append(l); continue
-        if (r.get("model") == model and r.get("task") == task and r.get("strategy") == strat
-                and r.get("seed") == seed and r.get("split") == split and r.get("status") == "pending"):
-            continue
-        out.append(l)
-    with open(LEDGER, "w") as f:
-        fcntl.flock(f, fcntl.LOCK_EX); f.writelines(out)
+    import rnafteval.ledger as _led
+    with _led._locked():
+        rows = _led._load()
+        rows = [r for r in rows if not (r.get("model") == model and r.get("task") == task
+                and r.get("strategy") == strat and r.get("seed") == seed
+                and r.get("split") == split and r.get("status") == "pending")]
+        _led._write(rows)
 
 import torch
 def mem(g):
