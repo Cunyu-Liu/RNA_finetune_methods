@@ -2856,3 +2856,49 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 终态收口且谱线连续两班零漂移，若无新增补格需求，本链巡检可归档。
 
 **提交**：TRAINING_LOG.md（第 9 班巡检条目）
+
+## 2026-09-26 下午 · 交接文档全量同步 + 后续交接工作 P1/P2 启动
+
+### 交接文档同步（本 session 主体）
+- 以 ledger/git/status 产物为唯一口径，对账并回填交接文档：
+  spec v1.9→**v2.0**（+§10.6 后续交接工作 P1-P4）；tasks v3.11→**v3.12**
+  （逐项复核回填 + 文末「后续交接工作」节）；checklist v1.8→**v1.9**
+  （A4/A6/A9/A10、B17/B18/B19 回填；B10 按 v1.9 口径重标）；新增
+  STATUS_SNAPSHOT_20260926.md；巡检日志追加本轮条目。
+
+### 服务器事实核验
+- HEAD 36136d0→（本轮 push 后）**c5627b6**；ledger **1149→1153 行**
+  （+4 条 seed=999 smoke 验证行；无 pending 科学格）。
+- GPU 拓扑：torch 0-5 = A100-40GB（39.49GiB）；6/7 = MIG 1g.5gb（4.75GiB）。
+- 缺口盘点（ledger 实测）：4 任务 × 已接入模型 × {frozen,lora,full≤100M}
+  × {random,family} × {17,29,43} = **37 组 × 3 种子 = 111 runs**。
+
+### P1 缺口补齐（GPU，进行中）
+- 新脚本 scripts/q_p1_fill.py（N shard worker / 每卡 2 slot 原子锁 /
+  done-skip（ledger 字段权威，不猜 run_id）/ 失败清 pending 重试 /
+  真 CUDA 断言）；protocol：frozen/lora 默认 LR 3e-4；full tuned LR
+  RiNALMo 1e-5、受控 RNA-Sc 3e-5（full run_id 加 _lr 标签）。
+- **smoke 验证（4 组合，seed 999，全 exit 0）**：finetune_mrl×RNA-Sc-1M /
+  finetune_base(modification)×RNA-Sc-1M / finetune_ssp×RNA-Sc-1M /
+  finetune_ssp×RiNALMo-mega —— 确认新 task×model 组合 runner 可用。
+- **2 个 bug 修复（3 遍核查纪律）**：① tag 格式串参数缺失 → TypeError；
+  ② RUNS 元组序 split/seed 颠倒 → seed 收到 str。修复后前台验证通过。
+- 6 shard 已启动（setsid nohup，pid 3775175-3775180）；前 6 个 MRL frozen
+  格 exit 0（52-81s/格）。进度脚本 scripts/q_p1_need.py。
+- 监控：scripts/q_p1_monitor.sh，cron `*/20`（含进度+GPU+CPU 降级扫描+
+  自动补位：无 worker 且有缺口则重启 6 shard）。首次快照：
+  groups=37 cells_done=6/111。
+
+### P2 剩余架构接入（下载启动）
+- scripts/dl_p2.py（hf-mirror requests 下载器，resumable）。
+- 已下：multimolecule/utrlm-mrl（UTR-LM，~1.2M，model.safetensors 4.86MB）✓
+- 下载中：YYLY66/mRNABERT（pytorch_model.bin 456MB）、
+  SII-GAIR-NLP/RIBOSPAN-1K-40（6.45GB）。
+- AIDO.RNA-1.6B：tree API 非标准返回，待单独核（resolve 探测）。
+- RIBOSPAN-FM：仓库仅有 docs，无权重 → 以 RIBOSPAN-1K-40 为准。
+- HydraRNA：HF 无，需 GitHub 单 ckpt（后续）。
+
+### 纪律
+- smoke/proxy/训练集结果均未写成结论；P1 全为 test 集口径。
+- GPU 训练真 CUDA（worker 起始 assert torch.cuda.is_available()）。
+- 新脚本已提交 GitHub（HEAD c5627b6）。
