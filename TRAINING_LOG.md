@@ -2811,3 +2811,16 @@ RID 大写 bug + pick_gpu 空输出缺陷仍在（cell_state 永不命中 done �
 stderr 判空兜底）。
 
 **提交**：TRAINING_LOG.md（第 8 班巡检条目）
+
+## 2026-09-26 上午 · E6-EXT 谱线端点全收口（C6 36 格）+ preprint v0.9
+- 650M {lora,full} s17/s29/s43 全部 done（D 三实例 04:47/06:27/07:54 exit 0）。
+  E6-EXT 12 格 = 1M 6/6 + 650M 6/6 → **全落地**。
+- 期间工程修复：worker D 同卡碰撞 → 逐卡原子锁 + 抢锁后复核（f230f31）；
+  若干 OOM 重试（外部/我方 rna-jepa 作业抢卡）——最终全部成功。
+- export_e6 重导（36 格 = 6 模型 × {lora,full} × 3 seed）+ fig_e6_spectrum。
+- **谱线终判读（非单调、中段危险带）**：1M 轻微且种子噪声大（LoRA 一 seed +3.8）；
+  10M 负遗忘；30M 峰值（full 均值 +17.7，最差 +26.2；lora 最差 +3.4，尾部压缩 ~8×）；
+  100M 回稳（full ≈0，lora 轻微正）；650M 再负（lora 3/3 负；full 2/3 负，最差 +7.1）。
+  → forget_ratio：1M +0.24× / 10M +1.89× / 30M +11.86× / 100M −0.04× / 650M −0.44×。
+- preprint v0.9：§2.8 表补 1M/650M 两行（6 行全谱）+ 三发现更新（(i) 端点闭合）
+  + abstract finding 5（24→36 cell）+ limitations 去 "in flight" + header v0.4→v0.9。
