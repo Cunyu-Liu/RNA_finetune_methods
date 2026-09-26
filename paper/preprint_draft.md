@@ -237,6 +237,10 @@ Auto-exported (status/e2_table.md); per-seed values in Supp S3.
   tuned full-FT (0.064-0.096) joins the band while frozen reaches
   0.516 -- backbone-updating arms destroy the frozen family-level
   representation rather than transfer it.
+
+[fig:fig_c5b] -- dual-family equivalence-line spectrum (8 scales);
+status/figs/fig_c5b.png (slide: figs/equivalence_line.pptx).
+
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.
