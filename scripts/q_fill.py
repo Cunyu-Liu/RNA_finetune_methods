@@ -12,6 +12,7 @@ import os, sys, json, time, fcntl, subprocess, datetime
 SHARD = int(sys.argv[1]); NS = int(sys.argv[2]); PLAN = sys.argv[3]
 P = json.load(open(PLAN))
 LOCKDIR = P["lockdir"]; SLOTS = int(P.get("slots", 1)); RUNS = P["runs"]
+TIMEOUT_S = int(P.get("timeout_s", 14400))
 R = "/mnt/cunyuliu/rna-ft-eval"; LEDGER = R + "/ledger.jsonl"
 PY = "/home/cunyuliu/llr_env/bin/python"
 os.makedirs(LOCKDIR, exist_ok=True); os.makedirs(R + "/logs", exist_ok=True)
@@ -45,6 +46,21 @@ def is_done(task, model, strat, seed, split, lr):
                 try:
                     if abs(float(r.get("lr", 0)) - float(lr)) > 1e-12: continue
                 except Exception: continue
+            return True
+    return False
+
+def is_busy(task, model, strat, seed, split):
+    # live finetune process with these exact flags == in-flight (e.g. orphan)
+    try:
+        out = subprocess.check_output(["ps", "-eo", "args"], text=True)
+    except Exception:
+        return False
+    for l in out.splitlines():
+        if (("--model %s " % model) in l
+                and ("--strategy %s " % strat) in l
+                and ("--seed %d " % seed) in l
+                and ("--split %s " % split) in l
+                and "rnafteval.finetune" in l):
             return True
     return False
 
@@ -116,6 +132,9 @@ for rr in todo:
     tag = "%s|%s|%s|s%s|%s%s" % (task, model, strat, seed, split, ("|lr" + lr) if lr else "")
     if is_done(task, model, strat, seed, split, lr):
         log("skip(done)", tag); continue
+    if is_busy(task, model, strat, seed, split):
+        log("skip(busy)", tag); continue
+
     att = 0; finished = False
     while att < 60 and not finished:
         g = pick_target(need)
@@ -129,7 +148,7 @@ for rr in todo:
             t0 = time.time()
             p = subprocess.run(build_cmd(task, model, strat, seed, split, lr, g,
                                          rr.get("bs"), rr.get("max_len")),
-                               cwd="/home/cunyuliu/rna-ft-eval", timeout=14400,
+                               cwd="/home/cunyuliu/rna-ft-eval", timeout=TIMEOUT_S,
                                stdout=LOG, stderr=subprocess.STDOUT)
             log("exit", p.returncode, tag, "%.0fs" % (time.time() - t0))
             if p.returncode == 0: finished = True

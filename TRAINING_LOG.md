@@ -3159,3 +3159,26 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - P1 余 15 组全部为 SSP（RNA-Sc-100M 等长格）。
 - 巡检双 cron 在岗（*/20 监控+补位、*/20 收口重刷）；refresh marker 未触发（正确，AIDO/RiboSpan/mRNABERT 未收口）。
 - 无 GAVEUP/TIMEOUT；ledger 1298。
+
+## 2026-09-26 21:40 · AIDO/RiboSpan 吞吐危机修复（timeout 4h→9h + 并发 6→12+）
+
+### 危机（3 遍核查发现）
+- 单 run 实测 ~7h（1.6B fp32 + ncRNA 10 epochs），但 worker subprocess timeout=14400s(4h)
+  → **所有 run 会在 4h 被掐死并无限重试，永远无法落账**。
+- 并发仅 6（slots=1 × 3 shard × 2 plan）→ 48 runs 需 2.3 天。
+
+### 修复（q_fill.py + plans + cron）
+1. `TIMEOUT_S` 从 plan 读取（aido/ribospan 设 32400s=9h）；
+2. 新增 `is_busy()`：ps 级在飞检测（model+strategy+seed+split 精确匹配）→ 重启后
+   对孤儿 run `skip(busy)`，防双跑（ledger claim 协议之外的进程级保险）；
+3. slots 1→2、need 按实测校准（frozen 14→10G，lora 14→12G；实测占用 7.0–7.6G）；
+4. cron 自动补位 3 shard→6 shard。
+
+### 执行
+- 杀旧代码 worker（12 个，子进程孤儿化继续跑完写 ledger——父死后 subprocess timeout 失效，孤儿自然跑完）；
+- 新代码 12 worker（6 shard × 2 plan）启动，`skip(busy)` 已验证对 12 个孤儿生效；
+- 现 12 孤儿在飞 + 新 worker 空闲即派 → 并发 12→18+（随卡内 slots=2 展开）。
+
+### 附带核查（B20 门禁）
+- AIDO/RiboSpan tokenizer 均为**单碱基 token**（[CLS]+A/C/G/U/T 逐碱基）→ per-base 任务（modification）合法，与 mRNABERT（3-mer）不同，无需剔除。
+- GPU6/7 的 nvidia-smi 40GB 视图是宿主物理卡；torch 权威视图仍是 MIG 4.8GiB，不可用。

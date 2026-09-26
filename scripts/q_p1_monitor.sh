@@ -33,6 +33,6 @@ for pl in $REPO/scripts/p2_*.json; do
   if [ "${needp:-0}" -gt 0 ] && [ "$np" -eq 0 ]; then
     echo "$(date) AUTO-REFILL $tag: need=$needp" >> $OUT
     lk=$($PY -c "import json;print(json.load(open("$pl"))[\"lockdir\"])"); mkdir -p $lk; cd $REPO
-    for s in 0 1 2; do setsid nohup $PY $REPO/scripts/q_fill.py $s 3 $pl >> $R/logs/q_fill_${tag}_s${s}.log 2>&1 & done
+    for s in 0 1 2 3 4 5; do setsid nohup $PY $REPO/scripts/q_fill.py $s 6 $pl >> $R/logs/q_fill_${tag}_s${s}.log 2>&1 & done
   fi
 done
