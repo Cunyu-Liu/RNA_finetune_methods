@@ -3060,3 +3060,23 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 队列（约 16:55）
 - P1 **64/111**；UTR-LM 30/36；mRNABERT 40/54；AIDO 0/24（刚起）。
+
+## 2026-09-26 深夜（续）· P2 RiboSpan 接入成功（4/5 架构完成）
+
+### RiboSpan（model_type ribospan，1.6B 长上下文）
+- 代码不在 HF 仓 → 取自 **GAIR-NLP/RIBOSPAN-FM** 的 `ribospan/`（configuration/modeling/tokenization + vocab.txt）。
+- 将 `load_gbrna` 重构为**通用 `_load_vendored()`**（同时服务 gbrna 与 ribospan）：
+  ① 按 module 名子串定位 config/model/tokenizer（两种命名方案兼容）；
+  ② 建模文件 transformers≥5 补丁（pytorch_utils 缺失助手回退）；
+  ③ config 默认补齐（is_decoder 等）；
+  ④ tokenizer 直接实例化（绕开 fast 后端/sentencepiece）；
+  ⑤ 权重：**safetensors 优先，否则手工 `torch.load(weights_only=True)`**（RiboSpan 仅 .bin，
+     而 HF≥5 在 torch<2.6 下因 CVE 拒载 .bin）+ get_head_mask/警告方法 shim。
+- 验证：AIDO 与 RiboSpan 皆 CUDA forward `(B,T,2048)` fp32；RiboSpan runner smoke frozen exit 0。
+- 派发：RiboSpan plan ncRNA+modification × {frozen,lora} × 双切分 × 3 种子 = 24 runs（bs 8，need 24GB）。
+- 中途修复：重构后 `load_gbrna` 的 module 键失配（tokenization_rnabert）→ 改按子串查找，AIDO 复验通过。
+
+### 队列（约 17:15）
+- P1 **72/111**；UTR-LM 34/36；mRNABERT 49/54；AIDO 0/24；RiboSpan 0/24。
+- **P2 架构总账：4/5 已入 E1**（UTR-LM / mRNABERT / AIDO.RNA-1.6B / RiboSpan）；仅 HydraRNA（重型独立 env）未做。
+- GitHub HEAD 605c363。
