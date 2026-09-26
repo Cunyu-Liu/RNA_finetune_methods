@@ -3091,3 +3091,24 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - 结果：AIDO/RiboSpan 各 4 格已上卡在跑（GPU0/GPU4 等）；无 GAVEUP/TIMEOUT。
 - 队列（约 17:15）：P1 **75/111**；UTR-LM 35/36；mRNABERT 51/54；AIDO 0/24（4 在跑）；
   RiboSpan 0/24（4 在跑）；ledger **1347 行**。
+
+## 2026-09-26 深夜（续3）· mRNABERT 严重缺陷发现与修复（[UNK] tokenizer）
+
+### 发现（3 遍核查）
+- mRNABERT 已落 58 行数值全部异常：ncRNA ACC ≈ 0.077（恰 = 1/13 chance）、m6A AUC ≈ 0.50。
+- 根因：`YYLY66/mRNABERT` 的 BertTokenizer **词表为 DNA 字母表（A,C,G,T,N）+ 空格式 3-mer**
+  （74 = 5 specials + 5 单碱基 + 4^3 个 3-mer）；对原始 RNA 串：
+  ① `U` 不在词表 → [UNK]；② wordpiece 无法切分**未空格**的核苷酸串 → 整词 [UNK]。
+  故**全部 mRNABERT run 均为 chance，属无效结果**。
+
+### 修复
+- `_UDnaTokenWrapper`：预处理 = `U→T` + **非重叠 3-mer 空格切分** + 尾段（<3nt）拆单碱基
+  → 任意长度 0 个 [UNK]（已用 14/16/17/20 nt 验证）。
+- **方法学界定**：3-mer token 与碱基网格不对齐 → mRNABERT **仅适用于 per-seq 任务**；
+  per-base（m6A/SSP）需碱基级对齐（暂不做）→ 其 per-base runs 移除。
+
+### 数据治理
+- **quarantine**：58 行 mRNABERT 行移出 ledger → `status/quarantine_mrnabert_unk_tokenizer/`
+  （ledger_rows.jsonl + README.md 说明；明确标注"非科学结果"）。ledger 1347 → **1293 行**。
+- p2_mrnabert_plan.json 收敛为 **ncRNA only（18 runs）**，已重启 3 shard。
+- 教训：接入新 tokenizer 必须**先验 token 化**（是否 [UNK]/是否与标签网格对齐）再放量。

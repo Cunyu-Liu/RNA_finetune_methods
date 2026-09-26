@@ -254,6 +254,33 @@ class _MosaicBertWrapper:
         return type("O", (), {"last_hidden_state": h})
 
 
+class _UDnaTokenWrapper:
+    """mRNABERT BertTokenizer uses a DNA alphabet (A,C,G,T,N) with 3-mer
+    pieces; our sequences are RNA (U). Without U->T mapping every input becomes
+    [UNK] and the model scores at chance. Greedy wordpiece picks 3-mer tokens,
+    so this model is valid for per-SEQUENCE tasks only (per-base heads need
+    base-level alignment and are out of scope for now)."""
+
+    def __init__(self, tok):
+        self._t = tok
+
+    @staticmethod
+    def _prep(x):
+        # mRNABERT expects DNA k-mer string tokens separated by spaces
+        # (wordpiece cannot segment a raw unspaced nucleotide string -> [UNK]).
+        t = str(x).upper().replace("U", "T")
+        n3 = len(t) - len(t) % 3
+        parts = [t[i:i + 3] for i in range(0, n3, 3)]
+        parts += list(t[n3:])  # tail (<3 nt) as single-nucleotide tokens
+        return " ".join(parts)
+
+    def __call__(self, seqs, **kw):
+        return self._t([self._prep(x) for x in seqs], **kw)
+
+    def __getattr__(self, name):
+        return getattr(self._t, name)
+
+
 def load_mrnabert(spec: ModelSpec, device: str):
     """Load mRNABERT (MosaicBERT custom code). Checkpoint keys carry a
     bert. prefix while BertModel expects them unprefixed; forward returns a
@@ -270,7 +297,7 @@ def load_mrnabert(spec: ModelSpec, device: str):
                     map_location="cpu", weights_only=False)
     sd = {(k[5:] if k.startswith("bert.") else k): v for k, v in sd.items()}
     model.load_state_dict(sd, strict=False)
-    return tok, _MosaicBertWrapper(model.to(device))
+    return _UDnaTokenWrapper(tok), _MosaicBertWrapper(model.to(device))
 
 
 def _fix_modeling_file(path):
