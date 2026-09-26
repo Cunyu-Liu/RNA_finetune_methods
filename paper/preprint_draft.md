@@ -1,7 +1,7 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.96（外部架构验证臂数据刷新——C4 家族崩溃跨架构复现）** — 2026-09-26（数据快照：ledger 1346 runs；E1 缺口补齐 109/111 组；新架构验证臂 UTR-LM 36/36、mRNABERT 18/18（tokenizer 修复后，per-seq 限定）已收口，AIDO.RNA-1.6B / RiboSpan-1K-40 在飞；C6 受控系遗忘谱线 36 格全落地（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）C6 受控系遗忘谱线端点补全——1M→650M 全 6 档 × {LoRA, full-FT} × 3 种子 = 36 格全落地，非单调谱线闭合（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
+**Preprint draft v0.96（外部架构验证臂数据刷新——C4 家族崩溃跨架构复现）** — 2026-09-26（数据快照：ledger 1346 runs；E1 缺口补齐 109/111 组；新架构验证臂 UTR-LM 36/36、mRNABERT 18/18（tokenizer 修复后，per-seq 限定）已收口，AIDO.RNA-1.6B / RiboSpan-1K-40 在飞；C6 受控系遗忘谱线 36 格全落地（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
 
 ## Abstract
 
