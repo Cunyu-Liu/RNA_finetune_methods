@@ -1,7 +1,7 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v0.95（P1/P2 扩展中·外部架构验证臂）** — 2026-09-26（数据快照：ledger 1346 runs；E1 缺口补齐 109/111 组；新架构验证臂 UTR-LM 36/36、mRNABERT 18/18（tokenizer 修复后，per-seq 限定）已收口，AIDO.RNA-1.6B / RiboSpan-1K-40 在飞；C6 受控系遗忘谱线 36 格全落地（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）C6 受控系遗忘谱线端点补全——1M→650M 全 6 档 × {LoRA, full-FT} × 3 种子 = 36 格全落地，非单调谱线闭合（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
+**Preprint draft v0.96（外部架构验证臂数据刷新——C4 家族崩溃跨架构复现）** — 2026-09-26（数据快照：ledger 1346 runs；E1 缺口补齐 109/111 组；新架构验证臂 UTR-LM 36/36、mRNABERT 18/18（tokenizer 修复后，per-seq 限定）已收口，AIDO.RNA-1.6B / RiboSpan-1K-40 在飞；C6 受控系遗忘谱线 36 格全落地（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）C6 受控系遗忘谱线端点补全——1M→650M 全 6 档 × {LoRA, full-FT} × 3 种子 = 36 格全落地，非单调谱线闭合（§2.8，spec §10.4）；fig_e6_spectrum + status/e6_table.md 自动导出）
 
 ## Abstract
 
@@ -121,7 +121,7 @@ Cross-model consistency (ncRNA random, LoRA): RNA-Sc 0.75, SpliceBERT 0.90,
 RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora and
 parameter scales (19M–99M).
 
-### 2.1a External-architecture validation arms (new in v0.95)
+### 2.1a External-architecture validation arms (new in v0.95, data refresh v0.96)
 
 Six additional architectures beyond the core five test whether the C1/C4
 findings are corpus/architecture-specific. Status and rules: only cells
@@ -168,6 +168,9 @@ marked):
 - SSP (per-base): no collapse across all five models — ratios 0.956–1.110
   (ERNIE LoRA 0.337→0.345; RNA-FM 0.221→0.211; RNA-Sc 0.084→0.076;
   RiNALMo 0.214→0.223; SpliceBERT 0.168→0.169).
+  The granularity pattern also replicates on the external arms: UTR-LM
+  SSP ratios are flat (0.104→0.103 frozen; 0.135→0.141 LoRA), and
+  mRNABERT follows the per-seq collapse rule on ncRNA (below).
 - MRL (per-seq, singleton clusters): mild degradation only -- LoRA
   family/random ratios 0.85-0.92 across 5 models; delta = 0.04-0.12
   vs ncRNA 0.68-0.91. **Collapse requires multi-member family
@@ -177,6 +180,11 @@ marked):
   model–task–arm cells collapse outside multi-member-family
   per-seq classification (5 models × 3 tasks × 5 arms): ncRNA collapses
   5/5; m6A/SSP (per-base) and MRL (singleton per-seq) are immune.
+  **The collapse also replicates on the external-architecture arms**
+  (§2.1a): UTR-LM LoRA 0.684→0.071 (random→family) and mRNABERT LoRA
+  0.759→0.072 — including a 1.2M-parameter model and a 3-mer-token
+  DNA-alphabet model. The pathology is not an artifact of the core five
+  models' corpora or tokenizers.
   The family-split collapse holds at every scale tested -- 1M
   through 650M LoRA, including RiNALMo-650M (0.969 random ->
   0.106 family).
