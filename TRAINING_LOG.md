@@ -2762,3 +2762,52 @@ q_m6a_ends.log 永缺 M6A-ENDS DONE，收口以 M6A-SWEEP DONE + ledger
 18/18 为准；④ frozen s29 双实例竞态（同值 0.9137 无害）。
 
 **提交**：TRAINING_LOG.md（第 7 班巡检条目）
+
+## 2026-09-26 12:20 m6A 补格链第 8 班巡检（收口标记落地：M6A-ENDS DONE 补齐）
+
+**状态**：18/18 静默复核通过（task=modification & model∈{RNA-Sc-1M,
+RNA-Sc-650M} & smoke=false & split=random & 去重，18/18 done、pending 0）。
+本班接管时进程三清零，ledger mtime 冻结 09:19、q_m6a_ends.log mtime 冻结
+09-25 00:58（死亡点 09-26 01:00:44 pick_gpu 空输出 → 裸 --device →
+argparse exit 2 ×2，承第 5-7 班取证）。新落地 run：无（ends 范围 max
+updated_utc 2026-09-25T03:23Z，sweep 收口 09-25 11:23 后零新增）。
+
+**队列处置（本班动作）**：修正第 5-7 班「重启会把 18 个 done 格全重派」
+的判定——该假设只看了 shell 层 done 幂等（cell_state 拼大写 RID 永不
+命中），漏了 finetune_base 自身按 canonical 小写 rid 的 done 跳过
+（finetune_base.py 内 run_id 幂等，attempt 后直接 "skip (already done)"）。
+本班 12:13 重启（setsid nohup，pid 3012426）：18 格全部幂等跳过（~5s/格，
+零重训），QUEUE-A DONE 12:15:58，**M6A-ENDS DONE 12:18:16 正式落地
+（log L485），队列干净退出**；ledger 零扰动（1149 行、mtime 09:19 不变，
+跳过路径不写行）。重启前置校验：mem_get_info 全 8 卡抽验返回序
+(free,total) 确认无误；nvidia-smi 6×A100-40G + 2×MIG-4.75G，dev2 30.7G /
+dev4 40.4G / dev5 35.6G 空闲，空卡条件充分。ends 脚本本身未改（其
+pick_gpu 判空守卫沿用 09-25 01:05 补丁版本）。
+
+**谱线终态判读（承 12:20 终判，本班全量重算确认无漂移，只引 test 集
+value 字段，无 smoke 行）**：lora 5 档 3 种子均值 1M 0.9467 / 10M 0.9427 /
+30M 0.9415 / 100M 0.9469 / 650M 0.9476——全 5 档 ∈[0.941,0.948]，极差
+0.006；1M 首端 lora 0.9467 ≥ 10M 0.9427，无首端规模效应。full@3e-5 均值
+1M 0.9393 / 10M 0.8964 / 30M 0.9342 / 100M 0.9367 / 650M 0.9269。
+**口径勘误：10M full@3e-05 去重 3 种子（0.9438/0.9145/0.8309）均值
+0.8964，此前班次记录的 0.9181 为混入一行 3e-04 的口径混合**；10M full
+s43 0.8309 为全谱最差点，与 650M s43 0.9113 同属种子方差带（各档 full
+3 种子极差 0.021-0.113），非规模趋势。**对照 v0.6.4「m6A 全饱和
+0.94-0.997」：受控系 lora 侧 0.941-0.948 成立（与官方系 0.968-0.997
+合成 0.94-0.997 全谱段）；full 侧 10M 0.8964、650M 0.9269 低于 0.94
+下界，判为种子方差非规模效应（1M/30M/100M full 与其置信区间重叠）——
+v0.6.4 表述无需修订，「m6A 等价线不可辨识」结论维持；1M<0.90 通知线
+未触发（1M lora 0.9467、full 0.9393 两臂均 >0.90 且不低于 10M 对应臂），
+不通知用户。**
+
+**异常（待人工处理，承 00:20 清单，有更新）**：① ledger 650M full_s17
+同微秒同值 done 行 ×3（去重后 0.9250 无害）；② frozen s29 双实例竞态
+（同值 0.9137 无害）；③ ledger 10M full_s43 同微秒同值行 ×2（去重后
+0.8309，已含入 0.8964 口径勘误）；④ ~~q_m6a_ends.log 永缺 M6A-ENDS
+DONE~~ 本班已补齐（12:18:16 落地，队列终态退出）；⑤ ends 脚本 shell 层
+RID 大写 bug + pick_gpu 空输出缺陷仍在（cell_state 永不命中 done → 每格
+必进 attempt 分支；因 finetune_base 内部幂等兜底已实际无害化，仅多花
+~5s/格进程启动成本；修复方向仍为 RID 改 canonical 小写 + pick_gpu 捕获
+stderr 判空兜底）。
+
+**提交**：TRAINING_LOG.md（第 8 班巡检条目）
