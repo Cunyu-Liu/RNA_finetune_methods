@@ -1,0 +1,330 @@
+{
+"lockdir": "/tmp/p2_utrlm_locks",
+"slots": 1,
+"runs": [
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 17,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 29,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 43,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 17,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 29,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "noncoding-rna-family",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 43,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "random",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "frozen",
+"split": "family",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "random",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 17,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 29,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "lora",
+"split": "family",
+"seed": 43,
+"lr": null,
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 17,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 29,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "random",
+"seed": 43,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 17,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 29,
+"lr": "1e-05",
+"need": 4
+},
+{
+"task": "secondary-structure",
+"model": "UTR-LM",
+"strategy": "full",
+"split": "family",
+"seed": 43,
+"lr": "1e-05",
+"need": 4
+}
+]
+}
