@@ -3113,6 +3113,44 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - p2_mrnabert_plan.json 收敛为 **ncRNA only（18 runs）**，已重启 3 shard。
 - 教训：接入新 tokenizer 必须**先验 token 化**（是否 [UNK]/是否与标签网格对齐）再放量。
 
+## 2026-09-26 18:08 m6A 补格链第 10 班巡检（终态静默，无动作）
+
+**状态**：18/18 终态静默复核通过（task=modification & model∈{RNA-Sc-1M,
+RNA-Sc-650M} & smoke=false & split=random & 去重，18/18 done、pending 0）。
+M6A-ENDS DONE 12:18:16 驻留 log 第 485 行（末行）；ends/sweep/finetune_base
+进程三清零（当前在跑的 15 个训练 worker 全为 P1/P2 链 finetune_one/
+finetune_ssp 入口）；q_m6a_ends.log mtime 冻结 12:15:32、ledger mtime 09:19:47
+后 ends 范围零新增（ends 范围 max updated_utc 2026-09-25T03:23Z；ledger
+整体 1314 行、18:07 仍活跃系 P1/P2 并行链在写，与 ends 链无关）。
+
+**谱线终态复核（承第 8 班终判，本班全量重算确认无漂移，只引 test 集
+value 字段，无 smoke 行）**：lora 5 档 3 种子均值 1M 0.9467 / 10M 0.9427 /
+30M 0.9415 / 100M 0.9469 / 650M 0.9476——全 5 档 ∈[0.941,0.948]，极差
+0.006；1M 首端 lora 0.9467 ≥ 10M 0.9427，无首端规模效应。full@3e-5
+均值 1M 0.9393 / 10M 0.8964 / 30M 0.9342 / 100M 0.9367 / 650M 0.9269
+（10M 为 0.9438/0.9145/0.8309 去重口径）。**对照 v0.6.4「m6A 全饱和
+0.94-0.997」：受控系 lora 侧 0.941-0.948 成立（与官方系 0.968-0.997
+合成 0.94-0.997 全谱段）；full 侧 10M 0.8964、650M 0.9269 低于 0.94
+下界，判为种子方差非规模效应（各档 full 3 种子极差 0.021-0.113，置信
+区间跨 0.94 线重叠）——v0.6.4 表述无需修订，「m6A 等价线不可辨识」
+结论维持；1M<0.90 通知线未触发（1M lora 0.9467、full 0.9393 两臂均
+>0.90 且不低于 10M 对应臂），不通知用户。**
+
+**范围外观测（不计入 ends 18 格，无动作）**：第 9 班后（15:43-15:52 CST
+= 07:43-07:52Z）新落地 9 行 ft_rnasc1m_modification_{frozen,lora,full}
+×3 seeds_family（frozen 0.670-0.681 / lora 0.956-0.966 / full
+0.961-0.981）——来源为 P1 fill 链（q_p1_fill_s0/s5 日志比对确认），
+非 ends 链产物；ends 口径不涉该批行，谱线判读不受影响。
+
+**异常（待人工处理，承第 9 班清单不变）**：① ledger 650M full_s17
+同微秒同值 done 行 ×3（去重后 0.9250 无害）；② frozen s29 双实例
+竞态（同值 0.9137 无害）；③ 10M full_s43 同微秒同值行 ×2（去重后
+0.8309，已含入 0.8964 口径）；④ ends 脚本 shell 层 RID 大写 bug +
+pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）。链路
+终态收口且谱线连续三班零漂移，若无新增补格需求，本链巡检可归档。
+
+**提交**：TRAINING_LOG.md（第 10 班巡检条目）
+
 ## 2026-09-27 00:00 (CST 17:32) · 队列状态 + AIDO/RiboSpan 吞吐评估
 
 - mRNABERT 修复后首格落地：ncRNA frozen s43 = **0.4988**（chance 0.077）→ tokenizer 修复有效。
