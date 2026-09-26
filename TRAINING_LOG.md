@@ -3080,3 +3080,14 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - P1 **72/111**；UTR-LM 34/36；mRNABERT 49/54；AIDO 0/24；RiboSpan 0/24。
 - **P2 架构总账：4/5 已入 E1**（UTR-LM / mRNABERT / AIDO.RNA-1.6B / RiboSpan）；仅 HydraRNA（重型独立 env）未做。
 - GitHub HEAD 605c363。
+
+## 2026-09-26 深夜（续2）· AIDO/RiboSpan 显存门标定 + 上卡
+
+- 现象：AIDO/RiboSpan worker 长期 `wait(no card)`（need 24GB，常规卡空闲常在 15-18GB）；
+  且一次 kill/relaunch 组合命令半途失败，留下 2 个孤儿 run + 死 worker。
+- 处置：按 `finetune_one --model [A]{IDO}` bracket 防自匹配精确回收孤儿；清锁重锁；
+  按实测把 need 降到 **frozen 14GB / lora 18GB**（1.6B fp32 权重 6.4GB + 激活）；
+  重启 3+3 shard。
+- 结果：AIDO/RiboSpan 各 4 格已上卡在跑（GPU0/GPU4 等）；无 GAVEUP/TIMEOUT。
+- 队列（约 17:15）：P1 **75/111**；UTR-LM 35/36；mRNABERT 51/54；AIDO 0/24（4 在跑）；
+  RiboSpan 0/24（4 在跑）；ledger **1347 行**。
