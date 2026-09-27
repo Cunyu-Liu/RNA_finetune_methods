@@ -84,7 +84,14 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
         from peft import LoraConfig, get_peft_model
         hf_style = hasattr(core, "config") and hasattr(core, "forward")
         rnasc_style = hasattr(core, "blocks")
-        if rnasc_style:
+        nb_style = hasattr(core, "transformer_blocks")  # NucleicBERT BERTEncoder
+        if nb_style:
+            # torch nn.MultiheadAttention: in_proj (packed QKV) + out_proj.
+            # LoRA target by suffix match: out_proj (qkv packed cannot be split
+            # by peft name matching) + ffn.0 for width. Use out_proj only +
+            # ffn.0 (mirrors backbone-update intent with peft-safe modules).
+            target = ["out_proj", "ffn.0"]  # peft matches by substring
+        elif rnasc_style:
             target = ["qkv", "out"]
         elif hf_style:
             # multimolecule RiNALMo/ERNIE expose query/key/value/dense (BERT-style)

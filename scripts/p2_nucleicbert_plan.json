@@ -1,7 +1,7 @@
 {
  "lockdir": "/tmp/nucleicbert_locks",
  "slots": 1,
- "timeout_s": 14400,
+ "timeout_s": 21600,
  "runs": [
   {
    "task": "noncoding-rna-family",
@@ -10,7 +10,7 @@
    "split": "random",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -19,7 +19,7 @@
    "split": "random",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -28,7 +28,7 @@
    "split": "random",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -37,7 +37,7 @@
    "split": "family",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -46,7 +46,7 @@
    "split": "family",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -55,7 +55,7 @@
    "split": "family",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -64,7 +64,7 @@
    "split": "random",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -73,7 +73,7 @@
    "split": "random",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -82,7 +82,7 @@
    "split": "random",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -91,7 +91,7 @@
    "split": "family",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -100,7 +100,7 @@
    "split": "family",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -109,7 +109,7 @@
    "split": "family",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "noncoding-rna-family",
@@ -117,8 +117,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 17,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -126,8 +127,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 29,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -135,8 +137,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 43,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -144,8 +147,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 17,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -153,8 +157,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 29,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -162,8 +167,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 43,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -172,7 +178,7 @@
    "split": "random",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -181,7 +187,7 @@
    "split": "random",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -190,7 +196,7 @@
    "split": "random",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -199,7 +205,7 @@
    "split": "family",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -208,7 +214,7 @@
    "split": "family",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -217,7 +223,7 @@
    "split": "family",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -226,7 +232,7 @@
    "split": "random",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -235,7 +241,7 @@
    "split": "random",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -244,7 +250,7 @@
    "split": "random",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -253,7 +259,7 @@
    "split": "family",
    "seed": 17,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -262,7 +268,7 @@
    "split": "family",
    "seed": 29,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -271,7 +277,7 @@
    "split": "family",
    "seed": 43,
    "need": 10,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "modification",
@@ -279,8 +285,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 17,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "modification",
@@ -288,8 +295,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 29,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "modification",
@@ -297,8 +305,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 43,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "modification",
@@ -306,8 +315,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 17,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "modification",
@@ -315,8 +325,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 29,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "modification",
@@ -324,71 +335,72 @@
    "strategy": "full",
    "split": "family",
    "seed": 43,
-   "need": 16,
-   "timeout_s": 14400
+   "need": 18,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
    "model": "NucleicBERT",
    "strategy": "frozen",
-   "split": "random",
-   "seed": 17,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "frozen",
-   "split": "random",
-   "seed": 29,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "frozen",
-   "split": "random",
-   "seed": 43,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "frozen",
-   "split": "family",
-   "seed": 17,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "frozen",
-   "split": "family",
-   "seed": 29,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "frozen",
-   "split": "family",
-   "seed": 43,
-   "need": 8,
-   "timeout_s": 14400
-  },
-  {
-   "task": "secondary-structure",
-   "model": "NucleicBERT",
-   "strategy": "lora",
    "split": "random",
    "seed": 17,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 21600
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -397,7 +409,7 @@
    "split": "random",
    "seed": 29,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -406,7 +418,7 @@
    "split": "random",
    "seed": 43,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -415,7 +427,7 @@
    "split": "family",
    "seed": 17,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -424,7 +436,7 @@
    "split": "family",
    "seed": 29,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -433,7 +445,7 @@
    "split": "family",
    "seed": 43,
    "need": 8,
-   "timeout_s": 14400
+   "timeout_s": 21600
   },
   {
    "task": "secondary-structure",
@@ -441,8 +453,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 17,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
@@ -450,8 +463,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 29,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
@@ -459,8 +473,9 @@
    "strategy": "full",
    "split": "random",
    "seed": 43,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
@@ -468,8 +483,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 17,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
@@ -477,8 +493,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 29,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   },
   {
    "task": "secondary-structure",
@@ -486,8 +503,9 @@
    "strategy": "full",
    "split": "family",
    "seed": 43,
-   "need": 12,
-   "timeout_s": 14400
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 16
   }
  ]
 }

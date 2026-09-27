@@ -5,6 +5,8 @@ import glob
 import os
 import sys
 
+import torch.nn as nn
+
 NB_CODE = "/mnt/cunyuliu/hf_home/nucleicbert-code"
 NB_CKPT_DIR = "/mnt/cunyuliu/hf_home/models--nucleicbert/snapshots/main"
 NB_TOKENIZER = os.path.join(NB_CODE, "nucleicbert/tokenizers/noncoding_seqs.json")
@@ -48,6 +50,32 @@ class _NucleicBertTok:
 class _EncoderOutput:
     def __init__(self, h):
         self.last_hidden_state = h
+
+
+class _NucleicBertPeftShim(nn.Module):
+    """Adapt BERTEncoder forward signature for peft PeftModel wrapping:
+    peft passes all kwargs (attention_mask etc.) to model.forward —
+    BERTEncoder.forward(input_ids, need_weights=...) rejects them.
+    Shim swallows extras. Placed between peft and encoder via model.m swap."""
+
+    def __init__(self, enc):
+        super().__init__()
+        self.enc = enc
+        # passthrough attrs peft may probe
+        for attr in ("transformer_blocks", "embedding", "config"):
+            if hasattr(enc, attr):
+                setattr(self, attr, getattr(enc, attr))
+
+    def forward(self, input_ids=None, attention_mask=None,
+                need_weights=False, **kw):
+        out = self.enc(input_ids, need_weights=need_weights)
+        return out
+
+    def __getattr__(self, name):
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            return getattr(self.enc, name)
 
 
 class _NucleicBertWrapper:

@@ -61,6 +61,10 @@ def make_head(granularity: str, d_model: int, n_classes: int,
 def _lora_targets(core) -> list[str]:
     """Target module names for LoRA-family adapters (HF BERT-style first)."""
     names = {n for n, _ in core.named_modules()}
+    if hasattr(core, "transformer_blocks"):
+        # NucleicBERT: torch nn.MultiheadAttention (in_proj packed + out_proj)
+        # -> peft-safe targets: out_proj + ffn.0
+        return ["out_proj", "ffn.0"]
     for cand in (["query", "key", "value", "dense"],
                  ["Wqkv", "attention.output.dense"],
                  ["qkv_proj", "out_proj"], ["q", "k", "v", "o"]):
@@ -96,10 +100,19 @@ def apply_strategy(model, strategy: str, lora_rank: int = 8,
     if strategy in ("lora", "dora"):
         from peft import LoraConfig, get_peft_model
         rnasc_style = hasattr(core, "blocks")
+        nb_style = hasattr(core, "transformer_blocks")
         if rnasc_style:
             target = ["qkv", "out"]
         else:
             target = _lora_targets(core)
+        if nb_style:
+            # peft passes attention_mask etc. to forward; BERTEncoder rejects
+            from ..models.nucleicbert_loader import _NucleicBertPeftShim
+            core = _NucleicBertPeftShim(core)
+            if hasattr(model, "m"):
+                model.m = core
+            else:
+                model = core
         cfg = LoraConfig(
             r=lora_rank, lora_alpha=lora_alpha, lora_dropout=0.0,
             target_modules=target, bias="none",
