@@ -1,0 +1,493 @@
+{
+ "lockdir": "/tmp/nucleicbert_locks",
+ "slots": 1,
+ "timeout_s": 14400,
+ "runs": [
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 17,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 29,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 43,
+   "need": 10,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "need": 16,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 17,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 29,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 43,
+   "need": 8,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "NucleicBERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "need": 12,
+   "timeout_s": 14400
+  }
+ ]
+}

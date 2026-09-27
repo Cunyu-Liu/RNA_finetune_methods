@@ -1,51 +1,11 @@
 #!/bin/bash
-# Big-model FULL-FT backfill (2026-09-28 user decision: 100M gate REMOVED).
-# Cells: RiNALMo-mega, RiNALMo-650M, RNA-Sc-650M, AIDO.RNA-1.6B, RiboSpan-1K-40
-#        × full @ tuned family LR × ncRNA random+family × 3 seeds = 60 runs.
-# Tuned LR (family rule): RiNALMo 1e-5, RNA-Sc 3e-5, AIDO/RiboSpan 3e-5 (no
-# family prior -> use conservative 3e-5 + bs 8).
-# Memory gates: mega ~14G, 650M ~14G, 1.6B full ~24G (bf16? full-FT 1.6B ~24GB
-# fp32 AdamW; use bs 4 if OOM).
 R=/mnt/cunyuliu/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
 export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
 export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_full_big.log
-echo "=== fullbig start $(date) ===" >> $LOG
-
-spec_lr () {
-  case "$1" in
-    RiNALMo-*) echo 1e-05 ;;
-    RNA-Sc-*)  echo 3e-05 ;;
-    *)         echo 3e-05 ;;
-  esac
-}
-spec_need () {
-  case "$1" in
-    RiNALMo-mega|RNA-Sc-650M|RiNALMo-650M) echo 16 ;;
-    *) echo 26 ;;
-  esac
-}
-spec_bs () {
-  case "$1" in
-    AIDO.RNA-1.6B|RiboSpan-1K-40) echo 4 ;;
-    *) echo 8 ;;
-  esac
-}
-
-run_cell () {
-  local model=$1 split=$2 seed=$3 dev=$4
-  local lr=$(spec_lr "$model") need=$(spec_need "$model") bs=$(spec_bs "$model")
-  if [ "$model" = "RiNALMo-mega" ]; then mod=rnafteval.finetune_one
-  elif [ "$model" = "RiNALMo-650M" ]; then mod=rnafteval.finetune_one
-  elif [ "$model" = "RNA-Sc-650M" ]; then mod=rnafteval.finetune_one
-  else mod=rnafteval.finetune_one; fi
-  $PY -m $mod --model "$model" --task noncoding-rna-family \
-      --strategy full --seed "$seed" --split "$split" --device "$dev" \
-      --lr "$lr" --batch-size "$bs" --epochs 10 >> $LOG 2>&1
-  echo "[fullbig] exit $? $model s$seed $split $(date +%H:%M)" >> $LOG
-}
+echo "=== fullbig-v2 stage1 start $(date) ===" >> $LOG
 
 pick_gpu () {
   local need=$1
@@ -53,8 +13,57 @@ pick_gpu () {
   awk -F", " -v n="$need" '{ if ($2+0 >= n*1024 && $1 < 6) print $1 }' | head -1
 }
 
+for model in AIDO.RNA-1.6B RiboSpan-1K-40; do
+  for lr in 1e-05 3e-05; do
+    att=0
+    while [ $att -lt 60 ]; do
+      dev=$(pick_gpu 26)
+      if [ -n "$dev" ]; then break; fi
+      sleep 600
+    done
+    $PY -m rnafteval.finetune_one --model "$model" --task noncoding-rna-family \
+        --strategy full --seed 101 --split random --device "$dev" \
+        --lr "$lr" --batch-size 4 --epochs 10 >> $LOG 2>&1
+    echo "[fullbig1] exit $? $model s101 lr$lr $(date +%H:%M)" >> $LOG
+  done
+done
+
+BESTFILE=/tmp/fullbig_grid_choice.txt
+$PY - <<'PYEOF' > $BESTFILE
+import json
+rows=[json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl")]
+best={}
+for r in rows:
+    if (r.get("seed")==101 and r.get("strategy")=="full" and r.get("status")=="done"
+       and r.get("task")=="noncoding-rna-family" and r.get("split")=="random"
+       and r.get("model") in ("AIDO.RNA-1.6B","RiboSpan-1K-40")
+       and r.get("value") is not None and r.get("lr") is not None):
+        m=r["model"]; lr=float(r["lr"]); v=r["value"]
+        if m not in best or v>best[m][1]:
+            best[m]=(lr,v)
+for m,(lr,v) in best.items():
+    print(m, lr)
+PYEOF
+LRAIDO=$(grep "AIDO" $BESTFILE | awk '{print $2}')
+LRRIBO=$(grep "RiboSpan" $BESTFILE | awk '{print $2}')
+LRAIDO=${LRAIDO:-3e-05}
+LRRIBO=${LRRIBO:-3e-05}
+echo "[fullbig] grid chose AIDO=$LRAIDO RiboSpan=$LRRIBO" >> $LOG
+
+spec_lr () {
+  case "$1" in
+    RiNALMo-mega) echo 1e-05 ;;
+    RiNALMo-650M) echo 1e-05 ;;
+    RNA-Sc-650M) echo 3e-05 ;;
+    AIDO.RNA-1.6B) echo $LRAIDO ;;
+    RiboSpan-1K-40) echo $LRRIBO ;;
+  esac
+}
+spec_bs () { case "$1" in AIDO*|RiboSpan*) echo 4;; *) echo 8;; esac; }
+spec_need () { case "$1" in AIDO*|RiboSpan*) echo 26;; *) echo 16;; esac; }
+
 for model in RiNALMo-mega RiNALMo-650M RNA-Sc-650M AIDO.RNA-1.6B RiboSpan-1K-40; do
-  need=$(spec_need "$model")
+  need=$(spec_need "$model"); bs=$(spec_bs "$model"); lr=$(spec_lr "$model")
   for split in random family; do
     for seed in 17 29 43; do
       att=0
@@ -64,7 +73,10 @@ for model in RiNALMo-mega RiNALMo-650M RNA-Sc-650M AIDO.RNA-1.6B RiboSpan-1K-40;
         echo "[fullbig] wait card $model s$seed $split $(date +%H:%M)" >> $LOG
         sleep 600
       done
-      run_cell "$model" "$split" "$seed" "$dev"
+      $PY -m rnafteval.finetune_one --model "$model" --task noncoding-rna-family \
+          --strategy full --seed "$seed" --split "$split" --device "$dev" \
+          --lr "$lr" --batch-size "$bs" --epochs 10 >> $LOG 2>&1
+      echo "[fullbig] exit $? $model s$seed $split lr=$lr $(date +%H:%M)" >> $LOG
     done
   done
 done
