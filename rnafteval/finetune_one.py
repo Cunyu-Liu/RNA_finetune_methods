@@ -55,6 +55,8 @@ def main() -> int:
     ap.add_argument("--batch-size", type=int, default=32)
     ap.add_argument("--max-len", type=int, default=512)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--random-init", action="store_true",
+                    help="random-init control arm (pretrained vs random gap)")
     ap.add_argument("--n-train", type=int, default=0,
                     help="E3 小数据档: 10/100/1000 (簇级子集); 0=全量")
     args = ap.parse_args()
@@ -75,7 +77,7 @@ def main() -> int:
     # _lr 后缀区分，避免 ledger claim 误 skip 不同 LR 变体
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
-    extra = ("_smoke" if args.smoke else "") + lr_tag + e3_tag
+    extra = ("_smoke" if args.smoke else "") + ("_ri" if args.random_init else "") + lr_tag + e3_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -145,7 +147,7 @@ def main() -> int:
 
     # --- model + strategy ---
     from .models import load_model
-    spec, tok, backbone = load_model(args.model, device)
+    spec, tok, backbone = load_model(args.model, device, random_init=args.random_init)
     d_model = spec.d_model
     with torch.no_grad():
         probe = encode_seqs(tok, [recs[0]["seq"]], device, args.max_len)

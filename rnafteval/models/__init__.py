@@ -443,8 +443,10 @@ def load_ribospan(spec, device):
         extra_files=())
 
 
-def load_model(name: str, device: str):
+def load_model(name: str, device: str, random_init: bool = False):
     spec = MODEL_SPECS[name]
+    if random_init:
+        return spec, *load_random_init(spec, device)
     if spec.custom_loader == "rnasc":
         return spec, *load_rnasc(name, device)
     if spec.custom_loader == "mrnabert":
@@ -454,3 +456,34 @@ def load_model(name: str, device: str):
     if spec.custom_loader == "ribospan":
         return spec, *load_ribospan(spec, device)
     return spec, *load_hf(spec, device)
+
+
+def load_random_init(spec: ModelSpec, device: str):
+    """Same architecture, freshly initialized weights (NucleicBERT-style
+    random-init control arm; seed set by the runner).
+
+    rnasc: RNAMLMEncoder from arch cfg only (no ckpt).
+    HF:    AutoModel with from_config() (weights never loaded).
+    """
+    import sys
+    import torch
+    if spec.custom_loader == "rnasc":
+        sys.path.insert(0, "/home/cunyuliu/rna-sc")
+        from rna_sc.model import RNAMLMEncoder
+        arch = {"RNA-Sc-1M": (256, 6, 8), "RNA-Sc-10M": (512, 8, 8),
+                "RNA-Sc-30M": (480, 12, 12), "RNA-Sc-100M": (768, 16, 12),
+                "RNA-Sc-650M": (768, 24, 16)}[spec.name]
+        d_model, n_layers, n_heads = arch
+        model = RNAMLMEncoder(d_model=d_model, n_layers=n_layers,
+                              n_heads=n_heads, d_ff=4 * d_model)
+        model.config = _rnasc_pseudo_config(
+            {"d_model": d_model, "n_layers": n_layers, "n_heads": n_heads})
+        _attach_device_property(model)
+        return _RnaScTok(), _RnaScWrapper(model).to(device)
+    from multimolecule import RnaTokenizer
+    from transformers import AutoConfig, AutoModel
+    path = hf_path(spec.repo)
+    cfg = AutoConfig.from_pretrained(path, trust_remote_code=True)
+    backbone = AutoModel.from_config(cfg, trust_remote_code=True)
+    tok = RnaTokenizer.from_pretrained(path)
+    return tok, backbone.to(device)
