@@ -18,7 +18,8 @@ LOCK = os.path.join(ROOT, "ledger.lock")
 
 FORMAL_SEEDS = (17, 29, 43)
 TUNING_SEED = 101
-STRATEGIES = ("frozen", "lora", "head-only", "full")
+STRATEGIES = ("frozen", "lora", "head-only", "full",
+             "dora", "ia3", "e6", "aux")
 SPLITS = ("random", "family")
 
 

@@ -161,6 +161,17 @@ def main() -> int:
     ck_path = os.path.join(out_dir, "head.pt")
     torch.save(head.state_dict(), ck_path)
     peak = torch.cuda.max_memory_allocated(device) / (1 << 20)
+    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+        json.dump({"run_id": rid, "model": args.model, "task": args.task,
+                   "strategy": args.strategy, "seed": args.seed,
+                   "split": args.split, "metric": "PEARSON_R", "value": r,
+                   "mse": mse, "n_train": len(train), "n_test": len(test),
+                   "epochs": args.epochs, "lr": args.lr,
+                   "backbone_trainable": n_trainable,
+                   "wall_sec": round(time.time() - t0, 1),
+                   "peak_mem_mb": round(peak, 1),
+                   "ckpt_bytes": os.path.getsize(ck_path),
+                   "smoke": args.smoke}, fh, indent=2)
     ledger.update(rid, "done",
                   metric="PEARSON_R", value=r, mse=mse,
                   n_train=len(train), n_test=len(test),
