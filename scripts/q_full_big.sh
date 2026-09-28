@@ -17,13 +17,13 @@ for model in AIDO.RNA-1.6B RiboSpan-1K-40; do
   for lr in 1e-05 3e-05; do
     att=0
     while [ $att -lt 60 ]; do
-      dev=$(pick_gpu 26)
+      dev=$(pick_gpu 28)
       if [ -n "$dev" ]; then break; fi
       sleep 600
     done
     $PY -m rnafteval.finetune_one --model "$model" --task noncoding-rna-family \
         --strategy full --seed 101 --split random --device "$dev" \
-        --lr "$lr" --batch-size 4 --epochs 10 >> $LOG 2>&1
+        --lr "$lr" --batch-size 2 --epochs 10 >> $LOG 2>&1
     echo "[fullbig1] exit $? $model s101 lr$lr $(date +%H:%M)" >> $LOG
   done
 done
