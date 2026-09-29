@@ -1,6 +1,6 @@
 {
- "lockdir": "/tmp/grid_fill_locks",
- "slots": 1,
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
  "timeout_s": 21600,
  "runs": [
   {

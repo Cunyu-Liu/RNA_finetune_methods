@@ -97,7 +97,8 @@ def grab(g, need):
         try: os.mkdir(lk)
         except FileExistsError: continue
         free, total = mem(g)
-        if total >= 20 * 2**30 and free >= need * 1e9: return lk
+        margin = need * (1.0 if s == 0 else 1.8) * 1e9   # slot1 给同卡第二个任务留 1.8x 余量（2026-09-29 共享卡锁）
+        if total >= 20 * 2**30 and free >= margin: return lk
         try: os.rmdir(lk)
         except Exception: pass
     return None

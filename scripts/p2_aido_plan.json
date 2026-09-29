@@ -1,5 +1,5 @@
 {
- "lockdir": "/tmp/p2_aido_locks",
+ "lockdir": "/tmp/rnaft_shared_locks",
  "slots": 2,
  "runs": [
   {

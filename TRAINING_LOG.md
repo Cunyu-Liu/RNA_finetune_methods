@@ -3182,3 +3182,23 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 ### 附带核查（B20 门禁）
 - AIDO/RiboSpan tokenizer 均为**单碱基 token**（[CLS]+A/C/G/U/T 逐碱基）→ per-base 任务（modification）合法，与 mRNABERT（3-mer）不同，无需剔除。
 - GPU6/7 的 nvidia-smi 40GB 视图是宿主物理卡；torch 权威视图仍是 MIG 4.8GiB，不可用。
+
+## 2026-09-29 22:00-22:30 · 全队列盘点复原 + 执行架构加固（共享卡锁）
+
+### 盘点（逐 plan 精确核对，发现 6 条队列假死 + 三处不实记录）
+- random-init 29/36（7 格未落，0929 报告「36/36」不实）；grid 20/76（单 worker 串行）；aido 6/24（shard0 死）；ribospan 12/24（5/6 shard 死）；e6 官方 650M 0/6（dirs 空）；collapse 6/10；fullbig 正式 18/60（AIDO/RiboSpan 0；bs4+26G 门竞卡反复 OOM）。
+- 根因：各队列独立卡锁目录 → 多队列同卡叠加 → OOM 竞卡反复打掉大格。
+
+### 修复（本提交）
+1. 新增 scripts/rnaft_card.py：跨队列共享卡锁（/tmp/rnaft_shared_locks；双 slot；slot1 需 1.8× need 余量；抢锁后复核；MIG 过滤）；
+2. q_fill.py grab() 同步加 margin 规则；三 plan lockdir 共享 + slots=2；
+3. 新队列：q_ri_fill.sh（7 格）/ q_collapse_fill.sh（4 格）/ q_e6_official4.sh（650M 6 格 + mega lora@3e-4 协议修正 3 格）/ q_full_big_v4.sh（AIDO/RiboSpan 4 网格 + 12 正式，bs2+22G+3 轮重试）；
+4. 旧 11 worker kill（孤儿子进程保留自然落账）；重派 20 worker（grid 4 shard / ribospan 6 / aido 6 / 新队列 4）。
+
+### 实测验证（22:20）
+- 共享卡锁 4 个在用（GPU2 双 slot / GPU4 / GPU5）；6 个科学格并发在跑（RNA-FM full 孤儿 / RiboSpan frozen / SpliceBERT SSP full / RiNALMo-650M full / e6 650M full + lora）；
+- 新 worker 行为正常：skip(done) 正确、无卡轮询、抢锁失败 20s 重试。
+
+### 协议修正（登记在案，待导师补签）
+- e6 官方臂 mega lora 原跑 1e-5（与 micro/受控系 lora@3e-4 不一致）→ 补 3 格  另存；
+- 大格降 bs：e6 650M full 16→4；fullbig 1.6B 4→2（B22 标注纪律）。
