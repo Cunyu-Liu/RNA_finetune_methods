@@ -75,7 +75,7 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -86,7 +86,7 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -97,7 +97,7 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -108,7 +108,7 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -119,7 +119,7 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -130,7 +130,7 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -141,7 +141,7 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -152,7 +152,7 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -163,7 +163,7 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -174,7 +174,7 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -185,7 +185,7 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -196,7 +196,7 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 10,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -207,7 +207,7 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -218,7 +218,7 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -229,7 +229,7 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -240,7 +240,7 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -251,7 +251,7 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   },
@@ -262,7 +262,7 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 12,
+   "need": 18,
    "bs": 8,
    "max_len": 512
   }
