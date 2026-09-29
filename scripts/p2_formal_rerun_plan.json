@@ -1,0 +1,619 @@
+{
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "timeout_s": 21600,
+ "runs": [
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RNA-FM",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 43
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "1e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-650M",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 16,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "bs": 8,
+   "seed": 43
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "mrl",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-mega",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 14,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "modification",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "random",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 17
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 29
+  },
+  {
+   "task": "secondary-structure",
+   "model": "RiNALMo-micro",
+   "strategy": "full",
+   "split": "family",
+   "lr": "3e-05",
+   "need": 10,
+   "timeout_s": 21600,
+   "seed": 43
+  }
+ ]
+}
