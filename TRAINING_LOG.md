@@ -3200,5 +3200,5 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - 新 worker 行为正常：skip(done) 正确、无卡轮询、抢锁失败 20s 重试。
 
 ### 协议修正（登记在案，待导师补签）
-- e6 官方臂 mega lora 原跑 1e-5（与 micro/受控系 lora@3e-4 不一致）→ 补 3 格  另存；
+- e6 官方臂 mega lora 原跑 1e-5（与 micro/受控系 lora@3e-4 不一致）→ 补 3 格 `_lr3e-04` 另存；
 - 大格降 bs：e6 650M full 16→4；fullbig 1.6B 4→2（B22 标注纪律）。
