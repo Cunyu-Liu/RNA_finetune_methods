@@ -3202,3 +3202,15 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 ### 协议修正（登记在案，待导师补签）
 - e6 官方臂 mega lora 原跑 1e-5（与 micro/受控系 lora@3e-4 不一致）→ 补 3 格 `_lr3e-04` 另存；
 - 大格降 bs：e6 650M full 16→4；fullbig 1.6B 4→2（B22 标注纪律）。
+
+## 2026-09-29 22:26 · E6-v3 补位队列 + HydraRNA 攻坚记录（外部阻塞，如实登记）
+
+### E6-v3 补位
+- 18 格计划中最后 1 格（RiNALMo-micro lora s43 cross-task）→ 新增 q_e6ret_fill.sh（共享卡锁 + 3 轮重试 + 真 CUDA 断言），已启动等卡。
+
+### HydraRNA（唯一未接入架构）攻坚结果
+- 代码 OK：codeload tarball（17MB）→ /mnt/cunyuliu/hf_home/hydrarna-code（含定制 fairseq/examples/dict）。
+- 权重 BLOCKED（外网封锁）：官方仅 Google Drive（weights/download_url.txt 指向 drive 文件夹）；drive.google.com 从服务器与本地 Mac 双端 curl 均超时（gdown 亦失败）；替代源穷举 HF/hf-mirror/Zenodo/ModelScope/GitHub releases 全部无。
+- env 可行性已判：PyPI 对 mamba-ssm==2.2.2 / causal-conv1d 仅 sdist（wheel 下架，实测）→ 需源码编译；路线 = conda py3.9 + nvidia::cuda-toolkit=11.8 + torch 2.3.1+cu118 + mamba-ssm 编译 + flash-attn + editable fairseq。
+- 解封路径：a) 向作者索取；b) 用户从可访问 Drive 的环境提供 .pt（本地中转 scp，NucleicBERT 先例）；c) 第三方镜像。
+- 边界：SSM 观察臂（B11，不入等价线）→ 不阻塞 preprint v1.0。
