@@ -3214,3 +3214,26 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - env 可行性已判：PyPI 对 mamba-ssm==2.2.2 / causal-conv1d 仅 sdist（wheel 下架，实测）→ 需源码编译；路线 = conda py3.9 + nvidia::cuda-toolkit=11.8 + torch 2.3.1+cu118 + mamba-ssm 编译 + flash-attn + editable fairseq。
 - 解封路径：a) 向作者索取；b) 用户从可访问 Drive 的环境提供 .pt（本地中转 scp，NucleicBERT 先例）；c) 第三方镜像。
 - 边界：SSM 观察臂（B11，不入等价线）→ 不阻塞 preprint v1.0。
+
+## 2026-09-29 22:45-22:55 · 新臂分析链（6 导出器）+ 网格口径收口队列（60 runs）
+
+### 1. 新臂分析链落地（此前 5 个新臂只有人工判读，无自动导出——P4 前置）
+- export_randinit.py → status/randinit_table.{md,csv}（pretrained vs random-init gap；[PENDING] 标记未齐格）
+- export_e6v2.py → status/e6v2_table.md（起点差分 Δ(m6A)−Δ(ncRNA)）
+- export_e6v3.py → status/e6v3_table.md（probe-style retention，诚实口径写死）
+- export_collapse.py → status/collapse_table.md（ep1/init 比 + collapse-in-ep1 判定）
+- export_e6_official.py → status/e6_official_table.md（micro/mega/650M 按 lr 分组，不混用历史 1e-5 与对照 3e-4）
+- export_grid_audit.py → status/grid_audit.md（**臂感知**：tuned 臂  后缀 / default 臂 3e-4 / E3 变体  三者分离）
+
+### 2. 网格审计结果（三遍核对后修正口径）
+- 首版审计把 default 臂（A8 对照，lr=3e-4）与 tuned 臂混在一起 → 误报 5 条 RERUN；修正为臂分离后：
+  **RERUN-NEEDED 3 格**（tuned 臂 LR ≠ 网格最优）+ **TUNED-MISSING 7 格**（formal 完全无 tuned 臂—
+  RNA-FM ncRNA/mod（只有 3e-4 default 行）、RiNALMo-650M mod/mrl/SSP（formal 零 full 行）、mega mrl/SSP）
+  + PENDING 28（网格未齐，等齐后再判）。
+- 教训：**先审臂口径再审数字**（与 0927「先审口径再审数字」同一教训的第二次实例，已固化进脚本 docstring）。
+
+### 3. formal 重跑队列（P1.4 收口，60 runs）
+- 生成脚本内联（程序化、非手写，防 typo）：严格条件 = 网格两档全落 + best LR 与现有 tuned 臂不一致/缺位。
+- ：10 格 × 2 切分 × 3 种子 = 60 runs（设置从网格 plan 单元继承）。
+- 4 shards（q_fill）已派发，共享卡锁；needs 8-16G；随卡空即落。
+- 说明：其余 28 个 PENDING 格不入本队列——**网格两档落齐后由同一生成脚本重跑生成增量**（避免在未验证 LR 上跑 formal）。
