@@ -31,7 +31,10 @@ echo "=== ri_fill start $(date) ===" >> $LOG
 for entry in "RiNALMo-micro rinalmomicro" "RNA-Sc-10M rnasc10m" "RNA-Sc-30M rnasc30m"; do
   set -- $entry; M=$1; MK=$2
   for strat in lora full; do
-    if [ "$strat" = "full" ]; then need=10; else need=8; fi
+    case "$M" in
+      RiNALMo-micro) if [ "$strat" = "full" ]; then need=13; else need=12; fi ;;
+      *)             need=6 ;;
+    esac
     for split in random family; do
       for seed in 17 29 43; do
         is_done "$MK" "$strat" "$seed" "$split" && continue

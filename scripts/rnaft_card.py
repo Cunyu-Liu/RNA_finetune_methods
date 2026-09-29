@@ -43,7 +43,7 @@ def main():
                 free2, total2 = torch.cuda.mem_get_info(i)
             except Exception:
                 free2, total2 = 0, 0
-            margin = need * (1.0 if s == 0 else 1.8) * 1e9
+            margin = need * (1.0 if s == 0 else 1.5) * 1e9
             if total2 >= 20 * 2 ** 30 and free2 >= margin:
                 print("%d %d" % (i, s))
                 return

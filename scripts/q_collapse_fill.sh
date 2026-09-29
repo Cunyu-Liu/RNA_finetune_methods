@@ -31,7 +31,11 @@ for entry in "RiNALMo-micro rinalmomicro" "ERNIE-RNA ernierna"; do
   set -- $entry; M=$1; MK=$2
   for strat in lora full; do
     is_done "$MK" "$strat" && continue
-    if [ "$strat" = "full" ]; then need=12; else need=8; fi
+    if [ "$M" = "RiNALMo-micro" ]; then
+      if [ "$strat" = "full" ]; then need=13; else need=12; fi
+    else
+      if [ "$strat" = "full" ]; then need=8; else need=7; fi
+    fi
     ok=0
     for att in $(seq 1 40); do
       GS=$($CARD pick $need)
