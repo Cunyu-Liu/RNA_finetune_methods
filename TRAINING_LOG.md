@@ -3302,4 +3302,32 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - ledger **1822 行**（done 1683 / running 1 / pending 138）
 - formal_rerun **25/60**（RNA-FM 全落 + 650M 侧推进中）
 - random-init 36/36 ✅；E6-v3 18/18 ✅；collapse 10/10 ✅；HydraRNA 30/54（在飞）
-- 22 workers 在岗；GPU 0-4 全 100% util（我方 + 共享项目），GPU5 满载（外部 31.8G）
+- 22 workers 在岗；GPU 0-4 全 100% util（我方 + 共享项目），GPU5 满载（外部 31.8G）## 2026-10-01 02:10 · 监控轮 2（僵尸排查 + HydraRNA 54/54 收口 + 小格填谷）
+
+### 1. 僵尸排查结论（用户指令「再检查一遍僵尸进程」）
+- **进程级**：无僵尸——所有 wait 队列均活；q_hydrarna/ri_fill/collapse_fill/e6ret_fill 正常 DONE 退出。
+- **锁级**：GPU4 双锁为活锁（650M SSP full + AIDO lora 在跑）；昨日僵尸锁已被自愈逻辑覆盖。
+- **关键发现（显存视图差异）**：nvidia-smi 显示 GPU1 27G 空闲，但 **torch 视角仅 4.3G**（total 42.4G
+  与共享集群其他用户动态占用）——pick 用 torch 真值判定，此前 wait 均为**正确行为**（防过度提交 OOM）。
+  监控显存时以 `torch.cuda.mem_get_info` 为权威口径。
+
+### 2. HydraRNA 观察臂 54/54 全收口（0 缺失）
+| task | random (3 seeds mean) | family (3 seeds mean) |
+|---|---|---|
+| ncRNA | 0.690 | **0.115（崩溃带）** |
+| m6A | 0.903 | 0.948 |
+| SSP | 0.179 | 0.193 |
+- **科学判读**：C4 崩溃带第 14 架构复现（SSM+MHA 不例外）+ per-base 免疫一致 + frozen-SSP 不受切分影响。
+- 早期 6 格 GAVEUP 是 loader 修复前的旧失败，重跑轮次全部补齐。
+
+### 3. 小格旁路填谷（q_fill_small.py，本根因修复）
+- 问题：q_fill 严格按 plan 序处理——NB(23G)/650M(24G) 大格阻塞头部时，**36 个 need≤12G 小格**
+  （RNA-Sc mod/mrl/SSP、mega mod/mrl、SpliceBERT/RNA-FM SSP）无法利用 14-16G 空闲卡。
+- 修复：`q_fill_small.py`（need≤12G 过滤 + is_busy/done-skip 双保险防双跑 + 共享卡锁）——
+  grid 3 shard + rerun 2 shard 已派发；**启动 2 分钟内 7 卡槽全满、5 个新任务并发**
+  （mega mod ×2、Sc-1M mrl、SpliceBERT SSP、RNA-FM SSP）。
+- 总 worker：22（主）+ 6（small）= 28。
+
+### 4. 进度快照（02:10）
+- ledger done 数持续上升；formal_rerun 31/60 → 小格填谷推进中；grid missing 24（其中 14 小格在跑）
+- e6_official4：650M lora s29 重试中（竞卡 exit 1 循环——大卡窗口等待）
