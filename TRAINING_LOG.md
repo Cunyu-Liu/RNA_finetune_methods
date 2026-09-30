@@ -3237,3 +3237,46 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - `scripts/p2_formal_rerun_plan.json`：10 格 × 2 切分 × 3 种子 = 60 runs（bs/need/max_len 从网格 plan 单元继承）。
 - 4 shards（q_fill）已派发，共享卡锁；needs 8-16G；随卡空即落。
 - 说明：其余 28 个 PENDING 格不入本队列——**网格两档落齐后用同一生成脚本增量生成**（避免在未验证 LR 上跑 formal）。
+
+## 2026-09-30 · HydraRNA 全链路接入（P2.8 完成：权重→env→loader→队列）
+
+### 1. 权重（用户提供 zip，本地中转）
+- models-20260930T044000Z-1-001.zip（894MB）→ 3 个官方 .pt：HydraRNA_model.pt（336MB, md5 2a805ae7...）、
+  V2（336MB, 63664eb9...）、SS（337MB, c168ac98...）——scp 中转至
+  /mnt/cunyuliu/hf_home/models--hydrarna/snapshots/main/，md5 三者全部一致。
+- 至此 16/16 正式架构全部有权重（HydraRNA 为最后一个阻塞架构）。
+
+### 2. env（hydrarna，独立 conda）
+- conda py3.9.12 + nvidia/label/cuda-11.8.0 cuda-toolkit（免 root）+ torch 2.3.1+cu118
+  + mamba-ssm 2.2.2 源码编译（TORCH_CUDA_ARCH_LIST=8.0）+ causal-conv1d 1.4.0 + flash-attn
+  2.6.3 官方 wheel（cu118torch2.3 cxx11abiFALSE）+ fused_dense_lib（csrc 源装）+ fairseq
+  定制 fork editable（--no-deps）+ omegaconf 2.0.6（pip 元数据语法过老，手动解压 wheel 安装）
+  + hydra-core 1.0.7（同法）+ antlr4 4.8 + scikit-learn。
+- 教训 3 条：① omegaconf/hydra 老版 wheel 的 METADATA 用旧语法（PyYAML (>=5.1.*)），新版 pip
+  拒装 → 手动 unzip 进 site-packages；② worker 子进程必须剥 PYTHONPATH（主流水线 pypath 的旧
+  triton 与 hydrarna env 冲突，undefined symbol PyThreadState_GetUnchecked）；③ fairseq 定制
+  fork 的 setup.py 声明 omegaconf<2.1 但 dataclass 代码实际需要 2.0.x 的 II/MISSING——用
+  --no-deps 安装再手动补依赖。
+
+### 3. 官方模式冒烟（hydrarna env 内）
+- load_model_ensemble + dict 19 类 + encoder.extract_features：84.2M 参数（官方 ~84M 一致），
+  fp16（flash-attn 强制），forward (B,T,1024) 有限值——三次冒烟全过。
+
+### 4. vendored loader（rnafteval/models/hydrarna_loader.py）
+- 架构：llr_env 主进程 ↔ hydrarna env 子进程 RPC（stdin/stdout JSON lines + base64 特征）。
+  原因：fairseq fork 锁死 torch 2.3.1 与主流水线 torch≥2.6 不可同进程共存。
+- _HydraTok：字符级 U→T + <s>/</s>（官方 encode_line 等价复刻，dict 19 类）。
+- B20 门禁：IUPAC 全字符表 [UNK]=0（ACGTN RYKMWS DHVB 全在 dict）。
+- B11 LoRA 目标（仅 MHA 层）：backbone.layers.{5,11}.mixer 的 q/kv/out_proj（6 tensors），
+  SSM 层不挂（纪律）。
+- 修复 3 处：lora_targets 属性路径（ENC.backbone.layers 非 ENC.layers）；fairseq task setup
+  的 dict 打印污染 stdout（redirect_stdout 吞掉 + robust ready-line 解析）；forward 输出
+  .to(target_device)（RPC 结果 CPU → 调用方卡）+ no_grad/detach。
+- 端到端 RPC_SMOKE_OK：params_m=84.18 / lora_targets=6 / unk=0 / LHS=(3,53,1024) finite。
+
+### 5. 观察臂队列（scripts/q_hydrarna.sh，54 runs）
+- {ncRNA, m6A, SSP} × frozen × {random, family} × 3 种子（UTR-LM 同款协议）；
+  共享卡锁 + done-skip（ledger run_id）+ 3 轮重试 + 真 CUDA 断言。
+- 首格 ncRNA s17 random 已开训（epoch 0 loss 2.1553——训练循环经 RPC 正常反传/收敛中）。
+- 口径诚实：本臂为 B11 SSM 架构观察臂（不入等价线）；lora/full 训练策略需进程内 env 融合
+  （梯度回传跨进程），列为后续工程项，不阻塞 frozen 观察数据。

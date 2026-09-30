@@ -45,6 +45,7 @@ MODEL_SPECS: dict[str, ModelSpec] = {
     "AIDO.RNA-1.6B": ModelSpec("AIDO.RNA-1.6B", "genbio-ai/GB.RNA-1.6B", 2048, 1600.0, "tierA", strategies=("frozen", "lora"), custom_loader="gbrna", notes="P2 integrated 2026-09-26; RNABert/MegatronBERT, HF4 to 5 patched, no pip"),
     "RiboSpan-1K-40": ModelSpec("RiboSpan-1K-40", "SII-GAIR-NLP/RIBOSPAN-1K-40", 2048, 1600.0, "tierB", strategies=("frozen", "lora"), custom_loader="ribospan", notes="P2 integrated 2026-09-26; long-context, vendored GAIR-NLP/RIBOSPAN-FM code"),
     "NucleicBERT": ModelSpec("NucleicBERT", "", 1024, 404.0, "tierB", custom_loader="nucleicbert", notes="P2.7 2026-09-28; Zenodo 16989562 + vendored KIT-MBS code; char-level U->T vocab25"),
+    "HydraRNA": ModelSpec("HydraRNA", "", 1024, 84.0, "tierB", strategies=("frozen",), custom_loader="hydrarna", notes="P2.8 2026-09-30; GDrive weights via local relay; fairseq fork env hydrarna; SSM observation arm B11"),
     "SpliceBERT": ModelSpec("SpliceBERT", "multimolecule/splicebert", 512,
                             19.2, "tierB"),
     "SpliceBERT-human510": ModelSpec(
@@ -444,7 +445,8 @@ def load_ribospan(spec, device):
         extra_files=())
 
 
-from .nucleicbert_loader import load_nucleicbert  # noqa: E402
+from .nucleicbert_loader import load_nucleicbert
+from .hydrarna_loader import load_hydrarna  # noqa: E402
 
 
 def load_model(name: str, device: str, random_init: bool = False):
@@ -461,6 +463,8 @@ def load_model(name: str, device: str, random_init: bool = False):
         return spec, *load_ribospan(spec, device)
     if spec.custom_loader == "nucleicbert":
         return spec, *load_nucleicbert(spec, device)
+    if spec.custom_loader == "hydrarna":
+        return spec, *load_hydrarna(spec, device)
     return spec, *load_hf(spec, device)
 
 
