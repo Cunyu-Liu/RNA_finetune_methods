@@ -3280,3 +3280,26 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - 首格 ncRNA s17 random 已开训（epoch 0 loss 2.1553——训练循环经 RPC 正常反传/收敛中）。
 - 口径诚实：本臂为 B11 SSM 架构观察臂（不入等价线）；lora/full 训练策略需进程内 env 融合
   （梯度回传跨进程），列为后续工程项，不阻塞 frozen 观察数据。
+## 2026-10-01 00:30 · 监控轮（HydraRNA 首批数据 + 僵尸锁修复 + 全队列进度）
+
+### 1. HydraRNA 观察臂首批科学数据（30/54 落地）
+- **ncRNA frozen**（3 种子齐）：random **0.727/0.717/0.627**（均值 0.690——SSM 架构 frozen 表征中等）；
+  family **0.088/0.064/0.192** → **落入 0.06-0.19 崩溃带**（C4 家族崩溃带第 14 个架构复现——SSM 混合架构不例外；
+  s43 0.19 略高于带心但仍在带内）
+- **m6A frozen**（3 种子齐）：random 0.906/0.897/0.907、family 0.948/0.946/0.950——per-base 任务不崩
+  （与 C4「per-base 免疫」判据一致）
+- **SSP frozen**：random 0.178/0.175（前 2 种子，与 RiNALMo SSP frozen 同量级）
+- 队列继续（SSP s43 在飞 → 然后 6 格 family 补齐 → 54/54 收口）
+
+### 2. 僵尸锁事故与修复（B21 工程纪律再加固）
+- 现象：GPU5 32GB 空闲 9 小时无队列启动——slot_0 锁是 15:24 被杀的旧 q_hydrarna 进程残留（mkdir 原子锁
+  无 owner 清理）；slot_1 被间隙占用。
+- 修复：`rnaft_card.py` 加**僵尸锁自愈**（>1h 且空目录 → pick 时回收重抢）；手动清理当前残留。
+- commit `4abb8f1`。
+- 后验：GPU5 随即被外部 31.8GB 大进程占满 → fullbig wait 为正确行为（真无空间，非锁问题）。
+
+### 3. 全队列进度（00:30 实测）
+- ledger **1822 行**（done 1683 / running 1 / pending 138）
+- formal_rerun **25/60**（RNA-FM 全落 + 650M 侧推进中）
+- random-init 36/36 ✅；E6-v3 18/18 ✅；collapse 10/10 ✅；HydraRNA 30/54（在飞）
+- 22 workers 在岗；GPU 0-4 全 100% util（我方 + 共享项目），GPU5 满载（外部 31.8G）
