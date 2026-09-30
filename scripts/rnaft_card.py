@@ -32,12 +32,26 @@ def main():
         if total < 20 * 2 ** 30 or free < need * 1e9:
             continue
         cands.append((free, i))
+    import time
+    now = time.time()
     for free, i in sorted(cands, reverse=True):
         for s in (0, 1):
             lk = "%s/gpu_%d_slot_%d" % (LOCKDIR, i, s)
             try:
                 os.mkdir(lk)
             except FileExistsError:
+                # 僵尸锁自愈（0930 教训：进程被杀后锁残留 9 小时空占 GPU5 slot0）
+                try:
+                    age = now - os.path.getmtime(lk)
+                except OSError:
+                    continue
+                if age > 3600:   # >1h 且目录为空 = 视为僵尸锁，回收
+                    if not os.listdir(lk):
+                        try:
+                            os.rmdir(lk)
+                        except OSError:
+                            continue
+                        continue  # rmdir 后本轮跳过，下轮 pick 会重新抢
                 continue
             try:
                 free2, total2 = torch.cuda.mem_get_info(i)
