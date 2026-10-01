@@ -10,8 +10,7 @@
    "seed": 17,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -21,8 +20,7 @@
    "seed": 29,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -32,8 +30,7 @@
    "seed": 43,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -43,8 +40,7 @@
    "seed": 17,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -54,8 +50,7 @@
    "seed": 29,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -65,8 +60,7 @@
    "seed": 43,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -75,9 +69,8 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -86,9 +79,8 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -97,9 +89,8 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -108,9 +99,8 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -119,9 +109,8 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "noncoding-rna-family",
@@ -130,9 +119,8 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 30,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -142,8 +130,7 @@
    "seed": 17,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -153,8 +140,7 @@
    "seed": 29,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -164,8 +150,7 @@
    "seed": 43,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -175,8 +160,7 @@
    "seed": 17,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -186,8 +170,7 @@
    "seed": 29,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -197,8 +180,7 @@
    "seed": 43,
    "lr": null,
    "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "bs": 8
   },
   {
    "task": "modification",
@@ -207,9 +189,8 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -218,9 +199,8 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -229,9 +209,8 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -240,9 +219,8 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -251,9 +229,8 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   },
   {
    "task": "modification",
@@ -262,9 +239,8 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 18,
-   "bs": 8,
-   "max_len": 512
+   "need": 20,
+   "bs": 8
   }
  ],
  "timeout_s": 32400
