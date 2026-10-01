@@ -3354,4 +3354,29 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
   UTR-LM grid、Sc-100M grid、AIDO lora ×3、e6 650M lora 在飞
 - worker 总数 23（含 grid s2 等 34G 大卡窗口 + fullbig 等 22G 窗口）
 
-### 5. HydraRNA（上轮 54/54 收口后）无可补——观察臂完成待 P4 并入
+### 5. HydraRNA（上轮 54/54 收口后）无可补——观察臂完成待 P4 并入## 2026-10-01 16:50 · 监控轮 4（rerun2 近收口 + fullbig v5 根因修复 + ERNIE 挤压自愈验证）
+
+### 1. 进度（ledger 2008 行，done 1897）
+- **rerun2: 67/72**（缺 5 格全是 UTR-LM 小格，在飞：SSP s17/s43、mrl s29、mod s43）
+- **grid_fill: 72/76**（缺 4 格：650M ncRNA 34G 大格 + NB 3 格 20-23G——大卡窗口队列）
+- aido 6/24 + ribospan 12/24（lora/frozen mod 侧在飞，多进程并发）
+- e6 650M: 2/6（lora s43 已落 + full s17 竞卡重试中）
+- NucleicBERT grid mod 格已开跑（23:23 进程可见）
+
+### 2. ERNIE SSP 5 进程并发挤压（v5 发现的并发竞争模式）
+- 现象：rerun2 4 shard + small worker 同窗口抢到不同卡的锁后同时起 5 个 ERNIE SSP（各 2-3G）
+  + 共享用户进程 → GPU3 OOM exit 1 × 3
+- **自愈验证通过**：worker 重试机制 12 分钟内全部落地（ERNIE SSP 12 格 lr3e-05 全 done，
+  random 均值升至 0.29、family 0.30——**3e-5 优于 1e-5 口径确认，审计预测 0.3293 验证**）
+- 无需代码改动（锁按卡不按格是设计选择——多 worker 并行 + 失败重试的稳态正确）
+
+### 3. fullbig v5 根因修复（commit 93f9096）
+- **根因确诊**：AIDO 1.6B full bs2 实跑峰值 **30.3G**（AdamW fp32 状态 1.6B×12bytes≈19G +
+  激活/梯度）——v4 的 bs2+22G 门数学上必然 OOM（8 次失败全同因）
+- v5：**bs1 + 34G 门**（40G 卡近独占窗口）+ 网格补缺先行（AIDO 两档 + RiboSpan lr1e-05）
+  + RiboSpan 网格已有 0.485@3e-5（唯一落地的网格点）
+- v5 已启动（16:45），当前 wait 34G 窗口（正确——卡上有 15-25G 空闲但被共享用户分占）
+
+### 4. 本轮系统观
+- SSH 频繁 reset（网络波动）→ 启动队列改用「setsid nohup + 独立连接验证」双步法防假启动
+- 19 workers 在岗；7 个训练进程并发（UTR-LM SSP ×2、e6 650M、AIDO lora ×5、NB mod）
