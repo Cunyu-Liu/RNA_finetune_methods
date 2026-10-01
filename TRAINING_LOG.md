@@ -3437,4 +3437,31 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 ### 5. 教训记录
 - 1.6B 模型 lora 的激活峰值对 batch 内最长序列敏感（ncRNA 家族数据有长尾序列），
   卡上已有 17×418M 外部小进程时 30G 门仍不保险 → bs4 是 1.6B lora 在共享卡上的稳态解
-- 共享卡上「nvidia-smi 空闲」≠「torch 空闲」，抢卡逻辑必须用 torch 真值（已实现）
+- 共享卡上「nvidia-smi 空闲」≠「torch 空闲」，抢卡逻辑必须用 torch 真值（已实现）## 2026-10-02 01:10 · 监控轮 7（共享集群深夜高峰 + 僵尸锁清理 + bs4 生效验证）
+
+### 1. 系统态（01:00 巡检快照）
+- GPU 0-5 全部 100% util（我们 2 进程 + 共享用户大量任务）；ledger 2022（done 1922）
+- 活跃训练：e6 650M full s29（3.4h，epoch 5 loss 0.1275）+ AIDO mod frozen s17 family（41min，epoch 2 loss 0.0218）
+- cron 巡检/导出全部在岗（status_20261002_0100.md 每 30min 一份）
+
+### 2. 本轮处理的三件事
+- **僵尸锁手动清理**：GPU3/GPU5 的 4 把老锁（17:49/17:52/21:38 起 7h+ 空目录）——
+  发现 rnaft_card.py 的自愈逻辑实际生效但轮次内 continue 导致单轮回收不全，
+  手动 python 直删后 GPU5 slot 立即释放（后续被 worker 抢到，lora bs4 上卡）
+- **1.6B lora bs4 生效验证**：GPU5 上 lora s17 family bs4 只占 **11.03G**
+  （对比 bs8 的 31.85G——激活峰值砍半以上），证明 need=22 门有余量
+- **OOM 归因**：bs4 任务在 GPU5 加载 75s 后被共享用户新进程（10.6G+6.05G）挤压 OOM——
+  深夜高峰期外部动态竞争，非我方 bug；worker 重试自愈机制正确运转
+
+### 3. 剩余缺口（在自动队列中，等大卡窗口）
+- grid: 1 格（650M ncRNA 34G）
+- aido: 16 格（lora bs4 22G ×6 + mod frozen 18G ×7 + mod lora 20G ×4）
+- ribo: mod lora 6 格（bs4 22G）
+- e6 650M: lora s17 + full s29(在跑) / s43
+- fullbig v5: AIDO/RiboSpan 网格 4 格（34G 独占）
+
+### 4. 判读（连续 3 轮稳定的模式）
+- RiNALMo-650M e6 forgetting：lora dNLL +0.044/+0.017 vs full +0.098——
+  **LoRA 的灾难性遗忘显著低于 full-FT**（E6 核心论点的 650M 侧初步证据）
+- RiboSpan mod frozen 0.927-0.945 / AIDO mod frozen 0.944 / AIDO mod lora 0.996——
+  1.6B 模型 per-base 稳定；ncRNA family 崩溃带观察待 aido/ribo ncRNA 格落齐后判读
