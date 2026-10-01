@@ -3379,4 +3379,29 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 4. 本轮系统观
 - SSH 频繁 reset（网络波动）→ 启动队列改用「setsid nohup + 独立连接验证」双步法防假启动
-- 19 workers 在岗；7 个训练进程并发（UTR-LM SSP ×2、e6 650M、AIDO lora ×5、NB mod）
+- 19 workers 在岗；7 个训练进程并发（UTR-LM SSP ×2、e6 650M、AIDO lora ×5、NB mod）## 2026-10-01 18:00 · 监控轮 5（rerun2 72/72 收口 + aido/ribo 双 bug 修复）
+
+### 1. rerun2: 72/72 全收口（P1.4 第二轮闭环）
+- 12 格 × 2 切分 × 3 种子全部落地（UTR-LM mod/mrl/SS、ERNIE/RNA-FM/SpliceBERT SSP、
+  Sc-100M/30M mrl、mega/micro mod/SSP 全换网格最优 LR 口径）
+- 加上第一轮 60/60 —— **tuned-LR 口径收口累计 132 runs 全落地**
+
+### 2. 双 bug 修复（commit 8f227c8）——「空余显存较大却不落格」的根因
+- **bug①（致命）**：aido/ribo plan 的 modification 格带 `max_len: 512`，而
+  `finetune_base`（mod runner）**不接受 --max-len 参数** → 24 个 mod 格全部秒败
+  （argparse error instant-fail，从 0926 接入起从未跑成过）。修复：plan 中移除 max_len。
+- **bug②**：AIDO ncRNA lora bs8 实跑峰值 **27G**（OOM 现场取证），plan need=18G 低估
+  → 抢锁后必爆。修复：need 18→30（mod lora 18→20）。
+- 修复后即时验证：**RiboSpan mod frozen ×3 并发在跑**（此前 mod 格 0 落地）；
+  9 个卡槽全占（GPU0-5 全覆盖）。
+
+### 3. 剩余缺口（全在大卡窗口队列）
+- grid: 3 格（650M ncRNA 34G + NB ncRNA/SSP 20-23G）
+- aido: 18 格（ncRNA lora×6 30G + mod frozen/lora×12）——need 修正后待大窗口
+- ribo: 12 格（mod frozen×6 11G 已在跑 + mod lora×6 30G）
+- e6 650M: full s17 在跑（44min）+ lora s29/s43 + mega 修正 3 格
+- fullbig v5: 网格 4 格（bs1+34G 独占窗口）
+
+### 4. 系统态
+- ledger 2009（done 1900）；19+ workers；GPU0/2/3 满、GPU1 23G + GPU5 30G 待大格
+  （aido lora 30G 临界——竞争窗口动态变化）
