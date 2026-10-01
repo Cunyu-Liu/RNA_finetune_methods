@@ -3404,4 +3404,37 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 4. 系统态
 - ledger 2009（done 1900）；19+ workers；GPU0/2/3 满、GPU1 23G + GPU5 30G 待大格
-  （aido lora 30G 临界——竞争窗口动态变化）
+  （aido lora 30G 临界——竞争窗口动态变化）## 2026-10-02 00:35 · 监控轮 6（RiboSpan mod 6/6 收口 + AIDO lora 峰值三次实测修正）
+
+### 1. RiboSpan mod frozen 6/6 收口（bug① 修复的直接成果）
+- RiboSpan-1K-40 modification frozen 全 6 格落地：random 0.927/0.933/0.931，
+  family 0.944/0.944/0.945——**1.6B SSM 模型 per-base 任务表现稳定在 0.93-0.94**
+- ledger 2022（done 1922）；grid_fill 差 1 格（650M ncRNA 34G）；rerun2 72/72；
+  formal 第一轮 60/60
+
+### 2. AIDO ncRNA lora 峰值实测（显存门三次逼近的教训）
+- 实测 #1（18G 门）：bs8 峰值 27.0G → OOM
+- 实测 #2（30G 门，v 修复后）：bs8 峰值 **31.85G**（含 17 个外部 418M 小进程 + 激活碎片）
+  → GPU2 真空闲 30G 也不够 → 仍 OOM
+- **修正方案（已入 plan）**：lora 全家 bs8→**bs4** + need 24G（激活峰值砍半，
+  1.6B 权重 fp16 + LoRA 优化器态 ~8G + bs4 激活 ~10G ≈ 20G 稳态）
+- 验证测试本身撞上 GPU5 窗口被共享用户 3 进程（6.7+10.5+10.4G）占满——
+  峰值数据仍有效（模型加载即 OOM，非训练 OOM）
+
+### 3. aido 侧其他格
+- AIDO mod frozen family s43 已落（0.9438）+ mod lora family s43 已落（0.9964）
+- mod frozen 8 格中 s17 family 正在跑（GPU2, 18G）——15 分钟内应落
+- e6 650M full s29 跑至 epoch 5（loss 0.1275 收敛中），dNLL 温和
+
+### 4. 剩余缺口（全 30G 级大卡窗口队列，自动等）
+- grid: 650M ncRNA 34G ×1
+- aido: lora×6 (bs4/24G 已修) + mod frozen×7 + mod lora×4
+- ribo: mod lora×6 (bs4/24G 已修)
+- e6 650M: lora s17 + full s29/s43
+- fullbig v5: AIDO/RiboSpan 网格 4 格（bs1/34G 独占窗口——注意与 aido lora 24G
+  可能叠加冲突，fullbig 在 r3 轮等待中）
+
+### 5. 教训记录
+- 1.6B 模型 lora 的激活峰值对 batch 内最长序列敏感（ncRNA 家族数据有长尾序列），
+  卡上已有 17×418M 外部小进程时 30G 门仍不保险 → bs4 是 1.6B lora 在共享卡上的稳态解
+- 共享卡上「nvidia-smi 空闲」≠「torch 空闲」，抢卡逻辑必须用 torch 真值（已实现）

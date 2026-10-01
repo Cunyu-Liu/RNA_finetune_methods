@@ -69,8 +69,9 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -79,8 +80,9 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -89,8 +91,9 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -99,8 +102,9 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -109,8 +113,9 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -119,44 +124,15 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
    "model": "RiboSpan-1K-40",
    "strategy": "frozen",
    "split": "random",
-   "seed": 17,
-   "lr": null,
-   "need": 11,
-   "bs": 8
-  },
-  {
-   "task": "modification",
-   "model": "RiboSpan-1K-40",
-   "strategy": "frozen",
-   "split": "random",
-   "seed": 29,
-   "lr": null,
-   "need": 11,
-   "bs": 8
-  },
-  {
-   "task": "modification",
-   "model": "RiboSpan-1K-40",
-   "strategy": "frozen",
-   "split": "random",
-   "seed": 43,
-   "lr": null,
-   "need": 11,
-   "bs": 8
-  },
-  {
-   "task": "modification",
-   "model": "RiboSpan-1K-40",
-   "strategy": "frozen",
-   "split": "family",
    "seed": 17,
    "lr": null,
    "need": 11,
@@ -166,6 +142,36 @@
    "task": "modification",
    "model": "RiboSpan-1K-40",
    "strategy": "frozen",
+   "split": "random",
+   "seed": 29,
+   "lr": null,
+   "need": 11,
+   "bs": 8
+  },
+  {
+   "task": "modification",
+   "model": "RiboSpan-1K-40",
+   "strategy": "frozen",
+   "split": "random",
+   "seed": 43,
+   "lr": null,
+   "need": 11,
+   "bs": 8
+  },
+  {
+   "task": "modification",
+   "model": "RiboSpan-1K-40",
+   "strategy": "frozen",
+   "split": "family",
+   "seed": 17,
+   "lr": null,
+   "need": 11,
+   "bs": 8
+  },
+  {
+   "task": "modification",
+   "model": "RiboSpan-1K-40",
+   "strategy": "frozen",
    "split": "family",
    "seed": 29,
    "lr": null,
@@ -189,8 +195,9 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
@@ -199,8 +206,9 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
@@ -209,8 +217,9 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
@@ -219,8 +228,9 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
@@ -229,8 +239,9 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   },
   {
    "task": "modification",
@@ -239,8 +250,9 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 30,
-   "bs": 8
+   "need": 24,
+   "bs": 8,
+   "batch_size": 4
   }
  ],
  "timeout_s": 32400
