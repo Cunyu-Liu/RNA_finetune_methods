@@ -3330,4 +3330,28 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 4. 进度快照（02:10）
 - ledger done 数持续上升；formal_rerun 31/60 → 小格填谷推进中；grid missing 24（其中 14 小格在跑）
-- e6_official4：650M lora s29 重试中（竞卡 exit 1 循环——大卡窗口等待）
+- e6_official4：650M lora s29 重试中（竞卡 exit 1 循环——大卡窗口等待）## 2026-10-01 13:30 · 监控轮 3（formal_rerun 60/60 收口 + 网格审计 v2 + rerun2 派发）
+
+### 1. formal_rerun 60/60 全收口（P1.4 第一轮闭环）
+- 20 格 × 2 切分 × 3 种子全部落地，3 种子均值（新 tuned-LR 口径）：
+  RNA-FM ncRNA random **0.948** / family 0.533；RiNALMo-650M mrl random **0.794** / family 0.747；
+  650M SSP random **0.337**；mega mrl random **0.782**；micro mod random **0.971**。
+  与此前网格审计的预测值一致（0.9499/0.7944/0.3668/0.7823/0.9713）——**口径闭环验证通过**。
+
+### 2. 网格审计 v2（grid_audit.md 自动刷新，新数据入账）
+- **15 MATCH / 9 RERUN-NEEDED / 3 TUNED-MISSING / 11 PENDING**
+- grid_fill 65/76（剩 11 格：1×34G 大格 + 5 小格在跑 + NB 4 格 18-23G）
+- 新增发现：SSP 任务在 6 个模型上全部 grid best=3e-5（ERNIE/RNA-FM/SpliceBERT/UTR-LM/micro/Sc-10M）
+  ——SSP 的 tuned-LR 家族规则向 3e-5 收敛（写 P4 时可提炼）
+
+### 3. rerun2 派发（72 runs = 12 格 × 2 切分 × 3 种子）
+- `p2_formal_rerun2_plan.json`：9 RERUN（ERNIE/RNA-FM/SpliceBERT/UTR-LM SSP、Sc-100M/30M mrl、
+  mega/micro mod、micro SSP）+ 3 TUNED-MISSING（Sc-10M SSP、UTR-LM mod/mrl）——全部取网格最优 LR
+- 4 主 shard + 2 small shard 已派发；UTR-LM grid 格已在跑
+
+### 4. 填谷效果复核
+- GPU4/5 的"大空闲"经核实为任务切换间隙 + torch/nvidia-smi 视图差——填谷 worker 落格：
+  UTR-LM grid、Sc-100M grid、AIDO lora ×3、e6 650M lora 在飞
+- worker 总数 23（含 grid s2 等 34G 大卡窗口 + fullbig 等 22G 窗口）
+
+### 5. HydraRNA（上轮 54/54 收口后）无可补——观察臂完成待 P4 并入
