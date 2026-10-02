@@ -89,6 +89,8 @@ def main() -> int:
         print("skip (already %s): %s" % (claim["row"]["status"], rid))
         return 0
 
+    ledger.update(rid, "running", note="heartbeat: start")
+
     t0 = time.time()
     torch.cuda.reset_peak_memory_stats(args.device)
 
@@ -194,6 +196,7 @@ def main() -> int:
             tot += loss.item()
             nb += 1
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+        ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
     backbone.eval()

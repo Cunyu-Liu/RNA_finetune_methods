@@ -69,12 +69,30 @@ def run_id(model: str, task: str, strategy: str, seed: int, split: str,
         strategy.replace("-", "").lower(), seed, split, extra)
 
 
+def _age_s(row: dict) -> float:
+    try:
+        t = datetime.datetime.fromisoformat(row.get("updated_utc", ""))
+        return (datetime.datetime.now(datetime.timezone.utc) - t).total_seconds()
+    except Exception:
+        return 1e9
+
+
 def claim(model: str, task: str, strategy: str, seed: int, split: str,
           device: int = -1, out_dir: str = "", note: str = "",
           extra: str = "") -> dict:
     rid = run_id(model, task, strategy, seed, split, extra)
     with _locked():
         rows = _load()
+        changed = False
+        for r in rows:
+            if (r["run_id"] == rid and r.get("status") == "running"
+                    and _age_s(r) > 7200):
+                r["status"] = "pending"
+                r["note"] = "stale-running>2h auto-reclaim (claim guard)"
+                r["updated_utc"] = _now()
+                changed = True
+        if changed:
+            _write(rows)
         for r in rows:
             if r["run_id"] == rid and r.get("status") in ("running", "done"):
                 return {"claimed": False, "reason": "already %s" % r["status"],
