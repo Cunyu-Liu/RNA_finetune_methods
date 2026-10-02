@@ -3517,3 +3517,19 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 **其他**：fill s1 SHARD DONE（全部 done/busy）；fb5 仍等 34G 窗口（AIDO s101 lr1e-05 grid + Stage2 formal 12 格）；上轮 6-shard s3/s5 worker 已自然退出（子进程孤儿继续训练，无害）。
 
 **提交**：d7ec463（双修复）已推 GitHub。
+## 2026-10-03 00:50 巡检：AIDO lora 6/6 收官 + P2 全队列 0 miss + fullbig formal 并行化
+
+**里程碑：AIDO ncRNA lora 6/6 全部落地**——P2 计划侧（9 队列 394 runs）**全部 0 miss**：
+- random: s17 0.824 / s29 0.819 / s43 0.833（均值 0.825，vs frozen 0.57-0.59 → **lora +0.25，1.6B 规模下 PEFT 优势与 RiboSpan/650M 等中小模型同构**）
+- family: s17 0.076 / s29 0.084 / s43 0.076（collapse band 第 16 次架构级确认：lora 低于 frozen 0.15-0.19）
+
+**e6 650M lora s17**（全项目 e6 唯一缺口）：20:00 救援 cron 起跑于 GPU1，已 2h41m，epoch 6/10 loss 0.0112（收敛正常），预计 ~1h 完成（剩 4 epoch + post-NLL 评估）。
+
+**fullbig formal 队列重构（串行→并行）**：
+- 原 fb5 脚本串行执行 14 格（2 网格档 + 12 formal）需 60h+，且 SSH 断连即死。
+- 新建 p2_fullbig_formal_plan.json（14 格：AIDO s101 lr1e-05 + RiboSpan s101 lr1e-05 网格档、AIDO/RiboSpan × random/family × 17/29/43 @grid-best 3e-05 formal；need 34G、bs1、timeout 9h——修正默认 4h 不够 AIDO full 5.1h 峰值格的问题）。
+- 6-shard worker 已拉起（PIDs 1314154-59）+ 20min cron q_p1_monitor 自动兜底补拉；夜间无 34G 窗口（free 0-11G）处 wait 状态，白天释放即抢。
+
+**清理**：7h 孤儿锁 gpu_2_slot_0（上轮 GPU2 lora 完成遗留）已清；fill s0/s1（aido lora）SHARD DONE 自然退出。
+
+**待办**：e6 s17 落地后 e6 全齐 → q_refresh_when_done 全链重导出；fullbig 14 格是最后的大队列；之后 P4 预印本 v1.0。

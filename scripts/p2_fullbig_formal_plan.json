@@ -1,0 +1,148 @@
+{
+ "tag": "p2_fullbig_formal",
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "timeout_s": 32400,
+ "runs": [
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "random",
+   "seed": 101,
+   "lr": "1e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 101,
+   "lr": "1e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 34,
+   "bs": 1
+  }
+ ]
+}
