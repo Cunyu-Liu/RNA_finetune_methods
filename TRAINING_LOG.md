@@ -3464,4 +3464,34 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - RiNALMo-650M e6 forgetting：lora dNLL +0.044/+0.017 vs full +0.098——
   **LoRA 的灾难性遗忘显著低于 full-FT**（E6 核心论点的 650M 侧初步证据）
 - RiboSpan mod frozen 0.927-0.945 / AIDO mod frozen 0.944 / AIDO mod lora 0.996——
-  1.6B 模型 per-base 稳定；ncRNA family 崩溃带观察待 aido/ribo ncRNA 格落齐后判读
+  1.6B 模型 per-base 稳定；ncRNA family 崩溃带观察待 aido/ribo ncRNA 格落齐后判读## 2026-10-02 14:30 巡检：bs 键错位根因修复 + 双死格收编 + 全队列 0 miss 核验
+
+**核心发现（P0 bug）**：
+- 上轮（1002a）对 aido/ribospan plan 的 lora 修复写的是 `batch_size:4` 键，但 `q_fill.py:148` 实际读取 `rr.get("bs")`（=8）——**修复从未生效**，白天 6-shard worker（cron q_p1_monitor 自动拉起，PIDs 2938211-216）启动的仍是 bs8 进程。
+- 证据链：pgrep 命令行显示 `--batch-size 8`；plan 中同时存在 `bs:8`（旧）与 `batch_size:4`（无效新键）。
+- 修复：两个 plan 统一 `bs:4` 并删除无效 `batch_size` 键。commit 64b05e1/62834ee。
+
+**双死格收编**：
+1. e6 RiNALMo-650M lora s17（e6off4 五次中途 OOM 后 GAVEUP，全项目 e6 唯一缺口）：q_patch_dead_cells.sh 收编，14:09 GPU0 起跑；另装 20min 救援 cron（q_e6_rescue.sh，done-skip + is_busy 双检查，修复 patch 脚本无 is_busy 的缺陷——曾出现同格双跑 3 分钟，杀新留旧）。
+2. AIDO 1.6B full s101 random lr1e-05（fb5 Stage1 等卡超限 GAVEUP，网格缺档）：同 patch 脚本 cell2，34G 门排队中。
+
+**night 无人值守复盘（01:15→13:47 约 12.5h 只 +1 ledger）**：
+- 3 个 bs8 lora 进程（上轮遗留）全部中途 OOM 退出（GPU1 挤双 + 共享用户夜间扩容）；worker 整夜 wait(no card)。
+- 白天集群释放后 cron 自动重启 worker，13:47-14:05 期间 6-shard 全部激活。
+
+**当前运行面（14:15）**：GPU0 e6 650M lora s17；GPU1 AIDO s29 random lora bs4（fill worker s1，need16）；GPU2 AIDO s29 family lora bs8（保留：旧协议已 40min，若落地则记录 bs 差异）；GPU5 17.5G 空闲（s0 worker 争夺中）；fb5 重启（RiboSpan lr1e-05 网格档 + Stage2 AIDO×6/RiboSpan×6 formal，34G 门）。
+
+**全局队列核验（唯一权威口径，以 ledger done+lr 匹配）**：
+- p2_grid_fill 76/76、formal_rerun 60/60、rerun2 72/72、ribospan 24/24、nucleicbert 54/54、utrlm 36/36、mrnabert 18/18、e2ext 24/24 —— **全部 0 miss**。
+- 仅存缺口：AIDO ncRNA lora 6 格（2 在跑）+ AIDO full formal 6 格（fb5 排队）+ RiboSpan family full 6 格（fb5 排队）+ AIDO full s101 lr1e-05 网格档 1 格（patch 排队）+ e6 650M lora s17 1 格（在跑）。
+- 9 队列 380 runs 中 374 done（98.4%），余 6 在飞/排队。
+
+**RiboSpan 全景（24/24 首次全齐）**：
+- ncRNA random: frozen 0.575-0.591 / lora 0.821-0.853（lora +0.25，PEFT 优势显著）
+- ncRNA family: frozen 0.146-0.194 / lora 0.064-0.072（**collapse band 第 15 次确认**，lora 比 frozen 更差）
+- modification: frozen 0.927-0.945 / lora 0.989-0.997（per-base 免疫，第 N 次确认）
+- full s101 random 3e-5 = 0.485
+
+**经验教训**：修复后必须核验生效路径的读取键（本例 batch_size vs bs），"改了 plan"≠"worker 用了新值"；SSH 断连（exit 255）会在 heredoc/管道中途中断执行链，需分步执行+独立验证连接。
+
+**提交**：64b05e1（bs 键修复+patch+rescue）、62834ee（ribospan 同步）已推 GitHub。
