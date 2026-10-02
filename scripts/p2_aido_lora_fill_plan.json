@@ -1,0 +1,68 @@
+{
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "runs": [
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 17,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 29,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "random",
+   "seed": 43,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 17,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 29,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "AIDO.RNA-1.6B",
+   "strategy": "lora",
+   "split": "family",
+   "seed": 43,
+   "lr": null,
+   "need": 16,
+   "bs": 4
+  }
+ ],
+ "timeout_s": 32400,
+ "tag": "p2_aido_lora_fill"
+}

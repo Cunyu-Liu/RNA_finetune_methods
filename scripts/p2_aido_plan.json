@@ -69,9 +69,8 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -80,9 +79,8 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -91,9 +89,8 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -102,9 +99,8 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -113,9 +109,8 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "noncoding-rna-family",
@@ -124,9 +119,8 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -195,9 +189,8 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -206,9 +199,8 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -217,9 +209,8 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -228,9 +219,8 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -239,9 +229,8 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   },
   {
    "task": "modification",
@@ -250,9 +239,8 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 24,
-   "bs": 8,
-   "batch_size": 4
+   "need": 22,
+   "bs": 4
   }
  ],
  "timeout_s": 32400
