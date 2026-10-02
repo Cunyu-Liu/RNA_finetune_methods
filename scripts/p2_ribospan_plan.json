@@ -69,7 +69,7 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -80,7 +80,7 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -91,7 +91,7 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -102,7 +102,7 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -113,7 +113,7 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -124,7 +124,7 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -195,7 +195,7 @@
    "split": "random",
    "seed": 17,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -206,7 +206,7 @@
    "split": "random",
    "seed": 29,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -217,7 +217,7 @@
    "split": "random",
    "seed": 43,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -228,7 +228,7 @@
    "split": "family",
    "seed": 17,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -239,7 +239,7 @@
    "split": "family",
    "seed": 29,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   },
@@ -250,7 +250,7 @@
    "split": "family",
    "seed": 43,
    "lr": null,
-   "need": 24,
+   "need": 22,
    "bs": 8,
    "batch_size": 4
   }
