@@ -3495,3 +3495,25 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 **经验教训**：修复后必须核验生效路径的读取键（本例 batch_size vs bs），"改了 plan"≠"worker 用了新值"；SSH 断连（exit 255）会在 heredoc/管道中途中断执行链，需分步执行+独立验证连接。
 
 **提交**：64b05e1（bs 键修复+patch+rescue）、62834ee（ribospan 同步）已推 GitHub。
+## 2026-10-02 20:10 巡检：stale-running 毒化根因修复 + AIDO lora 4/6 落地
+
+**核心发现（P0，静默失败 5.5h）**：
+- ledger 中 `ft_aidorna16b_noncodingrnafamily_lora_s17_random` 行 status=running（被杀的 bs8 进程遗留，无 update）→ ledger.claim 拒绝（"already running"）→ finetune_one exit 0（4-8 秒）→ q_fill worker 误判成功跳过 → 该格 5.5h 无进度但看起来"被处理过"。
+- 毒化源无法在现存代码定位（claim 只写 pending、finetune_one 只写 done；git 历史亦无 update(running)）——疑似更早一代 worker 遗留。防御性修复优先于考据。
+
+**双修复（d7ec463）**：
+1. ledger.claim：running 行 age>2h 自动降级 pending（stale-reclaim guard）。
+2. finetune_one：启动 + 每 epoch 写心跳（status=running, note=epoch N heartbeat）——running 行自此自描述、可判活。
+- 清理：s17_random 行手动重置 pending；全 ledger 扫描 0 stale-running 残留。
+
+**AIDO ncRNA lora 进度（4/6 done）**：
+- random: s17 在飞（GPU5 19:50 起跑，修复后重启）· s29 0.819 done · s43 0.833 done
+- family: s17 0.0759 done · s29 在飞（GPU2）· s43 在飞（GPU4）
+- random 3 格均值≈0.83（frozen 0.57-0.59 → lora +0.25，与 RiboSpan 同构结论一致）
+- family 3 格全部落在 collapse band（0.064-0.076 vs frozen 0.15-0.19，lora 更差——15+2 架构次确认）
+
+**e6 650M lora s17**：黄昏共享用户挤卡，19:30/19:40/20:00 三次救援 OOM（GPU5→GPU5→GPU1）。20:00 起跑于 GPU1，rescue cron 20min 周期兜底。唯一 e6 缺口。
+
+**其他**：fill s1 SHARD DONE（全部 done/busy）；fb5 仍等 34G 窗口（AIDO s101 lr1e-05 grid + Stage2 formal 12 格）；上轮 6-shard s3/s5 worker 已自然退出（子进程孤儿继续训练，无害）。
+
+**提交**：d7ec463（双修复）已推 GitHub。
