@@ -3533,3 +3533,23 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 **清理**：7h 孤儿锁 gpu_2_slot_0（上轮 GPU2 lora 完成遗留）已清；fill s0/s1（aido lora）SHARD DONE 自然退出。
 
 **待办**：e6 s17 落地后 e6 全齐 → q_refresh_when_done 全链重导出；fullbig 14 格是最后的大队列；之后 P4 预印本 v1.0。
+## 2026-10-03 14:15 巡检：e6 全项目收官 + AIDO grid LR 翻转 + ledger 大清理
+
+**e6 收官**：650M lora s17 落地（delta_nll 0.0168，与 s43 0.0167 同水平）。E6 全谱系 done：micro 19、10M 20、30M 16、100M 6、1M 6、rnasc650m 6、rinalmo650m 6、mega 9 = 88 unique。650M 谱：lora {0.017,0.017,0.044} vs full {0.098,0.124,0.154}——**LoRA 遗忘少 5-9×，E6 核心结论跨尺度稳定**。
+
+**AIDO grid LR 翻转（重要科学信号）**：s101 网格 1e-05=0.720 vs 3e-05=0.520（+0.20）。1.6B full-FT 在 ncRNA 上**大模型需要更小 LR**——与"published LM 用 1e-5"的项目先验一致，且差距量级（0.2）远超 seed 噪声。决策：AIDO formal 12 格全部切 1e-05（grid-best 语义）；杀掉在飞的 3e-05 s29 family（1.5h 止损）；plan 修正 + worker 重启。已落地 3e-05 的 family17 (0.0596) 保留为副对照（另记 note）。
+
+**ledger 三重清理（330 行重复 + 13 stale）**：
+- claim bug 根治：claim 前先剔除同 run_id 的旧 pending 行（防重复 append）——s17 random 曾累积 12 条重复行。
+- 全 ledger 去重（保留每 run_id 最后一条）：2099 → 1769 行（330 重复移除）；13 条 stale-running>2h 重置 pending。
+- 校验：关键 done 值全在（AIDO lora 6/6 value、AIDO 1e-05 0.720、RiboSpan 0.4977）；全队列 miss 校验 = 9（全在 fullbig 剩余格，正常）。
+- 状态分布：done 1757 / pending 8 / running 4（4 条为在飞心跳：RiboSpan s101 lr1e-05 ×2 同 run_id? + AIDO s29 family 重置前残留）。
+
+**fullbig formal 进度（5/14）**：
+- 网格档：AIDO s101 1e-05 ✅ 0.720 · RiboSpan s101 1e-05 在飞（1.9h，epoch 2）
+- formal 落地：AIDO family17 3e-05 (0.0596，转副对照) · RiboSpan random17 0.4977 · RiboSpan family17 0.0841
+- formal 剩 9 格（AIDO 6 格 @1e-05 + RiboSpan 5 格 @3e-05）——worker wait 等卡中，白天空窗即抢
+
+**RiboSpan grid 缺口**：两档中只有 3e-05 (0.485) 有数据，1e-05 档在飞——若 1e-05 > 3e-05 则 RiboSpan formal 也需切换（等结果）。
+
+**提交**：patch 1003b（claim dedup + ledger squash）+ TRAINING_LOG 本轮记录。

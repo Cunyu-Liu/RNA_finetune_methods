@@ -30,7 +30,7 @@
    "strategy": "full",
    "split": "random",
    "seed": 17,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },
@@ -40,7 +40,7 @@
    "strategy": "full",
    "split": "random",
    "seed": 29,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },
@@ -50,7 +50,7 @@
    "strategy": "full",
    "split": "random",
    "seed": 43,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },
@@ -60,7 +60,7 @@
    "strategy": "full",
    "split": "family",
    "seed": 17,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },
@@ -70,7 +70,7 @@
    "strategy": "full",
    "split": "family",
    "seed": 29,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },
@@ -80,7 +80,7 @@
    "strategy": "full",
    "split": "family",
    "seed": 43,
-   "lr": "3e-05",
+   "lr": "1e-05",
    "need": 34,
    "bs": 1
   },

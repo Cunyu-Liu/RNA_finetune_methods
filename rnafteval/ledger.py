@@ -91,10 +91,11 @@ def claim(model: str, task: str, strategy: str, seed: int, split: str,
                 r["note"] = "stale-running>2h auto-reclaim (claim guard)"
                 r["updated_utc"] = _now()
                 changed = True
-        if changed:
-            _write(rows)
+        keep = [r for r in rows if r.get("status") != "pending" or r["run_id"] != rid]
         for r in rows:
             if r["run_id"] == rid and r.get("status") in ("running", "done"):
+                if changed:
+                    _write(rows)
                 return {"claimed": False, "reason": "already %s" % r["status"],
                         "row": r}
         row = {"run_id": rid, "model": model, "task": task,
@@ -103,8 +104,11 @@ def claim(model: str, task: str, strategy: str, seed: int, split: str,
                "updated_utc": _now(), "note": note}
         if extra:
             row["extra"] = extra
-        rows.append(row)
-        _write(rows)
+        keep.append(row)
+        if len(keep) != len(rows) or changed:
+            _write(keep)
+        else:
+            _write(keep)
     return {"claimed": True, "row": row}
 
 
