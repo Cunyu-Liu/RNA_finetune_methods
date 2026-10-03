@@ -3588,3 +3588,8 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - tm：NB ncRNA 6 格（s4 worker 在岗，等卡）
 - fb：9 格（3 在飞 + 6 等卡）
 - 落齐 → q_refresh_when_done 全链重刷 → P4
+
+### 6. NB mrl s17 low-value note (1004a appendix)
+- NB mrl random 三种子 0.119/0.690/0.427（s17 低）——对照其他模型 mrl random full 三种子一致性（ERNIE/RNA-FM/mega 均 ±0.001、micro 0.099/0.196/0.782 分化先例），NB 属第 2 个 mrl 种子敏感案例
+- 训练日志核查：s17 run 完成 3 epoch（exit 0，2621s，peak 11.5G），无 OOM/中断迹象；epoch loss 0.989/0.965/0.955（收敛中但 train loss 仍高——NB 404M 在 mrl@1e-05 3ep 下欠拟合）
+- 判读：**种子敏感 + 3ep 欠拟合的组合效应**（NB mrl 网格 s101 0.769 需要 1e-05 恰好收敛）；写 P4 时 NB mrl 行如实报三种子均值 ± 分化（0.412±0.287），不做 seed 剔除
