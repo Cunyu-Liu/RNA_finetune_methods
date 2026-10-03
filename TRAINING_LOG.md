@@ -3621,3 +3621,25 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - **真实风险点（本轮已修）**：LR 不一致才是真正的公平性风险——tuned 臂各模型必须统一用 grid-best，本轮 9 组违规中 3 组实质差距（RiboSpan/UTR-LM/mRNABERT）已派 36 runs 修正
 - 1.6B full 在飞 3 格（3e-05 口径）跑到自然结束保留为副对照；1e-05 补格在 gridbest 队列排队
 - P4 写作口径：full 臂一律以 grid-best LR 行为主表，默认 LR 行进 A8 崩溃对照组；欠拟合三格如实标注「10ep 边际下降 5-8%，未完全平台」
+
+## 2026-10-04 09:15 · 收敛审计误报修正（用户追问驱动）——3 个「真欠拟合格」全部证伪
+
+### 用户问题
+没收敛的几个实验要重跑吗？还是 epoch 预算统一？
+
+### 1. epoch 预算验证（ledger epochs 字段全量统计）
+- **完全统一**：ncRNA=10ep / m6A=3ep / MRL=3ep / SSP=3ep，同任务下三策略（frozen/lora/full 及 dora/ia3/head-only）预算一致；n_train 同任务一致（ncRNA 6858/6859 双切分、m6A 20000、MRL 20000、SSP 3000）。变体行（epochs=3 于 ncRNA 等）属 E3 小数据臂与 e6 专用口径，不进 formal 聚合。
+- 协议对齐 Schmirler/BEACON：固定 epoch + 同 LR 选取流程（s101 网格）——**策略间对比自洽，无需为「收敛」重跑**。
+
+### 2. 三个「真欠拟合格」全部为审计脚本归属误报（昨天 1004c 的修正）
+- 误报机制：audit_convergence.py 以「最近的 run_id 提及行」归属后续 epoch 行；日志中 skip/wait 行同样含 run_id，会重置 context 把相邻格（多为 s101 网格格）的 loss 段错误归到目标格。
+- 逐格证据（verify3.py 取证）：
+  1. Sc-10M full s29 random：日志中其 run_id 行后直接 exit 0（无自有 loss 段）；被误归的 loss 序列（0.52 仍降）属旁边的 _lr3e-05 网格格。性能侧：默认臂 s29=0.690 是三种子最高（0.660/0.690/0.660）——与欠拟合相反。
+  2. Sc-100M lora s43 random：无自有 loss 段（早期 wave 队列未留存）；三种子 0.815/0.793/0.777 高度一致，s43 只正常偏低。
+  3. SpliceBERT full s43 random：同上无自有 loss 段；tuned@3e-05 三种子 0.916/0.909/0.903 一致；@3e-4 0.077 为 A8 有意崩溃对照。
+- **修正后结论：formal 口径下 0 个欠拟合格**；昨报「3 个真候选」撤销。收敛审计最终态：26 标记 = 13 变体（非 formal）+ 7 崩溃带本身（frozen 同不降，C4 发现）+ 3 误报 + 3 SSP 口径（快收敛任务统一 3ep）。
+
+### 3. 处置决定
+- **不重跑任何 formal 格**（epoch 预算统一 + 无真欠拟合 + 三种子一致性支持）
+- gridbest 36 runs（LR 合规修正）继续在飞——那是真正的公平性修复，与收敛无关
+- 教训入 checklist：审计脚本按「最近 run_id 行」归属 loss 的方法在多格混排日志上有误报风险，误报必须经「该格自身日志段 + 三种子性能一致性」双证排除
