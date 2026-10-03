@@ -3553,3 +3553,11 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 **RiboSpan grid 缺口**：两档中只有 3e-05 (0.485) 有数据，1e-05 档在飞——若 1e-05 > 3e-05 则 RiboSpan formal 也需切换（等结果）。
 
 **提交**：patch 1003b（claim dedup + ledger squash）+ TRAINING_LOG 本轮记录。
+
+## 2026-10-03 19:20 巡检（本地第二轮）：E6-v2 18/18 收口 + NB tuned-LR 首批数据 + stale 重置
+
+- **E6-v2 18/18 完整收口（16:36）**：q_e6_v2_fill 3/3 落地（micro lora s17 / 30M lora s29/s43）——E6 遗忘三臂（v1 88 + v2 18 + v3 18）= 124 格全收口。
+- **tunedmissing 8/36**：NB m6A 默认 3e-4 崩溃 0.50 → tuned 1e-05 恢复 0.988-0.997（A8 崩溃-恢复获 NB formal 确认）；NB ncRNA 网格 1e-05=0.878；Sc-650M mrl 1e-05 在跑（s17 random 0.791）。
+- **修复 2 stale running**（NB ncRNA s17 random / s29 family，18:01 OOM 死亡 ps 双核实）→ 手动重置 pending。
+- fullbig 4/14（RiboSpan s43 random epoch 5 在飞）；ledger 1782 = done 1770。
+- 剩余：tunedmissing 28 + fullbig 10 全自动在飞。
