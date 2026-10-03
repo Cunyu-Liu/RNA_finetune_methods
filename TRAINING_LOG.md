@@ -3593,3 +3593,31 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - NB mrl random 三种子 0.119/0.690/0.427（s17 低）——对照其他模型 mrl random full 三种子一致性（ERNIE/RNA-FM/mega 均 ±0.001、micro 0.099/0.196/0.782 分化先例），NB 属第 2 个 mrl 种子敏感案例
 - 训练日志核查：s17 run 完成 3 epoch（exit 0，2621s，peak 11.5G），无 OOM/中断迹象；epoch loss 0.989/0.965/0.955（收敛中但 train loss 仍高——NB 404M 在 mrl@1e-05 3ep 下欠拟合）
 - 判读：**种子敏感 + 3ep 欠拟合的组合效应**（NB mrl 网格 s101 0.769 需要 1e-05 恰好收敛）；写 P4 时 NB mrl 行如实报三种子均值 ± 分化（0.412±0.287），不做 seed 剔除
+
+## 2026-10-04 08:30 · LR 网格合规审计 + 全量收敛审计（用户质询驱动）
+
+### 1. LR 网格合规（16 模型 ncRNA random s101 网格 vs formal tuned 臂）
+- **A8 默认臂（3e-4）不受此约束**——它是有意的崩溃对照组（A8 发现）
+- 发现 9 组 tuned 臂用非 grid-best LR（历史家族规则先于网格落地）：
+  1. **RiboSpan full 6 格 @3e-05**（grid: 1e-05=0.522 > 3e-05=0.485，gap 0.037）→ **重跑 @1e-05**
+  2. **UTR-LM full 24 格 @1e-05**（grid: 3e-05=0.647 > 1e-05=0.495，gap 0.152——最大差距）→ **重跑 @3e-05**
+  3. **mRNABERT full 6 格 @1e-05**（gap 0.042）→ 重跑 @3e-05
+  4. RiNALMo-micro family @1e-05（grid 1e-05=0.943 ≈ 3e-05=0.944，gap 0.001 纯噪声）→ 免重跑
+  5. AIDO family17 @3e-05（已转副对照，1003b 已决策重跑 @1e-05 在 fullbig 队列）
+- **派发 p2_gridbest_fill_plan.json 36 runs**（RiboSpan 6 + UTR-LM 24 + mRNABERT 6，3-shard，041c4fc）；旧 LR 行保留为副对照不删除
+- 用户直觉正确：RiboSpan full 确实没用网格最优 LR——感谢质询，本轮修正
+
+### 2. 全量收敛审计（audit_convergence.py，307 日志文件全扫）
+- 927 done runs 匹配到 loss 曲线（含 742 no-trace = 早期 wave 队列日志已轮转，多为 frozen/headonly 无 backbone 训练）
+- **26 个「欠拟合标记」细分判读**：
+  - 13 个 = e3/_ri 变体（非 formal 口径）
+  - 7 个 = ncRNA **family 切分**（loss 高企 = 崩溃带本身，是 C4 科学发现不是欠拟合——frozen 同样在 2.4-2.6 不降）
+  - 3 个 = SSP 3ep 任务口径（全模型统一 3ep，m6A/SSP 快收敛任务协议）
+  - **3 个 = ncRNA random（真候选）：Sc-100M lora s43 / Sc-10M full s29 / SpliceBERT full s43**（last drop 5.8-8.3%——10ep 边际效应，幅度温和）
+- 115 个「最后 epoch 仍在降 >15%」——多为 ERNIE SSP/mRNABERT m6A 等**继续下降型**（说明还有下降空间但任务本身已近饱和：mRNABERT SSP loss 已到 0.001-0.013）
+
+### 3. 公平性判读（回答用户核心问题）
+- **协议层面公平**：同任务同模型下三策略用完全相同的 epochs/bs/数据——固定 epoch 协议（10/3/3/3）对三策略同等约束，对比内部自洽（对齐 Schmirler/BEACON 协议）
+- **真实风险点（本轮已修）**：LR 不一致才是真正的公平性风险——tuned 臂各模型必须统一用 grid-best，本轮 9 组违规中 3 组实质差距（RiboSpan/UTR-LM/mRNABERT）已派 36 runs 修正
+- 1.6B full 在飞 3 格（3e-05 口径）跑到自然结束保留为副对照；1e-05 补格在 gridbest 队列排队
+- P4 写作口径：full 臂一律以 grid-best LR 行为主表，默认 LR 行进 A8 崩溃对照组；欠拟合三格如实标注「10ep 边际下降 5-8%，未完全平台」
