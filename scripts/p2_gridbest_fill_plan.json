@@ -1,0 +1,373 @@
+{
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "timeout_s": 40000,
+ "runs": [
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "RiboSpan-1K-40",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "1e-05",
+   "need": 34,
+   "timeout_s": 40000,
+   "bs": 1
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "modification",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "mrl",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "secondary-structure",
+   "model": "UTR-LM",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 6,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "random",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 17,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 29,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  },
+  {
+   "task": "noncoding-rna-family",
+   "model": "mRNABERT",
+   "strategy": "full",
+   "split": "family",
+   "seed": 43,
+   "lr": "3e-05",
+   "need": 12,
+   "timeout_s": 14400
+  }
+ ]
+}
