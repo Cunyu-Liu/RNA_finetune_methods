@@ -3561,3 +3561,30 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - **修复 2 stale running**（NB ncRNA s17 random / s29 family，18:01 OOM 死亡 ps 双核实）→ 手动重置 pending。
 - fullbig 4/14（RiboSpan s43 random epoch 5 在飞）；ledger 1782 = done 1770。
 - 剩余：tunedmissing 28 + fullbig 10 全自动在飞。
+
+## 2026-10-04 05:40 巡检（夜间 10h）：tunedmissing 30/36 + fullbig 5/14 + 9 stale 重置 + NB/650M tuned 全景判读
+
+### 1. 夜间落格（ledger 1769 → 1809，+40 done）
+- **tunedmissing 30/36**：NB mrl 6/6 + NB ssp 7/7（含 s101 网格档）+ Sc-650M mrl 6/6 + Sc-650M ssp 7/7 全落地；**唯缺 NB ncRNA 6 格**（18:01 OOM 死后 stale 行堵住 s4 worker）
+- **fullbig 5/14**：RiboSpan random 三种子全齐（0.497/0.522*/0.558——*为 s101 网格档）；AIDO 网格 1e-05=0.720 已确认；3 个 1.6B full 在飞（RiboSpan s29 random epoch 7 + AIDO s43 family epoch 6 + AIDO s17 random epoch 6）
+- 4 个 tm shard + 2 个 fb shard 打完 SHARD DONE 退出（正常）
+
+### 2. 修复 9 个 stale running 行（05:35）
+- 5× NB ncRNA（18:01 OOM 竞卡死亡，ps 双核实）+ 3× AIDO（13:xx-21:xx 前夜 OOM 死亡）+ 1× RiboSpan s29 family
+- 重置后 ledger running = 3 行全有活进程心跳（ribospan s29rnd / aido s43fam / aido s17rnd）
+- 根因模式同 1002d（stale-running 毒化 = claim 拒绝 → worker skip 循环）；自动回收阈值 2h 对 40G 大格的 ~4.5h 训练窗口偏保守——已在下一轮考虑把 finetune_one 的 epoch 心跳间隔收紧
+
+### 3. tuned-LR 修复值全景（NB + Sc-650M，A8 崩溃-恢复叙事的外部架构证据链）
+- **NB mrl @1e-05**：family 三种子 0.612/0.682/0.680（稳定）；random 分化大（0.119/0.690/0.427）——s17 低值待判读（可能需检查 s17 的 mrl 数据/种子行为）
+- **NB ssp @1e-05**：random 0.168-0.232 / family 0.194-0.261——vs 默认 3e-4 的 0.008（完全崩）恢复 ~25×
+- **Sc-650M mrl @1e-05**：random 0.783-0.792 / family 0.683-0.693（6/6 全落，随机-家族差距仅 0.10——MRL 免疫叙事的 650M 端支持）
+- **Sc-650M ssp @1e-05**：0.066-0.083 全谱（与 3e-05 档 0.0796 相当——网格两档接近，1e-05 略优已按 grid-best 落格）
+
+### 4. 1.6B full 大端进展（等价线收官前的最后大格）
+- RiboSpan random full 三种子 0.497-0.558（与 frozen 0.575-0.591、lora 0.821-0.853 对比——**1.6B 端 full < lora 且 ≈ frozen**，与官方系「LoRA ≥ full」方向一致）
+- AIDO 1.6B 网格翻转已定（1e-05=0.720 vs 3e-05=0.520）；formal 6 格在飞
+
+### 5. 待收口清单（全部自动）
+- tm：NB ncRNA 6 格（s4 worker 在岗，等卡）
+- fb：9 格（3 在飞 + 6 等卡）
+- 落齐 → q_refresh_when_done 全链重刷 → P4
