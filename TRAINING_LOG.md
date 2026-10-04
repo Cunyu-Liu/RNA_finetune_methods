@@ -3665,3 +3665,26 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 4. stale 行处理
 - RiboSpan s29 random @3e-05 旧口径格被 ledger 行（running）+ gridbest worker 双认领中——旧格跑到自然结束留副对照；gridbest 队列 1e-05 版本在排队（两队列不同 run_id 无冲突）
+
+## 2026-10-04 22:05 巡检：剩余 11 格 + ss650 收口 + RiboSpan 1e-05 大端反转确认 + 3 stale 重置
+
+### 1. 队列进度（22:00 实测，ledger 1833 = done 1821）
+- **ss650 补臂 6/6 全收口（11:03 完成）**：Sc-650M ssp @3e-05 双切分三种子全落——random 0.145-0.160 / family 0.139-0.157（vs 1e-05 副对照 0.066-0.083，**gap ~0.07 确认**，上轮网格读数错误已彻底纠正）
+- **gridbest 34/36**：UTR-LM 24 + mRNABERT 6 全落；RiboSpan 剩 s29 random + s29 family 两格（worker s1 在岗轮询）
+- fullbig 11/14：RiboSpan s101 + 5 formal done；AIDO s29 random 在飞（epoch 6，GPU5，4h）
+- tunedmissing 30/36：NB ncRNA 6 格等卡（s4 在岗）
+- **总剩余：11 格**（gridbest 2 + fullbig 3 + tunedmissing 6）
+
+### 2. RiboSpan 1.6B full 大端反转确认（grid-best 口径落地后的重要科学信号）
+- 1e-05（grid-best）random：s17 0.606 / s43 0.690（s29 在 gridbest 队列）vs 3e-05 副对照 0.448-0.558
+- **RiboSpan full@1e-05 ≈ 0.65 均值 > frozen 0.575-0.591**——与旧口径（full≈frozen）判读反转：LR 修正后 1.6B full 实为正增益，但 < lora 0.821-0.853
+- family 侧两口径都在崩溃带（0.06-0.10，A8/C4 结论不受影响）
+- **AIDO 侧**：random @1e-05 s17 0.670 / s43 0.708（s29 在飞）——均值 ~0.66-0.71 < lora 0.825（1.6B 端 LoRA 优势保持），但 vs frozen 0.568-0.590 full +0.1~0.15 正增益
+- **修正后 1.6B 大端图景**：full@grid-best 有实质增益（此前 3e-05 口径低估了 full），但 LoRA 仍最优——「LoRA ≥ full」在 1.6B 端成立且两架构（AIDO Transformer / RiboSpan SSM 长上下文）一致
+- P4 写作注意：v0.96 中「full ≈ frozen」的旧表述需按 1e-05 口径改写
+
+### 3. 修复 3 个 stale running（22:02，ps 甄别）
+- RiboSpan s29 family @1e-05（642min 无心跳无进程）+ AIDO s17 family / s29 family（94-274min 同状）→ 重置 pending；AIDO s29 random（epoch 6 新鲜心跳）保留
+
+### 4. 全部落齐后的触发链已就绪
+- q_refresh_when_done 的 p2_*.json 通配符自动覆盖 4 个新 plan（gridbest/tunedmissing/ss650/fullbig）
