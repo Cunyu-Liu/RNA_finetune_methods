@@ -3643,3 +3643,25 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - **不重跑任何 formal 格**（epoch 预算统一 + 无真欠拟合 + 三种子一致性支持）
 - gridbest 36 runs（LR 合规修正）继续在飞——那是真正的公平性修复，与收敛无关
 - 教训入 checklist：审计脚本按「最近 run_id 行」归属 loss 的方法在多格混排日志上有误报风险，误报必须经「该格自身日志段 + 三种子性能一致性」双证排除
+
+## 2026-10-04 08:40 巡检：全任务 LR 合规审计收官 + 队列进度 + RiboSpan 口径切换完成证据
+
+### 1. 全任务 LR 合规审计（1004e，四任务 × 16 模型完成）
+- ncRNA（昨审）：3 组实质违规 → gridbest 36 已派，**今 18/36 done**（UTR-LM m6A/mrl 全落 + RiboSpan s17 random @1e-05 在飞 epoch 1）
+- m6A/MRL/SSP（今审）：20 组标记 → **18 组已由 rerun2 闭环**（旧 LR 行为副对照残留）；**真缺 = Sc-650M ssp @3e-05 6 格**（grid gap 0.068 >> 种子 sd 0.005——决定性差距；tunedmissing 上一轮用 1e-05 系我方沿用了错误的网格读数 0.0796<0.1476 判 1e-05 优，实为 3e-05 优——本轮以 ledger 原始网格行纠正）→ **ss650 补臂 6 runs 已派**（12ef7d0），1e-05 行转副对照
+- 全任务审计脚本入仓 scripts/audit_gridbest_all_tasks.py
+
+### 2. 队列进度（08:31 实测）
+- gridbest 18/36（UTR-LM m6A/mrl 12 格全落 + RiboSpan 6 格排队/在飞 1）
+- tunedmissing 30/36（NB ncRNA 6 格 s4 worker 等卡）
+- fullbig 8/14 done（新增 AIDO s17 random @1e-05=0.670 / s43 family 0.096 / RiboSpan s29 random 0.448）+ 3 在飞（RiboSpan s29/s43 family @3e-05 旧口径跑到自然结束保为副对照 + gridbest 的 s17 random @1e-05 在 GPU4 epoch 1）
+- ss650 0/6 新派（Sc-650M ssp @3e-05）
+- **总剩余：gridbest 18 + tunedmissing 6 + fullbig 6 + ss650 6 = 36 格自动在飞**
+
+### 3. 1.6B full 口径切换完成证据（RiboSpan）
+- 旧 3e-05 行：random 三种子 0.448-0.558（副对照）
+- 新 1e-05 行：s17 random 在跑（epoch 1，GPU4）——**AIDO 侧已切完**（s17 random 0.670 @1e-05 done，vs 3e-05 网格 0.520）
+- P4 主表取 1e-05 行
+
+### 4. stale 行处理
+- RiboSpan s29 random @3e-05 旧口径格被 ledger 行（running）+ gridbest worker 双认领中——旧格跑到自然结束留副对照；gridbest 队列 1e-05 版本在排队（两队列不同 run_id 无冲突）
