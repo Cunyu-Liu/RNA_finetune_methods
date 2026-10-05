@@ -117,6 +117,8 @@ def main() -> int:
     ap.add_argument("--n-train", type=int, default=2000)
     ap.add_argument("--n-test", type=int, default=400)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--rank", type=int, default=8,
+                    help="LoRA/DoRA rank (E2 sweep; default 8)")
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -129,7 +131,8 @@ def main() -> int:
 
     # run_id 编码 LR 维度（A8 协议，与 finetune_one/base 一致）
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    extra = ("_smoke" if args.smoke else "") + lr_tag
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    extra = ("_smoke" if args.smoke else "") + lr_tag + rank_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -201,7 +204,7 @@ def main() -> int:
     with torch.no_grad():
         probe = encode_one(tok, [train[0]["seq"]], device, args.max_len)
         d = backbone(**probe).last_hidden_state.shape[-1]
-    backbone, n_trainable = apply_strategy(backbone, args.strategy)
+    backbone, n_trainable = apply_strategy(backbone, args.strategy, lora_rank=args.rank)
     head = PairHead(d).to(device)
     params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]

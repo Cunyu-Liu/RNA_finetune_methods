@@ -37,8 +37,18 @@ def refresh():
         try: _rows.append(json.loads(l))
         except Exception: pass
 
-def is_done(task, model, strat, seed, split, lr):
+def is_done(task, model, strat, seed, split, lr, rank=None):
     refresh()
+    if rank is not None and int(rank) != 8:
+        rid = "ft_%s_%s_%s_s%d_%s%s%s" % (
+            model.lower().replace("-", "").replace(".", "").replace(" ", ""),
+            task.replace("-", ""), strat, seed, split,
+            ("_lr%s" % lr) if (lr is not None and strat == "full") else "",
+            "_r%d" % int(rank))
+        for r in _rows:
+            if r.get("run_id") == rid and r.get("status") == "done":
+                return True
+        return False
     for r in _rows:
         if (r.get("model") == model and r.get("task") == task and r.get("strategy") == strat
                 and r.get("seed") == seed and r.get("split") == split and r.get("status") == "done"):
@@ -102,7 +112,7 @@ def grab(g, need):
         try: os.rmdir(lk)
         except Exception: pass
     return None
-def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None):
+def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None, rank=None):
     if task == "mrl":
         mod = "rnafteval.finetune_mrl"; extra = ["--epochs", "3", "--n-train", "20000", "--batch-size", "32"]
     elif task == "modification":
@@ -118,6 +128,7 @@ def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None):
     if lr is not None: cmd += ["--lr", lr]
     if bs is not None: cmd += ["--batch-size", str(bs)]
     if max_len is not None: cmd += ["--max-len", str(max_len)]
+    if rank is not None: cmd += ["--rank", str(rank)]
     return cmd
 
 assert torch.cuda.is_available(), "CUDA not available - stopping"
@@ -128,7 +139,7 @@ for rr in todo:
     task, model, strat, split = rr["task"], rr["model"], rr["strategy"], rr["split"]
     seed, lr, need = rr["seed"], rr.get("lr"), rr.get("need", 6)
     tag = "%s|%s|%s|s%s|%s%s" % (task, model, strat, seed, split, ("|lr" + lr) if lr else "")
-    if is_done(task, model, strat, seed, split, lr):
+    if is_done(task, model, strat, seed, split, lr, rr.get("rank")):
         log("skip(done)", tag); continue
     if is_busy(task, model, strat, seed, split):
         log("skip(busy)", tag); continue
@@ -145,7 +156,7 @@ for rr in todo:
             log("RUN", tag, "GPU%d need%dG" % (g, need))
             t0 = time.time()
             p = subprocess.run(build_cmd(task, model, strat, seed, split, lr, g,
-                                         rr.get("bs"), rr.get("max_len")),
+                                         rr.get("bs"), rr.get("max_len"), rr.get("rank")),
                                cwd="/home/cunyuliu/rna-ft-eval", timeout=TIMEOUT_S,
                                stdout=LOG, stderr=subprocess.STDOUT)
             log("exit", p.returncode, tag, "%.0fs" % (time.time() - t0))

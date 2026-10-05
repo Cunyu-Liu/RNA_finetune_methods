@@ -59,6 +59,8 @@ def main() -> int:
                     help="random-init control arm (pretrained vs random gap)")
     ap.add_argument("--n-train", type=int, default=0,
                     help="E3 小数据档: 10/100/1000 (簇级子集); 0=全量")
+    ap.add_argument("--rank", type=int, default=8,
+                    help="LoRA/DoRA rank (E2 sweep; default 8)")
     args = ap.parse_args()
 
     # --- GPU discipline: no CUDA => abort with evidence ---
@@ -76,8 +78,9 @@ def main() -> int:
     # run_id 编码 LR 维度（A8 网格协议）：非默认 3e-4 的 tuning runs 用
     # _lr 后缀区分，避免 ledger claim 误 skip 不同 LR 变体
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
-    extra = ("_smoke" if args.smoke else "") + ("_ri" if args.random_init else "") + lr_tag + e3_tag
+    extra = ("_smoke" if args.smoke else "") + ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -158,7 +161,7 @@ def main() -> int:
         print("d_model corrected: spec %d -> actual %d" % (d_model, h_dim),
               flush=True)
         d_model = h_dim
-    backbone, n_trainable = apply_strategy(backbone, args.strategy)
+    backbone, n_trainable = apply_strategy(backbone, args.strategy, lora_rank=args.rank)
 
     head = make_head("per-seq", d_model, len(labels)).to(device)
     head_params = sum(p.numel() for p in head.parameters())

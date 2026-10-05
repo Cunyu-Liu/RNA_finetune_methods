@@ -51,6 +51,8 @@ def main() -> int:
     ap.add_argument("--n-train", type=int, default=20000,
                     help="subsample of train for wall-time control")
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--rank", type=int, default=8,
+                    help="LoRA/DoRA rank (E2 sweep; default 8)")
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -63,8 +65,9 @@ def main() -> int:
 
     # run_id 编码 LR 维度（A8 协议，与 finetune_one 一致）
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
-    extra = ("_smoke" if args.smoke else "") + e3_tag + lr_tag
+    extra = ("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -156,7 +159,7 @@ def main() -> int:
     with torch.no_grad():
         probe = encode_seqs(tok, [train[0]["seq"]], device, 128)
         d = backbone(**probe).last_hidden_state.shape[-1]
-    backbone, n_trainable = apply_strategy(backbone, args.strategy)
+    backbone, n_trainable = apply_strategy(backbone, args.strategy, lora_rank=args.rank)
     # token-level BCE head: outputs 1 logit per token
     head = TokenHead(d, 1, hidden=32).to(device)
     train_params = [p for p in head.parameters() if p.requires_grad] + \

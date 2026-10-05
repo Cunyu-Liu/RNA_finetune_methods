@@ -11,7 +11,7 @@ MARK=$R/status/.refresh_final_1005
 LOG=$R/status/refresh.log
 [ -f "$MARK" ] && exit 0
 allzero=1
-for pl in p2_tunedmissing_plan p2_fullbig_formal_plan p2_gridbest_fill_plan p2_ss650_gridbest_plan p2_gapfill_1005_plan; do
+for pl in p2_tunedmissing_plan p2_fullbig_formal_plan p2_gridbest_fill_plan p2_ss650_gridbest_plan p2_gapfill_1005_plan p2_ranksweep_1005_plan; do
   n=$( $PY $REPO/scripts/q_plan_need.py $REPO/scripts/$pl.json 2>/dev/null | grep -oE "missing=[0-9]+" | head -1 | cut -d= -f2 )
   [ -z "$n" ] && n=1
   [ "$n" -ne 0 ] && allzero=0
