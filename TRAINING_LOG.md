@@ -3688,3 +3688,19 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 4. 全部落齐后的触发链已就绪
 - q_refresh_when_done 的 p2_*.json 通配符自动覆盖 4 个新 plan（gridbest/tunedmissing/ss650/fullbig）
+
+## 2026-10-05 13:45 巡检：stale 毒化根修 + 6 worker 复位 + keepalive 门控化
+
+### 1. 状态实测（13:36，ledger 1834 = done 1824 / pending 8 / running 2）
+- **在飞 2 格**：AIDO full s29 family @1e-05（GPU4，11:02 起，epoch 3）+ RiboSpan full s29 random @1e-05（GPU1，11:34 起，epoch 2）——心跳正常，均为 34G 大格 ~4.5h
+- 真实剩余：gridbest 1（RiboSpan s29 random，即当前在飞格）+ fullbig 1（AIDO s29 family，即当前在飞格）+ tunedmissing 6（NB ncRNA 双切分三种子，等卡）= **8 unique 格**
+
+### 2. 本轮根修（stale-running 毒化 → worker 退出的闭环修复）
+- 5 个 tm shard（s0-s3/s5）因 stale 行导致 finetune_one 返回 skip(already running)+exit 0，worker 判定“完成”退出——NB 6 格实际无人认领
+- 手动重置 8 个 stale 行（含 RiboSpan s29 random 二次 stale）；tm need 18→34G（OOM 实测 31G）
+- **复位 6 worker**（setsid 拉起，13:39 全部在岗等卡）+ **keepalive 升级为三计划通用门控版**（keep_tunedmissing_alive.sh：missing>0 才拉 worker；missing=0 静默退出——避免与 q_refresh_when_done 的“零 worker”触发条件冲突）
+- 新增 reset_stale_cron.py（*/10 cron，ps 甄别活进程后重置无进程 stale 行）——stale 自动回收从 >2h 提速到 ≤10min
+- 孤儿行溯源：AIDO lora s99 random（10-01 遗留，无 plan 指向）+ AIDO full s17 lr3e-05（1003b LR 切换旧行）——不阻塞收口，保留为审计痕迹
+
+### 3. 收口路径（全自动）
+- 8 格落齐 → q_refresh_when_done（*/20 cron）触发全链重导 → [PENDING] 清零 → P4 v1.0
