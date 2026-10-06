@@ -1,0 +1,10 @@
+{
+ "lockdir": "/tmp/nb_backfill_locks",
+ "slots": 1,
+ "timeout_s": 21600,
+ "runs": [
+  {"task": "noncoding-rna-family", "model": "NucleicBERT", "strategy": "lora", "split": "random", "seed": 29, "need": 22, "timeout_s": 21600},
+  {"task": "noncoding-rna-family", "model": "NucleicBERT", "strategy": "frozen", "split": "random", "seed": 17, "need": 10, "timeout_s": 21600},
+  {"task": "modification", "model": "NucleicBERT", "strategy": "lora", "split": "random", "seed": 29, "need": 22, "timeout_s": 21600}
+ ]
+}

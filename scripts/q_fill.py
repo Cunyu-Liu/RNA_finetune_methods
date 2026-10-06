@@ -46,12 +46,13 @@ def is_done(task, model, strat, seed, split, lr, rank=None):
             ("_lr%s" % lr) if (lr is not None and strat == "full") else "",
             "_r%d" % int(rank))
         for r in _rows:
-            if r.get("run_id") == rid and r.get("status") == "done":
+            if r.get("run_id") == rid and r.get("status") == "done" and not r.get("smoke"):
                 return True
         return False
     for r in _rows:
         if (r.get("model") == model and r.get("task") == task and r.get("strategy") == strat
-                and r.get("seed") == seed and r.get("split") == split and r.get("status") == "done"):
+                and r.get("seed") == seed and r.get("split") == split and r.get("status") == "done"
+                and not r.get("smoke")):
             if strat == "full" and lr is not None:
                 try:
                     if abs(float(r.get("lr", 0)) - float(lr)) > 1e-12: continue
@@ -84,7 +85,7 @@ def clear_pending(task, model, strat, seed, split):
         rows = _led._load()
         rows = [r for r in rows if not (r.get("model") == model and r.get("task") == task
                 and r.get("strategy") == strat and r.get("seed") == seed
-                and r.get("split") == split and r.get("status") == "pending")]
+                and r.get("split") == split and r.get("status") in ("pending", "running"))]
         _led._write(rows)
 
 import torch
