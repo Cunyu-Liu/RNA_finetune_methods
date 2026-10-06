@@ -42,7 +42,7 @@ where it is worst.** Four lines of evidence:
    fine-tuned counterparts). Per-base tasks (m6A, SSP) are immune (0/20
    core cells fall below 0.7× their random-split score) and
    singleton-cluster regression (MRL) degrades only mildly
-   (0.85–0.91×). The collapse replicates from random-initialized
+   (0.85–0.93×). The collapse replicates from random-initialized
    backbones (family-side gap |≤0.014|, 6/6 cells), is in-band by the
    end of the first epoch (10/10 timeline cells), and coincides with an
    instant representation rank collapse under default-LR full-FT. Much
