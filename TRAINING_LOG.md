@@ -3759,3 +3759,30 @@ ledger 终态：1913+ done / pending 2（口径外遗留行）。
 3. C 组红队自查 24 项
 4. T0.3.1 导师会议（spec 冻结 + B7 补签 + 决策树签字）
 5. M1-M5 竞争监控重跑（挂出前 7 天硬性要求）
+
+## 2026-10-07 — P4 预印本 v1.0（六幕叙事重构）+ 假完成第三层根治
+
+**P4 preprint v1.0**（paper/preprint_v1.0.md，commit e63f3c5）：
+- Abstract 重写为「主命题 + 四支撑」结构（幻觉→机制→条件→路线→代价→配方六幕骨架）
+- 全文数字第 3 遍 ledger 对账，修正 v0.96 六处错误口径：
+  1. 17/17 崩溃 → 16 个 FT 架构（HydraRNA frozen-only；3 个部分逃逸 UTR-LM 0.15 / mega-lora 0.21 / RNA-FM tuned-full 0.53）
+  2. frozen 家族带 0.68–0.72 → 实际 0.11–0.89（ERNIE 0.887 / RNA-FM 0.860 / RiNALMo 0.52–0.72 / 窄配方 0.11–0.20）
+  3. E6 矩阵 124 格 → 87 格（51 ncRNA-start + 18 m6A-start + 18 retention）
+  4. "LoRA 压缩尾部 5–9×" → 危险带条件性（30M 8×；1M 处一个 LoRA 种子 +3.76 反超 full +2.50）
+  5. m6A 默认崩溃 3/5 → 2/5（RiNALMo 0.302、ERNIE 0.508；SpliceBERT 0.649 为退化非崩溃）
+  6. E3 旧表口径过时 → e3_table 权威口径（tuned full 小 n 全线最优 0.156/0.519/0.698，6859 崩溃 0.083）
+- 新增段：rank sweep 48 格（rank 二阶旋钮结论）+ 1.6B LR 二次翻转 + E6 官方谱 + m6A-start 稀释 13/18
+- E2 表修正：RNA-Sc full(tuned) 0.808；RiNALMo-650M full 0.956；mRNABERT lora family 0.086
+- 头部附「数据对账声明」注明与 v0.96 差异
+
+**假完成第三层（P1）q_fill smoke 假 skip**：
+- NB 3 缺格（lora random s29 / frozen random s17 / m6A lora s29）各自只有 smoke done 行
+- q_fill.is_done 不排除 smoke → 补跑被假 skip（SHARD DONE 但格子缺失）
+- 修复：is_done 两处加 `not r.get("smoke")`
+- 伴随缺陷：OOM exit 1 后心跳 running 行残留 → 自锁 claim-block 循环
+- 修复：clear_pending 扩展为同时清 pending/running 行
+- NB 3 格补跑已启动（GPU4，pid 见 q_fill_p2_nb_backfill_1007_plan_s0.log）
+
+**E6 导出器表间冲突记录**：e6_table.md / e6_official_table.md 的 10M/30M/micro 行数值互斥
+（e.g. 30M full s17 +4.12 vs +11.23）——ledger 原始行为唯一权威；v1.0 已按 ledger 裁决。
+导出器口径问题登记为后续修复项（不阻塞预印本，正文引用 ledger 值）。
