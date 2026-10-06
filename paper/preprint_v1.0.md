@@ -151,9 +151,9 @@ Contributions:
 
 ### 2.1 Fine-tuning is beneficial but task/split dependent (C1, Fig 1)
 [fig:fig_c1_matrix] — heatmap; black boxes = beats strongest k-mer baseline.
-Cross-model consistency (ncRNA random, LoRA): RNA-Sc 0.75, SpliceBERT 0.90,
-RiNALMo 0.93, RNA-FM 0.96, ERNIE 0.97 — gains replicate across corpora and
-parameter scales (19M–99M).
+Cross-model consistency (ncRNA random, LoRA, 3-seed means): RNA-Sc 0.746,
+SpliceBERT 0.903, RiNALMo 0.928, RNA-FM 0.962, ERNIE 0.974 — gains
+replicate across corpora and parameter scales (19M–99M).
 
 ### 2.1a External-architecture validation arms (complete, v1.0)
 
@@ -673,9 +673,9 @@ preprint scope, rules already frozen.
   tokenizer-pathology case study, excluded from per-base aggregates.
 - Prefix-tuning excluded due to dependency-stack incompatibility (peft
   0.13 / transformers 5.0 Cache API); documented, not worked around.
-- RiNALMo SSP full tuned arm: 3/3 seeds random (0.151–0.176,
-  ×24–27 recovery, direction-consistent) + family side backfilled
-  (0.158–0.189); no longer a 1-seed claim.
+- RiNALMo SSP full tuned arm: 3/3 seeds random at grid-best 3e-05
+  (0.204 mean, ×30–33 recovery) + family side (0.203); the earlier
+  1e-05 arm (0.151–0.176 random) is also reported in the grid table.
 - Preregistered checkpoint rule has two ambiguities discovered at
   automation (B16): the gain-median population was undefined (fixed:
   per-task best model, primary; all-cell pool, reported); and the
