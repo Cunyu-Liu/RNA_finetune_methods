@@ -261,7 +261,116 @@ marked):
   0.17) lose most of it. Pretraining-corpus breadth, not parameter
   count, predicts frozen family robustness.
 
-### 2.3 E2 PEFT horizontal comparison + rank sweep (C5: 2 models × 2 tasks, full factorial)
+Two questions follow directly: *why* do fine-tuned arms destroy the
+family representation so fast, and is the apparent strategy ranking
+itself trustworthy? Both point to the learning-rate protocol — the
+mechanism behind the collapse and behind every strategy comparison
+that follows.
+
+### 2.3 LR grids: scale × strategy × LR triple interaction (A8, Fig 3) — the mechanism
+
+Default-LR (3e-4) full-FT collapse is **task-dependent and extends to all
+five models on regression**: ncRNA 3/5 collapse (SpliceBERT/ERNIE/RiNALMo),
+m6A 2/5 (RiNALMo 0.302, ERNIE 0.508; SpliceBERT degrades to 0.649),
+MRL **5/5** (RiNALMo -0.001, SpliceBERT 0.098, ERNIE 0.028,
+RNA-Sc 0.159, RNA-FM 0.181 -- the only ncRNA/m6A survivor collapses on
+MRL); tuned LR recovers every cell (MRL 0.79-0.80 except RNA-Sc 0.53).
+LoRA never collapses at default LR on any task -- the phenomenon is
+full-FT-specific. Mechanistically (100-step diagnostics), collapse is an
+instant representation rank collapse: last-hidden effective rank drops
+300-500 -> 1 within 5-10 steps at only 3-5% weight drift; RNA-FM survives
+via post-collapse rebound (rank 9 -> 51) and RNA-Sc recovers within
+epochs -- collapse resistance is a recipe-family property (ALiBi-narrow
+robust, BERT-family mid-size fragile), not a monotone function of
+pretraining progress (dose experiment over RNA-Sc ck1-ck15 shows no
+dose effect).
+[fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
+RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
+RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA @3e-4: RNA-Sc 0.723,
+RiNALMo 0.934 (full grid: status/lr_grid_table.md, auto-exported).
+Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
+**0.971/0.996 (random/family, 3 seeds, grid-best 3e-05)**; SSP full
+default-LR 0.006 → **0.204/0.203 (3 seeds, grid-best 3e-05,
+direction-consistent ×30–33 recovery)** — recovery, confirming the grid
+diagnosis that the default 3e-4 is catastrophic for full-FT.
+
+**Cross-architecture collapse at the default LR, and tuned recovery
+(new)**: the ln(C) loss plateau (prediction entropy saturation)
+reproduces across three attention architectures — RiNALMo (standard),
+SpliceBERT (ALiBi), ERNIE-RNA (explicit base-pairing-constrained
+attention) — all collapsing to 0.077 ACC at 3e-4 full-FT, while
+RNA-FM (99.5M, most extensive pretraining) is the only survivor
+(0.82–0.84 random). Tuned-LR backfill restores every collapsed arm:
+SpliceBERT full@3e-5 random = 0.910 (3-seed, ×11.8 recovery,
+exceeding its LoRA 0.904); ERNIE full@1e-5 random = 0.973 (×12.6,
+matching LoRA 0.974); NucleicBERT full@1e-5 random = 0.878–0.890
+(default 0.10, ×8.7) — the collapse is an LR artifact, not a
+strategy property. Under family splits both tuned arms still
+collapse (0.06–0.10) — the C4 per-sequence collapse holds across
+all five models in both LoRA and tuned-full arms (tuned-SpliceBERT
+0.064–0.096, tuned-ERNIE 0.076–0.085), ruling out LR
+confounding for the leakage finding.
+
+**The full-FT optimum shifts left a second time at 1.6B (new).**
+The 10M→33M shift (3e-5→1e-5) is not the end of the trajectory: on
+AIDO.RNA-1.6B the full-FT grid separates further — 1e-05 scores
+0.720 vs 0.520 at 3e-05 on the tuning seed (3-seed formal mean
+0.688 at 1e-05) — and RiboSpan-1K-40 shows the same direction with
+full formal seeds (1e-05 0.606–0.690 vs 3e-05 0.448–0.558, 3-seed
+means 0.657 vs 0.501). The larger the
+backbone, the sharper the penalty for missing the leftward shift;
+the practical rule "always LR-sweep full-FT per scale" is itself a
+scale-dependent safety requirement, and the default 3e-4 inherited
+from the PEFT literature is never the full-FT answer at any RNA-LM
+scale tested (0.5M–1.6B).
+
+With the LR confound removed, one moderator of the family collapse
+remains untested: the amount of training data itself. Family
+memorization needs family members to memorize — how many labels does
+it take before the collapse mechanism engages?
+
+### 2.4 Label-budget axis (E3, C3): when the leakage advantage flips
+
+With cluster-level subsampling (draw clusters, keep them whole —
+seed-matched subsets at n ∈ {10, 100, 1000} + full 6,859) on the
+family split, 3-seed means (tuned-LR backfill applied; auto-exported
+status/e3_table.md):
+
+| n | frozen | LoRA | full (tuned) | best |
+|---|---|---|---|---|
+| 10 | 0.103 | 0.131 | **0.156** | full |
+| 100 | 0.424 | 0.509 | **0.519** | full |
+| 1,000 | 0.645 | 0.676 | **0.698** | full |
+| 6,859 (full) | **0.696** | 0.081 | 0.083 | frozen |
+
+(RiNALMo-micro, family split; RNA-Sc-10M replicates the small-n
+full-best pattern: n=10 0.110, n=100 0.154, then LoRA 0.287 at
+n=1000 and frozen 0.214 at full data.)
+
+Three signals: (i) **at small label budgets full fine-tuning wins**
+— n=10: full 0.156 vs LoRA 0.131 vs frozen 0.103 (3× frozen on
+RiNALMo; RNA-Sc n=10 0.110 same direction): ten sequences teach
+class priors, not family memorization — there are no family twins to
+memorize at n=10, and the frozen head (16K params) cannot even fit
+class priors; (ii) the tuned full-FT curve is *non-monotone in label
+budget*: 0.156 → 0.519 → **0.698 (best of all strategies)** → 0.083
+(collapse) — more labels first help then *hurt* full fine-tuning
+under family splits, because family memorization grows with data
+mass: the direct C3×C4 mechanism; (iii) **1,000 labels recover ~99%
+of the full-data frozen score** (0.698 vs 0.696, both best-arm) —
+practically, a thousand annotations under cluster sampling suffice
+for this task class, and the small-n regime inverts the
+recommendation: full-FT (or LoRA at n=1000 for the 10M model) over
+frozen. The label-budget axis turns the §2.2 verdict from "never
+fine-tune under family shift" into "fine-tune while the family-
+memorization mass is still small." Full learning curves:
+fig_e3_curves (per-model panels, min-max bands).
+
+So far "fine-tuning" has meant full-FT with tuned LRs. The remaining
+practical question is the route: which adaptation family — and at
+which adapter rank — buys the most per trainable parameter?
+
+### 2.5 PEFT route selection: five arms + rank sweep (C5)
 
 Auto-exported (status/e2_table.md, ranksweep runs in ledger); per-seed
 values in Supp S3.
@@ -373,100 +482,6 @@ status/figs/fig_c5b.png (slide: figs/equivalence_line.pptx).
 - Prefix-tuning infeasible under current dependency versions (peft 0.13
   tuple-style past_key_values vs transformers 5.0 Cache API) — documented
   limitation.
-
-### 2.4 LR grids: scale × strategy × LR triple interaction (A8, Fig 3)
-
-Default-LR (3e-4) full-FT collapse is **task-dependent and extends to all
-five models on regression**: ncRNA 3/5 collapse (SpliceBERT/ERNIE/RiNALMo),
-m6A 2/5 (RiNALMo 0.302, ERNIE 0.508; SpliceBERT degrades to 0.649),
-MRL **5/5** (RiNALMo -0.001, SpliceBERT 0.098, ERNIE 0.028,
-RNA-Sc 0.159, RNA-FM 0.181 -- the only ncRNA/m6A survivor collapses on
-MRL); tuned LR recovers every cell (MRL 0.79-0.80 except RNA-Sc 0.53).
-LoRA never collapses at default LR on any task -- the phenomenon is
-full-FT-specific. Mechanistically (100-step diagnostics), collapse is an
-instant representation rank collapse: last-hidden effective rank drops
-300-500 -> 1 within 5-10 steps at only 3-5% weight drift; RNA-FM survives
-via post-collapse rebound (rank 9 -> 51) and RNA-Sc recovers within
-epochs -- collapse resistance is a recipe-family property (ALiBi-narrow
-robust, BERT-family mid-size fragile), not a monotone function of
-pretraining progress (dose experiment over RNA-Sc ck1-ck15 shows no
-dose effect).
-[fig:fig_lr_grid] — 4-point grids per model×strategy (seed 101).
-RiNALMo full: 0.943/0.944/0.924/0.077 across 1e-5→3e-4;
-RNA-Sc full: 0.683/0.815/0.807/0.688; LoRA @3e-4: RNA-Sc 0.723,
-RiNALMo 0.934 (full grid: status/lr_grid_table.md, auto-exported).
-Tuned-LR protocol replication (Day 2): RiNALMo m6A full default-LR 0.30 →
-**0.971/0.996 (random/family, 3 seeds, grid-best 3e-05)**; SSP full
-default-LR 0.006 → **0.204/0.203 (3 seeds, grid-best 3e-05,
-direction-consistent ×30–33 recovery)** — recovery, confirming the grid
-diagnosis that the default 3e-4 is catastrophic for full-FT.
-
-**Cross-architecture collapse at the default LR, and tuned recovery
-(new)**: the ln(C) loss plateau (prediction entropy saturation)
-reproduces across three attention architectures — RiNALMo (standard),
-SpliceBERT (ALiBi), ERNIE-RNA (explicit base-pairing-constrained
-attention) — all collapsing to 0.077 ACC at 3e-4 full-FT, while
-RNA-FM (99.5M, most extensive pretraining) is the only survivor
-(0.82–0.84 random). Tuned-LR backfill restores every collapsed arm:
-SpliceBERT full@3e-5 random = 0.910 (3-seed, ×11.8 recovery,
-exceeding its LoRA 0.904); ERNIE full@1e-5 random = 0.973 (×12.6,
-matching LoRA 0.974); NucleicBERT full@1e-5 random = 0.878–0.890
-(default 0.10, ×8.7) — the collapse is an LR artifact, not a
-strategy property. Under family splits both tuned arms still
-collapse (0.06–0.10) — the C4 per-sequence collapse holds across
-all five models in both LoRA and tuned-full arms (tuned-SpliceBERT
-0.064–0.096, tuned-ERNIE 0.076–0.085), ruling out LR
-confounding for the leakage finding.
-
-**The full-FT optimum shifts left a second time at 1.6B (new).**
-The 10M→33M shift (3e-5→1e-5) is not the end of the trajectory: on
-AIDO.RNA-1.6B the full-FT grid separates further — 1e-05 scores
-0.720 vs 0.520 at 3e-05 on the tuning seed (3-seed formal mean
-0.688 at 1e-05) — and RiboSpan-1K-40 shows the same direction with
-full formal seeds (1e-05 0.606–0.690 vs 3e-05 0.448–0.558, 3-seed
-means 0.657 vs 0.501). The larger the
-backbone, the sharper the penalty for missing the leftward shift;
-the practical rule "always LR-sweep full-FT per scale" is itself a
-scale-dependent safety requirement, and the default 3e-4 inherited
-from the PEFT literature is never the full-FT answer at any RNA-LM
-scale tested (0.5M–1.6B).
-
-### 2.5 Label-budget axis (E3, C3: full tuned backfill complete)
-
-With cluster-level subsampling (draw clusters, keep them whole —
-seed-matched subsets at n ∈ {10, 100, 1000} + full 6,859) on the
-family split, 3-seed means (tuned-LR backfill applied; auto-exported
-status/e3_table.md):
-
-| n | frozen | LoRA | full (tuned) | best |
-|---|---|---|---|---|
-| 10 | 0.103 | 0.131 | **0.156** | full |
-| 100 | 0.424 | 0.509 | **0.519** | full |
-| 1,000 | 0.645 | 0.676 | **0.698** | full |
-| 6,859 (full) | **0.696** | 0.081 | 0.083 | frozen |
-
-(RiNALMo-micro, family split; RNA-Sc-10M replicates the small-n
-full-best pattern: n=10 0.110, n=100 0.154, then LoRA 0.287 at
-n=1000 and frozen 0.214 at full data.)
-
-Three signals: (i) **at small label budgets full fine-tuning wins**
-— n=10: full 0.156 vs LoRA 0.131 vs frozen 0.103 (3× frozen on
-RiNALMo; RNA-Sc n=10 0.110 same direction): ten sequences teach
-class priors, not family memorization — there are no family twins to
-memorize at n=10, and the frozen head (16K params) cannot even fit
-class priors; (ii) the tuned full-FT curve is *non-monotone in label
-budget*: 0.156 → 0.519 → **0.698 (best of all strategies)** → 0.083
-(collapse) — more labels first help then *hurt* full fine-tuning
-under family splits, because family memorization grows with data
-mass: the direct C3×C4 mechanism; (iii) **1,000 labels recover ~99%
-of the full-data frozen score** (0.698 vs 0.696, both best-arm) —
-practically, a thousand annotations under cluster sampling suffice
-for this task class, and the small-n regime inverts the
-recommendation: full-FT (or LoRA at n=1000 for the 10M model) over
-frozen. The label-budget axis turns the §2.2 verdict from "never
-fine-tune under family shift" into "fine-tune while the family-
-memorization mass is still small." Full learning curves:
-fig_e3_curves (per-model panels, min-max bands).
 
 ### 2.6 Official split leakage audit (B1 discipline)
 MMseqs2 0.8/0.8 over 309k BEACON modification windows: 327/1200 official
