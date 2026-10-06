@@ -44,6 +44,8 @@ def collect() -> dict:
         m, s, seed = r["model"], r["strategy"], int(r["seed"])
         if m not in ORDER or s not in ("lora", "full"):
             continue
+        if r.get("task") == "modification":
+            continue
         data.setdefault((m, s), {})[seed] = r
     return data
 
