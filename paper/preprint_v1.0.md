@@ -76,7 +76,7 @@ where it is worst.** Four lines of evidence:
    +0.017–0.044 vs full +0.098–0.154) — though at 1M one LoRA seed
    (+3.8) exceeds full's worst (+2.5): adapter protection is a
    danger-band phenomenon, not a blanket law. Per-base starting tasks dilute
-   forgetting in 13/18 seed-level contrasts (exceptions concentrated
+   forgetting in 14/18 seed-level contrasts (exceptions concentrated
    in MLM-scored RiNALMo-micro LoRA).
 
 We release the full run ledger, MMseqs2 0.8/0.8 family-cluster splits
@@ -506,8 +506,8 @@ LRs; 87 cells total across E6-v1/v2/v3):
 
 | model | strategy (lr) | Δ s17 / s29 / s43 | mean |
 |---|---|---|---|
-| RiNALMo-micro | full (1e-05) | +0.116 / +0.116 / +0.116 | +0.116 |
-| RiNALMo-micro | lora (3e-04) | +0.191 / +0.191 / +0.191 | +0.191 |
+| RiNALMo-micro | full (1e-05) | +0.159 / +0.155 / +0.159 | +0.157 |
+| RiNALMo-micro | lora (3e-04) | +0.110 / +0.140 / +0.105 | +0.118 |
 | RiNALMo-mega | full (1e-05) | +0.129 / +0.136 / +0.119 | +0.128 |
 | RiNALMo-mega | lora (1e-05) | +0.036 / +0.036 / +0.037 | +0.036 |
 | RiNALMo-mega | lora (3e-04) | +0.080 / +0.063 / +0.068 | +0.070 |
@@ -530,15 +530,16 @@ exceeds full-FT's worst (+2.50): adapters bound the tail in the danger
 band, they are not a blanket guarantee. For deployment risk management
 in the band, LoRA bounds the downside. (iii) **Every official RiNALMo
 scale forgets its own pretraining distribution in every cell** (micro
-6/6, mega 6/6, 650M 6/6 — 18/18 cells positive, +0.036 to +0.191) with
-tight seed variance, and forgetting *decreases* with scale within the
-official family (micro +0.116/+0.191 → 650M +0.125/+0.026) —
+6/6, mega 6/6, 650M 6/6 — 18/18 cells positive, +0.036 to +0.159) with
+tight seed variance, and LoRA forgetting *decreases* with scale within
+the official family (micro +0.118 → 650M +0.026; full +0.157 →
++0.125) —
 released-model users pay a measurable, scale-attenuated forgetting cost
 on any task fine-tune. (iv) **Per-base starting tasks dilute forgetting
-(E6-v2)**: m6A-start Δ is more negative than ncRNA-start Δ in 13/18
-seed-level contrasts (controlled family 10/12; the 5 exceptions are
-RiNALMo-micro MLM-scored LoRA ×3 and two 30M mid-band seeds where
-ncRNA-start variance is extreme). Dense per-position labels act as
+(E6-v2)**: m6A-start Δ is more negative than ncRNA-start Δ in 14/18
+seed-level contrasts (controlled family 11/12; the 4 exceptions are
+RiNALMo-micro MLM-scored LoRA ×3 and one 30M full seed whose ncRNA-start
+variance is extreme). Dense per-position labels act as
 implicit pretraining replay for the positions they touch.
 
 [fig:fig_e6_matrix] — forgetting matrix, auto-exported:
