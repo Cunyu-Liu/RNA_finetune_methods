@@ -75,14 +75,17 @@ def main() -> int:
         if r.get("split") == "random" and r.get("seed") == 101:
             if r.get("status") == "done" and r.get("value") is not None and is_tuned:
                 grid[key][lr] = r["value"]
-        elif r.get("split") == "random" and r.get("seed") in (17, 29, 43):
-            if is_tuned:
-                if r.get("status") == "done":
-                    tuned[key].add(lr)
-                else:
-                    tuned_unfinished[key] = True
-            else:
-                default_arm[key].add(lr)
+        elif r.get("seed") in (17, 29, 43) and is_tuned and r.get("status") == "done":
+            # 1006d: grid-best coverage check — a combo is covered when formal
+            # tuned rows exist AT the grid-best LR. Old-LR secondary-contrast rows
+            # must not mask missing grid-best rows, and vice versa. We therefore
+            # track per-LR completion instead of a single LR set.
+            tuned.setdefault(key, {}).setdefault(lr, 0)
+            tuned[key][lr] += 1
+        elif r.get("seed") in (17, 29, 43) and is_tuned and not r.get("status") == "done":
+            tuned_unfinished[key] = True
+        elif r.get("seed") in (17, 29, 43) and not is_tuned:
+            default_arm[key].add(lr)
 
     md = ["# s101 tuned-LR 网格一致性审计（B1 防线；自动导出）", "",
           "规则：网格最优 LR（VL0 选优）≠ formal **tuned 臂**实际 LR → 需重跑 formal。",
@@ -96,25 +99,27 @@ def main() -> int:
         g = grid.get(key, {})
         need = targets[key]
         have = set(k for k in need if k in g)
-        tl = tuned.get(key, set())
+        tl_map = tuned.get(key, {})
+        best = max(g, key=lambda k: g[k]) if g else None
+        covered = tl_map.get(best, 0) >= 6  # grid-best LR present on BOTH splits x 3 seeds
+        any_lr = len(tl_map) > 0
         dl = default_arm.get(key, set())
         if len(have) < len(need):
             verdict = "PENDING"
             n_pend += 1
         else:
-            best = max(g, key=lambda k: g[k])
-            if not tl:
+            if not any_lr:
                 verdict = "TUNED-MISSING"
                 missing.append((m, t, best, g[best]))
-            elif all(abs(x - best) < 1e-12 for x in tl):
+            elif covered:
                 verdict = "MATCH"
                 n_match += 1
             else:
                 verdict = "RERUN-NEEDED"
-                rerun.append((m, t, best, g[best], sorted(tl)))
+                rerun.append((m, t, best, g[best], sorted(tl_map)))
         fmtv = lambda v: ("%.4f" % v) if v is not None else "—"
         best_s = ("%.0e" % max(g, key=lambda k: g[k])) if (len(have) == len(need) and g) else "—"
-        t_s = ",".join("%.0e" % x for x in sorted(tl)) if tl else "—"
+        t_s = ",".join("%.0e" % x for x in sorted(tl_map)) if tl_map else "—"
         d_s = ",".join("%.0e" % x for x in sorted(dl)) if dl else "—"
         md.append("| %s | %s | %s | %s | %s | %s | %s | %s |" % (
             m, t, fmtv(g.get(1e-05)), fmtv(g.get(3e-05)), best_s, t_s, d_s, verdict))
