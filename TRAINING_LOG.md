@@ -3734,3 +3734,28 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 - 全项目唯一真缺口 = NB ncRNA 6 格（bs8 协议在飞）+ ranksweep 11 格
 - grid_audit：37 MATCH / 0 RERUN / 1 TUNED-MISSING（口径修复后）
 - ledger 1905 行 = done 1891 / pending 10 / running 4
+
+## TRAINING_LOG 2026-10-07 02:20（Day 20 收官 · 项目数据全收口达成 ★）
+
+### 终审计（02:20 全链重刷后）
+- **tunedmissing 36/36 + ranksweep 48/48 全收口** → final_close_monitor 自动触发 q_refresh_final（02:20:02 FINAL REFRESH → 02:22:17 done）
+- **grid_audit 终审：MATCH 38 / RERUN 0 / TUNED-MISSING 0 / PENDING 0**（NB ncRNA 6 格落地后转 MATCH）
+- **9 个导出表 [PENDING] 全部 = 0**（c4/e2/e3/e6/randinit/e6v2/e6v3/collapse/e6_official）
+- 全链 21 模块全 ok（0 FAIL）：export×14 + grid_audit + stats + decision_tree + figures + fig_resources/c5b/e6
+
+### NB ncRNA 6 格终值（tuned 1e-05 · bs8 网格协议）
+- random: s17 0.8776 / s29 0.8904 / s43 0.8788（对照 s101 网格 0.8776——种子一致性好）
+- family: s17 0.0596 / s29 0.0958 / s43 0.0643（崩溃带第 17 次架构级确认）
+- **A8 崩溃-恢复叙事第 2 外部架构 formal 级证据完整**：默认 3e-4 0.10 vs tuned 1e-05 0.88（random）
+
+### 项目总账（全部收口）
+E1 全矩阵（8 P2 plan + gridbest/gapfill/ss650/fullbig/ranksweep/tunedmissing 全 0 miss）+ s101 网格 76/76 + E6 三臂 124 格 + random-init 36 + collapse 10 + E2-ext 24 + HydraRNA 18 —— **项目数据全收口**。
+
+ledger 终态：1913+ done / pending 2（口径外遗留行）。
+
+### 下一步（P4 预印本 v1.0——按新叙事骨架）
+1. 六幕结构重写（幻觉→机制→条件→路线→代价→配方），并入 E6 88 格 + 1.6B 等价线大端 + NB tuned-LR 修复值 + ranksweep rank 轴
+2. 全文数字对账（ledger 唯一口径）
+3. C 组红队自查 24 项
+4. T0.3.1 导师会议（spec 冻结 + B7 补签 + 决策树签字）
+5. M1-M5 竞争监控重跑（挂出前 7 天硬性要求）
