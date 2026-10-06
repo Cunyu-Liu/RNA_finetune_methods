@@ -3704,3 +3704,33 @@ pick_gpu 空输出缺陷仍在（finetune_base 内部幂等已实际无害化）
 
 ### 3. 收口路径（全自动）
 - 8 格落齐 → q_refresh_when_done（*/20 cron）触发全链重导 → [PENDING] 清零 → P4 v1.0
+
+## TRAINING_LOG 2026-10-06（Day 20 · 1006b-1006e：假完成根治 + 审计纠错 + PPT 核对 + NB OOM 法证）
+
+### 1006b 假完成死亡链根治（P1 级工程修复）
+- 根因链（证据完整）：OOM exit 1 → ledger 残留 running → 重试 claim 被拒 "skip (already running)" + **exit 0** → q_fill 视 exit 0 为完成 → worker SHARD DONE 退出 → 格滞留
+- 修复两层：4 runner（finetune_one/ssp/base/mrl）claim 失败返回 **rc=75**；q_fill 对 rc=75 → claim-blocked wait 300s（不消耗 attempt）
+- 配套：NB ncRNA need 34→19G（当时判断）+ 6 worker 重启；commit 5ecf487
+
+### 1006c final_close_monitor（cron */10）
+- tm + ranksweep 双 missing=0 → 自动触发 q_refresh_final 全链重刷；marker .refresh_final_1006c；commit 65a5d6f
+
+### 1006d export_grid_audit 覆盖规则纠错
+- 旧规则只看 random 切分 tuned LR 集 → rerun2 双切分落地被漏判 → 12 组假 RERUN-NEEDED
+- 新规则：per-LR 覆盖（grid-best LR 需双切分×3 种子 = 6 done 行）；MATCH 25→37 / RERUN 12→0 / 唯一真缺口 = NB ncRNA TUNED-MISSING；commit dbc3c76
+
+### 1006e NB ncRNA OOM 法证二轮（need 回调）
+- 第一轮 need 19G 修正后开训，但 OOM 复发：torch 错误显示**进程自用 28.9G**（bs32 默认）vs s101 网格 peak 16.7G（**bs8**）
+- 根因：NB 用 torch nn.MultiheadAttention（显式物化注意力矩阵），ncRNA 长序列 bs32 → 28.9G；网格协议是 bs8
+- 修复：tm plan NB ncRNA 6 格 **bs=8（网格协议对齐）+ need 34G**；worker 重启；commit 57a58aa
+- 教训（checklist 候选 B24）：need 校准必须同 bs 语境——peak_mem_mb 来自哪个 bs 的 run 要先查，跨 bs 直接换算会错（16.7G@bs8 ≠ 16.7G@bs32）
+
+### PPT 全表核对（用户指令）
+- 60+ 数值格 vs 1006 版 c4_table（ledger 唯一口径）：19/20 组通过
+- 修正 1 处：slide3 新架构复现 mRNABERT lora family 0.072→0.086（ledger 0.0857）；lint PASS
+- 系统教训：同类手抄错第 2 次 → P4 期 PPT 数字程序化生成（update_ppt.py 扩展）
+
+### 收口总账（15:40 实测）
+- 全项目唯一真缺口 = NB ncRNA 6 格（bs8 协议在飞）+ ranksweep 11 格
+- grid_audit：37 MATCH / 0 RERUN / 1 TUNED-MISSING（口径修复后）
+- ledger 1905 行 = done 1891 / pending 10 / running 4
