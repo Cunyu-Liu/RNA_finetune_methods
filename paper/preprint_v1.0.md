@@ -313,17 +313,17 @@ values in Supp S3.
   (0.896) beats same-scale LoRA by +0.040 -- full-FT wins the
   controlled family at all five scales (full-FT curve is non-monotone
   with a 30M peak). Official family (RiNALMo, all three published
-  sizes complete): micro-33M full 0.938 < mega-148M full 0.945 <
-  giga-650M full 0.957 vs giga-650M LoRA 0.969 -- even
+  sizes complete, grid-best LRs): micro-33M full 0.944 < mega-148M full 0.945 <
+  giga-650M full 0.956 vs giga-650M LoRA 0.969 -- even
   full-FT at the largest released scale does not beat LoRA on the
-  same checkpoint, and the 33M->650M full-FT gain is only +0.028:
+  same checkpoint, and the 33M->650M full-FT gain is only +0.012:
   no crossover anywhere in the official family. Clean-scaling
   models reach equivalence early; officially released families retain a
   large-model advantage. Dual-track validation
   (user-requested): on the official three published RiNALMo scales the
   "small full-FT >= large LoRA" pattern does NOT hold -- micro-33M
-  full (0.938) trails mega-148M LoRA (0.949) by -0.011, and even
-  giga-650M full-FT (0.957, 3-seed mean: 0.966/0.939/0.964) trails
+  full (0.944) trails mega-148M LoRA (0.949) by -0.005, and even
+  giga-650M full-FT (0.956) trails
   giga LoRA (0.969) -- whereas the controlled family shows the
   crossover at 10M-30M and holds it through the largest controlled
   scale (650M full 0.896 > 650M LoRA 0.855; 30M full 0.862 ~
