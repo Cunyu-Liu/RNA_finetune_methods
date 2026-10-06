@@ -8,7 +8,14 @@ for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
     if not l: continue
     try: rows.append(json.loads(l))
     except Exception: pass
-def has(t, m, s, sd, sp, lr):
+def has(t, m, s, sd, sp, lr, rank=None):
+    if rank is not None and int(rank) != 8:
+        rid = "ft_%s_%s_%s_s%d_%s%s_r%d" % (
+            m.lower().replace("-", "").replace(".", "").replace(" ", ""),
+            t.replace("-", ""), s, sd, sp,
+            ("_lr%s" % lr) if (lr is not None and s == "full") else "",
+            int(rank))
+        return any(r.get("run_id") == rid and r.get("status") == "done" for r in rows)
     for r in rows:
         if (r.get("model") == m and r.get("task") == t and r.get("strategy") == s
                 and r.get("seed") == sd and r.get("split") == sp and r.get("status") == "done"):
@@ -20,6 +27,6 @@ def has(t, m, s, sd, sp, lr):
     return False
 runs = P["runs"]; done = 0
 for r in runs:
-    if has(r["task"], r["model"], r["strategy"], r["seed"], r["split"], r.get("lr")):
+    if has(r["task"], r["model"], r["strategy"], r["seed"], r["split"], r.get("lr"), r.get("rank")):
         done += 1
 print("missing=%d total=%d done=%d" % (len(runs) - done, len(runs), done))
