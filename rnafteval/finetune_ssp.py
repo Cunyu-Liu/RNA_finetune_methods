@@ -142,7 +142,7 @@ def main() -> int:
                          extra=extra)
     if not claim["claimed"]:
         print("skip (already %s): %s" % (claim["row"]["status"], rid))
-        return 0
+        return 75  # EXIT_CLAIM_BLOCKED (fake-complete fix 1006b)
 
     t0 = time.time()
     torch.cuda.reset_peak_memory_stats(args.device)

@@ -90,7 +90,7 @@ def main() -> int:
                          extra=extra)
     if not claim["claimed"]:
         print("skip (already %s): %s" % (claim["row"]["status"], rid))
-        return 0
+        return 75  # EXIT_CLAIM_BLOCKED: caller must NOT treat as success (fake-complete fix 1006b)
 
     ledger.update(rid, "running", note="heartbeat: start")
 

@@ -161,6 +161,11 @@ for rr in todo:
                                stdout=LOG, stderr=subprocess.STDOUT)
             log("exit", p.returncode, tag, "%.0fs" % (time.time() - t0))
             if p.returncode == 0: finished = True
+            elif p.returncode == 75:
+                # EXIT_CLAIM_BLOCKED: another worker/ledger row holds the cell
+                # (fake-complete root fix 1006b) -> wait WITHOUT consuming attempt
+                log("claim-blocked, wait", tag)
+                time.sleep(300)
             else: clear_pending(task, model, strat, seed, split); att += 1
         except subprocess.TimeoutExpired:
             log("TIMEOUT", tag); clear_pending(task, model, strat, seed, split); att += 1

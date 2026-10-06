@@ -74,7 +74,7 @@ def main() -> int:
                          extra=extra)
     if not claim["claimed"]:
         print("skip (already %s)" % claim["row"]["status"])
-        return 0
+        return 75  # EXIT_CLAIM_BLOCKED (fake-complete fix 1006b)
 
     t0 = time.time()
     from .tasks import mrl as mrl_task
