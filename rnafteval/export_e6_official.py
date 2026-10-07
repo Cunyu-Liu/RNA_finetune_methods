@@ -38,6 +38,8 @@ def collect() -> dict:
             continue
         if r.get("model") not in MODELS or r.get("strategy") not in STRATS:
             continue
+        if r.get("task") == "modification":
+            continue
         try:
             lr = float(r.get("lr"))
         except Exception:
