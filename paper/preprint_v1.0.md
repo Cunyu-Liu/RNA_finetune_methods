@@ -175,13 +175,11 @@ matrix.
   k-mer-token model needs backbone adaptation far more than
   nucleotide-token models — and still collapses under family splits.
 - **NucleicBERT (k-mer masked LM, 86M)** — 4 tasks × 3 strategies × 2
-  splits done (48/48 + tuned backfill; three default-arm random cells
-  carry 2/3 formal seeds, backfill in flight — LoRA ncRNA 0.938,
-  frozen 0.833, m6A LoRA 0.992 on the completed seeds). ncRNA: frozen
-  0.833 / LoRA 0.938 / full 0.882 (tuned 1e-05) random; family LoRA
-  0.079 / full 0.073 (3/3 seeds). The default-LR full arm scored
-  0.10 (A8 collapse), tuned 1e-05 restored it to 0.88 — the 17th
-  architecture confirming the LR trap (recovery ×8.7) and the
+  splits done (48/48 + tuned backfill + 1007 three-cell backfill). ncRNA:
+  frozen 0.833 / LoRA 0.940 (3/3 seeds) / full 0.882 (tuned 1e-05)
+  random; family LoRA 0.079 / full 0.073 (3/3 seeds). The default-LR
+  full arm scored 0.10 (A8 collapse), tuned 1e-05 restored it to 0.88 —
+  the 17th architecture confirming the LR trap (recovery ×8.7) and the
   family-split crash band. m6A: full 0.991 (3/3) — per-base immunity
   replicates. MRL regression: LoRA 0.782 random / 0.690 family
   (mild, ratio 0.88).
