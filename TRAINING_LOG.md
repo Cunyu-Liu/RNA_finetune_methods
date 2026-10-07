@@ -3786,3 +3786,11 @@ ledger 终态：1913+ done / pending 2（口径外遗留行）。
 **E6 导出器表间冲突记录**：e6_table.md / e6_official_table.md 的 10M/30M/micro 行数值互斥
 （e.g. 30M full s17 +4.12 vs +11.23）——ledger 原始行为唯一权威；v1.0 已按 ledger 裁决。
 导出器口径问题登记为后续修复项（不阻塞预印本，正文引用 ledger 值）。
+
+**NB 3 格补跑收官（12:10）**：m6A lora s29 random 0.9917（3226s，GPU3）落地 → SHARD DONE →
+nb_close_monitor 自动触发 c4_table 重刷成功（12:10 NB CLOSE）。NB 全臂 3/3 种子：
+ncRNA frozen 0.838 / lora 0.940 / full(tuned) 0.882 random；m6A lora 0.992 / full 0.991；
+family 侧 lora 0.079 / full 0.073（崩溃带 17 架构级确认维持）。
+过程记录：frozen s17 首跑 GPU4 被挤 OOM（7224s exit 1）→ clear_pending 修复版清行 →
+09:05 GPU3 换卡重跑 115.9min 成功——**修复生效实证**（旧行为 = 5 分钟死锁循环）。
+v1.0 终值已同步（GitHub push）。
