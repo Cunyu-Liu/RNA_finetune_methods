@@ -3794,3 +3794,14 @@ family 侧 lora 0.079 / full 0.073（崩溃带 17 架构级确认维持）。
 过程记录：frozen s17 首跑 GPU4 被挤 OOM（7224s exit 1）→ clear_pending 修复版清行 →
 09:05 GPU3 换卡重跑 115.9min 成功——**修复生效实证**（旧行为 = 5 分钟死锁循环）。
 v1.0 终值已同步（GitHub push）。
+
+## 2026-10-08（1008：PPT 七项修订 + 补测队列 + 300M 接入）
+
+- **q_fill.py 两处扩展**：--n-train 传参支持 + is_done e3 档位精确匹配（修「3000 done 误判 5000 done」假 skip——B23 教训新变体：档位维度双证）
+- **RNA-Sc-300M 接入**：models/__init__.py 注册（d_model 1024 / 300M / controlled）+ run_map + CUDA smoke 通过（302.1M, (B,T,1024)）
+- **派发 2 队列**：p2_e3_5000_1008_plan（24 runs：E3 3000/5000 档补全）+ p2_rnasc300m_1008_plan（18 runs：ncRNA 双切变 × 3 策略 × 3 种子）
+- **E3 3000 档落地**：micro tuned full 3/3（0.724/0.744/0.724）——曲线上行；lora@3000 反降 0.583（三种子 0.687/0.695/0.701 为 default LR 口径，0.480/0.457/0.477 为 lr3e-05 口径——取 default）
+- **等价线探索（用户问题6 核心新问题）**：full@1000 (0.707) ≈ lora@3000 (0.696)——千条全参 ≈ 三千条 LoRA；full@3000 > 全档 lora
+- **收敛审计成文**：docs/自训模型收敛审计_20261008.md——13 run 全收敛（val 末 3 档 <1.2%）；两系相反归因 = 语料广度+配方
+- **PPT 1008 修订**（本地）：13 页 lint PASS；5 图换新 + 2 新页（E4/E5）；LR 复核走 ledger 原始行
+- **图脚本坑**：rid tag 过滤必须 _ 分段精确匹配（_ri 子串误杀 rinalmo 前缀 → 全零假图）

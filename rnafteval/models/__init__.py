@@ -69,6 +69,8 @@ MODEL_SPECS: dict[str, ModelSpec] = {
                                  custom_loader="rnasc"),
     "RNA-Sc-100M": ModelSpec("RNA-Sc-100M", "", 768, 100.0, "controlled",
                              custom_loader="rnasc"),
+    "RNA-Sc-300M": ModelSpec("RNA-Sc-300M", "", 1024, 300.0, "controlled",
+                             custom_loader="rnasc"),
 }
 
 
@@ -209,6 +211,7 @@ def load_rnasc(model_name: str, device: str):
         "RNA-Sc-10M": "RNA-Sc-10M_s17",
         "RNA-Sc-30M": "RNA-Sc-30M_s17",
         "RNA-Sc-100M": "RNA-Sc-100M_s17",
+        "RNA-Sc-300M": "RNA-Sc-300M_s17",
         "RNA-Sc-650M": "RNA-Sc-650M_s17",
     }
     if "-ck" in model_name:

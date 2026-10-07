@@ -37,8 +37,19 @@ def refresh():
         try: _rows.append(json.loads(l))
         except Exception: pass
 
-def is_done(task, model, strat, seed, split, lr, rank=None):
+def is_done(task, model, strat, seed, split, lr, rank=None, n_train=None):
     refresh()
+    if n_train:
+        base = "ft_%s_%s_%s_s%d_%s" % (
+            model.lower().replace("-", "").replace(".", "").replace(" ", ""),
+            task.replace("-", ""), strat, seed, split)
+        want = base + (("_lr%s" % lr) if (lr is not None and strat == "full") else "") + "_e3%d" % int(n_train)
+        for r in _rows:
+            rid = r.get("run_id", "")
+            if rid == want or (rid.startswith(want) and set(rid[len(want):].split("_")) <= {"r8", ""}):
+                if r.get("status") == "done" and not r.get("smoke"):
+                    return True
+        return False
     if rank is not None and int(rank) != 8:
         rid = "ft_%s_%s_%s_s%d_%s%s%s" % (
             model.lower().replace("-", "").replace(".", "").replace(" ", ""),
@@ -113,7 +124,7 @@ def grab(g, need):
         try: os.rmdir(lk)
         except Exception: pass
     return None
-def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None, rank=None):
+def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None, rank=None, rr_n_train=None):
     if task == "mrl":
         mod = "rnafteval.finetune_mrl"; extra = ["--epochs", "3", "--n-train", "20000", "--batch-size", "32"]
     elif task == "modification":
@@ -127,6 +138,7 @@ def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None, r
     cmd = [PY, "-m", mod, "--model", model, "--strategy", strat, "--seed", str(seed),
            "--split", split, "--device", str(dev)] + extra
     if lr is not None: cmd += ["--lr", lr]
+    if rr_n_train: cmd += ["--n-train", str(rr_n_train)]
     if bs is not None: cmd += ["--batch-size", str(bs)]
     if max_len is not None: cmd += ["--max-len", str(max_len)]
     if rank is not None: cmd += ["--rank", str(rank)]
@@ -140,7 +152,7 @@ for rr in todo:
     task, model, strat, split = rr["task"], rr["model"], rr["strategy"], rr["split"]
     seed, lr, need = rr["seed"], rr.get("lr"), rr.get("need", 6)
     tag = "%s|%s|%s|s%s|%s%s" % (task, model, strat, seed, split, ("|lr" + lr) if lr else "")
-    if is_done(task, model, strat, seed, split, lr, rr.get("rank")):
+    if is_done(task, model, strat, seed, split, lr, rr.get("rank"), rr.get("n_train")):
         log("skip(done)", tag); continue
     if is_busy(task, model, strat, seed, split):
         log("skip(busy)", tag); continue
@@ -157,7 +169,7 @@ for rr in todo:
             log("RUN", tag, "GPU%d need%dG" % (g, need))
             t0 = time.time()
             p = subprocess.run(build_cmd(task, model, strat, seed, split, lr, g,
-                                         rr.get("bs"), rr.get("max_len"), rr.get("rank")),
+                                         rr.get("bs"), rr.get("max_len"), rr.get("rank"), rr.get("n_train")),
                                cwd="/home/cunyuliu/rna-ft-eval", timeout=TIMEOUT_S,
                                stdout=LOG, stderr=subprocess.STDOUT)
             log("exit", p.returncode, tag, "%.0fs" % (time.time() - t0))
