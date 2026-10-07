@@ -1,0 +1,10 @@
+{
+ "lockdir": "/tmp/aido_3e5_locks",
+ "slots": 1,
+ "timeout_s": 28800,
+ "runs": [
+  {"task": "noncoding-rna-family", "model": "AIDO.RNA-1.6B", "strategy": "full", "split": "random", "seed": 17, "lr": 3e-05, "need": 33, "timeout_s": 28800},
+  {"task": "noncoding-rna-family", "model": "AIDO.RNA-1.6B", "strategy": "full", "split": "random", "seed": 29, "lr": 3e-05, "need": 33, "timeout_s": 28800},
+  {"task": "noncoding-rna-family", "model": "AIDO.RNA-1.6B", "strategy": "full", "split": "random", "seed": 43, "lr": 3e-05, "need": 33, "timeout_s": 28800}
+ ]
+}
