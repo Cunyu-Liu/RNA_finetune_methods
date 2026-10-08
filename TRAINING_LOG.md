@@ -3823,3 +3823,11 @@ v1.0 终值已同步（GitHub push）。
 - **新派 p2_e3rank_1009_plan（78 runs）**：异架构 rank sweep（ERNIE/RNA-FM/SpliceBERT/UTR-LM × r4/r16）+ MRL/m6A E3 3000/5000 + Sc-30M/300M E3 3000/5000
 - **PPT 二轮修订**（本地 14 页）：A8/rank/why_opposite/E3 三任务/等价线交叉/E5/E6 全部直观化重画；用户 3 处批注按内容修改后删除
 - AIDO 3e-05 0/3 持续等卡
+
+## 2026-10-09 第三轮（04:30：E3 任务类型分化判读 + rank 六架构 + keepalive）
+
+- **E3 三任务类型对照完成**：ncRNA full@5000=0.07（崩）vs MRL full@5000=0.65 / m6A full@5000=0.99（正常上升）——崩溃为「多成员家族×逐序列分类」特有，非全参普遍失败
+- **MRL 等价线复现**：lora@3000=0.646 ≈ full@3000=0.621（3 倍数据换 LoRA 平价在 per-seq 回归任务复现）
+- **m6A per-base 饱和**：1000 条全策略 0.92+，3000/5000 full 0.97→0.99
+- rank 图 v4：六架构入图（ERNIE/RNA-FM/SpliceBERT/UTR-LM + micro/Sc-10M）——r8 跨架构 0.67-0.98 vs rank ≤0.06
+- keepalive_e3rank cron 在岗；异构 r16 余 6 格 + 30M/300M E3 + AIDO 3e-05 在飞
