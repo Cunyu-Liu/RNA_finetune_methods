@@ -3831,3 +3831,12 @@ v1.0 终值已同步（GitHub push）。
 - **m6A per-base 饱和**：1000 条全策略 0.92+，3000/5000 full 0.97→0.99
 - rank 图 v4：六架构入图（ERNIE/RNA-FM/SpliceBERT/UTR-LM + micro/Sc-10M）——r8 跨架构 0.67-0.98 vs rank ≤0.06
 - keepalive_e3rank cron 在岗；异构 r16 余 6 格 + 30M/300M E3 + AIDO 3e-05 在飞
+
+## 2026-10-09 第四轮（17:00：8 项新需求 + 语料宽度消融臂 b59 接入 + 105 runs）
+
+- **语料宽度消融臂**：RNA-Sc-100M-b59（rna-sc 预训练 5.9Gnt 全量语料版，s17）接入评测——与 RNA-Sc-100M_s17 同架构同规模同种子唯一差异=语料宽度 → 18 runs 派发（ncRNA 双切分 × 3 策略 × 3 种子），落齐后直接检验「两系相反=语料宽度」归因
+- **临界点加密**：e3_subsets 增 3500/4000/4500 档；micro full@1e-05 × 3 档 × 3 种子已派
+- **A8 MRL 缺格**：AIDO mrl full@1e-05（bs2/33G）+ NB mrl default 已派
+- **E3 RiNALMo 三档版**：mega/650M × 3 策略 × 4 档 × 3 种子 = 72 runs 已派
+- rank 图 v5（官方 4 模型）/ E5 v4（分组柱状）/ E6 官方谱 / 等价线 v3（线图+换算表）/ E3 v3（frozen+全量）全部重画入 PPT
+- 上轮收口：异构 rank 24/24 全落；30M/300M e3 21/24
