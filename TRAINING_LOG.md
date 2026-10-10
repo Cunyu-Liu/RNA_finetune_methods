@@ -3860,3 +3860,9 @@ v1.0 终值已同步（GitHub push）。
 - **90 runs 新派**（p2_1011_plan）：E3 崩溃普遍性（ERNIE/RNA-FM/SpliceBERT × ncRNA 3000-5000 × 45 + MRL/m6A 3500-4500 × 18）+ SSP rank r4/r16（4 模型 × 24）+ 100M 复测新种子 {7,13,59} × 3
 - 图全部按 plot-is-all-you-need 图库风格重画（offset-series/clean-lines/small-multiples/paired-changes）
 - 100M 选题原因写入 banner（受控系非单调定位点）；复测落地后终判
+
+## 2026-10-10 第八轮（22:45：1011 首批落地 + E3 六面板 + CRC 事故处置）
+
+- **普遍性首批数据**：ERNIE/RNA-FM 官方模型 3000-4000 档健康（0.76-0.91，vs micro 0.73）——崩溃临界随语料宽度右移（与 b59 互证）；ERNIE@4000 s43 崩 0.064（官方非免疫，临界更靠后）；MRL 3500-4500=0.63-0.65 正常
+- E3 图升六面板（+ERNIE/RNA-FM）；[PENDING] ≥2 种子纪律
+- PPT CRC 事故（image2.png）：从备份恢复重做——新纪律：保存后必 testzip
