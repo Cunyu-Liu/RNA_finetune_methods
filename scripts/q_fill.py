@@ -43,12 +43,14 @@ def is_done(task, model, strat, seed, split, lr, rank=None, n_train=None):
         base = "ft_%s_%s_%s_s%d_%s" % (
             model.lower().replace("-", "").replace(".", "").replace(" ", ""),
             task.replace("-", ""), strat, seed, split)
-        want = base + (("_lr%s" % lr) if (lr is not None and strat == "full") else "") + "_e3%d" % int(n_train)
-        for r in _rows:
-            rid = r.get("run_id", "")
-            if rid == want or (rid.startswith(want) and set(rid[len(want):].split("_")) <= {"r8", ""}):
-                if r.get("status") == "done" and not r.get("smoke"):
-                    return True
+        lrtag = (("_lr%s" % lr) if (lr is not None and strat == "full") else "")
+        e3tag = "_e3%d" % int(n_train)
+        for want in (base + lrtag + e3tag, base + e3tag + lrtag):
+            for r in _rows:
+                rid = r.get("run_id", "")
+                if rid == want or (rid.startswith(want) and set(rid[len(want):].split("_")) <= {"r8", ""}):
+                    if r.get("status") == "done" and not r.get("smoke"):
+                        return True
         return False
     if rank is not None and int(rank) != 8:
         rid = "ft_%s_%s_%s_s%d_%s%s%s" % (

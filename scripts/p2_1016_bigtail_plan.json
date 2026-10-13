@@ -1,0 +1,417 @@
+{
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "timeout_s": 21600,
+ "runs": [
+  {
+   "model": "AIDO.RNA-1.6B",
+   "task": "mrl",
+   "strategy": "full",
+   "seed": 17,
+   "split": "random",
+   "lr": "1e-05",
+   "need": 33,
+   "bs": 2
+  },
+  {
+   "model": "AIDO.RNA-1.6B",
+   "task": "mrl",
+   "strategy": "full",
+   "seed": 29,
+   "split": "random",
+   "lr": "1e-05",
+   "need": 33,
+   "bs": 2
+  },
+  {
+   "model": "AIDO.RNA-1.6B",
+   "task": "mrl",
+   "strategy": "full",
+   "seed": 43,
+   "split": "random",
+   "lr": "1e-05",
+   "need": 33,
+   "bs": 2
+  },
+  {
+   "model": "NucleicBERT",
+   "task": "mrl",
+   "strategy": "full",
+   "seed": 29,
+   "split": "random",
+   "lr": "3e-4",
+   "need": 22,
+   "bs": 8
+  },
+  {
+   "model": "NucleicBERT",
+   "task": "mrl",
+   "strategy": "full",
+   "seed": 43,
+   "split": "random",
+   "lr": "3e-4",
+   "need": 22,
+   "bs": 8
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "frozen",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 7
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 10,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 1000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 3000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "family",
+   "lr": null,
+   "n_train": 5000,
+   "need": 23
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 17,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 10,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 29,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 10,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 43,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 10,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 17,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 1000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 29,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 1000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 43,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 1000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 17,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 3000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 29,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 3000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 43,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 3000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 17,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 5000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 29,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 5000,
+   "need": 33
+  },
+  {
+   "model": "RiNALMo-650M",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 43,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 5000,
+   "need": 33
+  }
+ ]
+}
