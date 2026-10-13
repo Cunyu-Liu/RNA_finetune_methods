@@ -116,15 +116,38 @@ def pick_target(need):
         c.append((free, i))
     return -1 if not c else sorted(c, reverse=True)[0][1]
 def grab(g, need):
+    # 1016c: need>=30G cells require the WHOLE card (both slots free) - prevents TOCTOU
+    # double-grab OOM races observed when a 40G cell shares a card with a ramping 32G cell
+    if need >= 30:
+        lks = []
+        ok = True
+        for s in range(SLOTS):
+            lk = "%s/gpu_%d_slot_%d" % (LOCKDIR, g, s)
+            try: os.mkdir(lk)
+            except FileExistsError: ok = False; break
+            lks.append(lk)
+        if ok:
+            free, total = mem(g)
+            if total >= 20 * 2**30 and free >= need * 1.15 * 1e9:
+                return lks[0]  # caller rmdir(lk) only removes slot0; release both via cleanup below
+            for lk in lks:
+                try: os.rmdir(lk)
+                except Exception: pass
+        else:
+            for lk in lks:
+                try: os.rmdir(lk)
+                except Exception: pass
+        return None
     for s in range(SLOTS):
         lk = "%s/gpu_%d_slot_%d" % (LOCKDIR, g, s)
         try: os.mkdir(lk)
         except FileExistsError: continue
         free, total = mem(g)
-        margin = need * (1.0 if s == 0 else 1.5) * 1e9   # slot1 给同卡第二个任务留 1.8x 余量（2026-09-29 共享卡锁）
+        margin = need * (1.0 if s == 0 else 1.5) * 1e9   # slot1 给同卡第二个任务留 1.5x 余量（2026-09-29 共享卡锁）
         if total >= 20 * 2**30 and free >= margin: return lk
         try: os.rmdir(lk)
         except Exception: pass
+    return None
     return None
 def build_cmd(task, model, strat, seed, split, lr, dev, bs=None, max_len=None, rank=None, rr_n_train=None):
     if task == "mrl":
@@ -185,7 +208,14 @@ for rr in todo:
         except subprocess.TimeoutExpired:
             log("TIMEOUT", tag); clear_pending(task, model, strat, seed, split); att += 1
         finally:
-            try: os.rmdir(lk)
-            except Exception: pass
+            if lk is not None:
+                try: os.rmdir(lk)
+                except Exception: pass
+                # whole-card grab cleanup: release any sibling slot locks we created
+                for s2 in range(SLOTS):
+                    lk2 = "%s/gpu_%d_slot_%d" % (LOCKDIR, g, s2)
+                    if lk2 != lk:
+                        try: os.rmdir(lk2)
+                        except Exception: pass
     if not finished: log("GAVEUP", tag)
 log("SHARD %d DONE" % SHARD)
