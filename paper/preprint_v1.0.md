@@ -47,7 +47,15 @@ where it is worst.** Four lines of evidence:
    end of the first epoch (10/10 timeline cells), and coincides with an
    instant representation rank collapse under default-LR full-FT. Much
    of the "fine-tuning benefit" on sequence-level tasks under random
-   splits is family memorization.
+   splits is family memorization. On the label-budget axis the
+   collapse is not a step function but a seed-dependent transition
+   band: RiNALMo-micro full-FT stays healthy through n=3,500
+   (0.73) and collapses by n=5,000 (0.068); frozen is flat at
+   0.66–0.68 across the entire budget axis (family memory lives
+   only in updated weights); the band position is corpus-width and
+   model-capacity dependent (ERNIE-86M unstable at 4,000–5,000,
+   RNA-FM-99M stable throughout, SpliceBERT-19M LoRA collapsing
+   already at 4,500).
 2. **Mechanism.** The default LR (3e-4) is an architecture-agnostic
    trap for full-FT — collapse to the ln(C) plateau across three
    attention architectures (standard / ALiBi / base-pairing-constrained,
@@ -63,8 +71,11 @@ where it is worst.** Four lines of evidence:
    rank is a second-order knob next to strategy choice); the
    "small-model full-FT = large-model LoRA" equivalence line is
    family-recipe-dependent — the controlled RNA-Sc family shows
-   full-FT winning at all five scales (30M full 0.862 ≈ 650M LoRA
-   0.855, crossover inside the family), while the official RiNALMo
+   full-FT winning at all six scales (30M full 0.862 ≈ 650M LoRA
+   0.855, crossover inside the family; the mid-scale dip at 100M
+   (0.824) is confirmed as a true capacity-axis signal by a 300M
+   interpolation point (0.879) and a 6-seed re-test, 0.84±0.02),
+   while the official RiNALMo
    family never crosses (33M full 0.944 < 148M LoRA 0.949; 650M LoRA
    0.969 > full 0.956) and both 1.6B encoders favor LoRA outright
    (AIDO 0.826 vs 0.688; RiboSpan 0.841 vs 0.657).
@@ -367,6 +378,38 @@ fine-tune under family shift" into "fine-tune while the family-
 memorization mass is still small." Full learning curves:
 fig_e3_curves (per-model panels, min-max bands).
 
+**Where exactly does the collapse begin? A 5-model transition-band
+analysis (n ∈ {3,000, 3,500, 4,000, 4,500, 5,000}, 3 seeds each;
+family split, ncRNA).** The collapse is not a hard cliff but a
+seed-dependent transition band whose position moves with pretraining
+corpus width and model capacity:
+
+| model (corpus) | healthy ≥ | collapse by | band structure |
+|---|---|---|---|
+| RiNALMo-micro-33M (narrow) | 3,500 (0.736) | 5,000 (0.068) | per-seed transition: s17 half-collapsed at 4,000 (0.526), s29/s43 collapsed |
+| ERNIE-RNA-86M (broad) | 3,500 (0.863) | — (recovers: 5,000 mean 0.879) | unstable window 4,000–4,500 (2/3 seeds collapse), then recovery |
+| RNA-FM-99M (broad) | 5,000 (0.715) | — | no collapse anywhere; gentle peak 0.785 at 4,000 then slow decay |
+| SpliceBERT-19M (specialist) | LoRA-only: 3,500 (0.456) | 4,500 (0.075) | full-FT at chance at every n (capacity limit, not collapse); LoRA collapses earliest of all models |
+| RNA-Sc-10M (narrow, controlled) | 3,000 (0.169) | — | low plateau throughout (weak base, no cliff) |
+
+Three structural facts: (i) **frozen is flat at 0.66–0.68 across the
+whole budget axis** (micro: n=10 0.103 → 5,000 0.681 monotone, no
+collapse at any n) — family memory exists only in updated weights,
+so the budget axis modulates only the fine-tuning arms; (ii) the
+collapse crosses strategies, not just full-FT: ERNIE LoRA collapses
+in the same 4,000–5,000 window as its full arm (LoRA 4,000 mean
+0.611, 5,000 mean 0.343), and SpliceBERT's LoRA collapse precedes
+its full collapse — the driver is the **data-mass × family-split
+interaction**, not optimizer state; (iii) the band position tracks
+pretraining corpus width: the two broad-corpus 86-99M models stay
+healthy 500–2,500 labels deeper than the narrow-corpus micro-33M,
+consistent with the corpus-width ablation below. For practice the
+conservative reading is: **under family-clustered evaluation of
+multi-member-family classification, label budgets beyond ~3,000
+enter a model-dependent danger zone where additional labels can
+actively destroy generalization; frozen heads are immune at every
+budget.**
+
 So far "fine-tuning" has meant full-FT with tuned LRs. The remaining
 practical question is the route: which adaptation family — and at
 which adapter rank — buys the most per trainable parameter?
@@ -414,15 +457,33 @@ values in Supp S3.
   should tune the strategy axis, not the rank axis.
 - **Equivalence line (C5b, dual-family): "small full-FT = large LoRA"
   is family-dependent.** Controlled family (RNA-Sc, same recipe, full
-  5-scale spectrum 1M-650M now complete): full-FT 1M 0.700 / 10M 0.808
-  / 30M 0.862 / 100M 0.824 / 650M 0.896 vs LoRA 1M 0.639 / 10M 0.746
-  / 30M 0.773 / 100M 0.795 / 650M 0.855 -- full@10M already matches
+  6-scale spectrum 1M-650M now complete, incl. a 300M interpolation
+  point): full-FT 1M 0.700 / 10M 0.808
+  / 30M 0.862 / 100M 0.824 / 300M 0.879 / 650M 0.896 vs LoRA 1M 0.639 / 10M 0.746
+  / 30M 0.773 / 100M 0.795 / 300M 0.790 / 650M 0.855 -- full@10M already matches
   LoRA@100M, full@30M outright beats it (crossover within one 3.3x
   scale step), and the advantage is not recovered at the large end:
   full@30M (0.862) ties LoRA@650M (0.855, +0.007), and full@650M
   (0.896) beats same-scale LoRA by +0.040 -- full-FT wins the
-  controlled family at all five scales (full-FT curve is non-monotone
-  with a 30M peak). Official family (RiNALMo, all three published
+  controlled family at all six scales. Two audits harden the
+  non-monotone shape (30M peak 0.862 → 100M dip 0.824 → 300M 0.879 →
+  650M 0.896): a **300M interpolation point** (full 3-seed
+  0.888/0.881/0.867 @3e-05, LoRA 0.798/0.790/0.781 — the dip is
+  bracketed by real points, not an artifact of a sparse axis) and a
+  **6-seed re-test of the 100M cell** (original 17/29/43:
+  0.803/0.822/0.847; new seeds 7/13/59: 0.867/0.848/0.858; pooled
+  0.84±0.02 — a true capacity-axis signal, not seed luck).
+  A same-recipe **corpus-width ablation at fixed 100M capacity**
+  (RNA-Sc-100M-b59: 5.9 Gnt full-corpus pretraining vs the 2 Gnt
+  sampled corpus of the main line, same architecture/size/seed,
+  18 runs): broadening the corpus raises frozen by +0.07 (random
+  0.395→0.462, family 0.146→0.225) and full-FT by +0.03 (0.824→
+  0.852) but leaves LoRA flat (0.795→0.783) and does **not** move
+  the family-split collapse (all arms in-band, full−LoRA gap ~0.07
+  in both corpora) — corpus width explains part of the *frozen*
+  gap between the controlled and official families (frozen family
+  0.15–0.22 vs official 0.52–0.89), but the full-vs-LoRA direction
+  is a recipe/architecture effect, not a corpus-volume effect. Official family (RiNALMo, all three published
   sizes complete, grid-best LRs): micro-33M full 0.944 < mega-148M full 0.945 <
   giga-650M full 0.956 vs giga-650M LoRA 0.969 -- even
   full-FT at the largest released scale does not beat LoRA on the
@@ -460,8 +521,9 @@ values in Supp S3.
   the same checkpoint reverses (full 0.896 > LoRA 0.855, +0.040) --
   per-base tasks favor adapters, per-sequence tasks (in this
   family) favor full-FT, an orthogonal confirmation that the best
-  strategy is a property of task granularity, not of the model. On family splits, all eight LoRA cells
-  (controlled 1M/10M/30M/100M/650M + official 33M/148M/650M)
+  strategy is a property of task granularity, not of the model. On family splits, all nine LoRA cells
+  (controlled 1M/10M/30M/100M/300M/650M + official 33M/148M/650M;
+  300M mean 0.079)
   collapse to the 0.06-0.12 band *on average* (3-seed means: 1M 0.126,
   10M 0.072, 30M 0.064, 100M 0.081, controlled 650M 0.064, 33M 0.081,
   148M 0.207, official 650M 0.106) -- leakage sensitivity is
