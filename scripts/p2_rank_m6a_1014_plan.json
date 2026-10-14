@@ -1,0 +1,187 @@
+{
+ "lockdir": "/tmp/rnaft_shared_locks",
+ "slots": 2,
+ "timeout_s": 7200,
+ "runs": [
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "ERNIE-RNA",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "RNA-FM",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 3
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 2
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 2
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 4,
+   "need": 2
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 17,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 2
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 29,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 2
+  },
+  {
+   "model": "SpliceBERT",
+   "task": "modification",
+   "strategy": "lora",
+   "seed": 43,
+   "split": "random",
+   "lr": null,
+   "rank": 16,
+   "need": 2
+  }
+ ]
+}
