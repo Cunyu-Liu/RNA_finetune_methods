@@ -10,7 +10,7 @@
    "split": "random",
    "seed": 17,
    "lr": "3e-05",
-   "need": 34,
+   "need": 30,
    "bs": 1,
    "timeout_s": 57600
   },
@@ -21,7 +21,7 @@
    "split": "random",
    "seed": 29,
    "lr": "3e-05",
-   "need": 34,
+   "need": 30,
    "bs": 1,
    "timeout_s": 57600
   },
@@ -32,7 +32,7 @@
    "split": "random",
    "seed": 43,
    "lr": "3e-05",
-   "need": 34,
+   "need": 30,
    "bs": 1,
    "timeout_s": 57600
   }
