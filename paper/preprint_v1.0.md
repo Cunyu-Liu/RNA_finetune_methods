@@ -3,6 +3,8 @@
 
 **Preprint draft v1.0（项目数据全收口版·六幕叙事重构）** — 2026-10-07（数据快照：ledger 1913 done runs，全部计划 0 缺口；17 个架构全接入全收口——5 core + UTR-LM / mRNABERT / NucleicBERT / AIDO.RNA-1.6B / RiboSpan-1K-40 / HydraRNA + 受控 RNA-Sc 家族五档 + RiNALMo 官方三档；E6 遗忘矩阵 87 格（51+18+18）；1.6B 等价线双架构落地；rank 敏感性轴 48 格收口；grid_audit 终审 38 MATCH / 0 RERUN / 0 TUNED-MISSING。数据链全部自动导出，[PENDING] 清零。）
 
+**增量注记 2026-10-15（集群恢复后）**：①rank 跨架构复现臂收口（m6A 18/18 + ncRNA/SSP 各 24——「rank 二阶旋钮」结论扩至 5 架构 × 3 任务，§2.5 已并入）；②1016 尾格（mega/650M E3 车道 + AIDO 3e-05×3）在飞，落地后 §2.4/§2.5 数据行将同步；③ledger 现值 2255 行（done 2250+）。
+
 **数据对账声明：v1.0 全文数字已于 2026-10-07 对 ledger.jsonl（1913 done）逐条核验；与 v0.96 的关键差异——17/17 崩溃口径修正为 16 个 FT 架构（3 个部分逃逸）、frozen 家族带实际 0.11–0.89、E6 矩阵 87 格非 124、E2 表 RNA-Sc full 0.808 口径、AIDO 1.6B grid 1e-05=0.720/3e-05=0.520、mRNABERT lora family 0.086。表间冲突（e6_table vs e6_official 的 10M/30M/micro 行）已回 ledger 原始行裁决。**
 
 ## Abstract
