@@ -101,7 +101,7 @@
    "split": "family",
    "lr": null,
    "n_train": 10,
-   "need": 36
+   "need": 12
   },
   {
    "model": "RiNALMo-mega",
@@ -111,7 +111,27 @@
    "split": "family",
    "lr": null,
    "n_train": 10,
-   "need": 36
+   "need": 12
+  },
+  {
+   "model": "RiNALMo-mega",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 17,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 10,
+   "need": 15
+  },
+  {
+   "model": "RiNALMo-mega",
+   "task": "noncoding-rna-family",
+   "strategy": "full",
+   "seed": 43,
+   "split": "family",
+   "lr": "1e-05",
+   "n_train": 10,
+   "need": 15
   },
   {
    "model": "RiNALMo-mega",
@@ -182,26 +202,6 @@
    "lr": null,
    "n_train": 5000,
    "need": 36
-  },
-  {
-   "model": "RiNALMo-mega",
-   "task": "noncoding-rna-family",
-   "strategy": "full",
-   "seed": 17,
-   "split": "family",
-   "lr": "1e-05",
-   "n_train": 10,
-   "need": 40
-  },
-  {
-   "model": "RiNALMo-mega",
-   "task": "noncoding-rna-family",
-   "strategy": "full",
-   "seed": 43,
-   "split": "family",
-   "lr": "1e-05",
-   "n_train": 10,
-   "need": 40
   },
   {
    "model": "RiNALMo-mega",

@@ -151,7 +151,7 @@
    "split": "family",
    "lr": null,
    "n_train": 10,
-   "need": 23
+   "need": 27
   },
   {
    "model": "RiNALMo-650M",
@@ -161,7 +161,7 @@
    "split": "family",
    "lr": null,
    "n_train": 10,
-   "need": 23
+   "need": 27
   },
   {
    "model": "RiNALMo-650M",
@@ -171,7 +171,7 @@
    "split": "family",
    "lr": null,
    "n_train": 10,
-   "need": 23
+   "need": 27
   },
   {
    "model": "RiNALMo-650M",
@@ -181,7 +181,7 @@
    "split": "family",
    "lr": null,
    "n_train": 1000,
-   "need": 23
+   "need": 18
   },
   {
    "model": "RiNALMo-650M",
@@ -191,7 +191,7 @@
    "split": "family",
    "lr": null,
    "n_train": 1000,
-   "need": 23
+   "need": 18
   },
   {
    "model": "RiNALMo-650M",
@@ -201,7 +201,7 @@
    "split": "family",
    "lr": null,
    "n_train": 1000,
-   "need": 23
+   "need": 18
   },
   {
    "model": "RiNALMo-650M",
@@ -301,7 +301,7 @@
    "split": "family",
    "lr": "1e-05",
    "n_train": 10,
-   "need": 33
+   "need": 15
   },
   {
    "model": "RiNALMo-650M",
@@ -311,7 +311,7 @@
    "split": "family",
    "lr": "1e-05",
    "n_train": 10,
-   "need": 33
+   "need": 15
   },
   {
    "model": "RiNALMo-650M",
@@ -321,7 +321,7 @@
    "split": "family",
    "lr": "1e-05",
    "n_train": 10,
-   "need": 33
+   "need": 15
   },
   {
    "model": "RiNALMo-650M",
