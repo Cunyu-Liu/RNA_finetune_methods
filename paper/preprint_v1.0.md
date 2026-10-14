@@ -462,6 +462,18 @@ values in Supp S3.
   choice (adapter vs full) moves accuracy by 0.10–0.18 while the rank
   choice moves it by ≤ 0.06 on ncRNA and ≤ 0.01 on m6A. Practitioners
   should tune the strategy axis, not the rank axis.
+- **Cross-architecture replication (user-requested extension, landed
+  2026-10-15).** The rank sweep was replicated beyond RiNALMo/Sc-10M
+  onto three additional officially released architectures — SpliceBERT
+  (19M), ERNIE-RNA (86M), RNA-FM (99M) — across ncRNA, SSP and m6A
+  (r4/r16, 3 seeds each, random split; m6A fill 18/18, plus 24 ncRNA
+  and 24 SSP cells from earlier waves). The conclusion survives
+  unchanged in all three tasks: cross-architecture spread at fixed rank
+  is 0.17–0.35 (SSP) and 0.955–0.990 (m6A) while the rank spread is
+  ≤ 0.02 (m6A: ERNIE 0.989/0.990, RNA-FM 0.975/0.987, SpliceBERT
+  0.956/0.955 for r4/r16) — architecture choice dominates rank choice
+  by an order of magnitude. The "rank is a second-order knob" guidance
+  is not a RiNALMo-specific artifact.
 - **Equivalence line (C5b, dual-family): "small full-FT = large LoRA"
   is family-dependent.** Controlled family (RNA-Sc, same recipe, full
   6-scale spectrum 1M-650M now complete, incl. a 300M interpolation
