@@ -4,9 +4,9 @@
 # 依据: ERNIE 显式 attn 需整卡 (lora 峰值 4659MB 超 MIG); RNA-FM lora 峰值
 # 3632MB -> full 超 MIG; GPU5 当前他人 ~38G 占用, 等未来空闲卡 ("未来空闲卡
 # 随时征用" 落实为轮询). 最长等 72h.
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_full_ef_any.log

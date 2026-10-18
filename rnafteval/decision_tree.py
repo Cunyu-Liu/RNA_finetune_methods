@@ -18,7 +18,7 @@ import json, os, collections, statistics
 from scipy.stats import binomtest
 from rnafteval.stats import bh_fdr
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 OUT_MD = os.path.join(ROOT, "status", "decision_tree.md")
 OUT_CSV = os.path.join(ROOT, "status", "decision_tree.csv")

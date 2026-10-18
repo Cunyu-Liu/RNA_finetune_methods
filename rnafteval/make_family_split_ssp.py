@@ -16,7 +16,7 @@ import tempfile
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 MMSEQS = "/home/cunyuliu/mmseqs/bin/mmseqs"
 OUT_DIR = os.path.join(ROOT, "data", "family_splits")
 FAM_IDS = os.path.join(ROOT, "artifacts", "ssp_family_ids.json")

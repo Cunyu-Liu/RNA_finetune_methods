@@ -5,9 +5,9 @@
 #   B) 双格 done -> BEST LR -> formal 6 runs 双 worker 并行（前向/反向序 + fresh-pending 互斥）
 # 互斥：fresh pending(<=3h) 视为他 worker 在跑则跳过；done 幂等跳过；失败清 pending 重试(<=2)
 # 日志：追加写 q_rnasc650_full.log（与孤儿同日志，巡检兼容）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_rnasc650_full.log
@@ -19,7 +19,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -46,7 +46,7 @@ PYEOF
 clean_pending() {
   $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

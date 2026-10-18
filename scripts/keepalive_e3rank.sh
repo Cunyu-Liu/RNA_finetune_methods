@@ -1,7 +1,7 @@
 #!/bin/bash
 # e3rank keepalive（1009b）：e3rank_1009 队列 worker 死亡时重拉（共享卡锁协议不变）
 # cron */10
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PLAN=scripts/p2_e3rank_1009_plan.json
 LOG=$R/logs/keepalive_e3rank.log
 cd /home/cunyuliu/rna-ft-eval
@@ -10,7 +10,7 @@ PY=/home/cunyuliu/llr_env/bin/python
 # 统计 missing
 MISSING=$($PY - << 'PYEOF'
 import json
-rows = [json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl")]
+rows = [json.loads(l) for l in open("/root/rna-ft-eval/ledger.jsonl")]
 plan = json.load(open("/home/cunyuliu/rna-ft-eval/scripts/p2_e3rank_1009_plan.json"))["runs"]
 def is_done(rr):
     for r in rows:

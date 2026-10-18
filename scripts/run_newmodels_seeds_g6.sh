@@ -2,9 +2,9 @@
 # G6 (MIG 4.75G): 新模型 E1 种子补齐 s29/s43 (ncrna) — SpliceBERT/RNA-FM
 # frozen+lora, ERNIE-RNA frozen (lora 需整卡, 见 MIG OOM 教训, 排未来整卡队列)
 # family+random 双切分; 参数与 s17 首探一致 (epochs 10, bs 8)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_newmodels_seeds_g6.log

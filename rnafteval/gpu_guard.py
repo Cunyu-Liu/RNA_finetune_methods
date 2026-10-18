@@ -56,7 +56,7 @@ def main() -> int:
         "verdict": "GPU_OK" if n_busy > 0 else "NO_GPU_ACTIVITY",
     }
     print(json.dumps(report), flush=True)
-    out = "/mnt/cunyuliu/rna-ft-eval/status/gpu_guard_%d.json" % args.pid
+    out = "/root/rna-ft-eval/status/gpu_guard_%d.json" % args.pid
     with open(out, "w") as fh:
         json.dump(report, fh, indent=2)
     return 0 if n_busy > 0 else 1

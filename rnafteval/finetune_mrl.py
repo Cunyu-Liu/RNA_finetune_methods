@@ -19,7 +19,7 @@ import torch
 from . import ledger
 from .strategies import apply_strategy, make_head
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 
 def encode_seqs(tok, seqs, device, max_len=64):

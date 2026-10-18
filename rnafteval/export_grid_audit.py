@@ -23,7 +23,7 @@ import os
 import re
 from collections import defaultdict
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 DEFAULT_PLAN = os.path.join("/home/cunyuliu/rna-ft-eval", "scripts", "p2_grid_fill_plan.json")
 TUNED_RE = re.compile(r"_lr[0-9.eE+-]+$")

@@ -1,9 +1,9 @@
 #!/bin/bash
 # A8 跨任务补全: <model> <gpu> — m6A full 臂
 # 阶段1 default 3e-4 x6 -> 阶段2 判崩(random均值<0.75) -> 阶段3 s101 网格 {1e-5,3e-5} -> tuned x6
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 MODEL=$1

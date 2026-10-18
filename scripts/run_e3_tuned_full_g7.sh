@@ -2,9 +2,9 @@
 # GPU7 MIG: E3 tuned-full 补跑 — RiNALMo full @1e-5 × n ∈ {10,100,1000} × 3 种子
 # 背景: E3 首轴 full 列小档为默认 LR 崩溃值 (A8) — C3 干净曲线需要 tuned 臂
 # run_id = _e3<n>_lr1e-05 双标签 (不与现有行冲突)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e3_tuned_full_g7.log

@@ -2,9 +2,9 @@
 # E3-m6A 跨粒度验证: <gpu> — RiNALMo-micro m6A
 # {full@1e-5, lora, frozen} x n{100,1000,10000} x {random,family} x s{17,29,43} = 54 runs
 # 预测: per-base 曲线单调（无家族记忆峰）vs ncRNA 非单调 —— C4 x E3 机制打通
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

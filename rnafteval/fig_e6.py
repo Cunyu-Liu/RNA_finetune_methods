@@ -15,7 +15,7 @@ import os
 
 from rnafteval.export_e6 import collect
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 SCALE = {"RNA-Sc-1M": 1e6, "RNA-Sc-10M": 1e7, "RNA-Sc-30M": 3e7,
          "RNA-Sc-100M": 1e8, "RNA-Sc-650M": 6.5e8}
 ORDER = ["RNA-Sc-1M", "RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M",

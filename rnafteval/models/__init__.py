@@ -2,15 +2,15 @@
 
 All models expose (tokenizer, backbone) where backbone(**enc) returns an
 object with .last_hidden_state (B, T, D) aligned to input token positions.
-env: HF_ENDPOINT=hf-mirror, HF_HOME=/mnt/cunyuliu/hf_home, PYTHONPATH pypath.
+env: HF_ENDPOINT=hf-mirror, HF_HOME=/root/hf_home, PYTHONPATH pypath.
 """
 from __future__ import annotations
 
 import os
 from dataclasses import dataclass
 
-HF_HOME = "/mnt/cunyuliu/hf_home"
-RNASC_RUNS = "/mnt/cunyuliu/rna-sc/runs"
+HF_HOME = "/root/hf_home"
+RNASC_RUNS = "/root/rna-sc/runs"
 
 
 def hf_path(repo: str) -> str:
@@ -84,7 +84,7 @@ def load_hf(spec: ModelSpec, device: str):
     """Load multimolecule RNA LMs via the multimolecule package.
 
     The pypath copy is compat-patched (import guards for transformers 5.0);
-    requires PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath.
+    requires PYTHONPATH=/root/rna-ft-eval/pypath.
     """
     from multimolecule import RnaTokenizer
     from transformers import AutoModel
@@ -365,7 +365,7 @@ def _load_vendored(spec, device, pkg, module_stems, cfg_name, model_name,
     import os, sys, shutil, glob, importlib, torch
     base = hf_path(spec.repo)
     assert os.path.isdir(base), "model dir missing: %s" % base
-    pkgdir = os.path.join("/mnt/cunyuliu", pkg)
+    pkgdir = os.path.join("/root", pkg)
     os.makedirs(pkgdir, exist_ok=True)
     init = os.path.join(pkgdir, "__init__.py")
     if not os.path.exists(init):
@@ -380,8 +380,8 @@ def _load_vendored(spec, device, pkg, module_stems, cfg_name, model_name,
         if os.path.exists(src):
             _fix_modeling_file(src)
             shutil.copy(src, os.path.join(pkgdir, stem + ".py"))
-    if "/mnt/cunyuliu" not in sys.path:
-        sys.path.insert(0, "/mnt/cunyuliu")
+    if "/root" not in sys.path:
+        sys.path.insert(0, "/root")
     mods = {st: importlib.import_module("%s.%s" % (pkg, st)) for st in module_stems}
     mmod = next(m for k, m in mods.items() if "modeling" in k)
     for cname in model_classes:

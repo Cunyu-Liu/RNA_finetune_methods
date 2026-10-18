@@ -30,7 +30,7 @@ import torch.nn as nn
 from . import ledger
 from .tasks import ssp as ssp_task
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 FAMILY_IDS_PATH = os.path.join(ROOT, "artifacts", "ssp_family_ids.json")
 FAMILY_PARQUET = os.path.join(ROOT, "data", "family_splits",
                               "secondary-structure.parquet")

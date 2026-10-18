@@ -16,7 +16,7 @@ import csv
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 ART = os.path.join(ROOT, "artifacts", "collapse_tl")
 MODELS = ["RiNALMo-micro", "ERNIE-RNA", "SpliceBERT", "RNA-Sc-10M", "RNA-Sc-30M"]
 STRATS = ["lora", "full"]

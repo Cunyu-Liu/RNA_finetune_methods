@@ -2,9 +2,9 @@
 # G7: RiNALMo SSP full tuned 补齐 5 runs (s29/43 random + s17/29/43 family)
 # 依据: s17 random tuned=0.1758 vs 默认 3e-4 崩 0.006 (29x); 峰值 1057MB MIG 可跑
 # 参数与 tuned2 复核一致 (lr 1e-5, epochs 3, n-train 3000, n-test 500, bs 4)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_ssp_tuned5.log

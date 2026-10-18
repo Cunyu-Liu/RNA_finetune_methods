@@ -2,10 +2,10 @@
 # 补死格：e6off4/ fb5 GAVEUP 的格子收编重跑（2026-10-02）
 # 1) RiNALMo-650M e6 lora s17 lr3e-4 bs16 need11（5 次中途 OOM 后 GAVEUP）
 # 2) AIDO 1.6B ncRNA full s101 random lr1e-05 bs1 need34（等卡超限 GAVEUP）
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_patch_dead_cells.log

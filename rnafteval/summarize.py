@@ -1,6 +1,6 @@
 """Aggregate ledger -> C1/C4 summary tables (mean over seeds, direction check).
 
-Output: /mnt/cunyuliu/rna-ft-eval/status/summary.md + summary.json
+Output: /root/rna-ft-eval/status/summary.md + summary.json
 Usage: PYTHONPATH=... python -m rnafteval.summarize
 """
 from __future__ import annotations
@@ -9,7 +9,7 @@ import collections
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 
 

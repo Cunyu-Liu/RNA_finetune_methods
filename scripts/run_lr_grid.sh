@@ -1,9 +1,9 @@
 #!/bin/bash
 # A8 LR grid (tuning seed=101, spec E1 优化器协议):
 # RiNALMo-micro full FT 在 lr=3e-4 崩溃 (ACC 0.07) -> 网格搜 {1e-5, 3e-5, 1e-4, 3e-4}
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

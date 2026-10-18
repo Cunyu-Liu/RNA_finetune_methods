@@ -1,9 +1,9 @@
 #!/bin/bash
 # m6A 双轨受控系 full@3e-5 轨并行加速（G5 逆序）：10M/30M/100M full x 双切分 x 3 seed = 18 runs
 # 与主队列 q_m6a_dualtrack G3 段（full 优先）零碰撞：双端 done 跳过（bash 小写 RID + python 模块内建 skip）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=5

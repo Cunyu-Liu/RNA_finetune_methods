@@ -13,7 +13,7 @@ import json
 import os
 import re
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 ART = os.path.join(ROOT, "artifacts", "e6")
 ORDER = ["RNA-Sc-1M", "RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M", "RNA-Sc-650M", "RiNALMo-micro"]
 LABEL = {"RNA-Sc-1M": "RNA-Sc-1M", "RNA-Sc-10M": "RNA-Sc-10M",

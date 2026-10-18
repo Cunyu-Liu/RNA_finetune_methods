@@ -2,9 +2,9 @@
 # E6 并行分流（主队列 q_e6.sh 串行太慢：剩 18 格 ≈13h；拆 3 条不相交流并行）
 # STREAM: s29 | s43 | micro（与主队列 run_e6 逻辑一致：幂等 done-skip、claim 互斥、
 #         pick_gpu 三陷阱全防御、失败清 pending 重试；重试上限 4 适配过夜无人值守）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e6.log
@@ -18,7 +18,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -74,7 +74,7 @@ run_e6() {
       [ $RC -eq 0 ] && return 0
       $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

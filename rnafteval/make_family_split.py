@@ -9,7 +9,7 @@ PRETRAIN-train cluster are flagged contaminated for the family-split arm
 Usage:
   python -m rnafteval.make_family_split --task noncoding-rna-family
 Output:
-  /mnt/cunyuliu/rna-ft-eval/data/family_splits/<task>.parquet
+  /root/rna-ft-eval/data/family_splits/<task>.parquet
     columns: seq, label, cluster_id, split, contaminated
 """
 from __future__ import annotations
@@ -22,7 +22,7 @@ import tempfile
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 BEACON_RAW = os.path.join(ROOT, "data", "beacon_raw")
 OUT_DIR = os.path.join(ROOT, "data", "family_splits")
 MMSEQS = "/home/cunyuliu/mmseqs/bin/mmseqs"

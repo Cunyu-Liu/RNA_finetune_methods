@@ -14,7 +14,7 @@ import collections
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 
 ARM_ORDER = ["full", "dora", "lora", "ia3", "headonly"]

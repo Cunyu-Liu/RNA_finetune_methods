@@ -7,8 +7,8 @@ import sys
 
 import torch.nn as nn
 
-NB_CODE = "/mnt/cunyuliu/hf_home/nucleicbert-code"
-NB_CKPT_DIR = "/mnt/cunyuliu/hf_home/models--nucleicbert/snapshots/main"
+NB_CODE = "/root/hf_home/nucleicbert-code"
+NB_CKPT_DIR = "/root/hf_home/models--nucleicbert/snapshots/main"
 NB_TOKENIZER = os.path.join(NB_CODE, "nucleicbert/tokenizers/noncoding_seqs.json")
 
 sys.path.insert(0, NB_CODE)

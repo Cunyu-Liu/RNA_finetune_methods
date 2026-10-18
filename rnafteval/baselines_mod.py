@@ -17,7 +17,7 @@ import numpy as np
 
 from .tasks import modification as mod_task
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 BEACON_RAW = os.path.join(ROOT, "data", "beacon_raw")
 
 

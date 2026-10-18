@@ -12,7 +12,7 @@ for plan in p2_tunedmissing_plan p2_fullbig_formal_plan p2_gridbest_fill_plan; d
   for s in 0 1 2 3 4 5; do
     if ! ps -ef | grep -E "[q]_fill\.py $s 6 .*$plan" | grep -qv grep; then
       setsid nohup $PY scripts/q_fill.py $s 6 scripts/$plan.json </dev/null >>/dev/null 2>&1 &
-      echo "[$(date)] restarted $plan s$s (missing=$MISS)" >> /mnt/cunyuliu/rna-ft-eval/logs/keepalive.log
+      echo "[$(date)] restarted $plan s$s (missing=$MISS)" >> /root/rna-ft-eval/logs/keepalive.log
     fi
   done
 done

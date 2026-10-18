@@ -2,9 +2,9 @@
 # G5 (整卡 40G): ERNIE-RNA lora s17 family 重跑 (MIG OOM 教训: 显式 attn 矩阵需整卡)
 #   + RiNALMo-micro modification full x 3 seeds x 2 splits (E1 缺口, full 需整卡)
 GPU=${1:-5}
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_ernmod_g$GPU.log

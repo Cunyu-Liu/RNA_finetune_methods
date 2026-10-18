@@ -2,9 +2,9 @@
 # 第四波：MRL 大档 lora 补臂（E2 等价线对称 + C4 表A）：
 # RiNALMo-650M + RiNALMo-mega x lora x 双切分 x 3 种子 = 12 runs
 # <gpu>；带 done 跳过 + OOM 失败清行重试 x3（等卡逻辑：每轮 mem_get_info >= 14G）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

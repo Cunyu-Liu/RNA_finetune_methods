@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 CSV = os.path.join(ROOT, "status", "resources_costbenefit.csv")
 OUTDIR = os.path.join(ROOT, "status", "figs")
 TASKS = [("noncoding-rna-family", "ncRNA family (ACC)"),

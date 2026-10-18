@@ -1,9 +1,9 @@
 #!/bin/bash
 # giga-650M full@1e-5 random 侧补缺（G4 守门 >=24G）：G1 队列 random 3 种子 9 次 attempt 全被 GPU1 他方 churn 挤爆 OOM（MAX ATTEMPTS 放弃）；
 # 本队列换 GPU4，等 dualtrack G4 段（giga lora family）收尾释放后自动开跑；bs8 协议与 q_giga_full_bs8 对齐
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=4

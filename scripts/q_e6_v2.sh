@@ -5,10 +5,10 @@
 #        v1 already covers ncRNA-start for these models.
 # m6A-start cells: 3 models × 2 strategies × 3 seeds = 18 runs (~1-3h each on 1 GPU).
 # GPU: use idle MIG? No — needs 10-24GB. Run on GPU5/2/4 when free <3GB? Use free-slot detection.
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_v2.log
 echo "=== e6v2 start $(date) ===" >> $LOG

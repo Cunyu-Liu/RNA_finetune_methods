@@ -9,4 +9,4 @@ while true; do
   sleep 600
 done
 nohup setsid $PY scripts/q_fill.py 0 1 scripts/p2_e2ext_plan.json > /dev/null 2>&1 < /dev/null &
-echo "launched e2ext at $(date)" >> /mnt/cunyuliu/rna-ft-eval/logs/q_e6_v2.log
+echo "launched e2ext at $(date)" >> /root/rna-ft-eval/logs/q_e6_v2.log

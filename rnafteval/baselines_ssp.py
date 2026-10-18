@@ -23,7 +23,7 @@ import numpy as np
 
 from .tasks import ssp as ssp_task
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 COMP = {"A": "U", "U": "A", "G": "C", "C": "G"}
 CANON = {("A", "U"), ("U", "A"), ("G", "C"), ("C", "G"),

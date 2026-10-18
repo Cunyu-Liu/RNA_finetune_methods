@@ -34,8 +34,8 @@ import time
 import numpy as np
 import torch
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
-S0 = ("/mnt/cunyuliu/tokenizer-benchmark/data/derived/split/"
+ROOT = "/root/rna-ft-eval"
+S0 = ("/root/tokenizer-benchmark/data/derived/split/"
       "release22_split_8080.parquet")
 OFFICIAL = {"RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"}
 
@@ -161,7 +161,7 @@ def probe_task(backbone, tok, task, device, seed, is_official):
     if task == "mrl":
         from .tasks import mrl as mrl_task
         data = mrl_task.load_official_split(
-            "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw/"
+            "/root/rna-ft-eval/data/beacon_raw/"
             "mean-ribosome-loading/data")
         tr = data["train"][:2000]
         te = data["test"][:1000]

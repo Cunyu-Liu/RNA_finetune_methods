@@ -1,7 +1,7 @@
 #!/bin/bash
 # 1016: keepalive for mega E3 + bigtail plans (worker death -> re-dispatch)
 # cron */10; created 2026-10-13 (quota-fixed rewrite)
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 cd /home/cunyuliu/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/keepalive_1016.log

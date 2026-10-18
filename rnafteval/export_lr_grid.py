@@ -13,7 +13,7 @@ import argparse
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 LRS = ["1e-05", "3e-05", "0.0001", "0.0003"]
 LR_LABEL = {"1e-05": "1e-5", "3e-05": "3e-5",

@@ -1,8 +1,8 @@
 #!/bin/bash
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_full_big.log
 echo "=== fullbig-v2 stage1 start $(date) ===" >> $LOG
@@ -31,7 +31,7 @@ done
 BESTFILE=/tmp/fullbig_grid_choice.txt
 $PY - <<'PYEOF' > $BESTFILE
 import json
-rows=[json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl")]
+rows=[json.loads(l) for l in open("/root/rna-ft-eval/ledger.jsonl")]
 best={}
 for r in rows:
     if (r.get("seed")==101 and r.get("strategy")=="full" and r.get("status")=="done"

@@ -20,8 +20,8 @@ import os
 import subprocess
 import sys
 
-HYDRA_CODE = "/mnt/cunyuliu/hf_home/hydrarna-code"
-HYDRA_CKPT = "/mnt/cunyuliu/hf_home/models--hydrarna/snapshots/main/HydraRNA_model.pt"
+HYDRA_CODE = "/root/hf_home/hydrarna-code"
+HYDRA_CKPT = "/root/hf_home/models--hydrarna/snapshots/main/HydraRNA_model.pt"
 HYDRA_PY = "/home/cunyuliu/miniconda3/envs/hydrarna/bin/python"
 
 # fairseq dict: <s>=0 <pad>=1 </s>=2 <unk>=3 A=4 T=5 G=6 C=7 N=8 ... <mask>=19

@@ -16,7 +16,7 @@
   python -m rnafteval.e6_forget --model RNA-Sc-10M --strategy full \
       --seed 17 --lr 3e-5 --device 0 --out-suffix lr3e-05
 
-产物: /mnt/cunyuliu/rna-ft-eval/artifacts/e6/<model>_<strategy>_s<seed>_<suffix>/result.json
+产物: /root/rna-ft-eval/artifacts/e6/<model>_<strategy>_s<seed>_<suffix>/result.json
 """
 from __future__ import annotations
 
@@ -28,8 +28,8 @@ import time
 
 import torch
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
-S0 = ("/mnt/cunyuliu/tokenizer-benchmark/data/derived/split/"
+ROOT = "/root/rna-ft-eval"
+S0 = ("/root/tokenizer-benchmark/data/derived/split/"
       "release22_split_8080.parquet")
 
 MODEL = {"RNA-Sc-1M": 256, "RNA-Sc-10M": 512, "RNA-Sc-30M": 480,

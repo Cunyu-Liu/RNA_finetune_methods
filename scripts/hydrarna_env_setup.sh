@@ -3,11 +3,11 @@
 # conda env py3.9 + nvidia::cuda-toolkit 11.8（免 root）+ torch 2.3.1+cu118 + 源码编译 mamba-ssm 2.2.2 + causal-conv1d
 # + editable fairseq（hydrarna-code 内）。全程写日志；任一步失败如实登记不硬跑。
 set -x
-LOG=/mnt/cunyuliu/rna-ft-eval/logs/hydrarna_env.log
+LOG=/root/rna-ft-eval/logs/hydrarna_env.log
 exec >> $LOG 2>&1
 echo "=== hydrarna env start $(date) ==="
 CONDADIR=/home/cunyuliu/miniconda3
-CODE=/mnt/cunyuliu/hf_home/hydrarna-code
+CODE=/root/hf_home/hydrarna-code
 ENVNAME=hydrarna
 
 if ! $CONDADIR/bin/conda env list | grep -q "^$ENVNAME "; then
@@ -43,7 +43,7 @@ $SRC/pip install "transformers==4.44.0" pandas tqdm tensorboardX || exit 8
 cd $CODE
 $SRC/python - <<'PYEOF'
 import sys
-sys.path.insert(0, "/mnt/cunyuliu/hf_home/hydrarna-code")
+sys.path.insert(0, "/root/hf_home/hydrarna-code")
 print("smoke import start")
 PYEOF
 echo "=== hydrarna env done $(date) rc=$? ==="

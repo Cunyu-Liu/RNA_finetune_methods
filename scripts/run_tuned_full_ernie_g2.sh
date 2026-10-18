@@ -3,9 +3,9 @@
 # 背景: 默认 3e-4 全崩 (6/6, ln-13 平原 epoch 0 即卡死)
 # 86M 模型显式配对 attn — 需整卡 (与 lora 同理); 峰值预算 ~7G < 13.6G
 # 协议 (B1): s101 tuning (1e-5 vs 3e-5) → formal 17/29/43 × 2 切分
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_tuned_full_ernie_g2.log

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """audit_1016: authoritative missing count for 1016 plans (dual-format e3 + rank + lr exact)"""
 import json
-rows=[json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl")]
+rows=[json.loads(l) for l in open("/root/rna-ft-eval/ledger.jsonl")]
 def is_done_fixed(rr):
     task,model,strat,seed,split=rr["task"],rr["model"],rr["strategy"],rr["seed"],rr["split"]
     lr,n_train,rank=rr.get("lr"),rr.get("n_train"),rr.get("rank")

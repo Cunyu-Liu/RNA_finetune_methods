@@ -2,9 +2,9 @@
 # SSP E2 第三任务面板: RiNALMo SSP {dora,ia3} × s{17,29,43} = 6 runs
 # 口径 = 正式 SSP runs（finetune_ssp: epochs 3 / n-train 3000 /
 # n-test 500 / bs 4 / 默认 LR）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e2_ssp_g1.log

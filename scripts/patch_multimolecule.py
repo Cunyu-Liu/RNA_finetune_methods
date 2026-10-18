@@ -8,7 +8,7 @@ Fixes (idempotent, applied to pypath install):
 
 Usage:
   python patch_multimolecule.py [pypath]
-  (default pypath = /mnt/cunyuliu/rna-ft-eval/pypath)
+  (default pypath = /root/rna-ft-eval/pypath)
 """
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def patch_import_guards(src: str) -> str:
 
 def main() -> int:
     pypath = sys.argv[1] if len(sys.argv) > 1 else \
-        "/mnt/cunyuliu/rna-ft-eval/pypath"
+        "/root/rna-ft-eval/pypath"
     mm = os.path.join(pypath, "multimolecule", "models")
     files = glob.glob(os.path.join(mm, "*", "modeling_*.py"))
     patched = 0

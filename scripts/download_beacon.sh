@@ -2,8 +2,8 @@
 # BEACON task data download (hf-mirror, SSL-safe via requests)
 export HF_ENDPOINT=https://hf-mirror.com
 export PYTHONHTTPSVERIFY=0
-DEST=/mnt/cunyuliu/rna-ft-eval/data/beacon_raw
-LOG=/mnt/cunyuliu/rna-ft-eval/logs/download_beacon.log
+DEST=/root/rna-ft-eval/data/beacon_raw
+LOG=/root/rna-ft-eval/logs/download_beacon.log
 mkdir -p $DEST
 PY=$( [ -x /home/cunyuliu/miniconda3/envs/rnaft/bin/python ] && echo /home/cunyuliu/miniconda3/envs/rnaft/bin/python || echo python3 )
 TASKS="secondary-structure contact-map distance-map structural-score-imputation spliceai isoform noncoding-rna-family modification mean-ribosome-loading degradation programmable-rna-switches crispr-on-target crispr-off-target"
@@ -16,7 +16,7 @@ import urllib3
 urllib3.disable_warnings()
 task = sys.argv[1]
 repo = "jiahaozhang2003/beacon-%s" % task
-dest = "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw/%s" % task
+dest = "/root/rna-ft-eval/data/beacon_raw/%s" % task
 api = "https://hf-mirror.com/api/datasets/%s/tree/main?recursive=true" % repo
 r = requests.get(api, timeout=30, verify=False)
 r.raise_for_status()

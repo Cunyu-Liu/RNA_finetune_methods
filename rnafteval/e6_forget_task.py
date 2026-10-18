@@ -22,8 +22,8 @@ import time
 
 import torch
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
-S0 = ("/mnt/cunyuliu/tokenizer-benchmark/data/derived/split/"
+ROOT = "/root/rna-ft-eval"
+S0 = ("/root/tokenizer-benchmark/data/derived/split/"
       "release22_split_8080.parquet")
 
 MODEL_MAXLEN = {"RNA-Sc-1M": 256, "RNA-Sc-10M": 512, "RNA-Sc-30M": 480,

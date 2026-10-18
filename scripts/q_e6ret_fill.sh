@@ -1,10 +1,10 @@
 #!/bin/bash
 # e6-v3 跨任务保持度补位（2026-09-29）：18 格计划中 1 格未落（RiNALMo-micro lora s43）。
 # 协议与 q_e6_v3.sh 一致（probe-style retention；ncRNA 微调前后 m6A/MRL/SSP probe）；共享卡锁 + 真 CUDA 断言。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6ret_fill.log

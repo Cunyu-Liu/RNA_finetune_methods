@@ -3,10 +3,10 @@
 # （ledger 一直 pending、artifacts 无 result.json，0927 文档「18/18」不实）。
 # 缺口：RiNALMo-micro lora s17 / RNA-Sc-30M lora s29 / RNA-Sc-30M lora s43。
 # 协议与 q_e6_v2.sh 完全一致（m6A 起点、lora@3e-04）；共享卡锁 + 真 CUDA 断言 + 多轮重试。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_v2_fill.log

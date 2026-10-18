@@ -6,7 +6,7 @@ Task column semantics (spec §3.4 split-unit table):
   host_field: dataset column carrying the split-unit key (transcript/gene id)
 Official metrics per task (spec T1.3.5).
 
-BEACON raw data lands at /mnt/cunyuliu/rna-ft-eval/data/beacon_raw/<task>/...
+BEACON raw data lands at /root/rna-ft-eval/data/beacon_raw/<task>/...
 This registry maps task name -> loader, metric, split policy. Loaders are
 implemented in rnafteval/tasks/__init__.py as functions are added.
 """
@@ -26,7 +26,7 @@ class TaskSpec:
     binary_dir: str      # beacon raw dir suffix
 
 
-BEACON_RAW = "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw"
+BEACON_RAW = "/root/rna-ft-eval/data/beacon_raw"
 
 TASKS: dict[str, TaskSpec] = {
     "secondary-structure": TaskSpec(

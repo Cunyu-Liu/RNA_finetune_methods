@@ -1,6 +1,6 @@
 import json
 
-rows = [json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl") if l.strip()]
+rows = [json.loads(l) for l in open("/root/rna-ft-eval/ledger.jsonl") if l.strip()]
 TASKS = ["modification", "mrl", "secondary-structure"]
 
 def grid_best(model, task):

@@ -5,10 +5,10 @@
 #       共享卡锁（slot 独占——RPC 子进程显存 ~2-3GB 但模型加载慢，串行最稳）；
 #       done-skip（ledger run_id：ft_hydrarna_<task>_frozen_s<seed>_<split>）；
 #       真 CUDA 断言（llr_env + worker ready 即证）；3 轮重试。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_hydrarna.log
 CARD="$PY /home/cunyuliu/rna-ft-eval/scripts/rnaft_card.py"
@@ -19,7 +19,7 @@ is_done () {  # $1=task $2=seed $3=split
 import json,sys
 task,seed,split=sys.argv[1:4]
 rid="ft_hydrarna_%s_frozen_s%s_%s"%(task,seed,split)
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l=l.strip()
     if not l: continue
     try: r=json.loads(l)

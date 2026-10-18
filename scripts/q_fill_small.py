@@ -25,13 +25,13 @@ MAXG = float(sys.argv[4]) if len(sys.argv) > 4 else 12.0
 P = json.load(open(PLAN))
 LOCKDIR = P.get("lockdir", "/tmp/rnaft_shared_locks")
 TIMEOUT_S = int(P.get("timeout_s", 21600))
-R = "/mnt/cunyuliu/rna-ft-eval"
+R = "/root/rna-ft-eval"
 LEDGER = R + "/ledger.jsonl"
 PY = "/home/cunyuliu/llr_env/bin/python"
 CARD = [PY, "/home/cunyuliu/rna-ft-eval/scripts/rnaft_card.py"]
 os.environ.update({
-    "PYTHONPATH": "/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
-    "HF_HOME": "/mnt/cunyuliu/hf_home",
+    "PYTHONPATH": "/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
+    "HF_HOME": "/root/hf_home",
     "HF_ENDPOINT": "https://hf-mirror.com",
     "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
 })

@@ -2,9 +2,9 @@
 # 等 mod_family2 (PID 由 pgrep 指向真实进程) 结束后跑 lrbest random 三种子
 cd /home/cunyuliu/rna-ft-eval
 while pgrep -x -f "bash scripts/run_mod_family2.sh" >/dev/null 2>&1 || pgrep -x -f "bash scripts/run_mod_family2.sh " >/dev/null 2>&1; do sleep 120; done
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_lrbest_g2.log

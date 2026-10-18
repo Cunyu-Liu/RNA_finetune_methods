@@ -3,9 +3,9 @@
 # × {frozen,lora,full} × 3 种子 = 36 runs (1 已冒烟)
 # C3 预览: 标注量-策略翻转点。簇级子集 (e3_subsampler, T3.1.1)。
 # full 档 = 全量 train (6859); 小档 LR 与全量矩阵一致 (协议不变量)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e3_axis_g7.log

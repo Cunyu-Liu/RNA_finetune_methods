@@ -2,9 +2,9 @@
 # m6A 双轨受控系 LoRA 轨并行加速（G5 逆序）：10M/30M/100M lora x 双切分 x 3 seed = 18 runs
 # 与主队列 q_m6a_dualtrack G3（full 优先）零碰撞：主队列 lora 段带 done 跳过会自动让行
 # 带 done 跳过 + 等显重试 x2 + 失败清 pending 行
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=5

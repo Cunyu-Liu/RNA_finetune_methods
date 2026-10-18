@@ -1,10 +1,10 @@
 #!/bin/bash
 # Official-family E6 arms (2026-09-27): RiNALMo-mega + RiNALMo-650M × {lora, full@1e-5} × 3 seeds = 12 runs.
 # Chained: waits until e6_v2 AND e6_v3 queues both exit, then runs serially on freed cards.
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_official.log
 echo "=== e6off start-wait $(date) ===" >> $LOG

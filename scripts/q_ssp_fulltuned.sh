@@ -2,9 +2,9 @@
 # SSP full-FT tuned 臂补全：ERNIE-RNA / RNA-FM / SpliceBERT x random+family x 3 种子（LR 1e-5，对齐 RiNALMo SSP tuned 协议）
 # 口径对齐 q_ssp_generic.sh 正式 SSP run：epochs 3 / n-train 3000 / n-test 500 / batch-size 4
 # <model> <gpu>；带 done 跳过
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 MODEL=$1

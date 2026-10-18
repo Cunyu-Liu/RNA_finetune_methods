@@ -22,7 +22,7 @@ import json
 import os
 import random
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 
 def load_cells() -> dict:

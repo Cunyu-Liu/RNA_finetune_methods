@@ -4,9 +4,9 @@
 #       本队列与 g2(lora) claim 集不相交（队列互斥），full 格全部由本队列覆盖
 # 协议：bs8（650M OOM 教训）、lr 后缀口径 _lr%g 与主链/受控系一致、幂等 done-skip、
 #       全卡位选择(>=24G)、失败清 pending 重试(<=2)、6h 超时
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_rnasc650_full.log
@@ -18,7 +18,7 @@ done_chk() {
   $PY - "$1" <<'PYEOF'
 import json, sys
 rid=sys.argv[1]; n=0
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid and r.get("status")=="done": n=1
 print(n)
@@ -55,7 +55,7 @@ run_one() {
       [ $RC -eq 0 ] && return
       $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

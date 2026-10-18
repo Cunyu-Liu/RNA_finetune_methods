@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Print P1 gap status: groups=N cells_done=X/111 missing=Y  (ledger-authoritative)."""
 import json
-P = "/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P = "/root/rna-ft-eval/ledger.jsonl"
 rows = []
 for l in open(P):
     l = l.strip()

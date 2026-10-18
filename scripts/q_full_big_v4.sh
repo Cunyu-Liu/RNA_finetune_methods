@@ -2,10 +2,10 @@
 # fullbig v4（2026-09-29）：AIDO.RNA-1.6B / RiboSpan-1K-40 全参臂补位。
 # v2 问题：① bs4+26G 门在竞卡下反复 OOM（1.6B×Adam fp32 ≈19GB + 激活）；② 单次失败即放弃不重试。
 # v4：bs2 + 22G 门 + 共享卡锁 + 每 cell 3 轮重试 + expandable_segments。Stage1=LR 网格（s101）→ Stage2=正式 12 cell。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_full_big_v4.log
@@ -55,7 +55,7 @@ BESTFILE=/tmp/fullbig_v4_grid_choice.txt
 $PY - <<'PYEOF' > $BESTFILE
 import json
 best={}
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l=l.strip()
     if not l: continue
     try: r=json.loads(l)

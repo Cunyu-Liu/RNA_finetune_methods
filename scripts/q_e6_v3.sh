@@ -2,10 +2,10 @@
 # E6-v3 cross-task retention queue (2026-09-27, user-required axis):
 # 3 models × {lora, full@tuned} × 3 seeds = 18 runs. Each run = ncRNA finetune (10 ep)
 # + 3 cross-task probes (m6A/MRL/SSP, probe head 2k/1ep) pre & post.
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_v3.log
 echo "=== e6v3 start $(date) ===" >> $LOG

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """update_ppt.py — PPT 数据表程序化生成（纪律 ③：禁止手抄数字）。
 
-数据源（唯一口径）：服务器 /mnt/cunyuliu/rna-ft-eval/status/*.csv
+数据源（唯一口径）：服务器 /root/rna-ft-eval/status/*.csv
   - c4_table.csv   : Δ(random-family) 主表（PPT slide3 表A/表B 源）
   - e2_table.csv   : PEFT 五臂（PPT slide5 源）
   - e6_table.csv   : 遗忘矩阵（PPT slide6 源）

@@ -3,9 +3,9 @@
 # spec v1.4 E2 = 2 任务: ncRNA(per-seq) + m6A(per-base 粒度对照)
 # 6 runs: {dora,ia3} × s{17,29,43} × random
 # 口径 = 正式 m6A runs（epochs 3 / n-train 20000 / bs 32 / 默认 LR）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e2_mod_g3.log

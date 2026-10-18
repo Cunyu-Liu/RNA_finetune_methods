@@ -2,9 +2,9 @@
 # G7 (MIG 4.75G): RiNALMo-micro modification E1 矩阵 frozen/lora x 3 seeds x 2 splits
 # (E1 最大缺口: RiNALMo 在 modification 上 0 run) + E2 IA3 修复后重跑 x 3 seeds
 # full 不上 MIG (需整卡, 排 G5 链)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_mod_rinalmo_g7.log

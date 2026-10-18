@@ -1,7 +1,7 @@
 #!/bin/bash
 # P1/P2 gap-fill monitor (cron 20min): progress + GPU + real-CUDA scan + auto-refill.
 REPO=/home/cunyuliu/rna-ft-eval
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
 OUT=$R/status/p1_monitor.log
 mkdir -p $R/status

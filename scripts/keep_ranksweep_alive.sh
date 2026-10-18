@@ -7,6 +7,6 @@ MISS=$($PY scripts/q_plan_need.py scripts/p2_ranksweep_1005_plan.json 2>/dev/nul
 for s in 0 1 2 3; do
   if ! ps -ef | grep -E "[q]_fill\.py $s 4 .*ranksweep" | grep -qv grep; then
     setsid nohup $PY scripts/q_fill.py $s 4 scripts/p2_ranksweep_1005_plan.json </dev/null >>/dev/null 2>&1 &
-    echo "[$(date)] restarted ranksweep s$s (missing=$MISS)" >> /mnt/cunyuliu/rna-ft-eval/logs/keepalive.log
+    echo "[$(date)] restarted ranksweep s$s (missing=$MISS)" >> /root/rna-ft-eval/logs/keepalive.log
   fi
 done

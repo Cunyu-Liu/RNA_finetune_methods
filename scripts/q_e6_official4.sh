@@ -4,10 +4,10 @@
 # 2) RiNALMo-mega lora@3e-4 × 3 种子（协议修正：原 mega lora 跑的是 1e-5，与 micro/受控系 lora@3e-4 不一致；
 #    以 _lr3e-04 后缀另存，不动既有 _s0-heldout 行——P4 决定是否切换口径）
 # 工程：共享卡锁 + 抢锁后复核 + result.json done-skip + 3 轮重试 + expandable_segments
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_official4.log

@@ -25,7 +25,7 @@ from .splits import assert_no_overlap, family_split, random_split
 from .strategies import apply_strategy, make_head
 from .tasks import ncrna
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 BEACON_RAW = os.path.join(ROOT, "data", "beacon_raw")
 
 
