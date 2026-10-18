@@ -60,8 +60,8 @@ def main():
     os.makedirs(out_dir, exist_ok=True)
     claim = ledger.claim(args.model, args.task, args.strategy, args.seed,
                          args.split, rid, out_dir, extra="")
-    if claim["action"] != "run":
-        print("skip (already %s)" % claim["row"]["status"])
+    if not claim.get("claimed", False):
+        print("skip (already %s)" % claim["row"].get("status", "unknown"))
         return 75
 
     t0 = time.time()
