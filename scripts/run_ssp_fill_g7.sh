@@ -1,9 +1,9 @@
 #!/bin/bash
 # G7 排空后: ① RNA-Sc SSP full s29 random (E1 随机列最后一格)
 # ② RiNALMo SSP frozen/lora x s29/s43 x random/family (8 runs, MIG-safe)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

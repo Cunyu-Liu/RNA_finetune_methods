@@ -1,9 +1,9 @@
 #!/bin/bash
 # MRL full 臂（A8 三任务扩展）: <model> <gpu>
 # default x6 -> 判崩(random Pearson<0.45) -> s101 网格 {1e-5,3e-5} -> tuned x6
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 MODEL=$1

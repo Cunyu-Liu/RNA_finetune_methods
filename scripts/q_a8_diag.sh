@@ -1,8 +1,8 @@
 #!/bin/bash
 # A8 机制显微镜: 6 模型 x 100 步诊断（SpliceBERT/RiNALMo/ERNIE 崩, RNA-FM 幸存, RNA-Sc ck1/ck20 剂量两端）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

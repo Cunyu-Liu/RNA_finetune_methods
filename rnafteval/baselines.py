@@ -11,7 +11,7 @@ import os
 
 import numpy as np
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 BEACON_RAW = os.path.join(ROOT, "data", "beacon_raw")
 
 KMER_KS = (1, 2, 3, 4, 5, 6)

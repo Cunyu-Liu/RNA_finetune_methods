@@ -1,8 +1,8 @@
 #!/bin/bash
 # mod family retry on GPU2 (after fill queue): lora s29/s43 + full 3 seeds
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_mod_family2.log
@@ -10,7 +10,7 @@ cd /home/cunyuliu/rna-ft-eval
 # 清掉 GPU7 上 OOM 失败的 pending 行（lora s29/s43 family）
 python3 - << "PYEOF"
 import json
-p = "/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+p = "/root/rna-ft-eval/ledger.jsonl"
 rows = [json.loads(l) for l in open(p) if l.strip()]
 out = []
 for r in rows:

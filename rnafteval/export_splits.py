@@ -12,7 +12,7 @@ import os
 
 import pandas as pd
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 TASKS = ["noncoding-rna-family", "secondary-structure", "modification"]
 UNIT = {
     "noncoding-rna-family": "整条序列（家族簇整簇归一侧）",

@@ -2,7 +2,7 @@
 
 Tracks every (model, task, strategy, seed, split) combination:
   claim() refuses duplicate launches; update() keeps one row per run.
-Artifacts root: /mnt/cunyuliu/rna-ft-eval
+Artifacts root: /root/rna-ft-eval
 """
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ import fcntl
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 LOCK = os.path.join(ROOT, "ledger.lock")
 

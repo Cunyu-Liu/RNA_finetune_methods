@@ -1,7 +1,7 @@
 #!/bin/bash
 # 1006c: final-close monitor — when tunedmissing + ranksweep drain to 0 missing,
 # trigger full exporter-chain refresh once (marker-guarded), then report.
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 C=/home/cunyuliu/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/final_close_monitor.log

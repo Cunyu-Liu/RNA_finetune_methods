@@ -1,8 +1,8 @@
 #!/bin/bash
 # ERNIE lora 重跑 GPU5 (整卡, 显式 attn 矩阵需整卡显存; bs=4 保守)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_ernie_lora_g5.log

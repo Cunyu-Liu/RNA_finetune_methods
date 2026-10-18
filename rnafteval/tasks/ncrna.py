@@ -44,7 +44,7 @@ def load_official_split(data_dir: str) -> dict[str, list[dict]]:
 if __name__ == "__main__":
     import sys
     d = sys.argv[1] if len(sys.argv) > 1 else \
-        "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw/noncoding-rna-family/data"
+        "/root/rna-ft-eval/data/beacon_raw/noncoding-rna-family/data"
     recs = load_ncrna(d)
     print("records:", len(recs))
     sp = load_official_split(d)

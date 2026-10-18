@@ -19,7 +19,7 @@ import pyarrow.parquet as pq
 
 from rnafteval.tasks import modification as mod_task
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 MMSEQS = "/home/cunyuliu/mmseqs/bin/mmseqs"
 OUT = os.path.join(ROOT, "data", "family_splits", "modification.parquet")
 

@@ -1,6 +1,6 @@
 """BEACON data + RNA-LM checkpoints downloader (hf-mirror, requests-based).
 
-Run on server:  PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath python3 download_all.py
+Run on server:  PYTHONPATH=/root/rna-ft-eval/pypath python3 download_all.py
 """
 import os
 import sys
@@ -11,9 +11,9 @@ import urllib3
 
 urllib3.disable_warnings()
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 DATA = os.path.join(ROOT, "data", "beacon_raw")
-HF_HOME = "/mnt/cunyuliu/hf_home"
+HF_HOME = "/root/hf_home"
 
 DATASETS = [
     "secondary-structure", "contact-map", "distance-map",

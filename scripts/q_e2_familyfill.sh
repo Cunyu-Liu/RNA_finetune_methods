@@ -1,9 +1,9 @@
 #!/bin/bash
 # 第五波：m6A head-only family 侧（RNA-Sc-10M，E2 对称）+ MRL E2 family 侧（dora/ia3 x micro+10M）
 # <gpu1>（m6A）——MRL family 侧另卡；带 done 跳过
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 G1=$1

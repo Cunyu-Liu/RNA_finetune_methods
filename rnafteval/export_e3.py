@@ -12,7 +12,7 @@ import collections
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 FULL_N = 6859
 ORDER = ["rinalmomicro", "rnasc10m"]
 MODEL_LABEL = {"rinalmomicro": "RiNALMo-micro", "rnasc10m": "RNA-Sc-10M"}

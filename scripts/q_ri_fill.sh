@@ -2,10 +2,10 @@
 # random-init 控制臂补位（2026-09-29）：36 格计划中未落格 cell 定向重试。
 # done 判定：ledger run_id = ft_<mk>_noncodingrnafamily_<strat>_s<seed>_<split>_ri 且 status=done。
 # 协议与 q_random_init.sh 一致（默认 LR 3e-4；--random-init）；新增：共享卡锁 + 抢锁后复核 + 真 CUDA 断言。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_ri_fill.log
@@ -16,7 +16,7 @@ is_done () {  # $1=modelkey $2=strat $3=seed $4=split
 import json,sys
 mk,strat,seed,split=sys.argv[1:5]
 rid="ft_%s_noncodingrnafamily_%s_s%s_%s_ri"%(mk,strat,seed,split)
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l=l.strip()
     if not l: continue
     try: r=json.loads(l)

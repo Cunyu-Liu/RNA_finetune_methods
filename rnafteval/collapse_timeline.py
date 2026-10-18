@@ -21,7 +21,7 @@ import time
 
 import torch
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 
 def main() -> int:

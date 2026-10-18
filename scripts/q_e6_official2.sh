@@ -1,10 +1,10 @@
 #!/bin/bash
 # e6_official v2: retry the 12 failed cells (OOM/contended cards last round).
 # Now GPUs have room (2: 25GB free, 4: 12GB). Serial, high mem gate (18GB).
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_e6_official2.log
 echo "=== e6off2 start $(date) ===" >> $LOG

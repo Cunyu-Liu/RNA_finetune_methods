@@ -10,7 +10,7 @@ usage:
 from __future__ import annotations
 import argparse, csv, os
 
-CSV = "/mnt/cunyuliu/rna-ft-eval/status/decision_tree.csv"
+CSV = "/root/rna-ft-eval/status/decision_tree.csv"
 ADVICE = {
     "noncoding-rna-family": ("family", "per-sequence family classification collapses under "
                              "accepting LoRA/full fine-tuning when the split is family-level"),

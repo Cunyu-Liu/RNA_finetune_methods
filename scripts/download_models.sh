@@ -1,9 +1,9 @@
 #!/bin/bash
 # RNA-LM model checkpoints download (hf-mirror, requests-based, SSL-safe)
 export HF_ENDPOINT=https://hf-mirror.com
-export HF_HOME=/mnt/cunyuliu/hf_home
+export HF_HOME=/root/hf_home
 mkdir -p $HF_HOME
-LOG=/mnt/cunyuliu/rna-ft-eval/logs/download_models.log
+LOG=/root/rna-ft-eval/logs/download_models.log
 PY=$( [ -x /home/cunyuliu/miniconda3/envs/rnaft/bin/python ] && echo /home/cunyuliu/miniconda3/envs/rnaft/bin/python || echo python3 )
 echo "START v2 $(date)" >> $LOG
 for repo in "multimolecule/ernierna" "multimolecule/splicebert" "multimolecule/rnafm" "lmzb-bupt/RiNALMo" "gyx1130/SpliceBERT-human510"; do
@@ -13,7 +13,7 @@ import requests
 import urllib3
 urllib3.disable_warnings()
 repo = sys.argv[1]
-base = "/mnt/cunyuliu/hf_home"
+base = "/root/hf_home"
 api = "https://hf-mirror.com/api/models/%s/tree/main?recursive=true" % repo
 r = requests.get(api, timeout=30, verify=False)
 r.raise_for_status()

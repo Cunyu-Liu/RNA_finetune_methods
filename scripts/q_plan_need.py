@@ -3,7 +3,7 @@
 import sys, json
 P = json.load(open(sys.argv[1]))
 rows = []
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l = l.strip()
     if not l: continue
     try: rows.append(json.loads(l))

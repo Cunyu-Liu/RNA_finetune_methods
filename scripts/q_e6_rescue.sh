@@ -1,9 +1,9 @@
 #!/bin/bash
 # e6 650M lora s17 救援（20min cron）：GAVEUP 死格兜底
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_patch_dead_cells.log

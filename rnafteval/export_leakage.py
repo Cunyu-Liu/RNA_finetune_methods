@@ -17,7 +17,7 @@ import os
 
 import pandas as pd
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 RAW = os.path.join(ROOT, "data/beacon_raw/modification")
 FAM = os.path.join(ROOT, "data/family_splits/modification.parquet")
 

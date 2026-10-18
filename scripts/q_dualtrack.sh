@@ -5,9 +5,9 @@
 # C) m6A 受控系：RNA-Sc 10M/30M/100M {full@3e-5, lora}（双切分 x3 种子）
 # 口径：n-train 20000 / epochs 3 / batch 32（对齐既有 m6A 正式 run）
 # <gpu_a> <gpu_b>；带 done 跳过 + 失败清行重试 x2 + 等显存（20G for 650M full）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GA=$1

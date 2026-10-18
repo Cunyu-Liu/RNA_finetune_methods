@@ -2,9 +2,9 @@
 # MRL frozen/full 补臂（C4 表A 三任务全臂版）：RNA-Sc-30M/100M + RiNALMo-650M/mega
 # frozen: 全 16；full: tuned 1e-5（对齐 A8 tuned 协议）x 双切分 x 3 种子
 # <gpu1> <gpu2>；带 done 跳过 + 失败清行重试 x2
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 G1=$1

@@ -1,8 +1,8 @@
 #!/bin/bash
 # per-base modification 任务队列 (GPU1)
-R=/mnt/cunyuliu/rna-ft-eval
-export HF_ENDPOINT=https://hf-mirror.com HF_HOME=/mnt/cunyuliu/hf_home
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
+export HF_ENDPOINT=https://hf-mirror.com HF_HOME=/root/hf_home
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 cd /home/cunyuliu/rna-ft-eval

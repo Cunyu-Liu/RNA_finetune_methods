@@ -1,9 +1,9 @@
 #!/bin/bash
 # giga-650M full tuned @1e-5（batch 8——OOM 修复：默认 32 需 ~26G+ 挤爆 40G 卡）
 # 口径对齐 q_rnasc650_tests.sh 的 650M 协议（bs 8）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

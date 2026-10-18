@@ -2,9 +2,9 @@
 # 第七波b：head-only 全任务对称收官（E2 六臂完备性——head-only 是 E2 横评成员）
 # m6A/MRL: micro+10M head-only x 双切分 x3 = 12+12 runs; SSP: micro 双切 x3 + 10M s29/s43 补 = 8+4 runs
 # <gpu1> <gpu2> <gpu3>；带 done 跳过 + 失败清行重试 x2
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 G1=$1; G2=$2; G3=$3

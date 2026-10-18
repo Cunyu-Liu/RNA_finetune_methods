@@ -1,6 +1,6 @@
 import json, os, glob, re, collections
 
-R = "/mnt/cunyuliu/rna-ft-eval"
+R = "/root/rna-ft-eval"
 rows = [json.loads(l) for l in open(R + "/ledger.jsonl") if l.strip()]
 done = [r for r in rows if r.get("status") == "done" and not r.get("smoke", False)]
 

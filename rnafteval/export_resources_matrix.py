@@ -14,7 +14,7 @@ usage: python -m rnafteval.export_resources_matrix
 from __future__ import annotations
 import json, os, statistics, collections
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 OUT_MD = os.path.join(ROOT, "status", "resources_matrix.md")
 OUT_CSV = os.path.join(ROOT, "status", "resources_costbenefit.csv")

@@ -1,6 +1,6 @@
 import json
 
-rows = [json.loads(l) for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl") if l.strip()]
+rows = [json.loads(l) for l in open("/root/rna-ft-eval/ledger.jsonl") if l.strip()]
 # Exclude A8 default-LR arm (3e-4) which is the INTENTIONAL contrast group; focus on tuned-arm compliance
 # tuned arm = _lr suffix rows (or lr in {1e-5, 3e-5}); default arm = 3e-4/0.0003 (A8 对照组, 有意保留)
 models = {}

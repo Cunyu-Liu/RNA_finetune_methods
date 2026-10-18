@@ -1,9 +1,9 @@
 #!/bin/bash
 # 通用 SSP 队列: <model> {dora,ia3} 或 frozen × s{17,29,43} = 6 runs
 # 用法: q_ssp_generic.sh <model> <gpu> <arms:"dora,ia3"|"frozen">
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 MODEL=$1

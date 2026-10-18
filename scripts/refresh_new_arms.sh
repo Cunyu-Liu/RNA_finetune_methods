@@ -1,7 +1,7 @@
 #!/bin/bash
 # 新臂分析链定时刷新（0929）：6 导出器每 30 分钟重跑一次，status/*.md 始终反映最新落格。
 # 用途：训练过程记录自动化（[PENDING] 标记自动翻转为实数）；P4 取表即用。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
 export PYTHONPATH=$R/pypath:/home/cunyuliu/rna-ft-eval
 cd /home/cunyuliu/rna-ft-eval

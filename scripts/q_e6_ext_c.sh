@@ -7,9 +7,9 @@
 #           导致 GPU2/GPU4 各 ~12GB 空闲显存长期无法利用；且 24GB 永远拿不到）。
 # 与 主队列 q_e6_ext.sh / 侧翼 q_e6_ext_b.sh 经 ledger pending 互斥；
 # 本 worker 每格另有 mkdir 原子锁 + cell_state 幂等兜底。
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e6_ext_c.log
@@ -23,7 +23,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -54,7 +54,7 @@ PYEOF
 clear_pending() {
   $PY - "$1" <<'PYEOF'
 import fcntl, json, sys
-RID=sys.argv[1]; P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+RID=sys.argv[1]; P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

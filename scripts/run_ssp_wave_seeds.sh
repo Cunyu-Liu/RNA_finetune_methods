@@ -1,9 +1,9 @@
 #!/bin/bash
 # E1 SSP 补种子波：formal seed (29/43) x {frozen,lora,full} x {random,family}
 # E1 主矩阵无 head-only（spec v1.2）。用法: run_ssp_wave_seeds.sh <gpu> <seed>
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home
 export HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python

@@ -2,9 +2,9 @@
 # 崩溃带修订数据补全：ncRNA family 侧 lora，1M/10M/30M/100M 各 3 种子
 # 目的：确认"148M LoRA 击穿崩溃带"是否为孤点——四档全谱重测（带 done 跳过 + 失败清行重试 x2）
 # <gpu>
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

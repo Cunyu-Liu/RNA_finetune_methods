@@ -14,7 +14,7 @@ import numpy as np
 
 from .baselines import kmer_features
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 
 def load_mrl_parts(split: str):

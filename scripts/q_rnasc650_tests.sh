@@ -2,9 +2,9 @@
 # RNA-Sc-650M 预训练完成后的等价线测试链（受控系大端）
 # 相位1: frozen+lora x 双切分 x 3 种子（GPU>=14G）
 # 相位2: full tuned 链 s101 网格 -> formal（GPU>=28G）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_rnasc650_tests.log

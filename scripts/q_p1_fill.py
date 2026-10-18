@@ -16,7 +16,7 @@ import os, sys, json, time, fcntl, subprocess, datetime
 
 SHARD = int(sys.argv[1]); NS = int(sys.argv[2])
 SLOTS = int(os.environ.get("P1_SLOTS", "3"))
-R = "/mnt/cunyuliu/rna-ft-eval"
+R = "/root/rna-ft-eval"
 LEDGER = R + "/ledger.jsonl"
 PY = "/home/cunyuliu/llr_env/bin/python"
 LOCKS = "/tmp/p1_locks"
@@ -25,8 +25,8 @@ os.makedirs(R + "/logs", exist_ok=True)
 LOG = open("%s/logs/q_p1_fill_s%d.log" % (R, SHARD), "a", buffering=1)
 
 for k, v in {
-    "PYTHONPATH": "/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
-    "HF_HOME": "/mnt/cunyuliu/hf_home",
+    "PYTHONPATH": "/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
+    "HF_HOME": "/root/hf_home",
     "HF_ENDPOINT": "https://hf-mirror.com",
     "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
 }.items():

@@ -3,9 +3,9 @@
 # nvidia-smi 索引 ≠ torch 索引 —— 所有派单一律走 pick_gpu 动态选卡，绝不硬编码）
 # 流程：lr3e-5 网格格(pick_gpu 等卡) + 等 GPU1 孤儿 lr1e-5 → 双格齐 → BEST → formal 6 runs 双 worker
 # 互斥：done/fresh_pending(<=3h) 跳过；失败清 pending 重试(<=2)；bs8；6h 超时
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_rnasc650_full.log
@@ -17,7 +17,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -46,7 +46,7 @@ PYEOF
 clean_pending() {
   $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

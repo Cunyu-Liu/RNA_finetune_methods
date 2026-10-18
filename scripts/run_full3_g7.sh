@@ -1,9 +1,9 @@
 #!/bin/bash
 # G7 (MIG 4.75G): SpliceBERT E1 full 矩阵补齐 x 3 seeds x 2 splits (ncrna)
 # 显存依据: 同模型 lora 峰值 1013MB -> full ~1.5G, MIG 可容纳
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_full3_g7.log

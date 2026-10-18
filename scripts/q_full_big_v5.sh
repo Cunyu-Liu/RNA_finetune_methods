@@ -3,10 +3,10 @@
 # 1.6B×(2+2+4+4)bytes ≈ 19G + 激活/梯度 ≈ 30G），bs2+22G 门必然 OOM。
 # v5：AIDO bs1 + 34G 门（近独占卡窗口）；RiboSpan full 实测 0.48@lr3e-5 已落，
 # 其余格按网格选优。仍走共享卡锁 + done-skip + 3 轮重试。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_full_big_v5.log
@@ -55,7 +55,7 @@ BESTFILE=/tmp/fullbig_v5_grid_choice.txt
 $PY - <<'PYEOF' > $BESTFILE
 import json
 best={}
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l=l.strip()
     if not l: continue
     try: r=json.loads(l)

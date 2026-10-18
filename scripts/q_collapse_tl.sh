@@ -1,10 +1,10 @@
 #!/bin/bash
 # C4 collapse timeline queue (2026-09-27): 5 models × {lora, full@default} × s17 = 10 runs.
 # Evidence: per-epoch family test acc — when does the collapse happen?
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_collapse_tl.log
 echo "=== ctl start $(date) ===" >> $LOG

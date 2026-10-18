@@ -1,9 +1,9 @@
 #!/bin/bash
 # A8-D4 预训练深度剂量实验: RNA-Sc-10M 同配方, 只变预训练进度 ck{1,5,10,15,20}
 # ncRNA + m6A x full@3e-4 默认 x s17 random —— 早期崩/晚期幸存 => 预训练深度因果
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

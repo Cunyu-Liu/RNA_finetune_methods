@@ -4,9 +4,9 @@
 #   n ∈ {10,100,1000,full=6859} × {frozen,lora,full} × 3 种子 = 36 runs
 # 子集 = e3_subsampler 已生成 (ncrna_<n>_s<seed>.txt 通用不分模型)
 # 协议不变量: epochs 10 / bs 8 与首轴一致 (可比性)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e3_axis_rnasc_g5.log

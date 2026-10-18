@@ -2,7 +2,7 @@
 """P2 checkpoint downloader (hf-mirror, requests-based, resumable) -> HF_HOME layout."""
 import os, sys, time, requests, urllib3
 urllib3.disable_warnings()
-BASE = "/mnt/cunyuliu/hf_home"
+BASE = "/root/hf_home"
 repos = sys.argv[1:]
 for repo in repos:
     api = "https://hf-mirror.com/api/models/%s/tree/main?recursive=true" % repo

@@ -2,10 +2,10 @@
 # Auto-refresh product chain once P1 + all P2 plans have no missing cells.
 # Idempotent: runs once, guarded by a marker. cron: every 20 min.
 REPO=/home/cunyuliu/rna-ft-eval
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 MARK=$R/status/.refresh_after_p1p2
 LOG=$R/status/refresh.log
 [ -f "$MARK" ] && exit 0

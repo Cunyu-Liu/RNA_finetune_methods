@@ -4,9 +4,9 @@
 # family 侧 tuned 缺失——5 模型中唯一未知 tuned family 行为的洞
 # （其余 4 模型 tuned family 均崩 0.06-0.10; 本臂回答 RiNALMo 是否同样）
 # 口径 = random 侧真 tuned 行（epochs 10 / bs 8 / lr 1e-5 / 全量 6859）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_tuned_fam_rinalmo.log

@@ -19,7 +19,7 @@ import os
 
 import numpy as np
 
-BEACON_SS = "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw/secondary-structure"
+BEACON_SS = "/root/rna-ft-eval/data/beacon_raw/secondary-structure"
 BPRNA = os.path.join(BEACON_SS, "bpRNA")
 
 MAX_LEN = 320          # v1 protocol cap (documented deviation: memory)

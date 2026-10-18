@@ -4,9 +4,9 @@
 #       + RiNALMo-micro {lora, full@1e-5} × 3 种子 = 6 runs（官方系对照）
 # 门：10M/30M/micro 6G；100M 10G；全卡位 pick_gpu（MIG 过滤+try/except，
 #     三陷阱全修）；幂等 done-skip；失败清 pending 重试（<=2）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_e6.log
@@ -18,7 +18,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -74,7 +74,7 @@ run_e6() {
       [ $RC -eq 0 ] && return 0
       $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

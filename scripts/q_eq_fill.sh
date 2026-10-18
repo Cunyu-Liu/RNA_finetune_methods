@@ -2,9 +2,9 @@
 # 第五波：等价线受控系 1M 档补全（lora random 3 + frozen 双切分 6）+ 100M full tuned（双切分 6）
 # 1M full 已有 _lr3e-05 tuned 版（ledger 双行重复无害）；100M full 一直缺——等价线受控系大端 full 参照
 # <gpu>；带 done 跳过 + 失败清行重试 x2
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

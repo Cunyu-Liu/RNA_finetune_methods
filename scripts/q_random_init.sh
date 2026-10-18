@@ -3,10 +3,10 @@
 # 3 models × {lora, full} × {random, family} × 3 seeds = 36 runs.
 # Question answered (pre-registered): is the C4 collapse band a property of the
 # PRETRAINED representation, or of BERT training dynamics? (random-init control)
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_random_init.log
 echo "=== ri start $(date) ===" >> $LOG

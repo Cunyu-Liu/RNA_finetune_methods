@@ -1,9 +1,9 @@
 #!/bin/bash
 # MRL per-seq 第二任务（C4 对齐）: 5 模型 x {frozen,lora} x {random,family} x 3 种子 = 60 runs
 # 协议: epochs 3 / n-train 20000 / bs 32（对齐 m6A 口径）；指标 Pearson r
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

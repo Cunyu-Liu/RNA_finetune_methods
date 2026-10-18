@@ -3,9 +3,9 @@
 # 用法: run_queue.sh <queue_file> <gpu_id> <logname>
 # queue_file 每行: <model> <task> <strategy> <seed> <split> [batch_size]
 QF=$1; GPU=$2; LOGNAME=$3
-R=/mnt/cunyuliu/rna-ft-eval
-export HF_ENDPOINT=https://hf-mirror.com HF_HOME=/mnt/cunyuliu/hf_home
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath
+R=/root/rna-ft-eval
+export HF_ENDPOINT=https://hf-mirror.com HF_HOME=/root/hf_home
+export PYTHONPATH=/root/rna-ft-eval/pypath
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 cd /home/cunyuliu/rna-ft-eval

@@ -5,9 +5,9 @@
 #                 全卡位 pick_gpu（total>=20G 过滤 MIG 切片）门 >= 24G
 # 口径对齐 q_m6a_dualtrack.sh：finetune_base runner、epochs 3、n-train 20000
 # 互斥：done 幂等 + fresh_pending(<=3h) 跳过；失败清 pending 重试(<=2)
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 LOG=$R/logs/q_m6a_ends.log
@@ -19,7 +19,7 @@ cell_state() {
   $PY - "$1" <<'PYEOF'
 import json, sys, datetime
 rid=sys.argv[1]; st="none"
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     r=json.loads(l)
     if r.get("run_id")==rid:
         if r.get("status")=="done": st="done"
@@ -50,7 +50,7 @@ PYEOF
 clean_pending() {
   $PY - <<PYEOF
 import fcntl, json
-P="/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"
+P="/root/rna-ft-eval/ledger.jsonl"
 with open(P) as f:
     fcntl.flock(f, fcntl.LOCK_EX)
     rows=[l for l in f]

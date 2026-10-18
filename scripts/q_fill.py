@@ -13,13 +13,13 @@ SHARD = int(sys.argv[1]); NS = int(sys.argv[2]); PLAN = sys.argv[3]
 P = json.load(open(PLAN))
 LOCKDIR = P["lockdir"]; SLOTS = int(P.get("slots", 1)); RUNS = P["runs"]
 TIMEOUT_S = int(P.get("timeout_s", 14400))
-R = "/mnt/cunyuliu/rna-ft-eval"; LEDGER = R + "/ledger.jsonl"
+R = "/root/rna-ft-eval"; LEDGER = R + "/ledger.jsonl"
 PY = "/home/cunyuliu/llr_env/bin/python"
 os.makedirs(LOCKDIR, exist_ok=True); os.makedirs(R + "/logs", exist_ok=True)
 TAG = os.path.basename(PLAN).replace(".json", "")
 LOG = open("%s/logs/q_fill_%s_s%d.log" % (R, TAG, SHARD), "a", buffering=1)
-for k, v in {"PYTHONPATH": "/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
-             "HF_HOME": "/mnt/cunyuliu/hf_home", "HF_ENDPOINT": "https://hf-mirror.com",
+for k, v in {"PYTHONPATH": "/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval",
+             "HF_HOME": "/root/hf_home", "HF_ENDPOINT": "https://hf-mirror.com",
              "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}.items():
     os.environ[k] = v
 

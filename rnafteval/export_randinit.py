@@ -17,7 +17,7 @@ import csv
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 MODELS = ["RiNALMo-micro", "RNA-Sc-10M", "RNA-Sc-30M"]
 STRATS = ["lora", "full"]

@@ -1,10 +1,10 @@
 #!/bin/bash
 # collapse_tl 补位（2026-09-29）：10 格计划中 4 格未落（RiNALMo-micro / ERNIE-RNA × {lora,full} × s17 family）。
 # 与 q_collapse_tl.sh 协议一致；新增：done 定向检查 + 共享卡锁 + 真 CUDA 断言。
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 cd /home/cunyuliu/rna-ft-eval
 LOG=$R/logs/q_collapse_fill.log
@@ -15,7 +15,7 @@ is_done () {  # $1=modelkey $2=strat
 import json,sys
 mk,strat=sys.argv[1:3]
 rid="ft_%s_collapsetimeline_%s_s17_family_tl"%(mk,strat)
-for l in open("/mnt/cunyuliu/rna-ft-eval/ledger.jsonl"):
+for l in open("/root/rna-ft-eval/ledger.jsonl"):
     l=l.strip()
     if not l: continue
     try: r=json.loads(l)

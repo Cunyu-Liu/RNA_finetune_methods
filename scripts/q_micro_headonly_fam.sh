@@ -2,9 +2,9 @@
 # 6 号审计后继：ncRNA lora family 剩余档（1M 已完成 3/3，30M/100M 跳过 done）→ 10M/30M/100M 若 done 缺则补
 # 实际上 10M/30M/100M done 已齐，此链改为兜底重扫 + mega full family e33000 对照补充（已有）——
 # 本队列改为： RiNALMo-micro head-only family 补 2 种子（s29/s43，缺口见 etc_audit ASYM head-only random=3 family=1）
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GPU=$1

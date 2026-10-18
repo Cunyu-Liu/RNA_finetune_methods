@@ -14,7 +14,7 @@ import collections
 import json
 import os
 
-ROOT = "/mnt/cunyuliu/rna-ft-eval"
+ROOT = "/root/rna-ft-eval"
 
 
 def collect():

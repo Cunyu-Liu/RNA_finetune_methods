@@ -2,9 +2,9 @@
 # m6A 双系等价线（q_dualtrack B 部分独立版）：
 # 官方系 micro/mega full@1e-5 + mega/giga lora；受控系 10M/30M/100M {full@3e-5, lora}
 # <gpu_b>（主）<gpu_c>（辅助——受控系小模型）；带 done 跳过 + 失败清行重试 x2
-R=/mnt/cunyuliu/rna-ft-eval
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+R=/root/rna-ft-eval
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/home/cunyuliu/llr_env/bin/python
 GB=$1

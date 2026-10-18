@@ -10,7 +10,7 @@ import os
 
 import pyarrow.parquet as pq
 
-BEACON_RAW = "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw"
+BEACON_RAW = "/root/rna-ft-eval/data/beacon_raw"
 
 
 def load_modification(data_dir: str | None = None) -> list[dict]:

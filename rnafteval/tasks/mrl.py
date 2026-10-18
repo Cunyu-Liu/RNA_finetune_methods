@@ -37,7 +37,7 @@ def load_official_split(data_dir: str) -> dict[str, list[dict]]:
 
 
 if __name__ == "__main__":
-    d = "/mnt/cunyuliu/rna-ft-eval/data/beacon_raw/mean-ribosome-loading/data"
+    d = "/root/rna-ft-eval/data/beacon_raw/mean-ribosome-loading/data"
     sp = load_official_split(d)
     for k, v in sp.items():
         print(k, len(v))

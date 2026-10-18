@@ -3,10 +3,10 @@
 # are all complete. Independent marker so the legacy .refresh_after_p1p2 run (Oct 2,
 # before these plans existed) does not block the final re-export.
 REPO=/home/cunyuliu/rna-ft-eval
-R=/mnt/cunyuliu/rna-ft-eval
+R=/root/rna-ft-eval
 PY=/home/cunyuliu/llr_env/bin/python
-export PYTHONPATH=/mnt/cunyuliu/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
-export HF_HOME=/mnt/cunyuliu/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTHONPATH=/root/rna-ft-eval/pypath:/home/cunyuliu/rna-ft-eval
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
 MARK=$R/status/.refresh_final_1005
 LOG=$R/status/refresh.log
 [ -f "$MARK" ] && exit 0
