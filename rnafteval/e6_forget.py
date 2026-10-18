@@ -79,7 +79,16 @@ def encode(tok, seqs, device, max_len=512):
             "attention_mask": torch.tensor(mask, device=device)}
 
 
-OFFICIAL = {"RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"}
+OFFICIAL = {"RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M",
+            "ERNIE-RNA", "RNA-FM"}
+# NucleicBERT: no MLM head / no  TED (k-mer perturbation pretraining).
+# E6 metric switch for NB: hidden-state cosine drift on S0 heldout.
+NB_DRIFT_MODELS = {"NucleicBERT"}
+_LM_CLASS = {
+    "RiNALMo-micro": "RiNALMoForMaskedLM", "RiNALMo-mega": "RiNALMoForMaskedLM",
+    "RiNALMo-650M": "RiNALMoForMaskedLM",
+    "ERNIE-RNA": "ErnieRnaForMaskedLM", "RNA-FM": "RnaFmForMaskedLM",
+}
 
 
 def _official_encoder(lm):
@@ -94,6 +103,56 @@ def _official_encoder(lm):
     if hasattr(core, "model") and hasattr(core.model, "encoder"):
         return core.model
     return core
+
+
+def drift_eval(backbone, ref_states, tok, seqs, device, bs=8):
+    """Mean cosine distance between post-finetune hidden states and pre-finetune
+    reference states on the same S0 heldout sequences (NB forgetting proxy).
+
+    ref_states: dict seq_index -> np.ndarray (L, D) from pre-finetune pass.
+    Returns mean (1 - cos) over all non-pad positions of all seqs."""
+    import numpy as np
+    backbone.eval()
+    tot, cnt = 0.0, 0
+    with torch.no_grad():
+        for i in range(0, len(seqs), bs):
+            chunk = [seqs[j] for j in range(i, min(i + bs, len(seqs)))]
+            enc = encode(tok, chunk, device)
+            out = backbone(input_ids=enc["input_ids"],
+                           attention_mask=enc["attention_mask"])
+            h = out.last_hidden_state
+            for k, j in enumerate(range(i, min(i + bs, len(seqs)))):
+                if j not in ref_states:
+                    continue
+                ref = torch.tensor(ref_states[j], device=h.device,
+                                   dtype=h.dtype)
+                L = min(h.shape[1], ref.shape[0])
+                m = enc["attention_mask"][k, :L].bool()
+                hh = h[k, :L][m]
+                rr = ref[:L][m]
+                if hh.numel() == 0:
+                    continue
+                cos = torch.nn.functional.cosine_similarity(
+                    hh, rr, dim=-1)
+                tot += float((1.0 - cos).sum().item())
+                cnt += int(cos.numel())
+    return tot / max(cnt, 1)
+
+
+def _collect_states(backbone, tok, seqs, device, bs=8):
+    """Pre-finetune reference hidden states for drift eval."""
+    backbone.eval()
+    states = {}
+    with torch.no_grad():
+        for i in range(0, len(seqs), bs):
+            chunk = [seqs[j] for j in range(i, min(i + bs, len(seqs)))]
+            enc = encode(tok, chunk, device)
+            out = backbone(input_ids=enc["input_ids"],
+                           attention_mask=enc["attention_mask"])
+            h = out.last_hidden_state
+            for k, j in enumerate(range(i, min(i + bs, len(seqs)))):
+                states[j] = h[k].float().cpu().numpy()
+    return states
 
 
 def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None):
@@ -127,8 +186,15 @@ def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None):
             core = backbone.m if hasattr(backbone, "m") else backbone
             if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
                 core = core.base_model.model
-            out = core(enc["input_ids"], None, return_all_hiddens=False)
+            try:
+                out = core(enc["input_ids"], None, return_all_hiddens=False)
+            except TypeError:
+                # multimolecule/HF-style encoder (ERNIE/RNA-FM/NB): plain HF call
+                out = core(input_ids=enc["input_ids"],
+                           attention_mask=enc["attention_mask"])
             logits = out[0] if isinstance(out, (tuple, list)) else out
+            if hasattr(logits, "last_hidden_state"):
+                logits = logits.last_hidden_state
             lp = torch.nn.functional.log_softmax(logits.float(), dim=-1)
             shift_lp = lp[:, :-1]
             shift_ids = ids[:, 1:]
@@ -199,14 +265,21 @@ def main():
 
     # --- model ---
     is_official = args.model in OFFICIAL
+    is_nb_drift = args.model in NB_DRIFT_MODELS
     if is_official:
-        from multimolecule import RiNALMoForMaskedLM, RnaTokenizer
+        import multimolecule
+        from multimolecule import RnaTokenizer
         from .models import hf_path, MODEL_SPECS
         path = hf_path(MODEL_SPECS[args.model].repo)
         tok = RnaTokenizer.from_pretrained(path)
-        lm = RiNALMoForMaskedLM.from_pretrained(path, trust_remote_code=True)
-        with torch.no_grad():
-            lm.lm_head.decoder.bias.zero_()
+        lm_cls = getattr(multimolecule, _LM_CLASS[args.model])
+        lm = lm_cls.from_pretrained(path, trust_remote_code=True)
+        if hasattr(lm, "lm_head") and hasattr(lm.lm_head, "decoder") \
+                and lm.lm_head.decoder is not None \
+                and hasattr(lm.lm_head.decoder, "bias") \
+                and lm.lm_head.decoder.bias is not None:
+            with torch.no_grad():
+                lm.lm_head.decoder.bias.zero_()
         backbone = lm.to(device)
         d_model = MODEL_SPECS[args.model].d_model
     else:
@@ -219,12 +292,19 @@ def main():
     if h_dim != d_model:
         d_model = h_dim
 
-    # --- pre-finetune S0 NLL + noise band (two evals, different order) ---
-    pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
-    pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707)
-    noise_band = abs(pre_b - pre_a)
-    print("pre NLL: %.4f / %.4f (noise band %.4f)" % (pre_a, pre_b, noise_band),
-          flush=True)
+    # --- pre-finetune metric: NLL (official) or hidden-drift ref (NB) ---
+    if is_nb_drift:
+        ref_states = _collect_states(backbone, tok, hold, device)
+        pre_drift = 0.0  # drift vs itself = 0 by definition
+        noise_band = 0.0
+        print("NB drift mode: ref states collected for %d seqs" % len(hold),
+              flush=True)
+    else:
+        pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
+        pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707)
+        noise_band = abs(pre_b - pre_a)
+        print("pre NLL: %.4f / %.4f (noise band %.4f)" % (pre_a, pre_b, noise_band),
+              flush=True)
 
     # --- finetune (same loop as finetune_one) ---
     backbone, n_trainable = apply_strategy(backbone, args.strategy)
@@ -270,18 +350,29 @@ def main():
         backbone = merged
         print("peft merged back into RiNALMoForMaskedLM for post-NLL",
               flush=True)
-    post = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
-
-    result = {
-        "run_id": rid, "model": args.model, "strategy": args.strategy,
-        "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
-        "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
-        "noise_band": noise_band, "post_nll": post,
-        "delta_nll": post - pre_a,
-        "forgot": bool((post - pre_a) > max(noise_band, 1e-6)),
-        "wall_sec": time.time() - t0,
-        "protocol": "E6-v1: pre/post S0 heldout NLL + reorder noise band",
-    }
+    if is_nb_drift:
+        post_drift = drift_eval(backbone, ref_states, tok, hold, device)
+        result = {
+            "run_id": rid, "model": args.model, "strategy": args.strategy,
+            "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
+            "n_holdout": len(hold),
+            "metric": "HIDDEN_COSINE_DRIFT", "drift": post_drift,
+            "wall_sec": time.time() - t0,
+            "protocol": "E6-v1-nb: pre/post S0 heldout hidden cosine drift "
+                        "(NB has no MLM head; NLL undefined)",
+        }
+    else:
+        post = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
+        result = {
+            "run_id": rid, "model": args.model, "strategy": args.strategy,
+            "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
+            "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
+            "noise_band": noise_band, "post_nll": post,
+            "delta_nll": post - pre_a,
+            "forgot": bool((post - pre_a) > max(noise_band, 1e-6)),
+            "wall_sec": time.time() - t0,
+            "protocol": "E6-v1: pre/post S0 heldout NLL + reorder noise band",
+        }
     with open(os.path.join(out_dir, "result.json"), "w") as f:
         json.dump(result, f, indent=2)
     fields = {k: v for k, v in result.items() if k not in ("run_id", "protocol")}
