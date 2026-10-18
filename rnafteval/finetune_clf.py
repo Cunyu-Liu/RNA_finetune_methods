@@ -69,6 +69,7 @@ def main():
         return 75
 
     t0 = time.time()
+    torch.cuda.set_device(args.device)
     torch.cuda.reset_peak_memory_stats(args.device)
 
     # --- data ---
@@ -94,6 +95,19 @@ def main():
             for k in parts:
                 for r in parts[k]:
                     r["label"] = int(r["label"])
+            # BEACON cross-split exact dups (133+271 pairs) — dedup rule:
+            # keep the FIRST occurrence in side order train > val > test
+            # (same protocol as ncrna dedup; assert_no_overlap then passes)
+            seen = set()
+            for k in ("train", "val", "test"):
+                keep = []
+                for r in parts[k]:
+                    kk = r["seq"]
+                    if kk in seen:
+                        continue
+                    seen.add(kk)
+                    keep.append(r)
+                parts[k] = keep
     else:
         from .tasks import ncrna
         if args.split == "family":

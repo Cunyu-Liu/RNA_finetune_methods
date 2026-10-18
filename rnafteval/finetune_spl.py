@@ -65,6 +65,7 @@ def main():
         return 75
 
     t0 = time.time()
+    torch.cuda.set_device(args.device)
     torch.cuda.reset_peak_memory_stats(args.device)
 
     # --- data ---
