@@ -170,6 +170,12 @@ def main() -> int:
             m[i, :len(labs)] = 1.0
         return enc, y, m
 
+    def _pad_mask(enc):
+        am = enc.get("attention_mask")
+        if am is None:
+            return None
+        return (am == 0)
+
     for ep in range(args.epochs):
         backbone.train(args.strategy in ("lora", "full"))
         head.train()
@@ -181,7 +187,7 @@ def main() -> int:
             with contextlib.nullcontext() if not no_grad \
                     else torch.no_grad():
                 h = backbone(**enc).last_hidden_state
-            logits = head(h).squeeze(-1)
+            logits = head(h, _pad_mask(enc)).squeeze(-1)
             loss = ((logits - y) ** 2 * m).sum() / m.sum().clamp(min=1)
             opt.zero_grad()
             loss.backward()
@@ -199,7 +205,7 @@ def main() -> int:
         for b in batches(test, args.batch_size):
             enc, y, m = make_batch(b)
             h = backbone(**enc).last_hidden_state
-            logits = head(h).squeeze(-1)
+            logits = head(h, _pad_mask(enc)).squeeze(-1)
             for i in range(len(b)):
                 n = int(m[i].sum().item())
                 if n == 0:
