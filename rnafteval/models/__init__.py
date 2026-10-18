@@ -298,7 +298,22 @@ def load_mrnabert(spec: ModelSpec, device: str):
     path = hf_path(spec.repo)
     assert os.path.isdir(path), "model dir missing: %s" % path
     cfg = AutoConfig.from_pretrained(path, trust_remote_code=True)
-    import transformers_modules.main.bert_layers as bl
+    # new-cluster fix v2 (1018): bert_layers.py uses relative imports
+    # (.bert_padding/.configuration_bert) -> load snapshot dir as a proper
+    # package "mrnabert_pkg" under /root (vendored, no pip).
+    import importlib, sys as _sys, shutil as _sh
+    pkg = "/root/mrnabert_pkg"
+    _sh.rmtree(pkg, ignore_errors=True)
+    os.makedirs(pkg, exist_ok=True)
+    open(os.path.join(pkg, "__init__.py"), "w").write("")
+    for _f in ("bert_layers.py", "bert_padding.py", "configuration_bert.py",
+               "flash_attn_triton.py"):
+        _src = os.path.join(path, _f)
+        if os.path.exists(_src):
+            _sh.copy(_src, os.path.join(pkg, _f))
+    if "/root" not in _sys.path:
+        _sys.path.insert(0, "/root")
+    bl = importlib.import_module("mrnabert_pkg.bert_layers")
     tok = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
     model = bl.BertModel(cfg)
     sd = torch.load(os.path.join(path, "pytorch_model.bin"),
