@@ -1,0 +1,142 @@
+
+## 2026-10-13 晚（1016：is_done 双格式根治 + 队列解锁 + 配额事故处置）
+
+### 1. 第四层假完成变体根治（is_done 双格式）
+- **根因**：MRL/modification runner 的 e3 run_id 为 `_e3<n>_lr<lr>`（e3 在前），q_fill.is_done 只匹配 `_lr<lr>_e3<n>` → 1011 六 worker 在 9 个已完成格上 claim-blocked 死循环数小时（无 GPU 浪费但阻塞队列推进）；q_plan_need 同缺陷导致台账 missing 误报（1010 报 5 实为 68）
+- **修复**：is_done 双格式匹配（lr_e3 + e3_lr 两种顺序都认）+ 新增 audit_1016.py 权威审计器（含 rank/n_train/lr 精确匹配）
+
+### 2. 调度解锁 + 陈旧卡锁清理
+- 1010 四 worker 全卡 33-34G 大格（need 过标定：650M frozen 34G → 实测峰值 5031MB）→ 拆分 1016 双 plan：mega_e3 27 格（小格 need 重标定 4/36/40G）+ bigtail 41 格（650M frozen need 34→8G）
+- **kill -9 留下 10 个陈旧卡锁**（SIGKILL 不执行 finally rmdir；5 个是 Oct 6 的周旧锁）→ 清锁后 6 训练立即启动；教训：kill worker 前先让其自然退出，或杀后手动清锁
+- keepalive_1016.sh + cron */10 装岗（worker 死亡 10 分钟内自动重拉）
+
+### 3. 磁盘配额事故（tar_stage 111G → /mnt 归位，经用户确认）
+- home 配额 100% 满导致写入 0 字节失败（keepalive 首次创建被截断）；tar_stage 230 个 tar 分片（111G，hf_models/codonflow 等多课题备份，22:38 后无活跃写入进程）→ **用户确认后** mv 至 /mnt/cunyuliu/tar_stage_1013；写测试通过
+- 教训：见 tar_progress.log 有 [19:00]/[22:11]/[22:37] 三次 quota exceeded 记录——此前已多次失败
+
+### 4. 队列真态（23:02）
+- 1016 mega_e3：27 格中 frozen 首批已落地（e310 全落 + e31000/e33000 在跑）；bigtail 41 格（NB mrl 1 在跑 + AIDO×3 + 650M 36）
+- AIDO 3e-05×3（1007 遗留）：s17 首跑 OOM（共享卡挤压）后自动重试中
+- 1011 尾格：7 格（m6A E3×3 + SSP rank×4）由 keepalive_e3rank + 1016 体系接管
+
+## 2026-10-14 凌晨（1016c：TOCTOU 双抢 OOM 竞态根治）
+
+- **现象**：AIDO 3e-05 s17 与 mega full s29 同时在 GPU0 开训 → AIDO OOM 死亡（36.62MiB free 时仍试图分配）
+- **根因**：grab() 检查 free 与训练进程实际分配显存之间存在数分钟 ramp 窗口——AIDO 抢 slot_1（margin 48G 判定通过后开始 ramp），mega s29 在 ramp 完成前看到 free≥40G 也抢 slot_0 → 双双开训 → 后者 OOM。经典 TOCTOU
+- **修复**：need≥30G 的格要求**独占整卡**（双 slot 全空 + 1.15× margin）+ finally 释放兄弟 slot——同卡大格竞态结构性消除
+- 伴随治理：孤儿锁二次清理（kill -9 遗留）；bigtail plan need 升序重排（1c77713）后 650M frozen 批量落地恢复吞吐
+- NB mrl default-LR 三种子 -0.0016 落地（A8 默认崩溃第 2 架构确认）；audit_1016 56→44
+
+## 2026-10-14 关机前最后收口（1016e：mega/650M 大模型 E3 图 + PPT s11）
+
+- mega E3 终态：frozen 12/12（全档常值 0.72 家族切分）+ lora 9/12（e310/1000/5000 三档 3 种子全）+ full 5/12（e310 3 种子 + e31000/5000 各 1 种子被关机截断）
+- 650M E3 终态：frozen 12/12 全齐（0.65 常值）+ lora 3/12（e310 落地 0.16）
+- 新图 fig_ppt_e3_bigmodels.png（双面板大模型车道）+ PPT 新增 s11（16 页）；三遍验证（值 vs ledger tol 0.012 过 / CRC PASS / 嵌入 MD5 过 / lint PASS）
+- 科学判读：大模型家族切分下 frozen 常值远高于 micro（0.72/0.65 vs 0.68 但起点更稳）、微调臂温和——容量对崩溃带有缓冲效应（full@5000=0.70 vs micro 0.068）
+
+## 2026-10-14 晚（集群恢复：cron 重装 + 12 worker 重启 + rank m6A 补格新派 + GitHub 推送）
+
+- **恢复验证**：ledger 2236 行 md5 1ce3d75c（与关机备份一致）；git HEAD 906dbce（与备份盘一致）；artifacts 2173 目录；audit_1016 = 34 格（与关机清单一致，无静默丢失）
+- **GPU 拓扑变化**：6/7 号卡从 MIG 1g.5gb（4.75G 视图）变为整卡 40G——q_fill 的 total<20G 过滤现已放行 6/7 号卡，可用卡从 6 张升 8 张
+- **cron 重装**：9 条全部恢复（status/monitor/refresh/stale_reset/close_monitor ×2/keepalive ×2）
+- **worker 重启**：1016 双 plan ×4 shard + AIDO 3e-05 ×3 = 11 个；3 分钟内 650M lora e31000/e33000（关机中断格）重新开跑、ERNIE rank ×2 开跑——GPU2/3/4 100% 满载
+- **新派 p2_rank_m6a_1014_plan（18 runs，commit 203e08a 已推 GitHub）**：ERNIE/RNA-FM/SpliceBERT × modification × lora × r{4,16} × 3 种子 @random——关机期间备份审计发现的结论③ m6A 面板缺口（ncRNA/SSP 面板此前已齐）
+- 期间判读：UNEXPECTED 头权重提示 = lora 加载预期现象（非错误）；epoch 0 loss 0.028 正常
+
+## 2026-10-15 凌晨（1014b 收口：rank m6A 补格 18/18 全落地 + rank 图 v8 + PPT s7 更新）
+
+- **p2_rank_m6a_1014_plan 18/18 全落地**（~1.5h，2×2+2 补启分片；教训：启动 4-shard plan 必须把分片号全列——只起 s0/s1 会让 s2/s3 的格静默饿死）
+- **终值（m6A lora random，3 种子均值）**：ERNIE r4 0.9892 / r16 0.9904；RNA-FM r4 0.9746 / r16 0.9870；SpliceBERT r4 0.9556 / r16 0.9554；micro（旧有）r4 0.979 / r8 0.970 / r16 0.974
+- **判读**：架构差 0.955-0.990 主导，rank 差 ≤0.02（m6A 面板与 ncRNA/SSP 完全一致）——「rank 二阶旋钮」结论跨三任务闭合
+- **rank 图 v8**（status/figs/fig_ppt_ranksweep.png）：三面板全 4 模型；MRL 面板维持 r8 口径（r4/r16 不在 E2 spec——E2 只扫 ncRNA+DMS 2 任务，SSP/m6A 已是扩展）
+- **PPT s7 换图 + banner 更新**：嵌入 MD5 验证通过、lint PASS、orico 同步（md5 双端一致 894e0580）
+- 期间 1016 尾格推进：650M lora e31000 ×3 重跑中 + AIDO 3e-05 ×2 在飞（等大卡窗口）
+
+## 2026-10-15 深夜（1015b/c：AIDO 3e-05 OOM 三轮复盘 + bs1 整卡协议重派）
+
+- bs32 → bs16 → bs1 失败链：bs16 峰值仍 30.5-31.5G（1.6B 常驻基底 ~20G 不随 bs 缩）+ 共享卡 4-8G 负载 → 39.5G 卡放不下；508 次重试后 GAVEUP×5 轮
+- 终版协议 p2_aido_3e5_bs1_1015_plan（3187fc0）：bs=1 + need 34G 整卡独占 + timeout 16h = fullbig 1e-05 成功同款；stale running 行 ×2 清理 + 孤儿锁 gpu_0/gpu_4 清理（kill 遗留，ps 双证无占用后 rmdir）
+- 预印本 v1.0：§2.5 cross-arch rank 段 + 头部增量注记（84fd070/d147993）
+- 当前 8 卡满载（外部 7 进程 + codonflow×2 + AIDO mrl s29 dev2 训练中）——34G 整卡窗口由 keepalive 自动轮询抢占
+
+## 2026-10-15 凌晨（1015d：650M full e3 need 重标定——第五层饿死形态根治）
+
+- **发现**：bigtail 剩余 650M full e3 格 need=33G（1016 前的过标定存量），但 ledger 实测峰值仅 24.7G（e310 格）——21G 空闲窗口反复出现却全被 33G 门槛挡住（wait/no-card 循环数小时）
+- **修复**：p2_650m_full_e3_recal_1015_plan（899e8dc）——9 格重派 need=26G；启动 3 分钟内 e33000 s17/e31000 s29 双双开跑（GPU2/4），验证标定正确
+- **B24 纪律再证**：need 标定必须同 bs 语境引用 ledger peak_mem_mb（650M full bs32 peak 25014MB → e3 子集同 bs 峰值 24679.9MB 一致）
+- 650M full e31000 s43 / e33000 s29 / e35000 ×3 继续在飞；mega lora e33000 三格等 36G 窗口；AIDO 3e-05 bs1 等 34G 整卡
+
+## 2026-10-15 清晨（1015d 修正：recal 撤回——26G 门与双 slot 叠加致自撞 OOM）
+
+- **复盘**：1015d 的 need=26G 重标定是错误判断——e310 峰值 24.7G 是空卡口径；真实运行中 backward+碎片峰值 ~34G（OOM 堆栈实证）。26G 门通过后训练启动再 OOM；且 slots=2 允许两个 26G 任务叠同卡（26+26>39.5）加剧
+- **原 33G 整卡协议才是对的**（bigtail plan 原值）——已 kill recal worker、清理其制造的 pending 行；ledger 完整性核验 2256 行（2 个 done 行完好，无污染）
+- **教训（B24 升级第二版）**：need 标定不能只看 ledger peak_mem_mb 的单值——空卡峰值 ≠ 共享卡峰值（碎片 + ramp）；判据应为「ledger peak × 1.3 或整卡独占」二选一，中间地带最危险
+- 650M full e3 剩余 7 格由 bigtail 原协议（33G 整卡）继续排队；AIDO 3e-05 bs1 / mega lora 同等大卡窗口
+
+## 2026-10-15 上午（1015f：650M full 三天 GAVEUP 真根因——bs 协议错配）
+
+- **真根因确证**：q_full_big.sh 的 spec_bs() 对 RiNALMo-650M 给 **bs=8**（全部既有 650M full 正式行 = bs8、peak 25014MB）；而 1016 bigtail plan 对 650M full 传 bs=None → finetune_one 默认 bs32 → 峰值 35-37G → 整卡也 OOM。此前三天（10-13 起）650M full/lora 大量 GAVEUP 的元凶即此 bs 错配（lora 行同查：q_e6_official4 里 650M full bs=4——官方系 650M full 行都是小 bs）
+- **修复**：p2_650m_full_e3_bs8_1015_plan（59e6ae3）——9 格 bs=8/need 26G；s17/e35000 首格 GPU2 开跑（batch-size 8 实证）、s29/e31000 GPU0 并行
+- **纠错链记录（防再错）**：1015d 误判「need 过标定」→ 撤回；1015e need 34→30（AIDO）；1015f 找到真根因 bs——三次尝试全部留痕，最终以成功先例的 spec_bs 为准（B24 纪律的完整版：**need 与 bs 必须同时从成功先例抄**）
+
+## 2026-10-15 下午（1015g：cron 路径 bug 修复——/mnt 无 scripts，重装 crontab 后 8 小时静默失效）
+
+- **发现**：恢复时重装的 crontab 沿用恢复指南的 /mnt/cunyuliu/rna-ft-eval/scripts/ 路径——该路径无任何脚本（脚本在 /home）；cron 每次触发静默失败 → keepalive/stale_reset/close_monitor 全部停摆 8 小时（期间 bigtail 四 shard 全 GAVEUP/DONE、AIDO bs1 worker 静默死亡无人重拉）
+- **修复**：crontab 全量 sed /mnt→/home 路径；14:00 keepalive 首次正常触发（重拉 bigtail×3）——日志恢复滚动
+- **处置**：手动重启 AIDO bs1 s0/s2 + 650M bs8 网格；清冗余历史 plan worker（1010/1007/bs16/e3rank——只 skip 不干活但占 CUDA context）；killed 后孤儿锁已核（现存 6 锁全部对应活跃训练 dev0/2/3/5，mtime 新鲜）
+- **当前 7 训练并行**：AIDO 3e-05 s17（dev5！bs1 整卡抢到了）+ Sc-300M e3 ×3 + 650M lora s29/s43（dev2）+ mega lora s17（dev4）——GPU 0/3/4 100% 满载
+- **教训（入 checklist B25 候选）**：重装 crontab 后必须「等一个触发周期 + 查日志 mtime」验证真实生效，不能只看 crontab -l
+
+## 1016（10-15 晚）僵尸 worker 无限复活确诊 + 紧急备份（用户指示中断）
+- **确诊**：q_p1_monitor.sh AUTO-REFILL glob `p2_*.json` 无限复活 3 个判死计划（1010/1007/bs16）——25 个 q_fill worker × 8 卡 × 418MiB CUDA context ≈ 每卡 10.4G 被铺满 → AIDO bs1 need30 永远 wait(no card)；ledger 3 行 running 为假心跳
+- **手术方案（未执行，四步）**：见 Mac 交接文档/巡检日志.md 第二十七轮 §2（mv 判死 plan → dead_plans/ + pkill q_fill + 重启正式 worker + 验证 418MiB 数）；B26 纪律候选 = AUTO-REFILL 白名单制
+- 中断快照：ledger 2293/2289 done；AIDO 3e-05 ×3 + 650M full e3 尾 1 + mega lora ×3 未收口；PPT 17 页终版不受影响
+- 本轮动作：全部最新结果 rsync → orico 04 盘（ledger 2293 / artifacts / status / code / paper / logs）
+
+## 2026-10-18 晚 · 新集群（RTX 5090）恢复 + q5090 队列首批数据
+
+- 环境：torch 2.11.0+cu128（Blackwell sm_120）；单格复算基准 micro frozen s17 random ACC 0.7366（老集群 0.739，跨硬件复现 ✅）
+- q5090 队列（audit 22 缺格）首批落地（ledger 原始行）：
+  - mega full@1e-05 family e31000：s17 0.8107 / s29 0.8084（健康，与 e31000 档位预期一致）
+  - **mega full@1e-05 family e33000：s17 0.0759 / s29 0.6121 / s43 0.0643 —— 崩溃带命中（2/3 落 0.06-0.08 带）**
+  - 判读：与 1013 过渡带叙事一致——家族记忆崩溃临界点 3000-5000 在 mega full 上同样成立（e31000→e33000 从 0.81 崩到 0.06-0.61，种子方向不稳定=临界区特征）。lora e33000 历史 0.807/0.821 健康（LoRA 免疫证据 +1）
+  - 1 个 RC=1（mega lora s43 e33000，缺 accelerate 包）已装包并排 retry daemon
+- E6 官方 18 格：ledger 已注册 pending，等 S0 文件（release22_split_8080.parquet，用户从 orico 补传）；monitor_loop 哨兵自动启动
+- 备注：监控 monitor_loop 15min 在岗；q5090 22 格预计 1-2 天跑完
+
+### 1018 晚 二批数据判读（650M lora e3 车道）
+
+- 650M lora family e31000 三种子完全相同值 0.09579439 —— 独立排查（3 遍核对）：
+  - e3_subsets 三种子文件 md5 互不相同（数据侧无雷同）；值 = family test 多数类频率（856 行 top-class 0.0958 精确一致）→ 三种子全部坍缩到恒预测多数类的同一退化解
+  - 判读：650M LoRA 在 1000 条家族切分下坍缩到 majority-class（与崩溃带叙事一致）；种子间数值相同是坍缩到常数预测的自然结果，非数据泄漏（已验证数据/种子独立）
+  - 对照：650M lora e33000 s17 = 0.0759（带内）；历史全量 family lora 0.076-0.084 一致；random 切分 0.94+ 不受影响
+
+## 2026-10-18 (晚) — S0 重建 + HydraRNA 恢复 + 8 任务矩阵启动
+
+### S0 release22_split_8080 复现（v2，诚实声明）
+- 原 S0 文件（6.3G）不在 2ceping.zip；rinalmo_corpus_v1.parquet 尾部损坏；release22_cluster_split.parquet（335 万行）只有 cluster_id+split 无序列。
+- **重建方案**：r22_train_rfamcap.parquet（566,077 行带序列+簇 id，train 侧 cap 后数据）+ 簇级 80/10/10 重切（seed 17）→ release22_split_8080.parquet（132MB）
+  - train 449,170 / validation 53,218 / test 63,689（heldout 116,907 > 5000 哨兵门槛 ✓）
+- **与原 S0 的差异（必须写进论文/交接）**：原版含 Rfam release22 全量簇（含 family_validation/family_test 大 heldout），v2 基于 rfamcap train 子集重切。统计等价（同簇切分协议、同 80/10/10），但簇集合更小。E6 遗忘轴用途（heldout NLL 前后对比）不受影响——同一 S0 上前后对比自洽。
+- e6_forget.s0_heldout_seqs 读 test 档 → v2 兼容 ✓
+
+### HydraRNA 权重恢复（用户确认在归档 2.zip）
+- 归档 2.zip 中央目录损坏（End-of-central-directory not found）→ 写流式解析器（scan_zip3.py / extract_hydra.py）从本地文件头逐条扫描+zip64 extra 解析+流式条目数据描述符定位
+- **恢复产物**（/root/hf_home/hydrarna_extracted/）：
+  - HydraRNA_model.pt（336MB，md5 2a805ae7…）— fairseq ckpt，arch=HydraAttRNA12（12 层 Mamba+Att 混合，d=1024，词表 20，147 参数键）
+  - HydraRNA_SS_model.pt（337MB，md5 c168ac98…）
+  - HydraRNA_model_V2.pt（336MB，md5 63664eb9…）
+- 归档内还含 hydrarna-code/（fairseq 定制版代码）+ 09_env_exports/hydrarna.yml（环境导出）→ 后续如需加入 E5/E6 官方对比可完整搭建（mamba-ssm 2.2.2 + causal-conv1d 需源码编译，torch 2.3.1+cu118→5090 需换 cu128 版本验证）
+
+### 8 任务矩阵（用户已拍板：第 4 类选 a + 新增 crispr/降解/剪接）
+- 组合：ncRNA（序列级分类）+ crispr-off-target（序列级分类，GUIDE-seq 二分类 PR-AUC 主指标）
+  / MRL（序列级回归）+ degradation（碱基级回归）/ m6A（碱基级分类）+ spliceai（碱基级分类）
+  / degradation + ssi（碱基级回归双数据集）
+  实际 8 任务 = ncRNA, crispr-off-target, MRL, degradation, m6A, spliceai, ssi, (degradation 为第 4 类主) — RBP 不在 beacon_raw 备份中（已声明）
+- 新 runner：finetune_clf.py（per-seq 分类：ncrna/crispr）+ finetune_spl.py（spliceai per-base 3 分类 CE macro-F1）+ tasks/crispr.py（loader）
+- TokenHead pad_mask bug 修复（regbase 5/5 smoke RC=0）→ commit 1018g
+- m8_phase1 队列：spliceai/crispr 家族切分（mmseqs2 80/80）+ 6 冒烟格 + micro 模型 4 新任务 × frozen/lora × random/family × 3 种子 = 48 格
+- AIDO 1.6B mrl full OOM（bs2 32G 卡）→ bs1 重试中（31.8G 占满，正常）
+
+### GPU 队列链（全部串行化，防 OOM）
+AIDO bs1 retry → m8_phase1（家族切分+冒烟+48 格）→ E6 官方 18 格（s13.sh 已挂等待链）
