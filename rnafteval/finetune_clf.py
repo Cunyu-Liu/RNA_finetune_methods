@@ -81,8 +81,13 @@ def main():
                                "crispr-off-target.parquet")
             assert os.path.exists(fam), "run make_family_split first"
             t = pq.read_table(fam).to_pydict()
-            recs = [{"seq": s, "label": int(l), "cluster": c}
-                    for s, l, c in zip(t["seq"], t["label"], t["cluster_id"])]
+            lab_col = t["label"] if "label" in t else t["labels"]
+            def _int_label(l):
+                if isinstance(l, (list, tuple)):
+                    return int(l[0])
+                return int(l)
+            recs = [{"seq": s, "label": _int_label(l), "cluster": c}
+                    for s, l, c in zip(t["seq"], lab_col, t["cluster_id"])]
             parts = {
                 "train": [r for r, sp in zip(recs, t["split"]) if sp == "train"],
                 "val": [r for r, sp in zip(recs, t["split"]) if sp == "val"],
