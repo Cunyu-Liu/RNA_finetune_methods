@@ -177,11 +177,15 @@ def main() -> int:
         return (am == 0)
 
     for ep in range(args.epochs):
+        import random as _rd
+        _epshuf = _rd.Random(args.seed * 1000 + ep)
+        _rows = list(train)
+        _epshuf.shuffle(_rows)
         backbone.train(args.strategy in ("lora", "full"))
         head.train()
         tot, nb = 0.0, 0
         import contextlib
-        for b in batches(train, args.batch_size):
+        for b in batches(_rows, args.batch_size):
             enc, y, m = make_batch(b)
             no_grad = args.strategy in ("frozen", "head-only")
             with contextlib.nullcontext() if not no_grad \

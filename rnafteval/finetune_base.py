@@ -110,7 +110,7 @@ def main() -> int:
             for i, row in enumerate(train):
                 by_cl.setdefault(row["cluster"], []).append(i)
             cls = sorted(by_cl)
-            rng = random.Random(17)
+            rng = random.Random(args.seed)
             rng.shuffle(cls)
             picked = []
             for cc in cls:
@@ -119,7 +119,7 @@ def main() -> int:
                     break
             train = [train[i] for i in picked]
         else:
-            rng = random.Random(17)
+            rng = random.Random(args.seed)
             train = rng.sample(train, min(args.n_train, len(train)))
     else:
         sp = mod_task.load_official_split()
@@ -138,7 +138,7 @@ def main() -> int:
                 by_cl.setdefault(seq2cl.get(row["seq"], "c_solo_%d" % i),
                                  []).append(i)
             cls = sorted(by_cl)
-            rng = random.Random(17)
+            rng = random.Random(args.seed)
             rng.shuffle(cls)
             picked = []
             for cc in cls:
@@ -147,7 +147,7 @@ def main() -> int:
                     break
             train = [train[i] for i in picked]
         else:
-            rng = random.Random(17)
+            rng = random.Random(args.seed)
             train = rng.sample(train, min(args.n_train, len(train)))
     if args.smoke:
         train = train[:320]
@@ -177,10 +177,14 @@ def main() -> int:
         return enc, y
 
     for ep in range(args.epochs):
+        import random as _rd
+        _epshuf = _rd.Random(args.seed * 1000 + ep)
+        _rows = list(train)
+        _epshuf.shuffle(_rows)
         backbone.train(args.strategy in ("lora", "full"))
         head.train()
         tot, nb = 0.0, 0
-        for b in batches(train, args.batch_size):
+        for b in batches(_rows, args.batch_size):
             enc, y = make_batch(b)
             no_grad = args.strategy in ("frozen", "head-only")
             import contextlib
