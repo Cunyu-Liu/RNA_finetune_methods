@@ -175,13 +175,17 @@ def main() -> int:
 
     # --- train ---
     for ep in range(args.epochs):
+        import random as _rd
+        _epshuf = _rd.Random(args.seed * 1000 + ep)
+        _rows = list(parts["train"])
+        _epshuf.shuffle(_rows)
         is_training_backbone = args.strategy in (
             "lora", "full", "dora", "ia3", "prefix")
         backbone.train(is_training_backbone)
         head.train()
         tot = 0.0
         nb = 0
-        for b in batches(parts["train"], args.batch_size):
+        for b in batches(_rows, args.batch_size):
             enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
             y = torch.tensor([r["label_id"] for r in b], device=device)
             if is_training_backbone:

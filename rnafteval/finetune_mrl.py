@@ -92,14 +92,14 @@ def main() -> int:
         test = [{"seq": s, "label": float(l)}
                 for s, l, sd in zip(t["seq"], t["label"], t["split"])
                 if sd == "test"]
-        rng = random.Random(17)
+        rng = random.Random(args.seed)
         train = rng.sample(train, min(args.n_train, len(train)))
     else:
         sp = mrl_task.load_official_split(
             os.path.join(ROOT, "data", "beacon_raw",
                          "mean-ribosome-loading", "data"))
         train, test = sp["train"], sp["test"]
-        rng = random.Random(17)
+        rng = random.Random(args.seed)
         train = rng.sample(train, min(args.n_train, len(train)))
     if args.smoke:
         train, test = train[:320], test[:320]
@@ -124,10 +124,14 @@ def main() -> int:
         return enc, y
 
     for ep in range(args.epochs):
+        import random as _rd
+        _epshuf = _rd.Random(args.seed * 1000 + ep)
+        _rows = list(train)
+        _epshuf.shuffle(_rows)
         backbone.train(args.strategy in ("lora", "full", "dora", "ia3"))
         head.train()
         tot, nb = 0.0, 0
-        for b in batches(train, args.batch_size):
+        for b in batches(_rows, args.batch_size):
             enc, y = run_batch(b)
             no_grad = args.strategy in ("frozen", "head-only")
             import contextlib

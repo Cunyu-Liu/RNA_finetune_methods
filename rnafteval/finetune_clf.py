@@ -68,6 +68,12 @@ def main():
         print("skip (already %s)" % claim["row"].get("status", "unknown"))
         return 75
 
+    # seed everything (was missing: 3 seeds gave identical results)
+    import random as _r, numpy as _np
+    _r.seed(args.seed)
+    _np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
     t0 = time.time()
     torch.cuda.set_device(args.device)
     torch.cuda.reset_peak_memory_stats(args.device)
@@ -132,10 +138,10 @@ def main():
                 ROOT, "data", "beacon_raw", "noncoding-rna-family", "data"))
             from .tasks.dedup import dedup
             recs = dedup(recs)
-            parts = random_split(recs, seed=17)
+            parts = random_split(recs, seed=args.seed)
 
     if args.n_train > 0:
-        rng = random.Random(17)
+        rng = random.Random(args.seed)
         parts["train"] = rng.sample(parts["train"],
                                     min(args.n_train, len(parts["train"])))
     if args.smoke:
@@ -175,10 +181,13 @@ def main():
         return enc, y
 
     for ep in range(args.epochs):
+        _sh = random.Random(args.seed * 1000 + ep)
+        _rows = list(parts["train"])
+        _sh.shuffle(_rows)
         backbone.train(args.strategy in ("lora", "full", "dora", "ia3"))
         head.train()
         tot, nb = 0.0, 0
-        for b in batches(parts["train"], args.batch_size):
+        for b in batches(_rows, args.batch_size):
             enc, y = run_batch(b)
             import contextlib
             no_grad = args.strategy in ("frozen", "head-only")
