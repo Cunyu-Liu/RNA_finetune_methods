@@ -140,3 +140,11 @@
 
 ### GPU 队列链（全部串行化，防 OOM）
 AIDO bs1 retry → m8_phase1（家族切分+冒烟+48 格）→ E6 官方 18 格（s13.sh 已挂等待链）
+
+## 2026-10-22 补录：seed bug 全项目修复 + 车道推进
+1. **发现**：crispr family 3 种子 17 位小数完全同值 → 排查实锤 6 个 runner（clf/spl/mrl/one/regbase/base）全部缺失 torch.manual_seed（clf/spl 完全无 seed 调用）且无 per-epoch shuffle。ledger 中 71 个组合的 ±std 误差线是假值（mrl/degradation/ssi/crispr/spliceai 中招）。
+2. **修复**（commit 1022b, 4165d58）：6 runner 统一全局 seed + random.Random(seed*1000+ep) per-epoch shuffle + 硬编码 17 → args.seed。**验证**：frozen 3 种子分化 0.1576/0.1729/0.1575 ✓。crispr family 15 格旧数据已回滚重跑（1022b 同时修复 family label list 解析）。
+3. **遗留**：旧集群产出的 71 组合同值数据待评估重跑范围（等价线结论 3 需复核——mega degradation random full 0.565 vs lora 0.531 的差 0.034 目标带结论受 shuffle 语义影响，需新代码重测确认）。
+4. **车道**（commit 1022a/1022c）：q_crisprfam 27 格 + q_splmore/splfull2/splfull3（epochs 6 适配 4h 预算）+ q_degrfull（ERNIE/RNA-FM/NB degradation full 18 格）。今日 40+ 格 done，GPU 峰值 28.5G/99%。
+5. **AIDO m6a full**：bs2/bs1 与车道并行均 OOM → 移交 q_master 独占窗口执行（bs1）。
+6. **缺口审计（10-22）**：核心矩阵剩 165/588 格 + 专项 25 格（AIDO mrl s43、AIDO m6a×6、E6 15 格）；ncRNA 7 模型已全齐。
