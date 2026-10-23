@@ -132,3 +132,10 @@
 - RNA-FM spliceai frozen：s17 0.3791 / s43 0.3681（3 种子齐 2，s29 重跑中）——与 ERNIE frozen 0.35-0.40 同档
 - RC=124 ×3（650M/mega lora s17 4h timeout 到点）——大模型 spliceai 144628 训练集 bs16 单 epoch ~2h+，6 epochs 超出 4h timeout 协议；**车道自动继续 s29（runner claim 幂等），s17 需后续补**（epochs 6 不变、timeout 提升至 8h 或减 n_train）
 - 真态：ledger 2639 行 done 2582；GPU 26.6G 99%；monitor v2 + q_master + 9 lane bash 在岗
+
+## 2026-10-23 晚二（1023c：monitor v2.1 双开竞态根治 + s17 timeout 格重派）
+
+- **monitor v2.1 装岗（B27 纪律落地）**：判活从 ps aux | grep（路径形态匹配漏洞）改为 **pgrep -f 全匹配** + 每 lane spawn 锁（mkdir 原子 + 5min 自动释放）——双开竞态根治；装岗后各车道单实例验证通过（q_spl650/splmega2/splnbfroz/spl_s17_retry 全部 =1）
+- **spliceai s17 timeout 格重派**：q_spl_s17_retry（mega/650M lora s17 random+family 4 格，10h 预算——RC=124 的 4h 预算修正：144628 × bs16 × 6ep ≈ 8-12h）
+- GPU：26.6G→30.6G/32G 100%（14 训练进程）
+- 真态：ledger 2641/2582；mega lora s29 ep2 / 650M lora s29 ep1 心跳正常；RNA-FM frozen s43 0.3681 落地（MICRO_F1 0.9997 揭示 macro-F1 主口径下正类稀疏的严格性）
