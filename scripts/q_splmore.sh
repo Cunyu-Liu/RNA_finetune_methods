@@ -20,19 +20,19 @@ run_cell() {
 }
 
 for s in 17 29 43; do
-  run_cell "spl micro lora random s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy lora --seed $s --split random --device 0 --epochs 10 --batch-size 16 --lr 3e-4
+  run_cell "spl micro lora random s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy lora --seed $s --split random --device 0 --epochs 6 --batch-size 16 --lr 3e-4
 done
 for s in 17 29 43; do
-  run_cell "spl micro lora family s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy lora --seed $s --split family --device 0 --epochs 10 --batch-size 16 --lr 3e-4
+  run_cell "spl micro lora family s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy lora --seed $s --split family --device 0 --epochs 6 --batch-size 16 --lr 3e-4
 done
 for sp in random family; do
   for s in 17 29 43; do
-    run_cell "spl ERNIE lora $sp s$s" $PY -m rnafteval.finetune_spl --model ERNIE-RNA --task spliceai --strategy lora --seed $s --split $sp --device 0 --epochs 10 --batch-size 16 --lr 3e-4
+    run_cell "spl ERNIE lora $sp s$s" $PY -m rnafteval.finetune_spl --model ERNIE-RNA --task spliceai --strategy lora --seed $s --split $sp --device 0 --epochs 6 --batch-size 16 --lr 3e-4
   done
 done
 for sp in random family; do
   for s in 17 29 43; do
-    run_cell "spl RNAFM lora $sp s$s" $PY -m rnafteval.finetune_spl --model RNA-FM --task spliceai --strategy lora --seed $s --split $sp --device 0 --epochs 10 --batch-size 16 --lr 3e-4
+    run_cell "spl RNAFM lora $sp s$s" $PY -m rnafteval.finetune_spl --model RNA-FM --task spliceai --strategy lora --seed $s --split $sp --device 0 --epochs 6 --batch-size 16 --lr 3e-4
   done
 done
 echo "=== q_splmore DONE $(date -u +%FT%TZ) ===" >> $LOG
