@@ -110,3 +110,25 @@
   - e3_subsets 三种子文件 md5 互不相同（数据侧无雷同）；值 = family test 多数类频率（856 行 top-class 0.0958 精确一致）→ 三种子全部坍缩到恒预测多数类的同一退化解
   - 判读：650M LoRA 在 1000 条家族切分下坍缩到 majority-class（与崩溃带叙事一致）；种子间数值相同是坍缩到常数预测的自然结果，非数据泄漏（已验证数据/种子独立）
   - 对照：650M lora e33000 s17 = 0.0759（带内）；历史全量 family lora 0.076-0.084 一致；random 切分 0.94+ 不受影响
+
+## 2026-10-23（1023：新任接手巡检 + 47 行假 running 清理 + q_master 协议修正 + monitor v2 + frozen 车道）
+
+- 接手核验：ledger 2619→2633 行（done 2552→2578，+24 during session）；GPU 12.5G/32G 99% util；5 车道在飞（splmore/splfull2/splfull3/crisprfam/degrfull/nblane）
+- **修复①：ledger 47 行假 running 残留**（容器无 cron，reset_stale_cron 从未被调用）——一次性清理（AIDO ncRNA 3 行 10-16 旧心跳 + spliceai 车道 OOM 残留等）；此后并入 monitor_loop v2 每 15min 执行
+- **修复②：q_master Phase3 AIDO mrl s43 协议漂移**——旧脚本 epochs 10 + timeout 4h（成功先例 s17/s29 = epochs 3, wall ~7050-7250s）→ 改 epochs 3 + CELLTM 43200（12h）；q_master 重启带修复版
+- **修复③：GPU 占满纪律**——新增 q_splfrozen 车道（micro/ERNIE × spliceai × frozen × 双切分 × 3 种子 = 12 格，frozen 便宜快速）；首 6 格 RC=0 已落
+- **monitor_loop v2 装岗**：v1 仅快照+q5090 重拉；v2 新增 stale-running 清理 / 7 车道 worker 死亡自动 respawn / GPU<20G 且无训练时告警 / q_master 守护
+- 备份：ledger + status + logs → /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/（用户铁律：大文件去 teams）
+- 代码：de541d3（集群）+ feb7cb0（GitHub，经 Mac bundle 中转——集群无 GitHub 凭据，Mac 有 SSH key；后续推送走此通道）
+- 1016 尾格：audit=1（AIDO mrl full s43 random，q_master Phase3 等 drain 窗口）
+- E6 官方 15 格（ERNIE/RNAFM × lora/full × 3 种子）：q_master Phase1 等 drain——注意其 bs32 在 32G 卡与车道并行会 OOM（10-19 三轮实测），届时按 B24 纪律降 bs 重派
+- 新科学信号（本轮落地判读）：spliceai ERNIE lora s17 random 0.575 / RNAFM full 0.542 / Sc-300M full 0.463 vs micro lora 0.608——碱基级 3 分类上官方系 lora 稳定；frozen 0.35-0.39（ERNIE）与 micro frozen 0.39-0.44 同档
+
+## 2026-10-23 晚（1023b 续：占满三车道 + 双开竞态处置 + RNA-FM frozen 首格落地）
+
+- **GPU 占满铁律执行**：q_spl650（650M lora×6格）/ q_splmega2（mega lora×6格）/ q_splnbfroz（RNAFM+NB frozen×12格）三车道启动——GPU 12.4G→31.6G/32G 99% util（16 进程）
+- **发现并处置双开竞态（B24 新变体）**：monitor v2 的 RESPAWN 逻辑与仍存活的旧 lane worker 产生双实例（q_splmega2 ×2 / q_splnbfroz ×2）→ 同一 run 双进程抢 ledger 行（650M s29 与 mega s29 各出现两份训练进程）→ kill -9 冗余实例（2763348/2840345/2814947 一侧）；残余影响：rnafm frozen s29 被双开 OOM 后 stale-reset 归 pending，由 v2 respawn 的实例重新认领
+- **教训（B27 候选）**：monitor respawn 前必须先检测「该 lane 的 bash 进程是否已有存活实例」——grep .sh 匹配了两个不同路径形态（绝对路径 vs 相对路径 cwd 形态），导致误判死亡 + 双开。已用 kill 清单处置；monitor 判活改用 pgrep -f 全匹配
+- RNA-FM spliceai frozen：s17 0.3791 / s43 0.3681（3 种子齐 2，s29 重跑中）——与 ERNIE frozen 0.35-0.40 同档
+- RC=124 ×3（650M/mega lora s17 4h timeout 到点）——大模型 spliceai 144628 训练集 bs16 单 epoch ~2h+，6 epochs 超出 4h timeout 协议；**车道自动继续 s29（runner claim 幂等），s17 需后续补**（epochs 6 不变、timeout 提升至 8h 或减 n_train）
+- 真态：ledger 2639 行 done 2582；GPU 26.6G 99%；monitor v2 + q_master + 9 lane bash 在岗
