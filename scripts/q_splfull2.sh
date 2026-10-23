@@ -20,12 +20,12 @@ run_cell() {
 
 for sp in random family; do
   for s in 17 29 43; do
-    run_cell "spl micro full $sp s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy full --seed $s --split $sp --device 0 --epochs 10 --batch-size 16 --lr 1e-5
+    run_cell "spl micro full $sp s$s" $PY -m rnafteval.finetune_spl --model RiNALMo-micro --task spliceai --strategy full --seed $s --split $sp --device 0 --epochs 6 --batch-size 16 --lr 1e-5
   done
 done
 for sp in random family; do
   for s in 17 29 43; do
-    run_cell "spl RNA-Sc full $sp s$s" $PY -m rnafteval.finetune_spl --model RNA-Sc-300M --task spliceai --strategy full --seed $s --split $sp --device 0 --epochs 10 --batch-size 16 --lr 1e-5
+    run_cell "spl RNA-Sc full $sp s$s" $PY -m rnafteval.finetune_spl --model RNA-Sc-300M --task spliceai --strategy full --seed $s --split $sp --device 0 --epochs 6 --batch-size 16 --lr 1e-5
   done
 done
 echo "=== q_splfull2 DONE $(date -u +%FT%TZ) ===" >> $LOG
