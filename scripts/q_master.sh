@@ -1,8 +1,9 @@
 #!/bin/bash
-# MASTER exclusive queue: E6 v3 (15 cells) -> spliceai family reruns (12 cells) -> AIDO v5 (1 cell)
-# Memory-gated: before EACH cell, wait until GPU free mem > 22G (i.e. other lanes drained).
-# This is the single source of truth for exclusive jobs — no more racing lanes.
+# q_master v2: stricter drain gate — requires (a) 3 consecutive checks <8G 60s apart,
+# (b) zero finetune processes running. Fixes cold-start race where lanes load
+# their next cell right after a momentary <8G reading.
 set -x
+export CELLTM=14400
 cd /home/cunyuliu/rna-ft-eval
 export PYTHONPATH=/root/rnaft/pypath:/home/cunyuliu/rna-ft-eval:/home/cunyuliu/rna-sc
 export HF_HOME=/root/hf_home
@@ -10,22 +11,27 @@ export HF_ENDPOINT=https://hf-mirror.com
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY=/root/miniconda3/envs/llr_env/bin/python
 LOG=/root/rnaft/logs/q_master.log
-echo "=== q_master start $(date -u +%FT%TZ) ===" > $LOG
+echo "=== q_master v2 start $(date -u +%FT%TZ) ===" >> $LOG
 
-wait_mem() {
-  # wait until used < 8G (24G free) so big exclusive cells fit
+wait_drain() {
   while true; do
-    used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)
-    if [ "$used" -lt 8000 ]; then break; fi
+    ok=0
+    for i in 1 2 3; do
+      used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)
+      procs=$(ps aux | grep -cE '[f]inetune|[e]6_forget')
+      if [ "$used" -lt 8000 ] && [ "$procs" -eq 0 ]; then ok=$((ok+1)); fi
+      sleep 60
+    done
+    if [ "$ok" -eq 3 ]; then break; fi
     sleep 300
   done
 }
 
 run_cell() {
   desc=$1; shift
-  wait_mem
+  wait_drain
   echo "=== $(date -u +%FT%TZ) $desc ===" >> $LOG
-  timeout 14400 "$@" >> $LOG 2>&1
+  timeout $CELLTM "$@" >> $LOG 2>&1
   echo "RC=$? $(date -u +%FT%TZ)" >> $LOG
 }
 
@@ -47,20 +53,20 @@ for s in 17 29 43; do
 done
 echo "PHASE1_E6_DONE $(date -u +%FT%TZ)" >> $LOG
 
-# ---- Phase 2: spliceai family timeout reruns (mega/650M, 28h budget) ----
+# ---- Phase 2: spliceai family timeout reruns (mega/650M) ----
 for M in RiNALMo-mega RiNALMo-650M; do
   for s in 17 29 43; do
     run_cell "spl-rerun $M lora family s$s" $PY -m rnafteval.finetune_spl --model $M --task spliceai --strategy lora --seed $s --split family --device 0 --epochs 10 --batch-size 16
   done
 done
 for M in RiNALMo-mega RiNALMo-650M; do
-  BS=8
   for s in 17 29 43; do
-    run_cell "spl-rerun $M full family s$s" $PY -m rnafteval.finetune_spl --model $M --task spliceai --strategy full --seed $s --split family --device 0 --epochs 10 --batch-size $BS --lr 1e-05
+    run_cell "spl-rerun $M full family s$s" $PY -m rnafteval.finetune_spl --model $M --task spliceai --strategy full --seed $s --split family --device 0 --epochs 10 --batch-size 8 --lr 1e-05
   done
 done
 echo "PHASE2_SPL_DONE $(date -u +%FT%TZ)" >> $LOG
 
 # ---- Phase 3: AIDO 1.6B mrl full s43 (12h, bs1) ----
-run_cell "AIDO mrl full s43 v5" $PY -m rnafteval.finetune_mrl --model AIDO.RNA-1.6B --task mrl --strategy full --seed 43 --split random --device 0 --epochs 10 --batch-size 1 --lr 1e-05
+export CELLTM=43200
+run_cell "AIDO mrl full s43 v5" $PY -m rnafteval.finetune_mrl --model AIDO.RNA-1.6B --task mrl --strategy full --seed 43 --split random --device 0 --epochs 3 --batch-size 1 --lr 1e-05
 echo "=== q_master ALL DONE $(date -u +%FT%TZ) ===" >> $LOG
