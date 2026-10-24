@@ -31,6 +31,27 @@ import time
 import torch
 
 ROOT = "/root/rna-ft-eval"
+TRAINING_SEED_PROTOCOL = (
+    "global-seed-v1+per-epoch-shuffle-v1; task split independent of formal seed")
+NCRNA_SPLIT_SEED = 17
+
+
+def seed_training(seed):
+    """Seed every RNG used by model/head initialization and training."""
+    import numpy as np
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def epoch_rows(rows, seed, epoch):
+    """Return an independently shuffled copy without mutating the split."""
+    out = list(rows)
+    random.Random(seed * 1000 + epoch).shuffle(out)
+    return out
+
+
 S0 = ("/root/tokenizer-benchmark/data/derived/split/"
       "release22_split_8080.parquet")
 
@@ -268,6 +289,9 @@ def main():
     args = ap.parse_args()
     device = int(args.device)
     t0 = time.time()
+    seed_training(args.seed)
+    torch.cuda.set_device(device)
+    torch.cuda.reset_peak_memory_stats(device)
 
     from .models import load_model
     from .strategies import apply_strategy, make_head
@@ -298,7 +322,7 @@ def main():
     recs = load_ncrna(os.path.join(
         ROOT, "data", "beacon_raw", "noncoding-rna-family", "data"))
     recs = dedup(recs)
-    parts = random_split(recs, seed=args.seed)
+    parts = random_split(recs, seed=NCRNA_SPLIT_SEED)
     labels = sorted({r["label"] for r in recs})
     lab2id = {l: i for i, l in enumerate(labels)}
     for k in parts:
@@ -368,7 +392,8 @@ def main():
         backbone.train(tr_backbone)
         head.train()
         tot, nb = 0.0, 0
-        for b in batches(parts["train"], args.batch_size):
+        rows = epoch_rows(parts["train"], args.seed, ep)
+        for b in batches(rows, args.batch_size):
             enc = encode_seqs(tok, [r["seq"] for r in b], device)
             y = torch.tensor([r["label_id"] for r in b], device=device)
             if tr_backbone:
@@ -400,7 +425,13 @@ def main():
         post_drift = drift_eval(backbone, ref_states, tok, hold, device)
         result = {
             "run_id": rid, "model": args.model, "strategy": args.strategy,
-            "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
+            "seed": args.seed, "split": "s0-heldout",
+            "lr": args.lr, "epochs": args.epochs,
+            "batch_size": args.batch_size,
+            "training_seed_protocol": TRAINING_SEED_PROTOCOL,
+            "train_split": "random-fixed-seed-17",
+            "peak_mem_mb": round(
+                torch.cuda.max_memory_allocated(device) / (1 << 20), 1),
             "n_holdout": len(hold), "mask_rate": args.mask_rate,
             "metric": "HIDDEN_COSINE_DRIFT", "drift": post_drift,
             "wall_sec": time.time() - t0,
@@ -421,7 +452,13 @@ def main():
                         "reorder noise band")
         result = {
             "run_id": rid, "model": args.model, "strategy": args.strategy,
-            "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
+            "seed": args.seed, "split": "s0-heldout",
+            "lr": args.lr, "epochs": args.epochs,
+            "batch_size": args.batch_size,
+            "training_seed_protocol": TRAINING_SEED_PROTOCOL,
+            "train_split": "random-fixed-seed-17",
+            "peak_mem_mb": round(
+                torch.cuda.max_memory_allocated(device) / (1 << 20), 1),
             "n_holdout": len(hold), "mask_rate": args.mask_rate,
             "pre_nll_a": pre_a, "pre_nll_b": pre_b,
             "noise_band": noise_band, "post_nll": post,

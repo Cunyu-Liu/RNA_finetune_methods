@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import torch
 
-from rnafteval.e6_forget import nll_eval
+from rnafteval.e6_forget import epoch_rows, nll_eval, seed_training
 
 
 class ToyTokenizer:
@@ -106,3 +106,25 @@ def test_e6v2_official_nll_delegates_to_fixed_mask():
         shuffle_seed=201, eval_seed=201, mask_rate=0.15)
     assert value > 10.0
     assert masks_by_length(backbone)[34]
+
+
+
+def test_training_seed_controls_python_numpy_and_torch():
+    import random
+    import numpy as np
+
+    def draw(seed):
+        seed_training(seed)
+        return random.random(), float(np.random.rand()), float(torch.rand(1))
+
+    assert draw(17) == draw(17)
+    assert draw(17) != draw(29)
+
+
+def test_epoch_rows_are_seeded_per_epoch_and_do_not_mutate_split():
+    source = list(range(64))
+    original = list(source)
+    assert epoch_rows(source, 17, 0) == epoch_rows(source, 17, 0)
+    assert epoch_rows(source, 17, 0) != epoch_rows(source, 29, 0)
+    assert epoch_rows(source, 17, 0) != epoch_rows(source, 17, 1)
+    assert source == original

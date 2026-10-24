@@ -30,7 +30,7 @@ run_cell() {
   if [ -n "${MODELS:-}" ] && [[ " $MODELS " != *" $model "* ]]; then
     return 0
   fi
-  local resdir=$R/artifacts/e6/${model}_${strat}_s${seed}_mlm15fix
+  local resdir=$R/artifacts/e6/${model}_${strat}_s${seed}_mlm15fix_seedfix
   if proof "$resdir" "$model" "$strat" "$seed"; then
     echo "[mlm15fix] skip(done) $model $strat s$seed" >> $LOG
     ok=$((ok+1))
@@ -64,7 +64,7 @@ run_cell() {
   $PY -m rnafteval.e6_forget --model "$model" --strategy "$strat" \
     --seed "$seed" --lr "$lr" --device "$DEV" --epochs 10 \
     --batch-size "$bs" --n-holdout 2000 --mask-rate 0.15 \
-    --out-suffix "_mlm15fix" >> $LOG 2>&1
+    --out-suffix "_mlm15fix_seedfix" >> $LOG 2>&1
   local rc=$?
   echo "[mlm15fix] exit $rc $model $strat s$seed $(date +%H:%M)" >> $LOG
   [ "$rc" -eq 0 ] || return "$rc"

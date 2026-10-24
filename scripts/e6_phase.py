@@ -59,7 +59,7 @@ def atomic_write(path, text):
 def pending_cells(models, result_root):
     pending = []
     for model, strategy, seed in cells_for(models):
-        result_dir = result_root / ("%s_%s_s%d_mlm15fix" % (
+        result_dir = result_root / ("%s_%s_s%d_mlm15fix_seedfix" % (
             model, strategy, seed))
         try:
             proof.verify(result_dir, model, strategy, seed)
@@ -83,24 +83,27 @@ def advance(model_file, result_root):
             if models == ("COMPLETE",):
                 print("COMPLETE")
                 return
-            pending = pending_cells(models, result_root)
-            total = len(cells_for(models))
-            if pending:
+            # Recheck earlier phases too: a new protocol generation or a
+            # quarantined cell must retarget to the earliest incomplete phase.
+            # Any model-file change still happens only here, under the lock.
+            for candidate in PHASES:
+                pending = pending_cells(candidate, result_root)
+                if not pending:
+                    continue
+                if models != candidate:
+                    atomic_write(model_file, " ".join(candidate) + chr(10))
+                    print("E6_PHASE RETARGET %s -> %s" % (
+                        " ".join(models), " ".join(candidate)))
+                total = len(cells_for(candidate))
                 print("E6_PHASE PENDING models=%s complete=%d/%d" % (
-                    " ".join(models), total - len(pending), total))
+                    " ".join(candidate), total - len(pending), total))
                 for model, strategy, seed, reason in pending:
                     print("PENDING %s %s s%d: %s" % (
                         model, strategy, seed, reason))
                 return
-            phase_index = PHASES.index(models)
-            next_models = (("COMPLETE",) if phase_index == len(PHASES) - 1
-                           else PHASES[phase_index + 1])
-            atomic_write(model_file, " ".join(next_models) + "\n")
-            if next_models == ("COMPLETE",):
-                print("COMPLETE")
-            else:
-                print("E6_PHASE ADVANCE %s -> %s" % (
-                    " ".join(models), " ".join(next_models)))
+            if models != ("COMPLETE",):
+                atomic_write(model_file, "COMPLETE" + chr(10))
+            print("COMPLETE")
         finally:
             fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
 

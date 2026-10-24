@@ -23,7 +23,9 @@ import time
 
 import torch
 
-from .e6_forget import nll_eval as fixed_mask_nll_eval
+from .e6_forget import (
+    NCRNA_SPLIT_SEED, TRAINING_SEED_PROTOCOL, epoch_rows,
+    nll_eval as fixed_mask_nll_eval, seed_training)
 
 ROOT = "/root/rna-ft-eval"
 S0 = ("/root/tokenizer-benchmark/data/derived/split/"
@@ -138,6 +140,9 @@ def main():
     args = ap.parse_args()
     device = int(args.device)
     t0 = time.time()
+    seed_training(args.seed)
+    torch.cuda.set_device(device)
+    torch.cuda.reset_peak_memory_stats(device)
 
     if args.lr is None:
         args.lr = 3e-4 if args.strategy == "lora" else (
@@ -177,7 +182,7 @@ def main():
         recs = load_ncrna(os.path.join(
             ROOT, "data", "beacon_raw", "noncoding-rna-family", "data"))
         recs = dedup(recs)
-        parts = random_split(recs, seed=args.seed)
+        parts = random_split(recs, seed=NCRNA_SPLIT_SEED)
         labels = sorted({r["label"] for r in recs})
         lab2id = {l: i for i, l in enumerate(labels)}
         for k in parts:
@@ -239,7 +244,8 @@ def main():
             backbone.train(tr_backbone)
             head.train()
             tot, nb = 0.0, 0
-            for b in batches(train, args.batch_size):
+            rows = epoch_rows(train, args.seed, ep)
+            for b in batches(rows, args.batch_size):
                 enc = enc_cls(tok, [r["seq"] for r in b], device)
                 y = torch.tensor([r["label_id"] for r in b], device=device)
                 if tr_backbone:
@@ -274,7 +280,8 @@ def main():
             backbone.train(tr_backbone)
             head.train()
             tot, nb = 0.0, 0
-            for b in batches(train, args.batch_size):
+            rows = epoch_rows(train, args.seed, ep)
+            for b in batches(rows, args.batch_size):
                 enc, y = make_batch(b)
                 no_grad = not tr_backbone
                 with contextlib.nullcontext() if not no_grad \
@@ -313,7 +320,14 @@ def main():
     result = {
         "run_id": res["row"]["run_id"], "model": args.model,
         "task": args.task, "strategy": args.strategy, "seed": args.seed,
-        "lr": args.lr, "epochs": args.epochs, "mask_rate": args.mask_rate,
+        "split": "s0-heldout", "lr": args.lr, "epochs": args.epochs,
+        "batch_size": args.batch_size,
+        "training_seed_protocol": TRAINING_SEED_PROTOCOL,
+        "train_split": ("official-fixed" if args.task == "modification"
+                        else "random-fixed-seed-17"),
+        "peak_mem_mb": round(
+            torch.cuda.max_memory_allocated(device) / (1 << 20), 1),
+        "mask_rate": args.mask_rate,
         "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
         "noise_band": noise_band, "post_nll": post,
         "delta_nll": post - pre_a, "forgot": (post - pre_a) > max(noise_band, 1e-6),

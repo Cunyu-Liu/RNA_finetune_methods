@@ -11,8 +11,8 @@ LOG=${LOG:-$R/logs/q_e6_v2_mlm15fix.log}
 mkdir -p "$(dirname "$LOG")" || exit 1
 DEV=${DEV:-0}
 TIMEOUT_S=${E6_V2_TIMEOUT_S:-21600}
-SUFFIX=_mlm15fix
-EXTRA=_taskm6a_s0_mlm15fix
+SUFFIX=_mlm15fix_seedfix
+EXTRA=_taskm6a_s0_mlm15fix_seedfix
 
 proof() {
   local resdir=$1 model=$2 strat=$3 seed=$4

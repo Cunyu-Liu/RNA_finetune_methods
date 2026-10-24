@@ -21,7 +21,7 @@ def runtime(tmp_path, monkeypatch):
     def fake_verify(result_dir, model, strategy, seed):
         key = model, strategy, seed
         calls.append(key)
-        assert result_dir == result_root / ("%s_%s_s%d_mlm15fix" % (
+        assert result_dir == result_root / ("%s_%s_s%d_mlm15fix_seedfix" % (
             model, strategy, seed))
         if key not in done:
             raise SystemExit("mock double proof missing")
@@ -75,6 +75,7 @@ def test_each_phase_advances_once_and_all_thirty_cells_complete(
     )
     for models, expected in zip(phase.PHASES, expected_files):
         complete_models(runtime, models)
+        runtime.calls.clear()
         capsys.readouterr()
         assert runtime.run() == 0
         assert runtime.model_file.read_text() == expected
@@ -111,3 +112,11 @@ def test_phase_update_uses_atomic_replace(runtime, monkeypatch):
     assert Path(dst) == runtime.model_file
     assert runtime.model_file.read_text() == "ERNIE-RNA RNA-FM\n"
     assert not list(runtime.model_file.parent.glob("*.tmp"))
+
+
+
+def test_new_protocol_retargets_earliest_incomplete_phase(runtime):
+    runtime.model_file.write_text("ERNIE-RNA RNA-FM" + chr(10))
+    assert runtime.run() == 0
+    assert runtime.model_file.read_text() == "RiNALMo-micro" + chr(10)
+    assert len(runtime.calls) == 6

@@ -63,9 +63,9 @@ e6_v2_complete() {
   for seed in 17 29 43; do
     for strategy in lora full; do
       "$PY" scripts/e6_mlm15_proof.py \
-        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix" \
+        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix" \
         RiNALMo-micro "$strategy" "$seed" \
-        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix \
+        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix \
         --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
         >/dev/null 2>&1 || return 1
     done

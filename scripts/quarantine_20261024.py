@@ -20,7 +20,7 @@ B20_MODELS = {
 }
 OFFICIAL_E6 = {"RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M",
                "ERNIE-RNA", "RNA-FM"}
-ARTIFACTS = Path("/root/rnaft/artifacts")
+ARTIFACTS = Path("/root/rna-ft-eval/artifacts")
 BACKUP = Path("/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/quarantine_20261024")
 
 
@@ -59,6 +59,10 @@ def classify(row: dict) -> str | None:
         return "b20"
     old_e6v2 = (row.get("task") == "modification"
                 and "_e6forgetting_" in rid)
+    if (row.get("model") in OFFICIAL_E6 and "_mlm15fix" in rid
+            and "_mlm15fix_seedfix" not in rid
+            and (row.get("task") == "e6-forgetting" or old_e6v2)):
+        return "seed_protocol"
     if (row.get("model") in OFFICIAL_E6 and "_mlm15fix" not in rid
             and (row.get("task") == "e6-forgetting" or old_e6v2)):
         return "mlm"
@@ -66,7 +70,7 @@ def classify(row: dict) -> str | None:
 
 
 def result_path(row: dict, kind: str) -> Path:
-    if kind == "mlm":
+    if kind in {"mlm", "seed_protocol"}:
         name = Path(row.get("out_dir", "")).name
         return ARTIFACTS / "e6" / name / "result.json"
     return ARTIFACTS / row["run_id"] / "result.json"
@@ -109,18 +113,22 @@ def main() -> None:
             row = current_by_id[old["run_id"]]
             source = result_path(row, kind)
             if source.is_file():
-                target = source.with_name(
-                    "result.invalid_%s.json" % ("b20" if kind == "b20" else "unmasked_mlm"))
+                label = {"b20": "b20", "mlm": "unmasked_mlm",
+                         "seed_protocol": "seed_protocol"}[kind]
+                target = source.with_name("result.invalid_%s.json" % label)
                 if target.exists():
                     raise RuntimeError("quarantine target already exists: %s" % target)
                 actions[row["run_id"]] = (source, target, sha256(source))
         for old, kind in selected:
             row = current_by_id[old["run_id"]]
             previous = row["status"]
-            reason = (
-                "B20 token/base misalignment: special tokens were supervised "
-                "and base labels were offset" if kind == "b20" else
-                "Official MLM NLL used unmasked inputs at target positions")
+            reason = {
+                "b20": ("B20 token/base misalignment: special tokens were "
+                        "supervised and base labels were offset"),
+                "mlm": "Official MLM NLL used unmasked inputs at target positions",
+                "seed_protocol": ("E6 formal seeds did not control all training RNGs; "
+                                  "per-epoch shuffle was absent and E6-v1 split varied by seed"),
+            }[kind]
             row.update({
                 "previous_status": previous,
                 "status": "invalid" if previous == "done" else "cancelled",

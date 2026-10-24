@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import e6_mlm15_proof as proof
 import quarantine_20261024 as quarantine
 from rnafteval import export_e6v2, ledger
+from rnafteval.e6_forget import TRAINING_SEED_PROTOCOL
 
 
 def result_payload(rid, protocol, task=None):
@@ -21,6 +22,8 @@ def result_payload(rid, protocol, task=None):
         "seed": 17, "mask_rate": 0.15, "pre_nll_a": 1.0,
         "pre_nll_b": 1.01, "noise_band": 0.01, "post_nll": 1.2,
         "delta_nll": 0.2, "protocol": protocol,
+        "training_seed_protocol": TRAINING_SEED_PROTOCOL,
+        "batch_size": 4, "peak_mem_mb": 1024.0, "split": "s0-heldout",
     }
     if task is not None:
         payload["task"] = task
@@ -40,7 +43,7 @@ def proof_rows(monkeypatch):
 
 def test_proof_default_v1_cli_and_rid(tmp_path, proof_rows, capsys):
     rid = ledger.run_id("RiNALMo-micro", "e6-forgetting", "lora", 17,
-                        "s0-heldout", extra="_mlm15fix")
+                        "s0-heldout", extra="_mlm15fix_seedfix")
     proof_rows[rid] = {"run_id": rid, "status": "done"}
     write_result(tmp_path, result_payload(rid, "E6-v1-fixed-mask-mlm: test"))
 
@@ -89,7 +92,7 @@ def fake_queue_runtime(tmp_path):
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     fake_py = fake_bin / "fake_python"
-    fake_py.write_text("""#!/usr/bin/env python3
+    fake_py.write_text("""#!/root/miniconda3/envs/llr_env/bin/python
 import json
 import os
 from pathlib import Path
@@ -120,11 +123,19 @@ raise SystemExit(2)
     fake_timeout = fake_bin / "timeout"
     fake_timeout.write_text("#!/bin/sh\nshift\nexec \"$@\"\n")
     fake_timeout.chmod(0o755)
+    fake_sleep = fake_bin / "sleep"
+    fake_sleep.write_text(
+        "#!/bin/sh\necho call >> \"$FAKE_SLEEP_CALLS\"\n"
+        "rm -f \"${EXCLUSIVE_AIDO:-/dev/null/nonexistent}\"\n")
+    fake_sleep.chmod(0o755)
     env = os.environ.copy()
     env.update({
         "R": str(tmp_path / "runtime"), "REPO": str(tmp_path),
+        # isolate from the live AIDO exclusive flag on the shared server
+        "EXCLUSIVE_AIDO": str(tmp_path / "no-exclusive-flag"),
         "PY": str(fake_py), "LOG": str(log),
         "FAKE_STATE": str(state), "FAKE_CALLS": str(calls),
+        "FAKE_SLEEP_CALLS": str(tmp_path / "sleep.calls"),
         "PATH": str(fake_bin) + os.pathsep + env.get("PATH", ""),
     })
     return env, state, calls, log
@@ -161,17 +172,32 @@ def test_v2_queue_runs_exactly_six_cells_with_double_proof(tmp_path):
         assert option("--epochs") == "3"
         assert option("--batch-size") == "32"
         assert option("--mask-rate") == "0.15"
-        assert option("--out-suffix") == "_mlm15fix"
+        assert option("--out-suffix") == "_mlm15fix_seedfix"
     assert observed == {
         ("RiNALMo-micro", strategy, str(seed))
         for strategy in ("lora", "full") for seed in (17, 29, 43)
     }
     for cmd in proofs:
-        assert cmd[cmd.index("--extra") + 1] == "_taskm6a_s0_mlm15fix"
+        assert cmd[cmd.index("--extra") + 1] == "_taskm6a_s0_mlm15fix_seedfix"
         assert cmd[cmd.index("--result-task") + 1] == "modification"
         assert cmd[cmd.index("--protocol-prefix") + 1] == "E6-v2-fixed-mask-mlm"
     text = log.read_text()
     assert "DONE cells=6/6" in text and "INCOMPLETE" not in text
+
+
+def test_v2_queue_waits_at_cell_boundary_until_exclusive_flag_clears(tmp_path):
+    env, state, calls, log = fake_queue_runtime(tmp_path)
+    flag = tmp_path / "EXCLUSIVE_AIDO"
+    flag.write_text("active")
+    env["EXCLUSIVE_AIDO"] = str(flag)
+    completed = run_queue(env)
+    assert completed.returncode == 0, completed.stderr
+    assert not flag.exists()
+    runs = [r for r in read_calls(calls)
+            if r[:2] == ["-m", "rnafteval.e6_forget_task"]]
+    assert len(runs) == 6
+    assert log.read_text().count("WAIT EXCLUSIVE_AIDO") == 1
+    assert len(Path(env["FAKE_SLEEP_CALLS"]).read_text().splitlines()) == 1
 
 
 def test_v2_queue_failure_is_incomplete_and_nonzero(tmp_path):
@@ -189,7 +215,7 @@ def test_quarantine_classifies_old_official_v2_but_not_corrected():
     old = {"run_id": old_rid, "model": "RiNALMo-micro",
            "task": "modification", "status": "done"}
     assert quarantine.classify(old) == "mlm"
-    corrected = dict(old, run_id=old_rid + "_mlm15fix")
+    corrected = dict(old, run_id=old_rid + "_mlm15fix_seedfix")
     assert quarantine.classify(corrected) is None
     controlled = dict(old, model="RNA-Sc-10M")
     assert quarantine.classify(controlled) is None
