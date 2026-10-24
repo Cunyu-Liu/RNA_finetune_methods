@@ -148,3 +148,10 @@
 - **B27 教训第二版**：spawn 锁窗口需 ≥ lane 加载时间（大模型 load ~3-5min > 5min 锁边界的边缘案例）；根治版方案 = respawn 后二次 pgrep 校验（下轮 v2.2）
 - 数据落地（凌晨批）：ERNIE lora family 3 种子齐（0.590/0.597/0.596 稳定带）；RNAFM lora random 0.504/0.541；NB frozen random 0.34/0.34；mega lora s17 random 0.5902 落
 - 真态：ledger 2653 行 done 2595；spliceai 47/126 done；GPU 10.5-14.8G 99%（frozen 车道轻载轮转）
+
+## 2026-10-24 午后（1024b：8 任务缺口审计 + 三条 frozen/full 补位车道——回应「为什么全是 spliceai」）
+
+- **用户质询修正调度优先级**：此前车道集中在 spliceai（因其缺口大 79 格）；本轮 ledger 程序化审计显示其余新任务 frozen 臂整列缺失——degradation frozen 36 / ssi frozen 36+full 18 / crispr frozen 36+full 24（共 ~190 格缺口 vs spliceai 79）
+- **派发三条均衡车道**：q_degrfroz（degradation frozen 36 格）/ q_ssifill（ssi frozen 36 + full 18）/ q_crisprfill（crispr frozen 36 + full 24）——8 任务矩阵进入全面补齐阶段
+- 双开第三版处置：q_ssifill/q_crisprfill spawn 锁窗口双开（5min < 加载时间）→ kill 冗余侧；**v2.2 待办升级为硬需求**（respawn 后 90s 二次 pgrep 校验 + 锁窗口 15min）
+- GPU：10.5→15.8G 99%（21 进程：degr/ssi/crispr frozen 8 对 + spliceai 5 对）
