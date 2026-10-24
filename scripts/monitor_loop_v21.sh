@@ -10,7 +10,7 @@ export PYTHONPATH=/root/rnaft/pypath:/home/cunyuliu/rna-ft-eval:/home/cunyuliu/r
 export HF_HOME=/root/hf_home
 export HF_ENDPOINT=https://hf-mirror.com
 
-LANES="q_splmore q_splfull2 q_splfull3 q_crisprfam q_degrfull q_nblane q_splfrozen q_spl650 q_splmega2 q_splnbfroz q_spl_s17_retry q_splfroz2 q_splfroz3 q_splfill4"
+LANES="q_splmore q_splfull2 q_splfull3 q_crisprfam q_degrfull q_nblane q_splfrozen q_spl650 q_splmega2 q_splnbfroz q_spl_s17_retry q_splfroz2 q_splfroz3 q_splfill4 q_degrfroz q_ssifill q_crisprfill"
 
 while true; do
   {
