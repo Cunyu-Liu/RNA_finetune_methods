@@ -820,14 +820,14 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 
 ## D. E6 与遗留大格
 
-- [~] official canonical 30 格 `_mlm15fix` 重跑中，首批 micro 3 格已过双证；旧 mega LoRA@1e-5 变体若保留另带独立标签。
+- [~] official canonical 30 格 `_mlm15fix` 重跑中，micro v1 已 6/6 双证收口并自动推进到 ERNIE/RNA-FM；旧 mega LoRA@1e-5 变体若保留另带独立标签。
 - [~] E6-v2 official micro m6A-start 6 格已追加隔离并以 `_taskm6a_s0_mlm15fix` 重跑；累计隔离 300 行、251 个旧 result 文件。
 - [ ] 修正版 official ΔNLL 逐行对账前，冻结旧 official 5–9×等表述；controlled/NB 结果分协议呈现。
 - [ ] AIDO MRL s43 使用 `finetune_mrl` + 3 epochs + bs1 + 12h 的唯一 owner；q5090 错 runner 已修，audit_1016 必须回源核验而非只看状态。
 
 ## E. 监控、收敛与交付
 
-- [~] monitor v2.2 已部署并核验单实例、锁释放、白名单和 GPU 低显存告警；后续持续按完成证据移出白名单，旧计划 glob 复活已禁用。
+- [~] monitor v2.2 已部署并核验单实例、锁释放、白名单和 GPU 低显存告警；E6 阶段自推进与 corrected/E6-v2 verify-complete 已上线，后续按真实完成证据禁重启，旧计划 glob 复活已禁用。
 - [ ] 建立 validation-loss 平台审计；未达 `min_delta + patience` 的格不得标 final，续训以 `valplateau_v1` 独立记录，不与 fixed-epoch 静默混合。
 - [ ] corrected 结果达到 B23 + 收敛门禁后，重刷导出表/图，进行至少三轮 ledger 原始行对账，再更新 preprint 与结果版 PPT。
 - [ ] 每个修复/实验批次完成后提交并经 Mac bundle 通道推 GitHub；大型备份与 manifest 留 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`。

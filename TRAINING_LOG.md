@@ -174,3 +174,10 @@
 - **导出防回流**：export_e6 / official / v2 仅接收 controlled 或 `_mlm15fix` 对应协议，旧 artifact 即使残留也不能回到 status 表。当前 e6_table = controlled30 + official corrected3；e6v2_table 与 official_table 已重刷。
 - **预印本与 PPT**：三份稿件删除 official 旧 E6 数值、规模趋势和混合计数，保留 controlled 30 格与 E6-v3 probe retention；PPT s2/s17/s18/s19 同步撤回，s17 改为 controlled 双面板（30M 非单调谱 + 最差种子 full26.2/LoRA3.4≈7.8×）。layout 0 issues、项目 lint PASS、CRC/嵌入 MD5/内容 QA 全过，备份 before_e6_quarantine_1024。
 - **下一步**：E6-v1 micro 6 格与 E6-v2 micro 6 格继续，随后按运行时清单推进 ERNIE/RNA-FM/mega/650M；corrected 8 任务继续。每批完成后重新做 ledger 原始行对账，未达收敛门禁不发布。
+
+## 2026-10-24 晚续（1024e：E6 阶段自推进 + 旧父进程清剿）
+
+- **E6-v1 micro 6/6 完整**：lora/full × 3 种子全部通过双证；阶段脚本已将 `/root/rnaft/e6_mlm15_models.active` 从 RiNALMo-micro 原子推进到 ERNIE-RNA + RNA-FM，ERNIE lora s17 开训。E6-v2 micro 继续按独立 6 格队列推进。
+- **自动化**：新增 e6_phase（逐格真实 proof、锁内原子写、缺格不推进）；monitor 每周期检查阶段，全部30格才写 COMPLETE；E6-v2 6格和 corrected342格均加只读 verify-complete，完成 lane 不再被空跑复活。Python 41 tests + monitor lifecycle/whitelist/verified-complete 故障注入通过。
+- **旧进程清剿**：10-23 遗留 `bash -s` 父进程再次拉起 q_splmore/q_master，已按父进程证据停止，未动 corrected/CRISPR/E6；当前只剩 v2.2 白名单体系。
+- **当前判读**：E6-v1 进入 ERNIE/RNA-FM 阶段，E6-v2 和 corrected 在飞；尚无足够证据修改科学结论或 PPT 数值。

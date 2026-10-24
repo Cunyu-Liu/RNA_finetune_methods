@@ -13,7 +13,12 @@ TEST_LEGACY=$TMP_ROOT/legacy.started
 TEST_MASTER=$TMP_ROOT/master.started
 GPU_CALLS=$TMP_ROOT/gpu.calls
 STALE_CALLS=$TMP_ROOT/stale.calls
+PHASE_CALLS=$TMP_ROOT/phase.calls
+CORRECTED_CALLS=$TMP_ROOT/corrected.calls
+V2_PROOF_CALLS=$TMP_ROOT/v2-proof.calls
+COMPLETION_STARTS=$TMP_ROOT/completion.starts
 export TEST_STARTS TEST_LEGACY TEST_MASTER GPU_CALLS STALE_CALLS
+export PHASE_CALLS CORRECTED_CALLS V2_PROOF_CALLS COMPLETION_STARTS
 TEST_PYTHON=$(command -v python3)
 export TEST_PYTHON
 mkdir -p "$ROOT/scripts" "$RNAFT/logs" "$STUB_BIN"
@@ -94,9 +99,25 @@ chmod +x "$STUB_BIN/flock" "$STUB_BIN/setsid" "$STUB_BIN/nvidia-smi" "$STUB_BIN/
 
 cat > "$TMP_ROOT/fake_python" <<'EOF'
 #!/bin/sh
-[ "$1" = scripts/reset_stale_cron.py ] || exit 97
-echo call >> "$STALE_CALLS"
-echo stale-ok
+case "$1" in
+  scripts/reset_stale_cron.py)
+    echo call >> "$STALE_CALLS"
+    echo stale-ok
+    ;;
+  scripts/e6_phase.py)
+    echo call >> "$PHASE_CALLS"
+    echo phase-ok
+    ;;
+  scripts/q_corrected_8task.py)
+    [ "$2" = --verify-complete ] || exit 98
+    echo call >> "$CORRECTED_CALLS"
+    ;;
+  scripts/e6_mlm15_proof.py)
+    echo call >> "$V2_PROOF_CALLS"
+    ;;
+  *) exit 97 ;;
+esac
+exit 0
 EOF
 chmod +x "$TMP_ROOT/fake_python"
 
@@ -124,6 +145,8 @@ ENV_BASE=(
   "MONITOR_V22_PY=$TMP_ROOT/fake_python"
   "MONITOR_V22_LOCK_DIR=$TMP_ROOT/locks"
   "MONITOR_V22_INTERVAL=1"
+  "MONITOR_V22_E6_ARTIFACTS=$TMP_ROOT/e6"
+  "E6_MODEL_FILE=$RNAFT/e6_mlm15_models.active"
 )
 ONCE_SEQ=0
 run_once() {
@@ -220,7 +243,7 @@ assert_alive "$lane2"
 run_once relative
 assert_eq 2 "$(start_count)" "live replacement was duplicated"
 
-# The whitelist is the only stop-respawn switch; q_master/legacy never revive.
+# Removal still stops an ordinary lane; q_master/legacy never revive.
 echo '# no active lanes' > "$ROOT/scripts/active_lanes.txt"
 kill -9 "$lane2"
 sleep 0.1
@@ -235,4 +258,37 @@ grep -Eq 'ledger rows=[[:space:]]*2 done=1' "$RNAFT/logs/monitor_loop.log" || fa
 grep -q 'stale-ok' "$RNAFT/logs/monitor_loop.log" || fail "stale cleanup stub missing"
 grep -q 'finetune_procs=0' "$RNAFT/logs/monitor_loop.log" || fail "process snapshot missing"
 
-echo 'test_monitor_loop_v22: PASS (abs/rel, 4-way concurrency, single monitor/executor, SIGKILL, whitelist)'
+# Verified-complete corrected/E6 lanes stay whitelisted but are not restarted.
+# q_crisprfill has no completion gate and still starts despite historical DONE.
+for lane in q_corrected_8task q_e6_mlm15fix q_e6_v2_mlm15fix q_crisprfill; do
+  cat > "$ROOT/scripts/$lane.sh" <<EOF
+#!/bin/bash
+echo $lane >> "$COMPLETION_STARTS"
+EOF
+done
+printf '%s\n' q_corrected_8task q_e6_mlm15fix q_e6_v2_mlm15fix q_crisprfill \
+  > "$ROOT/scripts/active_lanes.txt"
+echo COMPLETE > "$RNAFT/e6_mlm15_models.active"
+echo '=== q_crisprfill DONE historical text ===' > "$RNAFT/logs/q_crisprfill.log"
+run_once absolute
+tries=0
+while [ ! -s "$COMPLETION_STARTS" ]; do
+  tries=$((tries + 1))
+  [ "$tries" -lt 50 ] || fail "q_crisprfill did not retain normal launch behavior"
+  sleep 0.1
+done
+assert_eq q_crisprfill "$(cat "$COMPLETION_STARTS")" \
+  "a verified-complete lane was restarted"
+assert_eq 1 "$(wc -l < "$CORRECTED_CALLS" | tr -d ' ')" \
+  "corrected verify-complete was not called exactly once"
+assert_eq 6 "$(wc -l < "$V2_PROOF_CALLS" | tr -d ' ')" \
+  "E6-v2 completion did not check exactly six proofs"
+[ -s "$PHASE_CALLS" ] || fail "E6 phase script was not called"
+grep -q 'SKIP q_corrected_8task (all 342' "$RNAFT/logs/monitor_loop.log" || \
+  fail "corrected completion skip was not logged"
+grep -q 'SKIP q_e6_mlm15fix (all 30' "$RNAFT/logs/monitor_loop.log" || \
+  fail "E6 COMPLETE skip was not logged"
+grep -q 'SKIP q_e6_v2_mlm15fix (all 6' "$RNAFT/logs/monitor_loop.log" || \
+  fail "E6-v2 completion skip was not logged"
+
+echo 'test_monitor_loop_v22: PASS (lifecycle locks, whitelist, verified-complete lane gates)'

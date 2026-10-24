@@ -1,9 +1,9 @@
 #!/bin/bash
-# monitor_loop v2.2: whitelist-only respawn with kernel-owned lifecycle locks.
-# active_lanes.txt is the sole automatic launch/respawn control. DONE text is
-# deliberately ignored: a whitelisted lane restarts after ANY exit; remove it
-# to prevent another launch. Removing a lane never kills a live process.
-# There is no q_master heartbeat or respawn of non-whitelisted legacy lanes/plans.
+# monitor_loop v2.2: whitelist respawn with kernel-owned lifecycle locks.
+# DONE text is deliberately ignored. Verified-complete corrected/E6 lanes are
+# not restarted; removing any lane from active_lanes.txt always prevents launch.
+# Removing a lane never kills a live process. There is no q_master heartbeat or
+# respawn of non-whitelisted legacy lanes/plans.
 ROOT=${MONITOR_V22_ROOT:-/home/cunyuliu/rna-ft-eval}
 RNAFT=${MONITOR_V22_RNAFT:-/root/rnaft}
 PY=${MONITOR_V22_PY:-/root/miniconda3/envs/llr_env/bin/python}
@@ -15,6 +15,8 @@ LEDGER=$RNAFT/ledger.jsonl
 LOG=$RNAFT/logs/monitor_loop.log
 STATE_DIR=$RNAFT/monitor_v22
 MONITOR_LOCK=$LOCK_DIR/monitor.lock
+E6_MODEL_FILE=${E6_MODEL_FILE:-$RNAFT/e6_mlm15_models.active}
+E6_ARTIFACTS=${MONITOR_V22_E6_ARTIFACTS:-/root/rna-ft-eval/artifacts/e6}
 
 export PYTHONPATH=/root/rnaft/pypath:/home/cunyuliu/rna-ft-eval:/home/cunyuliu/rna-sc
 export HF_HOME=/root/hf_home
@@ -56,6 +58,21 @@ observe_launcher() {
   # Observation is informational only; never kill or spawn from ps/pgrep text.
 }
 
+e6_v2_complete() {
+  local seed strategy
+  for seed in 17 29 43; do
+    for strategy in lora full; do
+      "$PY" scripts/e6_mlm15_proof.py \
+        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix" \
+        RiNALMo-micro "$strategy" "$seed" \
+        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix \
+        --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
+        >/dev/null 2>&1 || return 1
+    done
+  done
+  return 0
+}
+
 while true; do
   (
     echo "=== monitor v2.2 $(date '+%F %T') ==="
@@ -68,6 +85,10 @@ while true; do
 
     # Default 900-second cycle retains the 15-minute stale cleanup cadence.
     "$PY" scripts/reset_stale_cron.py 2>&1 | head -2
+
+    E6_PHASE_RC=0
+    "$PY" scripts/e6_phase.py --model-file "$E6_MODEL_FILE" \
+      --result-root "$E6_ARTIFACTS" || E6_PHASE_RC=$?
 
     while IFS= read -r L || [ -n "$L" ]; do
       case "$L" in
@@ -97,6 +118,35 @@ while true; do
       fi
       if [ ! -f "$SCRIPT" ]; then
         echo "SKIP $L (script removed before launch)"
+        exec 8>&-
+        continue
+      fi
+
+      SKIP_REASON=
+      case "$L" in
+        q_e6_mlm15fix)
+          if [ "$E6_PHASE_RC" -ne 0 ]; then
+            SKIP_REASON="E6 phase check failed rc=$E6_PHASE_RC"
+          elif [ ! -r "$E6_MODEL_FILE" ]; then
+            SKIP_REASON="E6 model file unavailable"
+          elif [ "$(cat "$E6_MODEL_FILE" 2>/dev/null)" = COMPLETE ]; then
+            SKIP_REASON="all 30 E6 cells double-proven COMPLETE"
+          fi
+          ;;
+        q_e6_v2_mlm15fix)
+          if e6_v2_complete; then
+            SKIP_REASON="all 6 E6-v2 cells double-proven complete"
+          fi
+          ;;
+        q_corrected_8task)
+          if "$PY" scripts/q_corrected_8task.py --verify-complete \
+              >/dev/null 2>&1; then
+            SKIP_REASON="all 342 corrected cells double-proven complete"
+          fi
+          ;;
+      esac
+      if [ -n "$SKIP_REASON" ]; then
+        echo "SKIP $L ($SKIP_REASON)"
         exec 8>&-
         continue
       fi

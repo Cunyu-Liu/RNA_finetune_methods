@@ -230,3 +230,24 @@ def test_main_exit_status_and_reentry(runtime, monkeypatch, capsys):
     assert q.main(["--models", cell.model, "--workers", "1"]) == 0
     captured = capsys.readouterr()
     assert "CORRECTED_DONE" in captured.out and "skipped=1" in captured.out
+
+
+def test_verify_complete_is_read_only_and_requires_all_342_double_proofs(
+        runtime, monkeypatch, capsys):
+    cells = q.canonical_cells()
+    assert len(cells) == 342
+    for cell in cells:
+        make_double_proof(runtime, cell)
+    monkeypatch.setattr(
+        q.subprocess, "run",
+        lambda *args, **kwargs: pytest.fail("verify-complete launched training"))
+
+    assert q.main(["--verify-complete"]) == 0
+    assert "CORRECTED_VERIFY_COMPLETE cells=342" in capsys.readouterr().out
+
+    missing = cells[-1]
+    runtime.rows[q.rid_for(missing)]["status"] = "running"
+    assert q.main(["--verify-complete"]) == 1
+    output = capsys.readouterr().out
+    assert "CORRECTED_VERIFY_INCOMPLETE cells=342 complete=341 incomplete=1" in output
+    assert not q.LOG_ROOT.exists()
