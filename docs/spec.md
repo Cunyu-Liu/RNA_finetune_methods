@@ -484,3 +484,5 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 **⑦ 本轮恢复事实（18:15 后）**：三层验证通过后，294 条受影响旧记录与 245 个旧 result 文件已在 `/teams` 备份并隔离；monitor v2.2 单实例与 lane 生命周期锁在岗，corrected dispatcher 和 CRISPR 已恢复，E6 micro 6 格已启动。上述为执行状态，不代表 corrected 结果已达标或可发布。
 
 **⑧ E6-v2 补充隔离与首批 corrected 证据**：后续复核发现 `e6_forget_task` 复制同一未掩码实现，official micro m6A-start 6 行及 6 个 artifacts 已追加隔离，累计 300 行、251 个 result 文件。E6-v2 corrected 6 格已启动。E6-v1 micro 首批 3 格通过 ledger+result+protocol 三证；pre NLL=1.3968、独立 mask/order noise=0.0037，旧口径不得比较。导出器只接收 controlled 或对应 `_mlm15fix` 协议，防止旧值回流。
+
+**⑨ E6 阶段自推进**：E6-v1 micro 已 6/6 双证收口，模型清单自动推进到 ERNIE-RNA/RNA-FM。`e6_phase` 逐格验证并原子更新；E6-v2 6 格与 corrected 342 格均有只读 verify-complete，未完成不得标 DONE，完成后禁止 monitor 空跑复活。遗留 `bash -s` 旧父进程及其 q_splmore/q_master 已清剿。

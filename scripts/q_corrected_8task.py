@@ -251,8 +251,26 @@ def parse_models(values):
     return names
 
 
+def verify_complete():
+    cells = canonical_cells()
+    incomplete = []
+    for cell in cells:
+        state, reason = proof_state(cell)
+        if state != "complete":
+            incomplete.append((cell, state, reason))
+    if incomplete:
+        print("CORRECTED_VERIFY_INCOMPLETE cells=%d complete=%d incomplete=%d" %
+              (len(cells), len(cells) - len(incomplete), len(incomplete)),
+              flush=True)
+        return 1
+    print("CORRECTED_VERIFY_COMPLETE cells=%d" % len(cells), flush=True)
+    return 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--verify-complete", action="store_true",
+                        help="read-only exit 0 only when all canonical cells have double proof")
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--models", nargs="+",
                         help="model names, space- or comma-separated")
@@ -261,6 +279,8 @@ def main(argv=None):
                         default=["spliceai", "degradation", "ssi"])
     parser.add_argument("--device", type=int, default=0)
     args = parser.parse_args(argv)
+    if args.verify_complete:
+        return verify_complete()
     if args.workers < 1:
         parser.error("--workers must be >= 1")
     try:
