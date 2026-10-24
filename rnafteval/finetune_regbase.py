@@ -22,6 +22,7 @@ import numpy as np
 import torch
 
 from . import ledger
+from .base_alignment import align_base_labels
 from .tasks import degradation as deg_task
 from .tasks import ssi as ssi_task
 
@@ -49,6 +50,15 @@ def encode_seqs(tok, seqs, device, max_len=192):
 def batches(rows, bs):
     for i in range(0, len(rows), bs):
         yield rows[i:i + bs]
+
+
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
+    epoch_tag = "" if args.epochs == 3 else "_ep%d" % args.epochs
+    return ("_b20fix" + ("_smoke" if args.smoke else "") + n_tag +
+            lr_tag + rank_tag + epoch_tag)
 
 
 def main() -> int:
@@ -79,11 +89,9 @@ def main() -> int:
     device = "cuda:%d" % args.device
     torch.manual_seed(args.seed)
     random.seed(args.seed)
+    np.random.seed(args.seed)
 
-    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
-    e3_tag = ("_e3%d" % args.n_train) if args.n_train else ""
-    extra = ("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -159,15 +167,9 @@ def main() -> int:
 
     def make_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
-        L = enc["input_ids"].shape[1]
-        y = torch.zeros(len(b), L, device=device)
-        m = torch.zeros(len(b), L, device=device)  # supervision mask
-        for i, r in enumerate(b):
-            labs = r["labels"][:L]
-            y[i, :len(labs)] = torch.tensor(np.asarray(labs),
-                                            dtype=torch.float32,
-                                            device=device)
-            m[i, :len(labs)] = 1.0
+        y, m = align_base_labels(
+            tok, enc, b, args.max_len,
+            allow_short_labels=args.task == "degradation")
         return enc, y, m
 
     def _pad_mask(enc):
@@ -211,17 +213,18 @@ def main() -> int:
             h = backbone(**enc).last_hidden_state
             logits = head(h, _pad_mask(enc)).squeeze(-1)
             for i in range(len(b)):
-                n = int(m[i].sum().item())
-                if n == 0:
+                if not m[i].any():
                     continue
-                p = logits[i, :n].float().cpu().numpy()
-                t = y[i, :n].float().cpu().numpy()
+                p = logits[i][m[i]].float().cpu().numpy()
+                t = y[i][m[i]].float().cpu().numpy()
                 preds.append(p)
                 tgts.append(t)
                 seqs_mse.append(float(((p - t) ** 2).mean()))
     allp = np.concatenate(preds) if preds else np.array([0.0])
     allt = np.concatenate(tgts) if tgts else np.array([0.0])
     pcc = float(np.corrcoef(allp, allt)[0, 1]) if preds else 0.0
+    if not np.isfinite(pcc):
+        raise FloatingPointError("non-finite primary metric: PCC")
     mcrmse = float(np.sqrt(np.mean(seqs_mse))) if seqs_mse else 0.0
     wall = time.time() - t0
     peak = torch.cuda.max_memory_allocated(args.device) / 1e6
@@ -235,8 +238,11 @@ def main() -> int:
         "wall_sec": round(wall, 1), "peak_mem_mb": round(peak, 1),
         "n_trainable": n_trainable, "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as f:
+    result_path = os.path.join(out_dir, "result.json")
+    tmp_path = result_path + ".tmp"
+    with open(tmp_path, "w") as f:
         json.dump(result, f, indent=1, default=str)
+    os.replace(tmp_path, result_path)
     ledger.update(rid, "done", value=pcc, metric="PCC",
                   wall_sec=round(wall, 1), peak_mem_mb=round(peak, 1),
                   n_train=len(train), n_test=len(test))

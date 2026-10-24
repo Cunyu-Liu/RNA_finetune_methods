@@ -9,17 +9,18 @@ try:
     for l in out.splitlines():
         if "rnafteval.finetune" in l: live.add(l)
 except: pass
-def has_live(m, s, sd, sp):
+def has_live(m, t, s, sd, sp):
     for l in live:
-        if ("--model %s " % m) in l and ("--strategy %s " % s) in l and ("--seed %d " % sd) in l and ("--split %s " % sp) in l: return True
+        if ("--model %s " % m) in l and ("--task %s " % t) in l and ("--strategy %s " % s) in l and ("--seed %d " % sd) in l and ("--split %s " % sp) in l:
+            return True
     return False
 with led._locked():
     rows = led._load()
     reset = []
     for r in rows:
         if r.get("status") == "running":
-            m, s, sd, sp = r.get("model"), r.get("strategy"), r.get("seed"), r.get("split")
-            if not has_live(m, s, sd, sp):
+            m, t, s, sd, sp = r.get("model"), r.get("task"), r.get("strategy"), r.get("seed"), r.get("split")
+            if not has_live(m, t, s, sd, sp):
                 r["status"] = "pending"
                 r["note"] = "stale-auto-reset %s" % datetime.datetime.now(datetime.timezone.utc).isoformat()[:19]
                 r["updated_utc"] = led._now()

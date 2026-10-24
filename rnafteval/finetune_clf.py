@@ -34,6 +34,15 @@ def batches(rows, bs):
         yield rows[i:i + bs]
 
 
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
+    epoch_tag = "" if args.epochs == 10 else "_ep%d" % args.epochs
+    return (("_smoke" if args.smoke else "") + n_tag + lr_tag + rank_tag +
+            epoch_tag)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -58,12 +67,14 @@ def main():
     device = torch.device("cuda:%d" % args.device)
     assert torch.cuda.is_available(), "CUDA unavailable - abort (no CPU fallback)"
 
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
-                        args.split, extra="")
+                        args.split, extra=extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
     os.makedirs(out_dir, exist_ok=True)
     claim = ledger.claim(args.model, args.task, args.strategy, args.seed,
-                         args.split, rid, out_dir, extra="")
+                         args.split, device=args.device, out_dir=out_dir,
+                         extra=extra)
     if not claim.get("claimed", False):
         print("skip (already %s)" % claim["row"].get("status", "unknown"))
         return 75
@@ -234,6 +245,8 @@ def main():
         acc = float((pred == y_all).mean())
         metric, value, metric2, value2 = "ACC", acc, "None", 0.0
 
+    if not np.isfinite(value):
+        raise FloatingPointError("non-finite primary metric: %s" % metric)
     torch.save(head.state_dict(), os.path.join(out_dir, "head.pt"))
     wall = time.time() - t0
     peak = torch.cuda.max_memory_allocated(args.device) / (1 << 20)
@@ -247,11 +260,15 @@ def main():
         "peak_mem_mb": round(peak, 1), "backbone_trainable": n_trainable,
         "lr": args.lr, "epochs": args.epochs, "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+    result_path = os.path.join(out_dir, "result.json")
+    tmp_path = result_path + ".tmp"
+    with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
+    os.replace(tmp_path, result_path)
     ledger.update(rid, "done", value=value, metric=metric, extra_fields=result)
     print(json.dumps(result))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

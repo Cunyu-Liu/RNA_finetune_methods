@@ -16,6 +16,7 @@ import numpy as np
 import torch
 
 from . import ledger
+from .base_alignment import align_base_labels
 from .tasks import spliceai as spl_task
 
 ROOT = "/root/rna-ft-eval"
@@ -30,6 +31,15 @@ def encode_seqs(tok, seqs, device, max_len=128):
 def batches(rows, bs):
     for i in range(0, len(rows), bs):
         yield rows[i:i + bs]
+
+
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
+    epoch_tag = "" if args.epochs == 10 else "_ep%d" % args.epochs
+    return ("_b20fix" + ("_smoke" if args.smoke else "") + n_tag +
+            lr_tag + rank_tag + epoch_tag)
 
 
 def main():
@@ -54,12 +64,14 @@ def main():
     device = torch.device("cuda:%d" % args.device)
     assert torch.cuda.is_available(), "CUDA unavailable - abort (no CPU fallback)"
 
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
-                        args.split, extra="")
+                        args.split, extra=extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
     os.makedirs(out_dir, exist_ok=True)
     claim = ledger.claim(args.model, args.task, args.strategy, args.seed,
-                         args.split, rid, out_dir, extra="")
+                         args.split, device=args.device, out_dir=out_dir,
+                         extra=extra)
     if not claim.get("claimed", False):
         print("skip (already %s)" % claim["row"].get("status", "unknown"))
         return 75
@@ -104,7 +116,7 @@ def main():
     from .strategies import apply_strategy, TokenHead
     spec, tok, backbone = load_model(args.model, device)
     with torch.no_grad():
-        probe = encode_seqs(tok, [train[0]["seq"]], device, 128)
+        probe = encode_seqs(tok, [train[0]["seq"]], device, args.max_len)
         d = backbone(**probe).last_hidden_state.shape[-1]
     backbone, n_trainable = apply_strategy(backbone, args.strategy,
                                            lora_rank=args.rank)
@@ -116,14 +128,9 @@ def main():
     lossf = torch.nn.CrossEntropyLoss(reduction="none")
 
     def make_batch(b):
-        enc = encode_seqs(tok, [r["seq"] for r in b], device, 128)
-        L = enc["input_ids"].shape[1]
-        y = torch.zeros(len(b), L, dtype=torch.long, device=device)
-        for i, r in enumerate(b):
-            labs = r["labels"][:L]
-            y[i, :len(labs)] = torch.tensor(labs, dtype=torch.long,
-                                            device=device)
-        return enc, y
+        enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
+        y, m = align_base_labels(tok, enc, b, args.max_len, dtype=torch.long)
+        return enc, y, m
 
     for ep in range(args.epochs):
         _sh = random.Random(args.seed * 1000 + ep)
@@ -133,7 +140,7 @@ def main():
         head.train()
         tot, nb = 0.0, 0
         for b in batches(_rows, args.batch_size):
-            enc, y = make_batch(b)
+            enc, y, m = make_batch(b)
             import contextlib
             no_grad = args.strategy in ("frozen", "head-only")
             with contextlib.nullcontext() if not no_grad \
@@ -141,7 +148,7 @@ def main():
                 h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
             logits = head(h, pad)  # [B, L, 3]
-            mask = enc["attention_mask"].float()
+            mask = m.float()
             # CE with class weights? no — keep protocol minimal, report macro-F1
             loss_map = lossf(logits.reshape(-1, 3), y.reshape(-1))
             loss = (loss_map.reshape(len(b), -1) * mask).sum() / \
@@ -161,17 +168,18 @@ def main():
     ys, ps = [], []
     with torch.no_grad():
         for b in batches(test, args.batch_size * 2):
-            enc, y = make_batch(b)
+            enc, y, m = make_batch(b)
             h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
             logits = head(h, pad)
-            m = enc["attention_mask"].bool()
             ys.append(y[m].cpu().numpy())
             ps.append(logits[m].argmax(-1).cpu().numpy())
     y_all = np.concatenate(ys)
     p_all = np.concatenate(ps)
     from sklearn.metrics import f1_score
     macro_f1 = float(f1_score(y_all, p_all, average="macro"))
+    if not np.isfinite(macro_f1):
+        raise FloatingPointError("non-finite primary metric: MACRO_F1")
     per_class = f1_score(y_all, p_all, average=None, labels=[0, 1, 2])
     f1_acc = float(f1_score(y_all, p_all, average="micro"))
 
@@ -189,12 +197,16 @@ def main():
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+    result_path = os.path.join(out_dir, "result.json")
+    tmp_path = result_path + ".tmp"
+    with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
+    os.replace(tmp_path, result_path)
     ledger.update(rid, "done", value=macro_f1, metric="MACRO_F1",
                   extra_fields=result)
     print(json.dumps(result))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

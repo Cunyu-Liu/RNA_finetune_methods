@@ -37,22 +37,25 @@ TASKS: dict[str, TaskSpec] = {
         "F1", "contact-map"),
     "spliceai": TaskSpec(
         "spliceai", "structure", "per-base", "gene", "",
-        "AUC", "spliceai"),
+        "MACRO_F1", "spliceai"),
     "modification": TaskSpec(
         "modification", "function", "per-base", "transcript", "",
         "AUC", "modification"),
     "noncoding-rna-family": TaskSpec(
         "noncoding-rna-family", "function", "per-seq", "sequence", "",
         "ACC", "noncoding-rna-family"),
-    "mean-ribosome-loading": TaskSpec(
-        "mean-ribosome-loading", "global", "per-seq", "sequence", "",
-        "R2", "mean-ribosome-loading"),
+    "mrl": TaskSpec(
+        "mrl", "global", "per-seq", "sequence", "",
+        "PEARSON_R", "mean-ribosome-loading"),
     "degradation": TaskSpec(
         "degradation", "engineering", "per-base", "sequence", "",
-        "MCRMSE", "degradation"),
+        "PCC", "degradation"),
+    "ssi": TaskSpec(
+        "ssi", "structure", "per-base", "sequence", "",
+        "PCC", "structural-score-imputation"),
     "crispr-off-target": TaskSpec(
-        "crispr-off-target", "interaction", "per-base", "sequence", "",
-        "AUC", "crispr-off-target"),
+        "crispr-off-target", "interaction", "per-seq", "sequence", "",
+        "PRAUC", "crispr-off-target"),
     # placeholder slots; RBP from BEACON/RBP-24 and DMS from RNAGym come later
     "rbp": TaskSpec("rbp", "interaction", "per-base", "transcript", "",
                     "MCC", "rbp"),
