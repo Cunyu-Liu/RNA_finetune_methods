@@ -1,11 +1,8 @@
-"""E6 官方系谱线导出器（C6 官方线扩展：micro/mega/650M × {lora, full}；0928-29 补位数据）。
+"""E6 official corrected fixed-mask MLM spectrum exporter.
 
-数据源：artifacts/e6/<model>_<strategy>_s<seed>[_lr3e-04]/result.json（以 result.json 的 lr 字段分组，
-不靠目录名解析）。official 系全部 MLM 全上下文口径（基线 ~0.06-0.09）——跨系绝对值不可比，
-只看系内 ΔNLL 与随规模趋势。
-
-协议注记（P4 决策项）：mega lora 历史格为 lr=1e-5（与 micro/受控系 lora@3e-4 不一致），
-0929 已补 `_lr3e-04` 对照 3 格——本表按 lr 分组并列，切换口径与否由 P4 决策，不静默混用。
+Only `_mlm15fix` results with the E6-v1-fixed-mask-mlm protocol are eligible.
+Legacy unmasked/full-context results are excluded even if their files remain.
+Rows are grouped by model, strategy and LR, and never silently mixed.
 
 用法: python -m rnafteval.export_e6_official [--out status/e6_official_table.md]
 """
@@ -18,7 +15,7 @@ import os
 
 ROOT = "/root/rna-ft-eval"
 ART = os.path.join(ROOT, "artifacts", "e6")
-MODELS = ["RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"]
+MODELS = ["RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M", "ERNIE-RNA", "RNA-FM"]
 STRATS = ["lora", "full"]
 SEEDS = [17, 29, 43]
 
@@ -40,6 +37,10 @@ def collect() -> dict:
             continue
         if r.get("task") == "modification":
             continue
+        if not ("_mlm15fix" in r.get("run_id", "")
+                and str(r.get("protocol", "")).startswith("E6-v1-fixed-mask-mlm")
+                and r.get("mask_rate") == 0.15):
+            continue
         try:
             lr = float(r.get("lr"))
         except Exception:
@@ -53,10 +54,10 @@ def main() -> int:
     ap.add_argument("--out", default=os.path.join(ROOT, "status", "e6_official_table.md"))
     args = ap.parse_args()
     data = collect()
-    md = ["# E6 官方系遗忘谱线（micro / mega / 650M；自动导出）", "",
-          "ΔNLL = post − pre（S0 held-out, n=2000, MLM 全上下文口径，噪声带 ~1e-9~1e-8）。",
-          "契约：official 系逐尺度谱线（micro→mega→650M）——遗忘随规模的变化方向。",
-          "lr 分组并列（mega lora 的 1e-5 历史格与 3e-4 对照格不混用；P4 决策口径）。",
+    md = ["# E6 官方系遗忘谱线（5 模型；fixed-mask corrected；自动导出）", "",
+          "ΔNLL = post − pre（S0 held-out, n=2000）。仅纳入 `_mlm15fix`：固定 15% masked-position MLM NLL + 独立掩码/顺序重评差异。",
+          "旧 MLM 全上下文结果已隔离；跨协议绝对 NLL 不可比。",
+          "lr 分组并列（不同 LR 不混用；P4 决策口径）。",
           "[PENDING] = 3 种子未齐。", "",
           "| model | strategy | lr | Δ s17 | Δ s29 | Δ s43 | mean | n/3 | forgot |",
           "|---|---|---|---|---|---|---|---|---|"]

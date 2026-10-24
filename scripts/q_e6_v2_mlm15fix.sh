@@ -1,0 +1,64 @@
+#!/bin/bash
+# E6-v2 RiNALMo-micro fixed-mask m6A correction: 2 strategies x 3 seeds.
+R=${R:-/root/rna-ft-eval}
+REPO=${REPO:-/home/cunyuliu/rna-ft-eval}
+PY=${PY:-/root/miniconda3/envs/llr_env/bin/python}
+export PYTHONPATH=/root/rna-ft-eval/pypath:$REPO${PYTHONPATH:+:$PYTHONPATH}
+export HF_HOME=/root/hf_home HF_ENDPOINT=https://hf-mirror.com
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+cd "$REPO" || exit 1
+LOG=${LOG:-$R/logs/q_e6_v2_mlm15fix.log}
+mkdir -p "$(dirname "$LOG")" || exit 1
+DEV=${DEV:-0}
+TIMEOUT_S=${E6_V2_TIMEOUT_S:-21600}
+SUFFIX=_mlm15fix
+EXTRA=_taskm6a_s0_mlm15fix
+
+proof() {
+  local resdir=$1 model=$2 strat=$3 seed=$4
+  "$PY" scripts/e6_mlm15_proof.py "$resdir" "$model" "$strat" "$seed" \
+    --ledger-task e6-forgetting --extra "$EXTRA" \
+    --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
+    >/dev/null 2>&1
+}
+
+ok=0
+run_cell() {
+  local model=$1 strat=$2 seed=$3 lr=$4
+  local resdir=$R/artifacts/e6/${model}_${strat}_task-m6a_s${seed}${SUFFIX}
+  if proof "$resdir" "$model" "$strat" "$seed"; then
+    echo "[e6v2-mlm15fix] skip(done) $model $strat s$seed" >> "$LOG"
+    ok=$((ok+1))
+    return 0
+  fi
+  if [ -e "$resdir/result.json" ]; then
+    echo "[e6v2-mlm15fix] CONFLICT result exists without valid double proof: $model $strat s$seed" >> "$LOG"
+    return 1
+  fi
+  echo "[e6v2-mlm15fix] RUN $model $strat s$seed lr$lr bs32 $(date +%H:%M)" >> "$LOG"
+  timeout "$TIMEOUT_S" "$PY" -m rnafteval.e6_forget_task \
+    --model "$model" --task modification --strategy "$strat" \
+    --seed "$seed" --lr "$lr" --device "$DEV" --epochs 3 \
+    --batch-size 32 --n-holdout 2000 --mask-rate 0.15 \
+    --out-suffix "$SUFFIX" >> "$LOG" 2>&1
+  local rc=$?
+  echo "[e6v2-mlm15fix] exit $rc $model $strat s$seed $(date +%H:%M)" >> "$LOG"
+  [ "$rc" -eq 0 ] || return "$rc"
+  if ! proof "$resdir" "$model" "$strat" "$seed"; then
+    echo "[e6v2-mlm15fix] incomplete ledger/result double proof $model $strat s$seed" >> "$LOG"
+    return 1
+  fi
+  ok=$((ok+1))
+}
+
+for seed in 17 29 43; do
+  run_cell RiNALMo-micro lora "$seed" 3e-4
+  run_cell RiNALMo-micro full "$seed" 1e-5
+done
+if [ "$ok" -eq 6 ]; then
+  echo "[e6v2-mlm15fix] DONE cells=$ok/6 $(date)" >> "$LOG"
+  exit 0
+else
+  echo "[e6v2-mlm15fix] INCOMPLETE cells=$ok/6 $(date)" >> "$LOG"
+  exit 1
+fi

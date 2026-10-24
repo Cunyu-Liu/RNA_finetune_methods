@@ -21,6 +21,7 @@ ART = os.path.join(ROOT, "artifacts", "e6")
 MODELS = ["RNA-Sc-10M", "RNA-Sc-30M", "RiNALMo-micro"]
 STRATS = ["lora", "full"]
 SEEDS = [17, 29, 43]
+OFFICIAL = {"RiNALMo-micro"}
 
 
 def collect() -> dict:
@@ -37,6 +38,11 @@ def collect() -> dict:
         if r.get("model") not in MODELS:
             continue
         tag = "m6a" if "task-m6a" in d else "ncrna"
+        if r["model"] in OFFICIAL:
+            protocol_prefix = ("E6-v2-fixed-mask-mlm" if tag == "m6a"
+                               else "E6-v1-fixed-mask-mlm")
+            if not str(r.get("protocol", "")).startswith(protocol_prefix):
+                continue
         data.setdefault((r["model"], r["strategy"], tag), {})[int(r["seed"])] = r
     return data
 

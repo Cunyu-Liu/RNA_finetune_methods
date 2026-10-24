@@ -41,6 +41,15 @@ def atomic_json(path: Path, value) -> None:
     os.replace(tmp, path)
 
 
+def backup_path(stem: str, stamp: str) -> Path:
+    path = BACKUP / ("%s_%s.json" % (stem, stamp))
+    index = 1
+    while path.exists():
+        path = BACKUP / ("%s_%s_%d.json" % (stem, stamp, index))
+        index += 1
+    return path
+
+
 def classify(row: dict) -> str | None:
     if row.get("status") not in {"done", "running", "pending"}:
         return None
@@ -48,8 +57,10 @@ def classify(row: dict) -> str | None:
     if (row.get("task") in B20_TASKS and row.get("model") in B20_MODELS
             and "_b20fix" not in rid):
         return "b20"
-    if (row.get("task") == "e6-forgetting"
-            and row.get("model") in OFFICIAL_E6 and "_mlm15fix" not in rid):
+    old_e6v2 = (row.get("task") == "modification"
+                and "_e6forgetting_" in rid)
+    if (row.get("model") in OFFICIAL_E6 and "_mlm15fix" not in rid
+            and (row.get("task") == "e6-forgetting" or old_e6v2)):
         return "mlm"
     return None
 
@@ -83,11 +94,15 @@ def main() -> None:
         return
 
     BACKUP.mkdir(parents=True, exist_ok=True)
-    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    now_dt = datetime.datetime.now(datetime.timezone.utc)
+    now = now_dt.isoformat()
+    stamp = now_dt.strftime("%Y%m%dT%H%M%S.%fZ")
+    ledger_backup = backup_path("ledger_pre_quarantine", stamp)
+    manifest_backup = backup_path("manifest", stamp)
     manifest = {"created_utc": now, "rows": [], "artifacts": []}
     with ledger._locked():
         current = ledger._load()
-        atomic_json(BACKUP / "ledger_pre_quarantine.json", current)
+        atomic_json(ledger_backup, current)
         current_by_id = {r["run_id"]: r for r in current}
         actions = {}
         for old, kind in selected:
@@ -129,7 +144,7 @@ def main() -> None:
     verified = [r for r in ledger._load() if classify(r)]
     if verified:
         raise RuntimeError("quarantine verification failed: %d active rows" % len(verified))
-    atomic_json(BACKUP / "manifest.json", manifest)
+    atomic_json(manifest_backup, manifest)
     print("QUARANTINE_OK", {
         "rows": len(manifest["rows"]), "artifacts": len(manifest["artifacts"]),
         "backup": str(BACKUP),

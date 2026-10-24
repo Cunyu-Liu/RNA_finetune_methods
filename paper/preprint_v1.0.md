@@ -1,11 +1,13 @@
 # To fine-tune or not to fine-tune RNA language models? A controlled
 # strategy comparison reveals task-granularity-dependent leakage effects
 
-**Preprint draft v1.0（项目数据全收口版·六幕叙事重构）** — 2026-10-07（数据快照：ledger 1913 done runs，全部计划 0 缺口；17 个架构全接入全收口——5 core + UTR-LM / mRNABERT / NucleicBERT / AIDO.RNA-1.6B / RiboSpan-1K-40 / HydraRNA + 受控 RNA-Sc 家族五档 + RiNALMo 官方三档；E6 遗忘矩阵 87 格（51+18+18）；1.6B 等价线双架构落地；rank 敏感性轴 48 格收口；grid_audit 终审 38 MATCH / 0 RERUN / 0 TUNED-MISSING。数据链全部自动导出，[PENDING] 清零。）
+**Data correction, 2026-10-24:** The earlier official MLM E6 results for RiNALMo-micro/mega/650M, ERNIE-RNA, and RNA-FM are invalid because unmasked inputs leaked labels. They are quarantined and must not be cited. A fixed 15% masked-position re-evaluation is in progress. Controlled RNA-Sc causal-NLL results and the 18 E6-v3 probe-retention cells are not withdrawn. Probe-style retention is neither NB hidden drift nor full fine-tuning. E6 results are reported by protocol, without a pooled cell count.
+
+**Preprint draft v1.0（项目数据版·六幕叙事重构）** — 2026-10-07（数据快照：ledger 1913 done runs；17 个架构：5 core + UTR-LM / mRNABERT / NucleicBERT / AIDO.RNA-1.6B / RiboSpan-1K-40 / HydraRNA + 受控 RNA-Sc 家族五档 + RiNALMo 官方三档；1.6B 等价线双架构落地；rank 敏感性轴 48 格收口；grid_audit 终审 38 MATCH / 0 RERUN / 0 TUNED-MISSING。）
 
 **增量注记 2026-10-15（集群恢复后）**：①rank 跨架构复现臂收口（m6A 18/18 + ncRNA/SSP 各 24——「rank 二阶旋钮」结论扩至 5 架构 × 3 任务，§2.5 已并入）；②1016 尾格（mega/650M E3 车道 + AIDO 3e-05×3）在飞，落地后 §2.4/§2.5 数据行将同步；③ledger 现值 2255 行（done 2250+）。
 
-**数据对账声明：v1.0 全文数字已于 2026-10-07 对 ledger.jsonl（1913 done）逐条核验；与 v0.96 的关键差异——17/17 崩溃口径修正为 16 个 FT 架构（3 个部分逃逸）、frozen 家族带实际 0.11–0.89、E6 矩阵 87 格非 124、E2 表 RNA-Sc full 0.808 口径、AIDO 1.6B grid 1e-05=0.720/3e-05=0.520、mRNABERT lora family 0.086。表间冲突（e6_table vs e6_official 的 10M/30M/micro 行）已回 ledger 原始行裁决。**
+**数据对账声明：v1.0 全文数字已于 2026-10-07 对 ledger.jsonl（1913 done）逐条核验；与 v0.96 的关键差异——17/17 崩溃口径修正为 16 个 FT 架构（3 个部分逃逸）、frozen 家族带实际 0.11–0.89、E2 表 RNA-Sc full 0.808 口径、AIDO 1.6B grid 1e-05=0.720/3e-05=0.520、mRNABERT lora family 0.086。**
 
 ## Abstract
 
@@ -81,16 +83,17 @@ where it is worst.** Four lines of evidence:
    family never crosses (33M full 0.944 < 148M LoRA 0.949; 650M LoRA
    0.969 > full 0.956) and both 1.6B encoders favor LoRA outright
    (AIDO 0.826 vs 0.688; RiboSpan 0.841 vs 0.657).
-4. **Cost.** Catastrophic forgetting (87-cell pretraining-NLL
-   matrix: 51 ncRNA-start + 18 m6A-start + 18 retention cells, noise
-   band < 3e-8): non-monotone in scale with a bounded mid-scale danger
-   band (30M full-FT worst seed +26.2 NLL); LoRA bounds the tail where
-   it is worst (30M: +3.4 vs +26.2; official RiNALMo-650M: LoRA Δ
-   +0.017–0.044 vs full +0.098–0.154) — though at 1M one LoRA seed
-   (+3.8) exceeds full's worst (+2.5): adapter protection is a
-   danger-band phenomenon, not a blanket law. Per-base starting tasks dilute
-   forgetting in 14/18 seed-level contrasts (exceptions concentrated
-   in MLM-scored RiNALMo-micro LoRA).
+4. **Cost.** Controlled RNA-Sc causal-NLL forgetting (30 v1 cells: 5
+   scales × 2 strategies × 3 seeds, reorder noise band < 3e-8) is
+   non-monotone in scale with a bounded mid-scale danger band. At 30M,
+   the mean full/LoRA ratio is approximately 12×, and LoRA's worst seed
+   is +3.4 versus full-FT's +26.2, approximately 8× tail compression.
+   At 1M, one LoRA seed (+3.8) exceeds full-FT's worst (+2.5): adapter
+   protection is a danger-band phenomenon, not a blanket law. Controlled
+   m6A-start Δ is more negative than ncRNA-start Δ in 11/12 RNA-Sc
+   seed-level contrasts. Separately, E6-v3 retains 18 probe-retention
+   cells; probe-style retention is neither NB hidden drift nor full
+   fine-tuning.
 
 We release the full run ledger, MMseqs2 0.8/0.8 family-cluster splits
 for all four tasks, LR grids, a rank sweep, and a split-leakage audit
@@ -160,9 +163,10 @@ Contributions:
   head-only / full reference) with a rank sweep (r ∈ {4, 8, 16}) under
   the same protocol, plus a dual-family scale-equivalence line
   (controlled RNA-Sc vs official RiNALMo vs 1.6B encoders).
-- **C6/E6** A 87-cell pretraining-objective forgetting matrix with a
+- **C6/E6** Protocol-separated forgetting analyses: 30 controlled RNA-Sc
+  v1 causal-NLL cells and 18 E6-v3 probe-retention cells, with a
   mid-scale danger band, adapter tail protection, and a per-base-start
-  dilution contrast.
+  dilution contrast. Official MLM E6 re-evaluation is in progress.
 - **B1** Split-leakage audit tooling (MMseqs2 0.8/0.8 clustering, zero-
   overlap assertions) applied to both our family arms and the official
   BEACON splits.
@@ -583,13 +587,15 @@ protection (C6, E6 first data)
 
 We measure pretraining-objective forgetting directly: ncRNA-family
 fine-tuning (tuned LRs, 10 epochs, 3 seeds) with held-out pretraining
-NLL evaluated before and after (S0 = the held-out tiers — test plus
-cluster-disjoint family-test — of the 29M-sequence RNAcentral
+NLL evaluated before and after (S0 = the held-out tiers, test plus
+cluster-disjoint family-test, of the 29M-sequence RNAcentral
 release-22 80/80 split, n=2,000; ΔNLL = post − pre, reorder noise
-band < 3e-8, every cell significant). Controlled-family models are
-causal LMs (shift-by-1 NLL, baseline ≈ 4.5); RiNALMo-micro is
-bidirectional, so we score MLM full-context pseudo-likelihood
-(baseline 0.07) — absolute NLL is comparable within a family only.
+band < 3e-8). The controlled v1 protocol has 30 cells: 5 scales × 2
+strategies × 3 seeds. Controlled-family models are causal LMs
+(shift-by-1 NLL, baseline ≈ 4.5), and absolute NLL is comparable within
+a family only. Earlier official MLM E6 results are quarantined because
+unmasked inputs leaked labels. A fixed 15% masked-position
+re-evaluation is in progress, so no official MLM E6 values are reported.
 
 | model | ΔNLL LoRA (s17/29/43) | ΔNLL full-FT | reading |
 |---|---|---|---|
@@ -598,52 +604,35 @@ bidirectional, so we score MLM full-context pseudo-likelihood
 | RNA-Sc-30M | +1.93 / −0.84 / +3.38 | +4.12 / **+26.24** / **+22.67** | forgetting peak; full-FT tail risk |
 | RNA-Sc-100M | +0.86 / +0.56 / +0.18 | +1.39 / +0.15 / **−1.61** | full-FT re-stabilizes, LoRA stays mildly positive |
 | RNA-Sc-650M | −0.40 / −1.05 / −1.11 | −2.75 / +7.07 / −3.18 | large-scale re-stabilizes; LoRA 3/3 negative, full-FT 1/3 over band (worst +7.1) |
-| RiNALMo-micro (official) | +0.11 / +0.14 / +0.11 | +0.16 / +0.15 / +0.16 | official model forgets its own corpus, tight variance |
 
-Official RiNALMo scale spectrum (MLM pseudo-likelihood, per-scale tuned
-LRs; 87 cells total across E6-v1/v2/v3):
+Three findings: (i) **forgetting is non-monotone in scale, with a bounded
+mid-scale danger band**. Across the 30 v1 cells spanning 1M→650M, 1M is
+mild and seed-noisy, 10M gains, 30M catastrophically degrades (full-FT
+post NLL reaches 30.8, +26 over pre), 100M re-stabilizes to ≈0, and
+650M re-stabilizes (LoRA 3/3 negative, full-FT worst seed +7.1). Thus,
+"bigger models forget more/less" is wrong in both directions; the
+mid-scale band is where task gradients compete most directly with
+pretraining features. (ii) **Adapter protection is primarily a tail
+effect, and it is conditional**: at 30M the mean full/LoRA ratio is
+approximately 12×, while LoRA's worst seed is +3.38 versus full-FT's
++26.24, approximately 8× tail compression; one LoRA seed is even
+negative. At 1M one LoRA seed (+3.76) exceeds full-FT's worst (+2.50):
+adapters bound the tail in the danger band, they are not a blanket
+guarantee. For deployment risk management in the band, LoRA bounds the
+downside. (iii) **Per-base starting tasks dilute forgetting (E6-v2)**:
+m6A-start Δ is more negative than ncRNA-start Δ in 11/12 controlled
+RNA-Sc seed-level contrasts. Dense per-position labels act as implicit
+pretraining replay for the positions they touch.
 
-| model | strategy (lr) | Δ s17 / s29 / s43 | mean |
-|---|---|---|---|
-| RiNALMo-micro | full (1e-05) | +0.159 / +0.155 / +0.159 | +0.157 |
-| RiNALMo-micro | lora (3e-04) | +0.110 / +0.140 / +0.105 | +0.118 |
-| RiNALMo-mega | full (1e-05) | +0.129 / +0.136 / +0.119 | +0.128 |
-| RiNALMo-mega | lora (1e-05) | +0.036 / +0.036 / +0.037 | +0.036 |
-| RiNALMo-mega | lora (3e-04) | +0.080 / +0.063 / +0.068 | +0.070 |
-| RiNALMo-650M | full (1e-05) | +0.098 / +0.154 / +0.122 | +0.125 |
-| RiNALMo-650M | lora (3e-04) | +0.017 / +0.044 / +0.017 | +0.026 |
+E6-v3 is reported separately as 18 cross-task probe-retention cells.
+These probe-style measurements are not NB hidden drift and are not full
+fine-tuning. They are not pooled with the controlled v1 causal-NLL cells
+or the quarantined official MLM results.
 
-Four findings: (i) **forgetting is non-monotone in scale, with a bounded
-mid-scale danger band** — across the now-complete 1M→650M controlled
-spectrum, 1M is mild and seed-noisy, 10M gains, 30M catastrophically
-degrades (full-FT post NLL reaches 30.8, +26 over pre), 100M
-re-stabilizes to ≈0, and 650M is again negative (LoRA +0/−1.1, full-FT
-worst seed +7.1) — so "bigger models forget more/less" is wrong in both
-directions; the mid-scale band is where task gradients compete most
-directly with pretraining features. (ii) **Adapter protection is
-primarily a tail effect, and it is conditional**: at 30M LoRA's worst
-seed is +3.38 vs full-FT's +26.24 (8× tail compression; one LoRA seed
-is even negative), and on the official 650M LoRA Δ stays at
-+0.017–0.044 vs full's +0.098–0.154 — but at 1M one LoRA seed (+3.76)
-exceeds full-FT's worst (+2.50): adapters bound the tail in the danger
-band, they are not a blanket guarantee. For deployment risk management
-in the band, LoRA bounds the downside. (iii) **Every official RiNALMo
-scale forgets its own pretraining distribution in every cell** (micro
-6/6, mega 6/6, 650M 6/6 — 18/18 cells positive, +0.036 to +0.159) with
-tight seed variance, and LoRA forgetting *decreases* with scale within
-the official family (micro +0.118 → 650M +0.026; full +0.157 →
-+0.125) —
-released-model users pay a measurable, scale-attenuated forgetting cost
-on any task fine-tune. (iv) **Per-base starting tasks dilute forgetting
-(E6-v2)**: m6A-start Δ is more negative than ncRNA-start Δ in 14/18
-seed-level contrasts (controlled family 11/12; the 4 exceptions are
-RiNALMo-micro MLM-scored LoRA ×3 and one 30M full seed whose ncRNA-start
-variance is extreme). Dense per-position labels act as
-implicit pretraining replay for the positions they touch.
-
-[fig:fig_e6_matrix] — forgetting matrix, auto-exported:
-status/e6_table.md (per-seed cells + csv); [fig:fig_e6_spectrum] —
-controlled-family ΔNLL vs scale, status/figs/fig_e6_spectrum.{png,pdf}.
+[fig:fig_e6_matrix] -- controlled RNA-Sc v1 causal-NLL cells; official
+MLM results are excluded pending re-evaluation. Per-seed cells and CSV:
+status/e6_table.md; [fig:fig_e6_spectrum] -- controlled-family ΔNLL vs
+scale, status/figs/fig_e6_spectrum.{png,pdf}.
 
 ## 3 Methods (summary)
 - Models (16 architectures, 0.5M–1.6B). Core five: RNA-Sc-10M
@@ -676,11 +665,13 @@ controlled-family ΔNLL vs scale, status/figs/fig_e6_spectrum.{png,pdf}.
 - Forgetting (E6): S0 held-out NLL (RNAcentral release-22 29M-sequence
   80/80 cluster split, held-out test + family-test tiers, n=2,000,
   len 32–512, deterministic eval with reorder-noise band <3e-8); causal
-  LMs scored with shift-by-1 CE, bidirectional RiNALMo with MLM
-  full-context pseudo-likelihood; LoRA arms merged (merge_and_unload)
-  before post-NLL so the score reflects deployed weights. 87 cells:
-  51 ncRNA-start + 18 m6A-start (E6-v2) + 18 cross-task retention
-  probes (E6-v3).
+  LMs scored with shift-by-1 CE; LoRA arms merged (merge_and_unload)
+  before post-NLL so the score reflects deployed weights. The controlled
+  RNA-Sc v1 protocol contains 30 cells: 5 scales × 2 strategies × 3
+  seeds. Earlier official MLM E6 results are quarantined, and a fixed
+  15% masked-position re-evaluation is in progress. E6-v3 contains 18
+  cross-task probe-retention cells, reported separately; probe-style
+  retention is not NB hidden drift or full fine-tuning.
 
 ## 4 Discussion (draft)
 - **Granularity, not "fine-tuning vs frozen", is the first-order factor.**
@@ -714,8 +705,8 @@ controlled-family ΔNLL vs scale, status/figs/fig_e6_spectrum.{png,pdf}.
   choice to a second-order knob (≤0.06 ncRNA, ≤0.01 m6A across
   r∈{4,8,16}) — budget spent tuning rank is budget wasted relative to
   the strategy and LR axes.
-- **Forgetting risk is concentrated, not uniform (C6)**: the E6 matrix
-  shows the practitioner-relevant summary — mid-scale (30M) full-FT
+- **Forgetting risk is concentrated, not uniform (C6)**: the controlled
+  RNA-Sc v1 causal-NLL results show the practitioner-relevant summary: mid-scale (30M) full-FT
   carries a catastrophic-forgetting tail (+26 NLL worst seed) that
   LoRA bounds 8×, while 10M fine-tuning is free (negative forgetting)
   and 100M full-FT self-stabilizes. Adapter protection is a
@@ -780,12 +771,14 @@ preprint scope, rules already frozen.
   per-task best model, primary; all-cell pool, reported); and the
   "no BH-significant cell" branch is vacuously true under n=3 sign
   tests (power wall) — documented, decision unchanged.
-- E6 forgetting: causal (RNA-Sc) vs MLM (RiNALMo) NLL metrics are
-  family-internal only; the 87-cell matrix is complete (51+18+18);
-  single-finetune-epoch protocol (10 ep, no replay or regularization
-  baselines) measures the raw forgetting cost. The rank sweep covers
-  two models × two tasks; adapter-axis coverage beyond LoRA/DoRA
-  (e.g., r=64, VeRA) is future work.
+- E6 forgetting: controlled RNA-Sc causal-NLL results are family-internal
+  and cover 30 v1 cells; official MLM E6 results are quarantined pending
+  fixed 15% masked-position re-evaluation. E6-v3's 18 probe-retention
+  cells are reported separately and are not NB hidden drift or full
+  fine-tuning. The single-finetune-epoch protocol (10 ep, no replay or
+  regularization baselines) measures the raw forgetting cost. The rank
+  sweep covers two models × two tasks; adapter-axis coverage beyond
+  LoRA/DoRA (e.g., r=64, VeRA) is future work.
 
 
 

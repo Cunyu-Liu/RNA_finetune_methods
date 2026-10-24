@@ -1,7 +1,8 @@
 # 预印本中文对照摘要 + 标题备选（v0.9，2026-09-26）
 
 > 用途：用户快速审阅版；英文正文在 paper/preprint_draft.md（v0.9）。
-> 数值与 ledger 全量对账通过（2026-09-26；C6 谱线端点 1M→650M 共 36 格全落地）。
+> 数值与 ledger 对账（2026-09-26）。
+> 2026-10-24 E6 数据更正：旧 official MLM E6（RiNALMo-micro/mega/650M、ERNIE-RNA、RNA-FM）因未掩码输入标签泄漏已隔离，旧值不得引用；fixed 15% masked-position 重估进行中。controlled RNA-Sc causal-NLL 与 E6-v3 的 18 个 probe retention 不撤回；probe-style 不是 NB hidden drift，也不是 full finetuning。
 
 ## 标题备选
 
@@ -87,19 +88,20 @@ ERNIE-RNA / RNA-FM）× 3 个 BEACON 任务（ncRNA 家族分类 / m6A
    **交点是否出现取决于训练配方**，不作为普适规律主张（可靠
    结论 = 方向性，受控系为界定主张边界的存在性反例）。
 6. **灾难性遗忘真实存在、尺度非单调且有界（中段危险带）、
-   适配器主要保护尾部（C6 全谱收口，36 格矩阵，0926）**：ncRNA
+   适配器主要保护尾部（C6，controlled RNA-Sc v1 causal-NLL 30 格）**：ncRNA
    微调（tuned LR、10 ep、3 种子）前后 S0 held-out NLL（29M 序列
    release-22 簇切分的 test+family-test 档，n=2000，重排噪声带
-   <3e-8 全格显著）：**受控系 1M→650M 全 6 档闭合、谱线非单调**
-   ——1M 轻微且种子噪声大；**10M 双臂负遗忘**（微调反而改善 S0）；
-   **30M 是遗忘峰值带**——full +4.12/+26.24/+22.67（两种子近崩溃，
-   post NLL 30.8）vs LoRA 最差 +3.38（尾部压缩 ~8×，且一种子为负）；
-   **100M full 回稳而 LoRA 恒小正**；**650M 大端再负**（LoRA 3/3 负、
-   full 2/3 负，最差 +7.1）。forget_ratio：1M +0.24× / 10M +1.89× /
-   30M +11.86× / 100M −0.04× / 650M −0.44×。官方 RiNALMo-33M
-   微忘自身预训练分布 6/6 格（+0.11~+0.16，MLM 伪似然口径，系内
-   可比）。**部署视角：LoRA 是有界保费的遗忘保险**（谱线图
-   fig_e6_spectrum + 表 status/e6_table.md）。
+   <3e-8）：**受控系 1M/10M/30M/100M/650M 五档，5 个尺度 × 2 策略
+   × 3 种子 = 30 格，谱线非单调**——1M 轻微且种子噪声大，且 LoRA
+   一种子 +3.76 超过 full 最差 +2.50，适配器保护并非普遍定律；
+   **10M 双臂负遗忘**（微调反而改善 S0）；**30M 是遗忘峰值带**——
+   full +4.12/+26.24/+22.67（两种子近崩溃，post NLL 30.8），full/LoRA
+   均值比约 12×；LoRA 最差 +3.38 vs full 最差 +26.24，尾部压缩约
+   8×，且 LoRA 一种子为负；**100M full 回稳而 LoRA 恒小正**；
+   **650M 大端再负**（LoRA 3/3 负、full 2/3 负，最差 +7.1）。
+   forget_ratio：1M +0.24× / 10M +1.89× / 30M +11.86× /
+   100M −0.04× / 650M −0.44×。**部署视角：LoRA 是有界保费的遗忘保险**
+   （controlled 谱线图 fig_e6_spectrum + 表 status/e6_table.md）。
 
 **开放资产** 完整 run 级 ledger（200+ runs）、三任务 MMseqs2
 0.8/0.8 家族簇切分、LR 网格、官方 BEACON m6A 切分的泄漏审计

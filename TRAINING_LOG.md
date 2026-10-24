@@ -166,3 +166,11 @@
 - **隔离**：`/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/quarantine_20261024/` 保存 ledger 与 manifest；294 行受影响记录（B20 done229/pending42、official E6 done23）标 invalid/cancelled，245 个旧 result 文件改名保留证据。旧值不得再进 PPT/preprint/决策树。
 - **恢复**：monitor v2.2 以 monitor 单实例 flock + lane 生命周期 flock + active whitelist 统一启动；旧 monitor/q_master 全部关闭。q_corrected_8task 统一接管 342 个 B20 canonical cells（每模型串行、模型间并行、三任务轮转，双证才 DONE）；CRISPR 继续；E6 先启动 RiNALMo-micro 6 格，后续按运行时模型清单推进，AIDO 大格留独占窗口。
 - **当前判读**：corrected 与 E6 训练在飞，尚无新的科学结论。后续每格须 ledger+result 双证、协议/指标核对和 validation 平台审计；fixed-epoch 循环结束不等于收敛，未平台者用独立 `valplateau_v1` continuation，不静默混入旧均值。
+
+## 2026-10-24 晚续（1024d：E6-v2 同源漏洞闭环 + 导出/交付物撤回）
+
+- **E6-v2 同源复核**：e6_forget_task 也复制了未掩码 official 路径，RiNALMo-micro m6A-start 6 行（lora/full×3种子）追加标 invalid，6 个 artifacts 改名隔离；controlled RNA-Sc 12 格不受影响。E6-v2 official 已委托 fixed-mask nll_eval，corrected RID `_taskm6a_s0_mlm15fix`，6 格队列启动。累计隔离 = 294+6=300 行、245+6=251 个 result 文件。
+- **首批 corrected E6 证据**：RiNALMo-micro lora s17/s29 与 full s17 通过 `e6_mlm15_proof`（ledger done + result protocol/metrics 一致）。真实 pre NLL=1.3968、独立 mask/order noise=0.0037，旧未掩码口径不可比；尚不齐三种子/全模型，不据此写新科学结论。
+- **导出防回流**：export_e6 / official / v2 仅接收 controlled 或 `_mlm15fix` 对应协议，旧 artifact 即使残留也不能回到 status 表。当前 e6_table = controlled30 + official corrected3；e6v2_table 与 official_table 已重刷。
+- **预印本与 PPT**：三份稿件删除 official 旧 E6 数值、规模趋势和混合计数，保留 controlled 30 格与 E6-v3 probe retention；PPT s2/s17/s18/s19 同步撤回，s17 改为 controlled 双面板（30M 非单调谱 + 最差种子 full26.2/LoRA3.4≈7.8×）。layout 0 issues、项目 lint PASS、CRC/嵌入 MD5/内容 QA 全过，备份 before_e6_quarantine_1024。
+- **下一步**：E6-v1 micro 6 格与 E6-v2 micro 6 格继续，随后按运行时清单推进 ERNIE/RNA-FM/mega/650M；corrected 8 任务继续。每批完成后重新做 ledger 原始行对账，未达收敛门禁不发布。
