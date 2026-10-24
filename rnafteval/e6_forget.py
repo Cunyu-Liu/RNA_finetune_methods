@@ -1,16 +1,17 @@
-"""E6 灾难性遗忘最小实现（v1）：微调前后 S0 held-out 困惑度 + 噪声带。
+"""E6 灾难性遗忘最小实现（v1）：微调前后 S0 held-out 评估 + 噪声带。
 
 协议（spec §3 E6 v1.2 冻结口径的最小可行版）：
 - 微调：ncRNA-family 任务（finetune_one 同协议：3 策略 × 种子 × lr tuned）
 - 遗忘度量：S0 held-out（release22_cluster_split 五分位第 5 档 = held-out）
-  的 nt 级平均 NLL（RNA-Sc wrapper 前向自带 LM logits）
-- 噪声带：同一未微调 backbone 对同一 held-out 集 eval 两次（batch 顺序
-  打乱 seed 不同）——两次 NLL 之差即重评噪声带（spec E6 对照臂）
+  的 nt 级平均 NLL；controlled 用 causal shift，official 用 fixed-mask MLM，
+  NucleicBERT 用 hidden-state cosine drift
+- 噪声带（NLL 系）：同一未微调 backbone 以 seed 201/707 重评。controlled
+  仅改变顺序；official 同时独立改变掩码与顺序，因此不是纯 reorder noise
 - 遗忘声明 = ΔNLL(post − pre) 超出噪声带才报
-- official（RiNALMo）分支：AutoModel 无 LM 头——直接类加载 RiNALMoForMaskedLM
-  （28 词表，model=encoder + lm_head）；双向模型不能 shift-by-1，NLL 用
-  MLM leave-one-out 伪似然（每个非特殊位单独 mask，其余全可见）；
-  lora 等 peft 臂训练后 merge_and_unload 原地回迁再评
+- official 分支：双向 MaskedLM 在每序列 attention=1 且非 special-token 的
+  位置固定抽样（默认 15%，至少 1 个），只在掩码位置计算 NLL。逐序列 RNG
+  由 eval seed + 原始序列 index 决定；pre_a/post 共用 seed 201 掩码，pre_b
+  使用 seed 707 独立掩码。lora 等 peft 臂训练后 merge_and_unload 再评
 
 用法:
   python -m rnafteval.e6_forget --model RNA-Sc-10M --strategy full \
@@ -22,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import random
 import time
@@ -155,33 +157,72 @@ def _collect_states(backbone, tok, seqs, device, bs=8):
     return states
 
 
-def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None):
+def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None,
+             eval_seed=None, mask_rate=0.15):
     """nt-level mean NLL over held-out seqs (PAD excluded).
 
     controlled 系：shift-by-1 因果 NLL（原 wrapper 前向自带 LM logits）。
-    official 系：RiNALMo 双向 + RiNALMoForMaskedLM——MLM leave-one-out
-    伪似然（每个非特殊位单独换 <mask>，其余位置全可见）。"""
+    official 系：固定比例 masked-position MLM NLL。每序列的候选位置仅含
+    attention=1 且非 special-token 的位置；RNG 由 eval seed 和原始序列
+    index 决定，与 batch size 及评估顺序无关。eval_seed 缺省沿用
+    shuffle_seed，两者都缺省时使用 0。"""
     order = list(range(len(seqs)))
     if shuffle_seed is not None:
         random.Random(shuffle_seed).shuffle(order)
     tot, cnt = 0.0, 0
     backbone.eval()
     is_official = hasattr(tok, "mask_token_id")
+    seq_tot = [0.0] * len(seqs) if is_official else None
+    seq_cnt = [0] * len(seqs) if is_official else None
+    if is_official:
+        if not 0.0 < mask_rate <= 1.0:
+            raise ValueError("mask_rate must be in (0, 1]")
+        mask_seed = shuffle_seed if eval_seed is None else eval_seed
+        mask_seed = 0 if mask_seed is None else int(mask_seed)
+        special_ids = set(getattr(tok, "all_special_ids", []) or [])
+        for name in ("bos_token_id", "eos_token_id", "cls_token_id",
+                     "sep_token_id", "pad_token_id", "mask_token_id",
+                     "unk_token_id"):
+            token_id = getattr(tok, name, None)
+            if token_id is not None:
+                special_ids.add(token_id)
     with torch.no_grad():
         for i in range(0, len(order), bs):
-            chunk = [seqs[j] for j in order[i:i + bs]]
+            original_indices = order[i:i + bs]
+            chunk = [seqs[j] for j in original_indices]
             enc = encode(tok, chunk, device)
             ids = enc["input_ids"]
             mask = enc["attention_mask"]
             if is_official:
-                out = backbone(input_ids=ids, attention_mask=mask)
-                logits = out.logits
-                lp = torch.nn.functional.log_softmax(logits.float(), dim=-1)
-                sel = (mask == 1)
-                tgt = ids.reshape(-1)[sel.reshape(-1)]
-                v = lp.reshape(-1, lp.shape[-1])[sel.reshape(-1)]
-                tot += (-v.gather(1, tgt.unsqueeze(1)).sum()).item()
-                cnt += int(sel.sum().item())
+                masked_ids = ids.clone()
+                batch_positions = []
+                for row, seq_index in enumerate(original_indices):
+                    candidates = [
+                        p for p, (attn, token_id) in enumerate(zip(
+                            mask[row].tolist(), ids[row].tolist()))
+                        if attn == 1 and token_id not in special_ids
+                    ]
+                    if not candidates:
+                        raise ValueError(
+                            "official MLM sequence %d has no maskable positions"
+                            % seq_index)
+                    n_mask = min(len(candidates), max(
+                        1, int(len(candidates) * mask_rate)))
+                    rng = random.Random((mask_seed << 32) ^ seq_index)
+                    positions = sorted(rng.sample(candidates, n_mask))
+                    masked_ids[row, positions] = tok.mask_token_id
+                    batch_positions.append(positions)
+                out = backbone(input_ids=masked_ids, attention_mask=mask)
+                lp = torch.nn.functional.log_softmax(
+                    out.logits.float(), dim=-1)
+                for row, seq_index in enumerate(original_indices):
+                    positions = torch.tensor(batch_positions[row],
+                                             device=ids.device, dtype=torch.long)
+                    target = ids[row, positions]
+                    values = lp[row, positions]
+                    nll = -values.gather(1, target.unsqueeze(1)).sum()
+                    seq_tot[seq_index] = nll.item()
+                    seq_cnt[seq_index] = len(batch_positions[row])
                 continue
             core = backbone.m if hasattr(backbone, "m") else backbone
             if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
@@ -204,6 +245,8 @@ def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None):
             v = shift_lp.reshape(-1, shift_lp.shape[-1])[sel]
             tot += (-v.gather(1, tgt.unsqueeze(1)).sum()).item()
             cnt += int(sel.sum().item())
+    if is_official:
+        return math.fsum(seq_tot) / max(sum(seq_cnt), 1)
     return tot / max(cnt, 1)
 
 
@@ -220,6 +263,7 @@ def main():
     ap.add_argument("--n-holdout", type=int, default=2000)
     ap.add_argument("--n-train-cap", type=int, default=0,
                     help="0 = full ncRNA train set")
+    ap.add_argument("--mask-rate", type=float, default=0.15)
     ap.add_argument("--out-suffix", default="")
     args = ap.parse_args()
     device = int(args.device)
@@ -243,7 +287,7 @@ def main():
                 extra=args.out_suffix)
     if res is None or res.get("claimed") is False:
         print("skip (ledger: %s)" % (res or {}).get("reason"), flush=True)
-        return
+        return 75
     rid = res["row"]["run_id"]
 
     # --- S0 held-out ---
@@ -300,8 +344,10 @@ def main():
         print("NB drift mode: ref states collected for %d seqs" % len(hold),
               flush=True)
     else:
-        pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
-        pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707)
+        pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201,
+                         eval_seed=201, mask_rate=args.mask_rate)
+        pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707,
+                         eval_seed=707, mask_rate=args.mask_rate)
         noise_band = abs(pre_b - pre_a)
         print("pre NLL: %.4f / %.4f (noise band %.4f)" % (pre_a, pre_b, noise_band),
               flush=True)
@@ -355,30 +401,52 @@ def main():
         result = {
             "run_id": rid, "model": args.model, "strategy": args.strategy,
             "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
-            "n_holdout": len(hold),
+            "n_holdout": len(hold), "mask_rate": args.mask_rate,
             "metric": "HIDDEN_COSINE_DRIFT", "drift": post_drift,
             "wall_sec": time.time() - t0,
             "protocol": "E6-v1-nb: pre/post S0 heldout hidden cosine drift "
                         "(NB has no MLM head; NLL undefined)",
         }
     else:
-        post = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
+        post = nll_eval(backbone, tok, hold, device, shuffle_seed=201,
+                        eval_seed=201, mask_rate=args.mask_rate)
+        if is_official:
+            protocol = (
+                "E6-v1-fixed-mask-mlm: pre/post S0 heldout masked-position NLL "
+                "(mask_rate=%g; pre_a/post eval seed 201, pre_b eval seed 707); "
+                "noise_band is an independent mask/order reevaluation difference"
+                % args.mask_rate)
+        else:
+            protocol = ("E6-v1: pre/post S0 heldout causal shift NLL + "
+                        "reorder noise band")
         result = {
             "run_id": rid, "model": args.model, "strategy": args.strategy,
             "seed": args.seed, "lr": args.lr, "epochs": args.epochs,
-            "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
+            "n_holdout": len(hold), "mask_rate": args.mask_rate,
+            "pre_nll_a": pre_a, "pre_nll_b": pre_b,
             "noise_band": noise_band, "post_nll": post,
             "delta_nll": post - pre_a,
             "forgot": bool((post - pre_a) > max(noise_band, 1e-6)),
-            "wall_sec": time.time() - t0,
-            "protocol": "E6-v1: pre/post S0 heldout NLL + reorder noise band",
+            "wall_sec": time.time() - t0, "protocol": protocol,
         }
-    with open(os.path.join(out_dir, "result.json"), "w") as f:
-        json.dump(result, f, indent=2)
+    metric_keys = ("drift",) if is_nb_drift else (
+        "pre_nll_a", "pre_nll_b", "noise_band", "post_nll", "delta_nll")
+    for key in metric_keys:
+        if not math.isfinite(result[key]):
+            raise FloatingPointError(
+                "non-finite E6 metric: %s=%r" % (key, result[key]))
+    result_path = os.path.join(out_dir, "result.json")
+    tmp_path = result_path + ".tmp"
+    with open(tmp_path, "w") as f:
+        json.dump(result, f, indent=2, allow_nan=False)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_path, result_path)
     fields = {k: v for k, v in result.items() if k not in ("run_id", "protocol")}
     update(rid, status="done", **fields)
     print(json.dumps(result, indent=2), flush=True)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

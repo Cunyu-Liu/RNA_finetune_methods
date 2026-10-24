@@ -42,6 +42,10 @@ cell RiNALMo-650M noncoding-rna-family full 43 family 1e-05 1000 8
 cell RiNALMo-650M noncoding-rna-family full 43 family 1e-05 3000 8
 cell RiNALMo-650M noncoding-rna-family full 17 family 1e-05 5000 8
 cell RiNALMo-650M noncoding-rna-family full 29 family 1e-05 5000 8
-# --- AIDO mrl full 1 cell (bs2 whole-card, long) ---
-cell AIDO.RNA-1.6B mrl full 43 random 1e-05 "" 2
+# --- AIDO mrl full 1 cell: use the MRL runner and successful 3-epoch/bs1 protocol ---
+echo "--- $(date -u +%FT%TZ) AIDO.RNA-1.6B mrl full s43 random lr=1e-05 bs=1 ---" >> $LOG
+timeout 43200 $PY -m rnafteval.finetune_mrl --model AIDO.RNA-1.6B --task mrl \
+  --strategy full --seed 43 --split random --device 0 --epochs 3 \
+  --batch-size 1 --lr 1e-05 >> $LOG 2>&1
+echo "RC=$? $(date -u +%FT%TZ)" >> $LOG
 echo "=== q5090 ALL DONE $(date -u +%FT%TZ) ===" >> $LOG

@@ -155,3 +155,14 @@
 - **派发三条均衡车道**：q_degrfroz（degradation frozen 36 格）/ q_ssifill（ssi frozen 36 + full 18）/ q_crisprfill（crispr frozen 36 + full 24）——8 任务矩阵进入全面补齐阶段
 - 双开第三版处置：q_ssifill/q_crisprfill spawn 锁窗口双开（5min < 加载时间）→ kill 冗余侧；**v2.2 待办升级为硬需求**（respawn 后 90s 二次 pgrep 校验 + 锁窗口 15min）
 - GPU：10.5→15.8G 99%（21 进程：degr/ssi/crispr frozen 8 对 + spliceai 5 对）
+
+## 2026-10-24 晚（1024c：科学完整性 P0 审计、隔离与 corrected 恢复）
+
+- **事实基线**：交接文档全量复核后，实测 HEAD a2f1442、ledger 2711 行/done 2651、单张 RTX5090。旧 monitor/q_master 与 17 条车道的 ownership、runner、日志交叉审计；未把历史 DONE 当作有效完成。
+- **B20 根因实证**：HF RnaTokenizer 自动加入 `<cls>/<eos>`，NucleicBERT 加入 `[CLS]/[SEP]`；旧 spliceai/degradation/SSI runner 从 token 0 填标签，导致特殊 token 被监督且碱基标签错位。RNA-Sc 无特殊 token，不受此实现错误影响。受影响队列精准暂停，per-seq CRISPR 保留。
+- **official E6 根因实证**：`nll_eval` 在未掩码 ids 上读取同位 target，存在标签泄漏；旧 official ΔNLL 与 5–9×等派生结论冻结。controlled causal NLL 与 NB hidden drift 分开，不与 official MLM 混写。
+- **修复**：新增 B20 共用对齐（全长度单碱基硬断言、special/PAD 排除、scored window、确定性截断）；spl/regbase 使用 `_b20fix` RID。official E6 改固定 15% masked-position MLM NLL（seed201 pre/post 同 mask，seed707 独立 mask；`_mlm15fix` RID）。同步修复 rc75、clf device 参数、finite、原子 result、NumPy seed、q5090 AIDO MRL runner、P2 glob auto-refill、stale task 匹配。
+- **验证**：本地 27 tests + ledger 8/8 + monitor 故障注入通过；真实 HF/NB/RNA-Sc tokenizer 全通过；真实 RiNALMo masked NLL 同 seed 差异 9.4e-8、异 seed 掩码不同；splice/degradation/SSI/NB 四个 CUDA smoke 均写出有限结果（smoke 仅工程验收，不作科学结论）。
+- **隔离**：`/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/quarantine_20261024/` 保存 ledger 与 manifest；294 行受影响记录（B20 done229/pending42、official E6 done23）标 invalid/cancelled，245 个旧 result 文件改名保留证据。旧值不得再进 PPT/preprint/决策树。
+- **恢复**：monitor v2.2 以 monitor 单实例 flock + lane 生命周期 flock + active whitelist 统一启动；旧 monitor/q_master 全部关闭。q_corrected_8task 统一接管 342 个 B20 canonical cells（每模型串行、模型间并行、三任务轮转，双证才 DONE）；CRISPR 继续；E6 先启动 RiNALMo-micro 6 格，后续按运行时模型清单推进，AIDO 大格留独占窗口。
+- **当前判读**：corrected 与 E6 训练在飞，尚无新的科学结论。后续每格须 ledger+result 双证、协议/指标核对和 validation 平台审计；fixed-epoch 循环结束不等于收敛，未平台者用独立 `valplateau_v1` continuation，不静默混入旧均值。

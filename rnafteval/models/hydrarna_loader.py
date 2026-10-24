@@ -34,6 +34,8 @@ class _HydraTok:
     """字符级 U→T tokenizer，<s>/</s> 包装（官方 encode_line 等价复刻）。"""
 
     pad_token_id = _VOCAB["<pad>"]
+    bos_token_id = _VOCAB["<s>"]
+    eos_token_id = _VOCAB["</s>"]
 
     def __call__(self, seqs, padding=True, truncation=True, max_length=512,
                  return_tensors="pt"):
