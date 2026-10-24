@@ -139,3 +139,12 @@
 - **spliceai s17 timeout 格重派**：q_spl_s17_retry（mega/650M lora s17 random+family 4 格，10h 预算——RC=124 的 4h 预算修正：144628 × bs16 × 6ep ≈ 8-12h）
 - GPU：26.6G→30.6G/32G 100%（14 训练进程）
 - 真态：ledger 2641/2582；mega lora s29 ep2 / 650M lora s29 ep1 心跳正常；RNA-FM frozen s43 0.3681 落地（MICRO_F1 0.9997 揭示 macro-F1 主口径下正类稀疏的严格性）
+
+## 2026-10-24（1024：HydraRNA 权重核验闭环 + spliceai 缺口三车道再派 + 双开残余清剿）
+
+- **HydraRNA 16 架构第 16 席闭环**（消除待用户项）：orico TCC 仍被闸，但集群 /root/hf_home/hydrarna_extracted/ 3 权重 md5 与备份总账逐一一致（model 2a805ae7 / V2 63664eb9 / SS c168ac98——前 session 从损坏归档.zip 流式解出）；ledger 18 格 frozen 观察臂 3 种子全落（ncRNA random 0.63-0.73 / family 0.06-0.19 崩溃带；m6A 0.90-0.95 双切分稳定；SSP 0.18-0.22）——**16/16 架构全部有权重有数据，无需 orico 盘**
+- **GPU 占满再执行**：夜间车道跑完后 GPU 掉到 4.9G（违反铁律）→ 12:25 派发 q_splfroz2（mega/650M frozen 12 格）+ q_splfroz3（Sc300M frozen 6 + NB lora 6）+ q_splfill4（micro lora 4 + ERNIE full 4 + Sc300M lora 6）；GPU 回到 14.8G 99%（5 训练对——frozen 车道显存轻，数量补）
+- **双开残余清剿**：q_splfroz3/q_splfill4 各又出现 monitor respawn 双实例（spawn 锁 5min 窗口短于大模型加载时间——bash 已起但 pgrep 捕捉到前锁已释放）→ kill 冗余侧；受影响格 claim 幂等自动重认领
+- **B27 教训第二版**：spawn 锁窗口需 ≥ lane 加载时间（大模型 load ~3-5min > 5min 锁边界的边缘案例）；根治版方案 = respawn 后二次 pgrep 校验（下轮 v2.2）
+- 数据落地（凌晨批）：ERNIE lora family 3 种子齐（0.590/0.597/0.596 稳定带）；RNAFM lora random 0.504/0.541；NB frozen random 0.34/0.34；mega lora s17 random 0.5902 落
+- 真态：ledger 2653 行 done 2595；spliceai 47/126 done；GPU 10.5-14.8G 99%（frozen 车道轻载轮转）
