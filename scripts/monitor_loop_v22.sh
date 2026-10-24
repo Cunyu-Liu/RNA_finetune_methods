@@ -124,6 +124,12 @@ while true; do
 
       SKIP_REASON=
       case "$L" in
+        q_aido_exclusive)
+          if "$PY" scripts/exclusive_aido.py --verify-complete \
+              >/dev/null 2>&1; then
+            SKIP_REASON="AIDO MRL s43 double-proven and audit_1016=0"
+          fi
+          ;;
         q_e6_mlm15fix)
           if [ "$E6_PHASE_RC" -ne 0 ]; then
             SKIP_REASON="E6 phase check failed rc=$E6_PHASE_RC"

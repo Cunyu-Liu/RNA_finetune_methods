@@ -823,7 +823,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [~] official canonical 30 格 `_mlm15fix` 重跑中，micro v1 已 6/6 双证收口并自动推进到 ERNIE/RNA-FM；旧 mega LoRA@1e-5 变体若保留另带独立标签。
 - [~] E6-v2 official micro m6A-start 6 格已追加隔离并以 `_taskm6a_s0_mlm15fix` 重跑；累计隔离 300 行、251 个旧 result 文件。
 - [ ] 修正版 official ΔNLL 逐行对账前，冻结旧 official 5–9×等表述；controlled/NB 结果分协议呈现。
-- [ ] AIDO MRL s43 使用 `finetune_mrl` + 3 epochs + bs1 + 12h 的唯一 owner；q5090 错 runner 已修，audit_1016 必须回源核验而非只看状态。
+- [~] AIDO MRL s43 已由 `exclusive_aido` 唯一 owner 接管，协议为 `finetune_mrl` + 3 epochs + bs1 + 12h；当前 child 自然排空后执行，完成须 PEARSON_R 双证 + `audit_1016=0`。
 
 ## E. 监控、收敛与交付
 

@@ -40,6 +40,26 @@ run_cell() {
     echo "[mlm15fix] CONFLICT result exists without valid double proof: $model $strat s$seed" >> $LOG
     return 1
   fi
+  local exclusive_last=0 exclusive_now
+  while [ -e "${EXCLUSIVE_AIDO:-/root/rnaft/EXCLUSIVE_AIDO}" ]; do
+    exclusive_now=$(date +%s)
+    if [ "$exclusive_last" -eq 0 ] || [ $((exclusive_now-exclusive_last)) -ge "${EXCLUSIVE_WAIT_LOG_S:-900}" ]; then
+      echo "[mlm15fix] WAIT EXCLUSIVE_AIDO $model $strat s$seed $(date -u +%FT%TZ)" >> "$LOG"
+      exclusive_last=$exclusive_now
+    fi
+    sleep "${EXCLUSIVE_POLL_S:-15}"
+  done
+  if [ "$exclusive_last" -ne 0 ]; then
+    if proof "$resdir" "$model" "$strat" "$seed"; then
+      echo "[mlm15fix] skip(done-after-wait) $model $strat s$seed" >> "$LOG"
+      ok=$((ok+1))
+      return 0
+    fi
+    if [ -e "$resdir/result.json" ]; then
+      echo "[mlm15fix] CONFLICT after wait: $model $strat s$seed" >> "$LOG"
+      return 1
+    fi
+  fi
   echo "[mlm15fix] RUN $model $strat s$seed lr$lr bs$bs $(date +%H:%M)" >> $LOG
   $PY -m rnafteval.e6_forget --model "$model" --strategy "$strat" \
     --seed "$seed" --lr "$lr" --device "$DEV" --epochs 10 \

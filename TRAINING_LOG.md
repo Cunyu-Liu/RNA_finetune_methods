@@ -181,3 +181,10 @@
 - **自动化**：新增 e6_phase（逐格真实 proof、锁内原子写、缺格不推进）；monitor 每周期检查阶段，全部30格才写 COMPLETE；E6-v2 6格和 corrected342格均加只读 verify-complete，完成 lane 不再被空跑复活。Python 41 tests + monitor lifecycle/whitelist/verified-complete 故障注入通过。
 - **旧进程清剿**：10-23 遗留 `bash -s` 父进程再次拉起 q_splmore/q_master，已按父进程证据停止，未动 corrected/CRISPR/E6；当前只剩 v2.2 白名单体系。
 - **当前判读**：E6-v1 进入 ERNIE/RNA-FM 阶段，E6-v2 和 corrected 在飞；尚无足够证据修改科学结论或 PPT 数值。
+
+## 2026-10-24 晚续（1024f：AIDO 协作式独占窗口上线）
+
+- **实现**：新增 exclusive_aido + q_aido_exclusive，使用 `/root/rnaft/EXCLUSIVE_AIDO` 原子标志和 `/tmp` 生命周期 flock；其它 corrected/E6/CRISPR parent 仅在新 cell 前限频等待，已运行 child 不杀。AIDO 用 finetune_mrl + epochs3 + bs1 + 12h，结果必须 PEARSON_R 双证且 audit_1016=0。
+- **主审修正**：等待中的 corrected parent 可保留 ~418MiB CUDA context，drain 判据改为“实际训练进程清空 + 总显存≤512MiB”，不再要求 compute PID 绝对为空，避免 AIDO 永久饿死。59 tests + monitor 故障注入通过。
+- **部署**：只停止 monitor 与 lane parent，当前 splice/CRISPR child 全部自然继续；新 monitor 启动后 AIDO 标志已建立，其它 parent 在边界等待，当前正在等待 GPU 排空。无重复 monitor，未强制中止任何训练 child。
+- **当前判读**：AIDO MRL s43 尚未出结果；窗口成功后自动清除标志并恢复其它队列，失败也清理等待状态，不能造成永久阻塞。
