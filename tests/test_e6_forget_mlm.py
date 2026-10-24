@@ -93,3 +93,16 @@ def test_special_tokens_and_padding_are_never_masked():
             assert positions
             assert 0 not in positions
             assert length - 1 not in positions
+
+
+def test_e6v2_official_nll_delegates_to_fixed_mask():
+    from rnafteval import e6_forget_task
+
+    assert e6_forget_task.fixed_mask_nll_eval is nll_eval
+    tok = ToyTokenizer()
+    backbone = IdentityLogitBackbone(tok)
+    value = e6_forget_task.nll_eval(
+        backbone, tok, ["AUGC" * 8], "cpu", bs=1,
+        shuffle_seed=201, eval_seed=201, mask_rate=0.15)
+    assert value > 10.0
+    assert masks_by_length(backbone)[34]

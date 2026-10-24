@@ -15,17 +15,14 @@ import re
 
 ROOT = "/root/rna-ft-eval"
 ART = os.path.join(ROOT, "artifacts", "e6")
-ORDER = ["RNA-Sc-1M", "RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M", "RNA-Sc-650M", "RiNALMo-micro"]
-LABEL = {"RNA-Sc-1M": "RNA-Sc-1M", "RNA-Sc-10M": "RNA-Sc-10M",
-         "RNA-Sc-30M": "RNA-Sc-30M", "RNA-Sc-100M": "RNA-Sc-100M",
-         "RNA-Sc-650M": "RNA-Sc-650M",
-         "RiNALMo-micro": "RiNALMo-micro (official)"}
-# controlled 系 NLL 为因果口径（非均匀基线 ~4.5），official 为 MLM 全上下文
-# 口径（基线 ~0.09）——绝对值跨系不可比，判读只看系内 ΔNLL 与倍率。
-CALENDAR = {"RNA-Sc-1M": "causal", "RNA-Sc-10M": "causal",
-            "RNA-Sc-30M": "causal", "RNA-Sc-100M": "causal",
-            "RNA-Sc-650M": "causal",
-            "RiNALMo-micro": "mlm-full-context"}
+CONTROLLED = ["RNA-Sc-1M", "RNA-Sc-10M", "RNA-Sc-30M", "RNA-Sc-100M", "RNA-Sc-650M"]
+OFFICIAL = ["RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M", "ERNIE-RNA", "RNA-FM"]
+ORDER = CONTROLLED + OFFICIAL
+LABEL = {m: m for m in CONTROLLED}
+LABEL.update({m: m + " (official, mlm15fix)" for m in OFFICIAL})
+# controlled 系为因果 NLL；official 只接收 fixed-mask 15% 的纠正结果。
+CALENDAR = {m: "causal" for m in CONTROLLED}
+CALENDAR.update({m: "fixed-mask-mlm15" for m in OFFICIAL})
 
 
 def collect() -> dict:
@@ -46,6 +43,11 @@ def collect() -> dict:
             continue
         if r.get("task") == "modification":
             continue
+        if m in OFFICIAL and not (
+                "_mlm15fix" in r.get("run_id", "")
+                and str(r.get("protocol", "")).startswith("E6-v1-fixed-mask-mlm")
+                and r.get("mask_rate") == 0.15):
+            continue
         data.setdefault((m, s), {})[seed] = r
     return data
 
@@ -62,9 +64,9 @@ def main() -> int:
     data = collect()
     lines = ["# E6 灾难性遗忘矩阵（C6 数据源，自动导出）", "",
              "协议 E6-v1：ncRNA-family 微调（tuned-LR, 10 ep）前后 S0 held-out",
-             "NLL（test+family_test, n=2000）+ 重排噪声带（~1e-8, 所有格显著）。",
-             "controlled 系 = 因果 NLL（基线 ~4.5）；official = MLM 全上下文",
-             "（基线 ~0.09）。ΔNLL = post − pre；正 = 遗忘，负 = 反向增益。",
+             "NLL（test+family_test, n=2000）。controlled = causal NLL + 重排噪声带；",
+             "official 仅纳入 `_mlm15fix` = 固定 15% masked-position MLM NLL + 独立掩码/顺序重评差异。",
+             "ΔNLL = post − pre；正 = 遗忘，负 = 反向增益；跨协议绝对 NLL 不可比。",
              "forget_ratio = mean ΔNLL(full) / mean ΔNLL(lora)（系内）。", "",
              "| model | pre NLL | Δ lora (s17/s29/s43) | Δ full (s17/s29/s43) | forget_ratio | n(l/f) | lora forgot | full forgot |",
              "|---|---|---|---|---|---|---|---|"]

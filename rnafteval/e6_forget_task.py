@@ -16,11 +16,14 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import math
 import os
 import random
 import time
 
 import torch
+
+from .e6_forget import nll_eval as fixed_mask_nll_eval
 
 ROOT = "/root/rna-ft-eval"
 S0 = ("/root/tokenizer-benchmark/data/derived/split/"
@@ -81,29 +84,24 @@ def _official_encoder(lm):
     return core
 
 
-def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None):
+def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None,
+             eval_seed=None, mask_rate=0.15):
+    if hasattr(tok, "mask_token_id"):
+        return fixed_mask_nll_eval(
+            backbone, tok, seqs, device, bs=bs, shuffle_seed=shuffle_seed,
+            eval_seed=eval_seed, mask_rate=mask_rate)
+
     order = list(range(len(seqs)))
     if shuffle_seed is not None:
         random.Random(shuffle_seed).shuffle(order)
     tot, cnt = 0.0, 0
     backbone.eval()
-    is_official = hasattr(tok, "mask_token_id")
     with torch.no_grad():
         for i in range(0, len(order), bs):
             chunk = [seqs[j] for j in order[i:i + bs]]
             enc = encode(tok, chunk, device)
             ids = enc["input_ids"]
             mask = enc["attention_mask"]
-            if is_official:
-                out = backbone(input_ids=ids, attention_mask=mask)
-                logits = out.logits
-                lp = torch.nn.functional.log_softmax(logits.float(), dim=-1)
-                sel = (mask == 1)
-                tgt = ids.reshape(-1)[sel.reshape(-1)]
-                v = lp.reshape(-1, lp.shape[-1])[sel.reshape(-1)]
-                tot += (-v.gather(1, tgt.unsqueeze(1)).sum()).item()
-                cnt += int(sel.sum().item())
-                continue
             core = backbone.m if hasattr(backbone, "m") else backbone
             if hasattr(core, "base_model") and hasattr(core.base_model, "model"):
                 core = core.base_model.model
@@ -134,6 +132,9 @@ def main():
     ap.add_argument("--epochs", type=int, default=None)
     ap.add_argument("--n-train-cap", type=int, default=20000)
     ap.add_argument("--n-holdout", type=int, default=2000)
+    ap.add_argument("--batch-size", type=int, default=32)
+    ap.add_argument("--mask-rate", type=float, default=0.15)
+    ap.add_argument("--out-suffix", default="")
     args = ap.parse_args()
     device = int(args.device)
     t0 = time.time()
@@ -153,25 +154,20 @@ def main():
     from .tasks import modification as mod_task
     from .tasks.dedup import dedup
 
-    tag = "" if args.model not in OFFICIAL else "_off"
+    task_tag = "ncrna" if args.task == "noncoding-rna-family" else "m6a"
     out_dir = os.path.join(
         ROOT, "artifacts", "e6",
-        "%s_%s_task-%s_s%d" % (args.model, args.strategy,
-                               "ncrna" if args.task == "noncoding-rna-family"
-                               else "m6a", args.seed))
+        "%s_%s_task-%s_s%d%s" % (args.model, args.strategy, task_tag,
+                                 args.seed, args.out_suffix))
     os.makedirs(out_dir, exist_ok=True)
+    extra = "_task%s_s0%s" % (task_tag, args.out_suffix)
     res = claim(args.model, "e6-forgetting", args.strategy, args.seed,
                 "s0-heldout", device=device, out_dir=out_dir,
-                note="E6-v2 task-origin forgetting",
-                extra="_task%s_s%d" % (
-                    "ncrna" if args.task == "noncoding-rna-family" else "m6a",
-                    0))
-    # Use a unique run_id via extra tag so claim won't collide with v1 rows:
-    # claim() builds rid from extra; we recompute our own below for ledger
-    # consistency.
+                note="E6-v2 task-origin forgetting", extra=extra)
+    # The task/suffix extra keeps the run_id distinct from E6-v1 rows.
     if res is None or res.get("claimed") is False:
         print("skip (ledger: %s)" % (res or {}).get("reason"), flush=True)
-        return 0
+        return 75
 
     hold = s0_heldout_seqs(args.n_holdout)
     print("S0 holdout: %d seqs" % len(hold), flush=True)
@@ -216,8 +212,10 @@ def main():
     if h_dim != d_model:
         d_model = h_dim
 
-    pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
-    pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707)
+    pre_a = nll_eval(backbone, tok, hold, device, shuffle_seed=201,
+                     eval_seed=201, mask_rate=args.mask_rate)
+    pre_b = nll_eval(backbone, tok, hold, device, shuffle_seed=707,
+                     eval_seed=707, mask_rate=args.mask_rate)
     noise_band = abs(pre_b - pre_a)
     print("pre NLL: %.4f / %.4f (noise %.2e)" % (pre_a, pre_b, noise_band),
           flush=True)
@@ -241,7 +239,7 @@ def main():
             backbone.train(tr_backbone)
             head.train()
             tot, nb = 0.0, 0
-            for b in batches(train, 32):
+            for b in batches(train, args.batch_size):
                 enc = enc_cls(tok, [r["seq"] for r in b], device)
                 y = torch.tensor([r["label_id"] for r in b], device=device)
                 if tr_backbone:
@@ -276,7 +274,7 @@ def main():
             backbone.train(tr_backbone)
             head.train()
             tot, nb = 0.0, 0
-            for b in batches(train, 32):
+            for b in batches(train, args.batch_size):
                 enc, y = make_batch(b)
                 no_grad = not tr_backbone
                 with contextlib.nullcontext() if not no_grad \
@@ -301,20 +299,37 @@ def main():
         backbone = merged
         print("peft merged back for post-NLL", flush=True)
 
-    post = nll_eval(backbone, tok, hold, device, shuffle_seed=201)
+    post = nll_eval(backbone, tok, hold, device, shuffle_seed=201,
+                    eval_seed=201, mask_rate=args.mask_rate)
 
+    if is_official:
+        protocol = (
+            "E6-v2-fixed-mask-mlm: task-origin forgetting; pre/post S0 heldout "
+            "masked-position NLL (mask_rate=%g; pre_a/post eval seed 201, "
+            "pre_b eval seed 707); noise_band is an independent mask/order "
+            "reevaluation difference" % args.mask_rate)
+    else:
+        protocol = "E6-v2: task-origin forgetting (ncRNA vs m6A start)"
     result = {
         "run_id": res["row"]["run_id"], "model": args.model,
         "task": args.task, "strategy": args.strategy, "seed": args.seed,
-        "lr": args.lr, "epochs": args.epochs,
+        "lr": args.lr, "epochs": args.epochs, "mask_rate": args.mask_rate,
         "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
         "noise_band": noise_band, "post_nll": post,
         "delta_nll": post - pre_a, "forgot": (post - pre_a) > max(noise_band, 1e-6),
-        "wall_sec": round(time.time() - t0, 1),
-        "protocol": "E6-v2: task-origin forgetting (ncRNA vs m6A start)",
+        "wall_sec": round(time.time() - t0, 1), "protocol": protocol,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
-        json.dump(result, fh, indent=2)
+    for key in ("pre_nll_a", "pre_nll_b", "noise_band", "post_nll", "delta_nll"):
+        if not math.isfinite(result[key]):
+            raise FloatingPointError(
+                "non-finite E6-v2 metric: %s=%r" % (key, result[key]))
+    result_path = os.path.join(out_dir, "result.json")
+    tmp_path = result_path + ".tmp"
+    with open(tmp_path, "w") as fh:
+        json.dump(result, fh, indent=2, allow_nan=False)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp_path, result_path)
     update(res["row"]["run_id"], "done", **{k: v for k, v in result.items()
                                              if k != "run_id"})
     print(json.dumps(result, indent=2), flush=True)
