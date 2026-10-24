@@ -10,6 +10,15 @@ LOG=/root/rnaft/logs/q_crisprfill.log
 echo "=== q_crisprfill start $(date -u +%FT%TZ) ===" >> $LOG
 run_cell() {
   desc=$1; shift
+  local exclusive_last=0 exclusive_now
+  while [ -e "${EXCLUSIVE_AIDO:-/root/rnaft/EXCLUSIVE_AIDO}" ]; do
+    exclusive_now=$(date +%s)
+    if [ "$exclusive_last" -eq 0 ] || [ $((exclusive_now-exclusive_last)) -ge "${EXCLUSIVE_WAIT_LOG_S:-900}" ]; then
+      echo "[crisprfill] WAIT EXCLUSIVE_AIDO $desc $(date -u +%FT%TZ)" >> "$LOG"
+      exclusive_last=$exclusive_now
+    fi
+    sleep "${EXCLUSIVE_POLL_S:-15}"
+  done
   echo "=== $(date -u +%FT%TZ) $desc ===" >> $LOG
   timeout 14400 "$@" >> $LOG 2>&1
   echo "RC=$? $(date -u +%FT%TZ)" >> $LOG

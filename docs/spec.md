@@ -486,3 +486,5 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 **⑧ E6-v2 补充隔离与首批 corrected 证据**：后续复核发现 `e6_forget_task` 复制同一未掩码实现，official micro m6A-start 6 行及 6 个 artifacts 已追加隔离，累计 300 行、251 个 result 文件。E6-v2 corrected 6 格已启动。E6-v1 micro 首批 3 格通过 ledger+result+protocol 三证；pre NLL=1.3968、独立 mask/order noise=0.0037，旧口径不得比较。导出器只接收 controlled 或对应 `_mlm15fix` 协议，防止旧值回流。
 
 **⑨ E6 阶段自推进**：E6-v1 micro 已 6/6 双证收口，模型清单自动推进到 ERNIE-RNA/RNA-FM。`e6_phase` 逐格验证并原子更新；E6-v2 6 格与 corrected 342 格均有只读 verify-complete，未完成不得标 DONE，完成后禁止 monitor 空跑复活。遗留 `bash -s` 旧父进程及其 q_splmore/q_master 已清剿。
+
+**⑩ AIDO 协作式独占窗口**：`exclusive_aido` 以原子标志协调 corrected/E6/CRISPR 在新 cell 前等待，当前 child 自然结束后执行 AIDO MRL s43，finally 清标志并恢复队列。排空判据允许等待 parent 的小型 CUDA context，但要求实际训练进程清空且总显存≤512MiB。完成必须 `finetune_mrl` 的 PEARSON_R 双证 + `audit_1016=0`；未达前仍为在途，不得写完成。

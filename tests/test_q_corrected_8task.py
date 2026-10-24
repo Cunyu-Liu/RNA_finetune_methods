@@ -212,6 +212,50 @@ def test_double_proof_skip_is_reentrant_and_never_launches(runtime, monkeypatch)
     assert first["rc"] is None and not calls
 
 
+def test_new_cell_waits_at_exclusive_boundary_with_rate_limited_log(
+        runtime, tmp_path, monkeypatch):
+    cell = make_cell()
+    flag = tmp_path / "EXCLUSIVE_AIDO"
+    flag.write_text("active")
+    monkeypatch.setattr(q, "EXCLUSIVE_AIDO", flag)
+    sleeps = []
+
+    def fake_sleep(seconds):
+        sleeps.append(seconds)
+        if len(sleeps) == 2:
+            flag.unlink()
+
+    def fake_run(*args, **kwargs):
+        assert not flag.exists()
+        return SimpleNamespace(returncode=9)
+
+    monkeypatch.setattr(q.time, "sleep", fake_sleep)
+    monkeypatch.setattr(q.subprocess, "run", fake_run)
+    outcome = q.run_cell(cell)
+    assert outcome["status"] == "failed"
+    assert sleeps == [q.EXCLUSIVE_POLL_S, q.EXCLUSIVE_POLL_S]
+    text = Path(outcome["log_path"]).read_text()
+    assert text.count("WAIT EXCLUSIVE_AIDO") == 1
+
+
+def test_exclusive_wait_rechecks_proof_from_detached_old_child(
+        runtime, tmp_path, monkeypatch):
+    cell = make_cell()
+    flag = tmp_path / "EXCLUSIVE_AIDO"
+    flag.write_text("active")
+    monkeypatch.setattr(q, "EXCLUSIVE_AIDO", flag)
+
+    def old_child_finished(_seconds):
+        make_double_proof(runtime, cell)
+        flag.unlink()
+
+    monkeypatch.setattr(q.time, "sleep", old_child_finished)
+    monkeypatch.setattr(q.subprocess, "run",
+                        lambda *args, **kwargs: pytest.fail("must not duplicate child"))
+    outcome = q.run_cell(cell)
+    assert outcome["status"] == "skipped" and outcome["ok"]
+
+
 def test_no_selected_cells_is_an_error(runtime):
     with pytest.raises(SystemExit) as exc_info:
         q.main(["--models", "RiNALMo-micro", "--tasks", "degradation"])

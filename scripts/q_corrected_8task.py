@@ -33,6 +33,9 @@ ARTIFACTS_ROOT = Path(finetune_spl.ROOT) / "artifacts"
 LOG_ROOT = Path("/root/rnaft/logs/q_corrected_8task")
 SPLICE_TIMEOUT_S = 24 * 60 * 60
 REGBASE_TIMEOUT_S = 12 * 60 * 60
+EXCLUSIVE_AIDO = Path("/root/rnaft/EXCLUSIVE_AIDO")
+EXCLUSIVE_POLL_S = 15
+EXCLUSIVE_WAIT_LOG_S = 900
 
 
 @dataclass(frozen=True)
@@ -178,6 +181,17 @@ def proof_state(cell):
     return "complete", ""
 
 
+def wait_for_exclusive(log):
+    next_log = 0.0
+    while EXCLUSIVE_AIDO.exists():
+        now = time.monotonic()
+        if now >= next_log:
+            print("[exclusive] WAIT EXCLUSIVE_AIDO; no new cell will launch",
+                  file=log, flush=True)
+            next_log = now + EXCLUSIVE_WAIT_LOG_S
+        time.sleep(EXCLUSIVE_POLL_S)
+
+
 def run_cell(cell, device=0, log_root=None):
     rid = rid_for(cell)
     path = result_path(cell)
@@ -206,6 +220,13 @@ def run_cell(cell, device=0, log_root=None):
         if state == "conflict":
             return finish("failed", False, None, 0.0, reason)
 
+        wait_for_exclusive(log)
+        # A detached old child may have finished this cell during the wait.
+        state, reason = proof_state(cell)
+        if state == "complete":
+            return finish("skipped", True, None, 0.0)
+        if state == "conflict":
+            return finish("failed", False, None, 0.0, reason)
         print("\n=== CELL %s ===\nCOMMAND %s" % (rid, shlex.join(cmd)),
               file=log, flush=True)
         start = time.monotonic()

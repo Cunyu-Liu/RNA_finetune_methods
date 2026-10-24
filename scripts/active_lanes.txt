@@ -1,5 +1,6 @@
 # One lane name per line. This file alone controls monitor v2.2 respawn.
 # Remove a completed lane; historical DONE text is not completion evidence.
+q_aido_exclusive
 q_crisprfill
 q_corrected_8task
 q_e6_mlm15fix
