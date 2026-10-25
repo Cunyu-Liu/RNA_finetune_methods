@@ -215,6 +215,24 @@ def main():
             tot += loss.item()
             nb += 1
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+
+        _el = tot / max(nb, 1)
+        # valplateau_v1: persist per-epoch train loss atomically
+        try:
+            import json as _json
+            _pl = os.path.join(out_dir, "plateau.json")
+            _cur = {}
+            if os.path.exists(_pl):
+                _cur = _json.load(open(_pl))
+            _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
+            _cur["protocol"] = "valplateau_v1"
+            _cur["updated_epoch"] = ep
+            _tmp = _pl + ".tmp"
+            with open(_tmp, "w") as fh:
+                _json.dump(_cur, fh, indent=2)
+            os.replace(_tmp, _pl)
+        except Exception as _e:
+            print("plateau-persist skipped: %s" % _e, flush=True)
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
