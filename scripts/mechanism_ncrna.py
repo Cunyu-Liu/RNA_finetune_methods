@@ -506,6 +506,8 @@ def aligned_tsne(states, output_path):
     split = next(iter(split_values), "unknown")
     seed = next(iter(seed_values), -1)
     output_path = Path(output_path)
+    if output_path.suffix != ".npz":
+        output_path = output_path.with_suffix(".npz")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez(output_path, tsne=coordinates, cls=cls, head_embedding=head_embedding,
              labels=np.tile(labels, len(states)),

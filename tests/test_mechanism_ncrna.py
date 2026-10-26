@@ -163,6 +163,25 @@ def test_small_joint_tsne_uses_n_minus_one_perplexity(tmp_path, monkeypatch):
     assert captured == {"n_components": 2, "random_state": 17, "perplexity": 5}
 
 
+def test_aligned_path_has_real_npz_suffix(tmp_path, monkeypatch):
+    class FakeTSNE:
+        def __init__(self, **kwargs):
+            pass
+
+        def fit_transform(self, values):
+            return np.zeros((len(values), 2), dtype=np.float32)
+
+    import sklearn.manifold
+    import sklearn.metrics
+    monkeypatch.setattr(sklearn.manifold, "TSNE", FakeTSNE)
+    monkeypatch.setattr(sklearn.metrics, "silhouette_score", lambda x, y: 0.0)
+    states = fake_tsne_states()
+    output = tmp_path / "aligned_without_suffix"
+    summary = mech.aligned_tsne(states, output)
+    assert summary["path"].endswith(".npz")
+    assert Path(summary["path"]).is_file()
+
+
 def test_single_state_does_not_make_forced_three_way_tsne(tmp_path):
     with pytest.raises(ValueError, match="requires pre, lora and full"):
         mech.aligned_tsne(fake_tsne_states()[:1], tmp_path / "not-made.npz")
