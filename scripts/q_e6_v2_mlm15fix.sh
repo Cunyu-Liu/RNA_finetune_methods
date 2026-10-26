@@ -11,8 +11,8 @@ cd "$REPO" || exit 1
 LOG=${LOG:-$R/logs/q_e6_v2_mlm15fix.log}
 mkdir -p "$(dirname "$LOG")" || exit 1
 DEV=${DEV:-0}
-TIMEOUT_S=${E6_V2_TIMEOUT_S:-21600}
-SUFFIX=_mlm15fix_seedfix_seqmlfix_bestval_v1
+ARTIFACTS=${RNAFT_ARTIFACT_ROOT:-$R/artifacts}
+SUFFIX=_mlm15fix_seedfix_seqmlfix
 EXTRA=_taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1
 
 proof() {
@@ -26,7 +26,7 @@ proof() {
 ok=0
 run_cell() {
   local model=$1 strat=$2 seed=$3 lr=$4
-  local resdir=$R/artifacts/e6/${model}_${strat}_task-m6a_s${seed}${SUFFIX}
+  local resdir=$ARTIFACTS/e6/${model}_${strat}_task-m6a_s${seed}${SUFFIX}_bestval_v1
   if proof "$resdir" "$model" "$strat" "$seed"; then
     echo "[e6v2-mlm15fix] skip(done) $model $strat s$seed" >> "$LOG"
     ok=$((ok+1))
@@ -57,7 +57,7 @@ run_cell() {
     fi
   fi
   echo "[e6v2-mlm15fix] RUN $model $strat s$seed lr$lr bs32 $(date +%H:%M)" >> "$LOG"
-  timeout "$TIMEOUT_S" "$PY" -m rnafteval.e6_forget_task \
+  "$PY" -m rnafteval.e6_forget_task \
     --model "$model" --task modification --strategy "$strat" \
     --seed "$seed" --lr "$lr" --device "$DEV" \
     --converge --convergence-mode bestval \

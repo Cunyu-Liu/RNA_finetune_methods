@@ -16,7 +16,7 @@ LOG=$RNAFT/logs/monitor_loop.log
 STATE_DIR=$RNAFT/monitor_v22
 MONITOR_LOCK=$LOCK_DIR/monitor.lock
 E6_MODEL_FILE=${E6_MODEL_FILE:-$RNAFT/e6_mlm15_models.active}
-E6_ARTIFACTS=${MONITOR_V22_E6_ARTIFACTS:-/root/rna-ft-eval/artifacts/e6}
+E6_ARTIFACTS=${MONITOR_V22_E6_ARTIFACTS:-${RNAFT_ARTIFACT_ROOT:-/root/rna-ft-eval/artifacts}/e6}
 
 export PYTHONPATH=/root/rnaft/pypath:/home/cunyuliu/rna-ft-eval:/home/cunyuliu/rna-sc
 export HF_HOME=/root/hf_home
@@ -63,9 +63,9 @@ e6_v2_complete() {
   for seed in 17 29 43; do
     for strategy in lora full; do
       "$PY" scripts/e6_mlm15_proof.py \
-        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix" \
+        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix_seqmlfix_bestval_v1" \
         RiNALMo-micro "$strategy" "$seed" \
-        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix \
+        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1 \
         --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
         >/dev/null 2>&1 || return 1
     done

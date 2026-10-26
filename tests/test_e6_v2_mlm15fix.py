@@ -208,7 +208,7 @@ def test_v2_queue_runs_exactly_six_cells_with_double_proof(tmp_path):
         assert option("--convergence-mode") == "bestval"
         assert option("--batch-size") == "32"
         assert option("--mask-rate") == "0.15"
-        assert "_seqmlfix_bestval_v1" in option("--out-suffix")
+        assert option("--out-suffix") == "_mlm15fix_seedfix_seqmlfix"
     assert observed == {
         ("RiNALMo-micro", strategy, str(seed))
         for strategy in ("lora", "full") for seed in (17, 29, 43)
