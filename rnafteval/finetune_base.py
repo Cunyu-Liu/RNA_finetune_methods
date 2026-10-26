@@ -191,14 +191,11 @@ def main() -> int:
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
+        from .base_alignment import align_base_labels
         enc = encode_seqs(tok, [r["seq"] for r in b], device, 128)
-        L = enc["input_ids"].shape[1]
-        y = torch.zeros(len(b), L, device=device)
-        for i, r in enumerate(b):
-            labs = r["labels"][:L]
-            y[i, :len(labs)] = torch.tensor(labs, dtype=torch.float32,
-                                            device=device)
-        return enc, y
+        y, supervision = align_base_labels(
+            tok, enc, b, 128, dtype=torch.float32)
+        return enc, y, supervision
 
     for ep in vp.training_epochs(args):
         import random as _rd
@@ -209,7 +206,7 @@ def main() -> int:
         head.train()
         tot, nb = 0.0, 0
         for b in batches(_rows, args.batch_size):
-            enc, y = make_batch(b)
+            enc, y, supervision = make_batch(b)
             no_grad = args.strategy in ("frozen", "head-only")
             import contextlib
             with contextlib.nullcontext() if not no_grad \
@@ -217,7 +214,7 @@ def main() -> int:
                 h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
             logits = head(h, pad).squeeze(-1)
-            mask = enc["attention_mask"].float()
+            mask = supervision.float()
             loss = torch.nn.functional.binary_cross_entropy_with_logits(
                 logits, y, reduction="none") * mask
             loss = loss.sum() / mask.sum().clamp(min=1)
@@ -235,11 +232,11 @@ def main() -> int:
             val_tot, val_nb = 0.0, 0
             with torch.no_grad():
                 for b in batches(val, args.batch_size * 2):
-                    enc, y = make_batch(b)
+                    enc, y, supervision = make_batch(b)
                     h = backbone(**enc).last_hidden_state
                     pad = enc["attention_mask"] == 0
                     logits = head(h, pad).squeeze(-1)
-                    mask = enc["attention_mask"].float()
+                    mask = supervision.float()
                     loss_map = torch.nn.functional.binary_cross_entropy_with_logits(
                         logits, y, reduction="none") * mask
                     val_loss = loss_map.sum() / mask.sum().clamp(min=1)
@@ -260,11 +257,11 @@ def main() -> int:
     ys, ps = [], []
     with torch.no_grad():
         for b in batches(test, args.batch_size * 2):
-            enc, y = make_batch(b)
+            enc, y, supervision = make_batch(b)
             h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
             logits = head(h, pad).squeeze(-1)
-            m = enc["attention_mask"].bool()
+            m = supervision
             ys.append(y[m].cpu().numpy())
             ps.append(torch.sigmoid(logits[m]).cpu().numpy())
     from sklearn.metrics import roc_auc_score
