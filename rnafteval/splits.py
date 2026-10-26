@@ -142,15 +142,18 @@ def prepare_convergence_splits(train: list[dict], val: list[dict] | None,
                                sample_seed: int = 17, holdout_seed: int = 17,
                                family: bool = False,
                                validation_source: str = "",
-                               evidence_path: str = ""):
+                               evidence_path: str = "",
+                               protocol: str = "valplateau_v2"):
     """Build leak-free v2 splits without changing the legacy data path.
 
     Existing test rows have deduplication priority, then an existing validation
     split, then train. If validation is absent it is held out from train only.
     """
+    if protocol not in ("valplateau_v2", "bestval_v1"):
+        raise ValueError("unsupported convergence evidence protocol: " + protocol)
     input_rows = {"train": len(train), "val": len(val or []), "test": len(test)}
     evidence = {
-        "protocol": "valplateau_v2",
+        "protocol": protocol,
         "validation_source": validation_source or (
             "train_holdout" if val is None else "provided_validation"),
         "input_rows": input_rows,

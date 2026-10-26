@@ -522,3 +522,6 @@ def test_modification_is_sequence_multilabel_not_per_base():
     assert "BEACON sequence-level multi-label; m6A index 7" in source
     from rnafteval.task_registry import TASKS
     assert TASKS["modification"].granularity == "per-seq"
+    source_one = open(finetune_one.__file__).read()
+    assert 'protocol=vp.protocol_tag(args).lstrip("_")' in source_one
+    assert 'protocol=vp.protocol_tag(args).lstrip("_")' in source

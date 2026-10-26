@@ -154,7 +154,8 @@ def main() -> int:
             family=args.split == "family",
             validation_source="family_validation" if args.split == "family"
             else "random_split_validation",
-            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+            evidence_path=os.path.join(out_dir, "split_evidence.json"),
+            protocol=vp.protocol_tag(args).lstrip("_"))
         if args.split == "family" and args.n_train > 0:
             data_evidence["train_sampling"]["candidate_pool"] = \
                 "precomputed_cluster_subset"

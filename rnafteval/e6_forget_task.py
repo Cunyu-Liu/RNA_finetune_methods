@@ -214,7 +214,8 @@ def main():
             parts["train"], parts["val"], parts["test"],
             n_train=args.n_train_cap or 0, sample_seed=args.seed,
             validation_source="official_validation",
-            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+            evidence_path=os.path.join(out_dir, "split_evidence.json"),
+            protocol=protocol_tag.lstrip("_"))
     else:
         train = parts["train"][:args.n_train_cap] if args.n_train_cap \
             else parts["train"]
