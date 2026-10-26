@@ -12,6 +12,8 @@ host id) also appears in the finetune set.
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 import random
 from collections import defaultdict
 
@@ -133,3 +135,102 @@ def assert_no_overlap(train: list[dict], eval_: list[dict],
     for r in eval_:
         k = key(r)
         assert k not in tr_keys, "OVERLAP DETECTED: %s in both train and eval" % k[:12]
+
+
+def prepare_convergence_splits(train: list[dict], val: list[dict] | None,
+                               test: list[dict], *, n_train: int = 0,
+                               sample_seed: int = 17, holdout_seed: int = 17,
+                               family: bool = False,
+                               validation_source: str = "",
+                               evidence_path: str = ""):
+    """Build leak-free v2 splits without changing the legacy data path.
+
+    Existing test rows have deduplication priority, then an existing validation
+    split, then train. If validation is absent it is held out from train only.
+    """
+    input_rows = {"train": len(train), "val": len(val or []), "test": len(test)}
+    evidence = {
+        "protocol": "valplateau_v2",
+        "validation_source": validation_source or (
+            "train_holdout" if val is None else "provided_validation"),
+        "input_rows": input_rows,
+        "dedup_priority": ["test", "val", "train"],
+        "removed_within_split": {"train": 0, "val": 0, "test": 0},
+        "removed_cross_split": {"train": 0, "val": 0, "test": 0},
+        "cross_split_examples": [],
+        "family": family,
+        "holdout_seed": holdout_seed,
+    }
+
+    def save(status="CHECKING", error=""):
+        evidence["status"] = status
+        if error:
+            evidence["error"] = error
+        if evidence_path:
+            tmp = evidence_path + ".tmp"
+            with open(tmp, "w") as fh:
+                json.dump(evidence, fh, indent=2)
+            os.replace(tmp, evidence_path)
+
+    if family:
+        missing = [side for side, rows in (("train", train), ("val", val or []),
+                                          ("test", test))
+                   if any(r.get("cluster") in (None, "") for r in rows)]
+        if missing:
+            message = "family validation requires cluster on every row: %s" % missing
+            save("INVALID", message)
+            raise ValueError(message)
+
+    # Keep the test control fixed wherever possible: duplicates are removed from
+    # validation/train rather than moved out of test into another side.
+    sides = {"train": train, "test": test}
+    if val is not None:
+        sides["val"] = val
+    seen = {}
+    for side in ("test", "val", "train"):
+        if side not in sides:
+            continue
+        local = set()
+        kept = []
+        for row in sides[side]:
+            key = seq_hash(str(row.get("seq", row.get("sequence", ""))))
+            if key in local:
+                evidence["removed_within_split"][side] += 1
+                continue
+            local.add(key)
+            if key in seen:
+                evidence["removed_cross_split"][side] += 1
+                if len(evidence["cross_split_examples"]) < 20:
+                    evidence["cross_split_examples"].append({
+                        "seq_hash": key, "kept": seen[key], "removed": side})
+                continue
+            seen[key] = side
+            kept.append(row)
+        sides[side] = kept
+    train, test = sides["train"], sides["test"]
+    val = sides.get("val")
+    if val is None:
+        train, val = split_train_validation(train, seed=holdout_seed)
+    before_sample = len(train)
+    train = seeded_sample(train, n_train, sample_seed)
+    evidence["train_sampling"] = {
+        "method": "seeded_sample", "n_train": n_train,
+        "seed": sample_seed, "rows_before": before_sample,
+        "rows_after": len(train),
+    }
+    evidence["output_rows"] = {
+        "train": len(train), "val": len(val), "test": len(test)}
+    save()
+    try:
+        if not train or not val or not test:
+            raise ValueError("valplateau_v2 requires non-empty train/val/test")
+        assert_no_overlap(train, val + test, unit="seq")
+        assert_no_overlap(val, test, unit="seq")
+        if family:
+            assert_cluster_no_overlap(train, val + test)
+            assert_cluster_no_overlap(val, test)
+    except Exception as exc:
+        save("INVALID", str(exc))
+        raise
+    save("OK")
+    return train, val, test, evidence

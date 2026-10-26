@@ -20,8 +20,10 @@ import time
 
 import torch
 
-from . import ledger
-from .splits import assert_no_overlap, family_split, random_split
+from . import ledger, valplateau as vp
+from .splits import (
+    assert_no_overlap, family_split, prepare_convergence_splits, random_split,
+    seeded_sample)
 from .strategies import apply_strategy, make_head
 from .tasks import ncrna
 
@@ -38,6 +40,16 @@ def encode_seqs(tok, seqs: list[str], device, max_len: int = 512):
 def batches(rows, bs):
     for i in range(0, len(rows), bs):
         yield rows[i:i + bs]
+
+
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
+    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    return (("_smoke" if args.smoke else "") +
+            ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag +
+            protocol_tag)
 
 
 def main() -> int:
@@ -61,6 +73,7 @@ def main() -> int:
                     help="E3 小数据档: 10/100/1000 (簇级子集); 0=全量")
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     # --- GPU discipline: no CUDA => abort with evidence ---
@@ -75,12 +88,8 @@ def main() -> int:
 
     torch.manual_seed(args.seed)
 
-    # run_id 编码 LR 维度（A8 网格协议）：非默认 3e-4 的 tuning runs 用
-    # _lr 后缀区分，避免 ledger claim 误 skip 不同 LR 变体
-    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
-    e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
-    extra = ("_smoke" if args.smoke else "") + ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag
+    # Keep all legacy RID dimensions; v2 gets an independent protocol suffix.
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -134,6 +143,21 @@ def main() -> int:
             print("dedup: %d -> %d (BEACON cross-split exact dups removed)"
                   % (n_before, len(recs)), flush=True)
         parts = random_split(recs, seed=17)
+    data_evidence = None
+    if args.converge:
+        e3_family = args.split == "family" and args.n_train > 0
+        (parts["train"], parts["val"], parts["test"],
+         data_evidence) = prepare_convergence_splits(
+            parts["train"], parts["val"], parts["test"],
+            n_train=0 if e3_family else args.n_train, sample_seed=args.seed,
+            family=args.split == "family",
+            validation_source="family_validation" if args.split == "family"
+            else "random_split_validation",
+            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+        if e3_family:
+            data_evidence["train_sampling"] = {
+                "method": "precomputed_cluster_subset", "n_train": args.n_train,
+                "seed": args.seed, "rows_after": len(parts["train"])}
     if args.smoke:
         # 全量数据取 labels（防止截断后 label 集不全导致 KeyError），
         # parts 各截前 60 条
@@ -172,9 +196,13 @@ def main() -> int:
             [p for p in backbone.m.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     # --- train ---
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         import random as _rd
         _epshuf = _rd.Random(args.seed * 1000 + ep)
         _rows = list(parts["train"])
@@ -202,7 +230,29 @@ def main() -> int:
             opt.step()
             tot += loss.item()
             nb += 1
-        print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+        epoch_loss = tot / max(nb, 1)
+        print("epoch %d loss %.4f" % (ep, epoch_loss), flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(parts["val"], args.batch_size * 2):
+                    enc = encode_seqs(tok, [r["seq"] for r in b], device,
+                                      args.max_len)
+                    y = torch.tensor([r["label_id"] for r in b], device=device)
+                    h = backbone(**enc).last_hidden_state
+                    pad = enc["attention_mask"] == 0
+                    val_loss = lossf(head(h, pad), y)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            val_epoch_loss = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, val_epoch_loss), flush=True)
+            if tracker.record(ep, epoch_loss, val_epoch_loss):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
@@ -237,10 +287,18 @@ def main() -> int:
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(n_val=len(parts["val"]), runtime=runtime,
+                      data_evidence=data_evidence,
+                      acceptance_eligible=not args.smoke)
+    result_path = os.path.join(out_dir, "result.json")
+    with open(result_path + ".tmp", "w") as fh:
         json.dump(result, fh, indent=2)
-    ledger.update(rid, "done", **{k: v for k, v in result.items()
-                                  if k != "run_id"})
+    os.replace(result_path + ".tmp", result_path)
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else \
+        {k: v for k, v in result.items() if k != "run_id"}
+    ledger.update(rid, "done", **ledger_fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0
 

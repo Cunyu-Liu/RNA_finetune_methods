@@ -1,4 +1,5 @@
 import os
+import json
 import runpy
 import sys
 from types import SimpleNamespace
@@ -7,11 +8,13 @@ import numpy as np
 import pytest
 import torch
 
-from rnafteval import finetune_clf, finetune_regbase, finetune_spl, ledger
+from rnafteval import (
+    finetune_base, finetune_clf, finetune_mrl, finetune_one,
+    finetune_regbase, finetune_spl, finetune_ssp, ledger, valplateau)
 from rnafteval.base_alignment import align_base_labels
 from rnafteval.splits import (
-    assert_cluster_no_overlap, assert_no_overlap, seeded_sample,
-    split_train_validation)
+    assert_cluster_no_overlap, assert_no_overlap, prepare_convergence_splits,
+    seeded_sample, split_train_validation)
 
 
 class _MockTokenizer:
@@ -284,3 +287,130 @@ def test_claim_blocked_module_exit_uses_rc75_and_keyword_device(
     expected_rid = ledger.run_id(*call["args"],
                                  extra=call["kwargs"]["extra"])
     assert call["kwargs"]["out_dir"].endswith(expected_rid)
+
+
+@pytest.mark.parametrize("runner,defaults,legacy_extra", [
+    (finetune_one, dict(n_train=0), ""),
+    (finetune_base, dict(n_train=20000), ""),
+    (finetune_mrl, dict(n_train=20000), ""),
+    (finetune_ssp, dict(n_train=2000, n_test=400), ""),
+])
+def test_old_runners_converge_rid_isolated_and_legacy_unchanged(
+        runner, defaults, legacy_extra):
+    base = SimpleNamespace(lr=3e-4, rank=8, epochs=3, smoke=False,
+                           random_init=False, converge=False, **defaults)
+    assert runner._run_extra(base) == legacy_extra
+    legacy_rid = ledger.run_id("m", "t", "frozen", 17, "random", legacy_extra)
+    converged = SimpleNamespace(**vars(base))
+    converged.converge = True
+    converged.epochs = 1
+    extra = runner._run_extra(converged)
+    assert extra.endswith("_valplateau_v2")
+    assert ledger.run_id("m", "t", "frozen", 17, "random", extra) != legacy_rid
+    converged.smoke = True
+    smoke_extra = runner._run_extra(converged)
+    assert "_smoke" in smoke_extra and smoke_extra != extra
+
+
+def test_ssp_converge_rid_separates_data_budgets():
+    base = SimpleNamespace(lr=3e-4, rank=8, n_train=2000, n_test=400,
+                           smoke=False, converge=True)
+    small = SimpleNamespace(**vars(base))
+    small.n_train = 100
+    small_test = SimpleNamespace(**vars(base))
+    small_test.n_test = 100
+    assert finetune_ssp._run_extra(small).endswith(
+        "_e3100_valplateau_v2")
+    assert finetune_ssp._run_extra(small_test).endswith(
+        "_nt100_valplateau_v2")
+    assert len({finetune_ssp._run_extra(x) for x in (base, small, small_test)}) == 3
+
+
+def test_convergence_ledger_status_never_overwrites_completion():
+    result = {
+        "run_id": "rid", "protocol": "valplateau_v2", "status": "CONVERGED",
+        "epoch_val_losses": [1.0, 0.62, 0.61, 0.605, 0.602],
+        "stop_reason": valplateau.STOP_REASON, "n_val": 4,
+    }
+    fields = valplateau.result_ledger_fields(result)
+    assert "status" not in fields
+    assert fields["convergence_status"] == "CONVERGED"
+    assert fields["protocol"] == "valplateau_v2"
+    with pytest.raises(RuntimeError, match="refusing ledger done"):
+        valplateau.result_ledger_fields(dict(result, status="RUNNING"))
+    with pytest.raises(RuntimeError, match="refusing ledger done"):
+        valplateau.result_ledger_fields(dict(result, status="INVALID"))
+
+
+def test_official_validation_is_reused_and_never_replaced_by_test(tmp_path):
+    train = [{"seq": "A" * 8}, {"seq": "C" * 8}, {"seq": "G" * 8}]
+    official_val = [{"seq": "N" * 8}]
+    test = [{"seq": "T" * 8}, {"seq": "G" * 8}]
+    evidence_path = tmp_path / "split.json"
+    tr, va, te, evidence = prepare_convergence_splits(
+        train, official_val, test, validation_source="official_validation",
+        evidence_path=str(evidence_path))
+    assert va == official_val and va is not test
+    assert te == test
+    assert [r["seq"] for r in tr] == ["A" * 8, "C" * 8]
+    assert_no_overlap(tr, va + te)
+    assert_no_overlap(va, te)
+    saved = json.loads(evidence_path.read_text())
+    assert saved["validation_source"] == "official_validation"
+    assert saved["removed_cross_split"]["train"] == 1
+    assert saved["status"] == "OK"
+
+
+def test_convergence_train_sampling_uses_formal_seed_not_prefix():
+    rows = [{"seq": ("ACGU" * 5) + str(i)} for i in range(60)]
+    official_val = [{"seq": "N" * 12}]
+    test = [{"seq": "G" * 12}]
+
+    def draw(seed):
+        return prepare_convergence_splits(
+            rows, official_val, test, n_train=10, sample_seed=seed)
+
+    train17, val17, _, evidence = draw(17)
+    train17_again, _, _, _ = draw(17)
+    train29, val29, _, _ = draw(29)
+    assert train17 == train17_again and train17 != train29
+    assert train17 != rows[:10]
+    assert val17 == val29 == official_val
+    assert evidence["train_sampling"] == {
+        "method": "seeded_sample", "n_train": 10, "seed": 17,
+        "rows_before": 60, "rows_after": 10}
+
+
+def test_family_convergence_split_is_three_way_cluster_isolated(tmp_path):
+    train = [{"seq": ("ACGU" * 4) + str(i), "cluster": "tr-%d" % (i // 2)}
+             for i in range(20)]
+    official_val = [{"seq": "N" * 20, "cluster": "va"},
+                    {"seq": "C" * 20, "cluster": "vb"}]
+    test = [{"seq": "G" * 20, "cluster": "te"}]
+    evidence_path = tmp_path / "family.json"
+    tr, va, te, _ = prepare_convergence_splits(
+        train, official_val, test, family=True,
+        evidence_path=str(evidence_path))
+    assert_cluster_no_overlap(tr, va + te)
+    assert_cluster_no_overlap(va, te)
+    assert va == official_val and te == test
+
+    tr2, va2, te2, _ = prepare_convergence_splits(
+        train, None, test, family=True, validation_source="train_holdout")
+    assert not va2 or set(r["cluster"] for r in va2).isdisjoint(
+        r["cluster"] for r in tr2 + te2)
+    assert_cluster_no_overlap(tr2, va2 + te2)
+    assert_cluster_no_overlap(va2, te2)
+
+
+def test_family_cluster_overlap_fails_and_preserves_evidence(tmp_path):
+    train = [{"seq": "A" * 12, "cluster": "same"}]
+    val = [{"seq": "C" * 12, "cluster": "same"}]
+    test = [{"seq": "G" * 12, "cluster": "test"}]
+    path = tmp_path / "invalid.json"
+    with pytest.raises(AssertionError, match="FAMILY OVERLAP"):
+        prepare_convergence_splits(
+            train, val, test, family=True, evidence_path=str(path))
+    saved = json.loads(path.read_text())
+    assert saved["status"] == "INVALID"
+    assert "FAMILY OVERLAP" in saved["error"]

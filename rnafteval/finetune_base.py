@@ -18,7 +18,8 @@ import time
 import numpy as np
 import torch
 
-from . import ledger
+from . import ledger, valplateau as vp
+from .splits import prepare_convergence_splits
 from .tasks import modification as mod_task
 
 ROOT = "/root/rna-ft-eval"
@@ -33,6 +34,15 @@ def encode_seqs(tok, seqs, device, max_len=128):
 def batches(rows, bs):
     for i in range(0, len(rows), bs):
         yield rows[i:i + bs]
+
+
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
+    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    return (("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag +
+            protocol_tag)
 
 
 def main() -> int:
@@ -53,6 +63,7 @@ def main() -> int:
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -63,11 +74,7 @@ def main() -> int:
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
-    # run_id 编码 LR 维度（A8 协议，与 finetune_one 一致）
-    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
-    e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
-    extra = ("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -82,6 +89,7 @@ def main() -> int:
     t0 = time.time()
     torch.cuda.reset_peak_memory_stats(args.device)
 
+    val = None
     if args.split == "family":
         # cluster-pure split (make_family_split_mod): host-transcript proxy
         # via MMseqs2 80-80 on overlapping 101-nt windows
@@ -95,16 +103,14 @@ def main() -> int:
         by_side = {}
         for seq, lab, sd, cid in zip(t["seq"], t["labels"], t["split"],
                                      t["cluster_id"]):
-            if sd == "train":
-                by_side.setdefault("train", []).append(
-                    {"seq": seq, "labels": [int(x) for x in str(lab).split()],
-                     "subset": "family_%s" % sd, "cluster": cid})
-            elif sd == "test":
-                by_side.setdefault("test", []).append(
+            if sd in ("train", "val", "test"):
+                by_side.setdefault(sd, []).append(
                     {"seq": seq, "labels": [int(x) for x in str(lab).split()],
                      "subset": "family_%s" % sd, "cluster": cid})
         train, test = by_side["train"], by_side["test"]
-        if 0 < args.n_train < len(train) and args.n_train != 20000:
+        if args.converge:
+            val = by_side.get("val")
+        elif 0 < args.n_train < len(train) and args.n_train != 20000:
             # E3: 宿主簇级整簇采样（随机抽簇→整簇纳入，对齐 e3_subsampler）
             by_cl = {}
             for i, row in enumerate(train):
@@ -125,7 +131,9 @@ def main() -> int:
         sp = mod_task.load_official_split()
         train = sp["train"]
         test = sp["test"]
-        if 0 < args.n_train < len(train) and args.n_train != 20000:
+        if args.converge:
+            val = sp.get("validation")
+        elif 0 < args.n_train < len(train) and args.n_train != 20000:
             # E3: 用家族表 seq->cluster 映射做宿主簇级整簇采样
             import pyarrow.parquet as pq
             tp = pq.read_table(
@@ -149,7 +157,19 @@ def main() -> int:
         else:
             rng = random.Random(args.seed)
             train = rng.sample(train, min(args.n_train, len(train)))
+    data_evidence = None
+    if args.converge:
+        train, val, test, data_evidence = prepare_convergence_splits(
+            train, val, test, n_train=args.n_train, sample_seed=args.seed,
+            family=args.split == "family",
+            validation_source="official_validation" if args.split == "random"
+            else "family_validation",
+            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+        print("data: train %d val %d test %d" % (
+            len(train), len(val), len(test)), flush=True)
     if args.smoke:
+        if val is not None:
+            val = val[:320]
         train = train[:320]
         test = test[:320]
 
@@ -165,6 +185,10 @@ def main() -> int:
     train_params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, 128)
@@ -176,7 +200,7 @@ def main() -> int:
                                             device=device)
         return enc, y
 
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         import random as _rd
         _epshuf = _rd.Random(args.seed * 1000 + ep)
         _rows = list(train)
@@ -203,7 +227,32 @@ def main() -> int:
             opt.step()
             tot += loss.item()
             nb += 1
-        print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+        epoch_loss = tot / max(nb, 1)
+        print("epoch %d loss %.4f" % (ep, epoch_loss), flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(val, args.batch_size * 2):
+                    enc, y = make_batch(b)
+                    h = backbone(**enc).last_hidden_state
+                    pad = enc["attention_mask"] == 0
+                    logits = head(h, pad).squeeze(-1)
+                    mask = enc["attention_mask"].float()
+                    loss_map = torch.nn.functional.binary_cross_entropy_with_logits(
+                        logits, y, reduction="none") * mask
+                    val_loss = loss_map.sum() / mask.sum().clamp(min=1)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            val_epoch_loss = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, val_epoch_loss), flush=True)
+            if tracker.record(ep, epoch_loss, val_epoch_loss):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
+        ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval: AUC over non-pad positions ---
     backbone.eval()
@@ -235,10 +284,20 @@ def main() -> int:
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+    if args.converge:
+        if not np.isfinite(auc):
+            raise FloatingPointError("non-finite primary metric: AUC")
+        result.update(tracker.result_fields())
+        result.update(n_val=len(val), runtime=runtime,
+                      data_evidence=data_evidence,
+                      acceptance_eligible=not args.smoke)
+    result_path = os.path.join(out_dir, "result.json")
+    with open(result_path + ".tmp", "w") as fh:
         json.dump(result, fh, indent=2)
-    ledger.update(rid, "done", **{k: v for k, v in result.items()
-                                  if k != "run_id"})
+    os.replace(result_path + ".tmp", result_path)
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else \
+        {k: v for k, v in result.items() if k != "run_id"}
+    ledger.update(rid, "done", **ledger_fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0
 

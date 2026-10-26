@@ -139,6 +139,16 @@ class PlateauTracker:
         }
 
 
+def result_ledger_fields(result):
+    """Separate convergence from ledger completion; never mark RUNNING done."""
+    fields = {k: v for k, v in result.items() if k != "run_id"}
+    if result.get("protocol") == PROTOCOL:
+        if result.get("status") != "CONVERGED":
+            raise RuntimeError("validation has not converged; refusing ledger done")
+        fields["convergence_status"] = fields.pop("status")
+    return fields
+
+
 def runtime_evidence(tok, device):
     """Capture the actual tokenizer and CUDA execution context after loading."""
     dev = torch.device(device)

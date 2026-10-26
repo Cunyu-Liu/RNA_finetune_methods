@@ -27,7 +27,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from . import ledger
+from . import ledger, valplateau as vp
+from .splits import prepare_convergence_splits
 from .tasks import ssp as ssp_task
 
 ROOT = "/root/rna-ft-eval"
@@ -99,6 +100,17 @@ def pair_f1(all_pred: list[set], all_gold: list[set]) -> dict:
             "f1": round(f1, 4), "tp": tp, "fp": fp, "fn": fn}
 
 
+def _run_extra(args):
+    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
+    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
+    legacy = ("_smoke" if args.smoke else "") + lr_tag + rank_tag
+    if not getattr(args, "converge", False):
+        return legacy
+    n_tag = "" if args.n_train == 2000 else "_e3%d" % args.n_train
+    nt_tag = "" if args.n_test == 400 else "_nt%d" % args.n_test
+    return legacy + n_tag + nt_tag + "_valplateau_v2"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -119,6 +131,7 @@ def main() -> int:
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -129,10 +142,7 @@ def main() -> int:
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
-    # run_id 编码 LR 维度（A8 协议，与 finetune_one/base 一致）
-    lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
-    rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
-    extra = ("_smoke" if args.smoke else "") + lr_tag + rank_tag
+    extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
     out_dir = os.path.join(ROOT, "artifacts", rid)
@@ -168,6 +178,7 @@ def main() -> int:
         import pyarrow.parquet as pq
         tbl = pq.read_table(FAMILY_PARQUET).to_pydict()
         side_of = dict(zip(tbl["id"], tbl["split"]))
+        cluster_of = dict(zip(tbl["id"], tbl["cluster_id"]))
         union = []
         for split_name in ("TR0", "VL0", "TS0"):
             union += ssp_task.load_split(split_name, meta,
@@ -175,14 +186,30 @@ def main() -> int:
         # dedup by id (union may contain duplicates)
         seen = set()
         uniq = [r for r in union if not (r["id"] in seen or seen.add(r["id"]))]
-        train = [r for r in uniq if side_of.get(r["id"]) == "train"]
-        val = [r for r in uniq if side_of.get(r["id"]) == "val"]
-        test = [r for r in uniq if side_of.get(r["id"]) == "test"]
+        train = [dict(r, cluster=cluster_of[r["id"]]) for r in uniq
+                 if side_of.get(r["id"]) == "train"]
+        val = [dict(r, cluster=cluster_of[r["id"]]) for r in uniq
+               if side_of.get(r["id"]) == "val"]
+        test = [dict(r, cluster=cluster_of[r["id"]]) for r in uniq
+                if side_of.get(r["id"]) == "test"]
 
-    rng = random.Random(args.seed)
-    train = rng.sample(train, min(args.n_train, len(train)))
-    val = rng.sample(val, min(args.n_test, len(val)))
-    test = rng.sample(test, min(args.n_test, len(test)))
+    data_evidence = None
+    if args.converge:
+        train, val, test, data_evidence = prepare_convergence_splits(
+            train, val, test, n_train=args.n_train, sample_seed=args.seed,
+            family=args.split == "family",
+            validation_source="official_validation" if args.split == "random"
+            else "family_validation",
+            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+        rng = random.Random(args.seed)
+        test = rng.sample(test, min(args.n_test, len(test)))
+        print("data: train %d val %d test %d" % (
+            len(train), len(val), len(test)), flush=True)
+    else:
+        rng = random.Random(args.seed)
+        train = rng.sample(train, min(args.n_train, len(train)))
+        val = rng.sample(val, min(args.n_test, len(val)))
+        test = rng.sample(test, min(args.n_test, len(test)))
     if args.smoke:
         train, val, test = train[:24], val[:24], test[:24]
 
@@ -210,6 +237,10 @@ def main() -> int:
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
     pw_t = torch.tensor(pw, device=device)
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def run_batch(b, train_mode: bool):
         enc = encode_one(tok, [r["seq"] for r in b], device, args.max_len)
@@ -241,12 +272,15 @@ def main() -> int:
         loss = loss / len(b)
         return enc, S, tri_masks, loss
 
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         backbone.train(args.strategy in ("lora", "full"))
         head.train()
         tot, nb = 0.0, 0
         order = list(range(len(train)))
-        rng.shuffle(order)
+        if args.converge:
+            random.Random(args.seed * 1000 + ep).shuffle(order)
+        else:
+            rng.shuffle(order)
         for i in range(0, len(order), args.batch_size):
             b = [train[k] for k in order[i:i + args.batch_size]]
             enc, S, tm, loss = run_batch(b, True)
@@ -256,7 +290,25 @@ def main() -> int:
             opt.step()
             tot += float(loss.item())
             nb += 1
-        print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+        epoch_loss = tot / max(nb, 1)
+        print("epoch %d loss %.4f" % (ep, epoch_loss), flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batchify(val, args.batch_size * 2):
+                    _enc, _S, _tm, val_loss = run_batch(b, False)
+                    val_tot += float(val_loss.item())
+                    val_nb += 1
+            val_epoch_loss = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, val_epoch_loss), flush=True)
+            if tracker.record(ep, epoch_loss, val_epoch_loss):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
+        ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # ---- eval: pair-level F1, threshold tuned on val ----
     backbone.eval()
@@ -321,10 +373,18 @@ def main() -> int:
         "epochs": args.epochs, "max_len": args.max_len,
         "smoke": args.smoke,
     }
-    with open(os.path.join(out_dir, "result.json"), "w") as fh:
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(n_val=len(val), runtime=runtime,
+                      data_evidence=data_evidence,
+                      acceptance_eligible=not args.smoke)
+    result_path = os.path.join(out_dir, "result.json")
+    with open(result_path + ".tmp", "w") as fh:
         json.dump(result, fh, indent=2)
-    ledger.update(rid, "done", **{k: v for k, v in result.items()
-                                  if k != "run_id"})
+    os.replace(result_path + ".tmp", result_path)
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else \
+        {k: v for k, v in result.items() if k != "run_id"}
+    ledger.update(rid, "done", **ledger_fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0
 
