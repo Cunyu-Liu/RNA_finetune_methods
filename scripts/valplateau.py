@@ -17,8 +17,9 @@ import sys
 from pathlib import Path
 
 from rnafteval.valplateau import (
-    ABS_FLOOR, LEGACY_PROTOCOL, MIN_DELTA, PATIENCE, PROTOCOL, STOP_REASON,
-    classify)
+    ABS_FLOOR, BESTVAL_PROTOCOL, BESTVAL_STOP_REASON, LEGACY_PROTOCOL,
+    MIN_DELTA, PATIENCE, PROTOCOL, STOP_REASON, bestval_classify,
+    checkpoint_proof_error, classify)
 
 ROOT = "/root/rna-ft-eval"
 E6_DIR = os.path.join(ROOT, "artifacts", "e6")
@@ -40,34 +41,68 @@ def audit_cell(result_dir, min_delta=MIN_DELTA, patience=PATIENCE,
     protocol = d.get("protocol")
     if protocol == LEGACY_PROTOCOL:
         return cell, "TRAIN_ONLY", "valplateau_v1 used epoch_train_losses"
-    if protocol != PROTOCOL:
+    if protocol not in (PROTOCOL, BESTVAL_PROTOCOL):
         return cell, "INVALID", "unknown protocol %r" % protocol
+    bestval = protocol == BESTVAL_PROTOCOL
+    stop_reason = BESTVAL_STOP_REASON if bestval else STOP_REASON
     if d.get("loss_source") != "validation":
-        return cell, "INVALID", "v2 loss_source is not validation"
+        return cell, "INVALID", "loss_source is not validation"
+    if (d.get("min_delta") != min_delta or d.get("patience") != patience
+            or d.get("abs_floor") != abs_floor):
+        return cell, "INVALID", "plateau parameters do not match audit parameters"
     losses = d.get("epoch_val_losses", [])
-    status, detail = classify(losses, min_delta, patience, abs_floor)
+    trains = d.get("epoch_train_losses", [])
+    if not isinstance(trains, list) or len(trains) != len(losses):
+        return cell, "INVALID", "train/validation curves have different lengths"
+    if bestval:
+        status, detail, best_epoch = bestval_classify(
+            losses, min_delta, patience, abs_floor)
+    else:
+        status, detail = classify(losses, min_delta, patience, abs_floor)
+        best_epoch = None
     if status != "CONVERGED":
         return cell, status, "validation: " + detail
     try:
         result = json.loads(rj.read_text())
     except (ValueError, OSError) as e:
         return cell, "INVALID", "result.json unreadable: %s" % e
-    if d.get("status") != "CONVERGED" or d.get("stop_reason") != STOP_REASON:
+    if d.get("status") != "CONVERGED" or d.get("stop_reason") != stop_reason:
         return cell, "NOT_CONVERGED", "plateau has no converged stop evidence"
-    if result.get("protocol") != PROTOCOL:
-        return cell, "INVALID", "result protocol is not valplateau_v2"
+    if result.get("protocol") != protocol:
+        return cell, "INVALID", "result protocol does not match plateau"
     if result.get("status") != "CONVERGED":
         return cell, "NOT_CONVERGED", "result status is not CONVERGED"
     if result.get("loss_source") != "validation":
         return cell, "INVALID", "result loss_source is not validation"
     if result.get("epoch_val_losses") != losses:
         return cell, "INVALID", "result/plateau validation curves differ"
-    if result.get("stop_reason") != STOP_REASON:
+    if result.get("epoch_train_losses") != trains:
+        return cell, "INVALID", "result/plateau training curves differ"
+    if result.get("stop_reason") != stop_reason:
         return cell, "NOT_CONVERGED", "result has no converged stop_reason"
     if result.get("epochs_trained") != len(losses):
         return cell, "INVALID", "epochs_trained does not match validation curve"
     if d.get("updated_epoch") != len(losses) - 1:
         return cell, "INVALID", "updated_epoch does not match validation curve"
+    if bestval:
+        if (d.get("best_epoch") != best_epoch or d.get("best_val") != losses[best_epoch]
+                or d.get("stale_epochs") != patience
+                or d.get("best_checkpoint") != result.get("best_checkpoint")):
+            return cell, "INVALID", "plateau best-val evidence is inconsistent"
+        if (result.get("best_epoch") != best_epoch
+                or result.get("best_val") != losses[best_epoch]
+                or result.get("stale_epochs") != patience):
+            return cell, "INVALID", "result best-val evidence is inconsistent"
+        if result.get("acceptance_eligible") is not True:
+            return cell, "INVALID", "bestval result is not acceptance eligible"
+        if not isinstance(result.get("runtime"), dict):
+            return cell, "INVALID", "bestval runtime evidence is missing"
+        if (not isinstance(result.get("n_val"), int)
+                or isinstance(result["n_val"], bool) or result["n_val"] < 1):
+            return cell, "INVALID", "bestval n_val is missing or invalid"
+        checkpoint_error = checkpoint_proof_error(result_dir, result)
+        if checkpoint_error:
+            return cell, "INVALID", checkpoint_error
     return cell, "CONVERGED", "validation: " + detail
 
 

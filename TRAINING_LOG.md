@@ -1,4 +1,12 @@
 
+## 2026-10-27 · 过拟合分支切换 best-val 与任务语义复核
+
+- 复核 rank8/MRL 的真实训练日志和 validation 曲线：5 个在训格出现训练损失持续下降、验证损失长期回升，未满足 `valplateau_v2`。这些格不作为完成结果，也不继续无上限训练。
+- 已备份 ledger、`plateau.json`、`split_evidence.json` 和停止前后进程至 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/handoff_20261027/overfit_val2_evidence/20261026T200448Z/`。5 个格均标 `cancelled / NOT_CONVERGED / acceptance_eligible=false`；没有改写 result 或历史数值。
+- 已终止上述过拟合 launcher 及其全部锁持有者。三任务 corrected 队列仍独立运行，未误停。rank8 与 MRL 扩展准备改用独立 `_bestval_v1` RID；代码、最佳 checkpoint 恢复和调度审计验收前不启动新分支。
+- m6A 复测尚未启动正式矩阵：旧 launcher 被 MRL 子进程持有锁，不能宣称 `_seqmlfix` 正在训练。BEACON modification 仍严格采用序列级 12 维多标签、m6A index 7；527 条旧错误实现结果保持 invalid，不用于 PPT 科学结论。
+- 下一步：bestval 全 runner focused tests → checkpoint 证据审计 → 真实 CUDA 小规模验收 → GitHub/bundle 部署 → rank8、MRL/m6A 与统一调度并行启动。
+
 ## 2026-10-13 晚（1016：is_done 双格式根治 + 队列解锁 + 配额事故处置）
 
 ### 1. 第四层假完成变体根治（is_done 双格式）

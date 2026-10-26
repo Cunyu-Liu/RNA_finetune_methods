@@ -1,6 +1,9 @@
 import json
 from types import SimpleNamespace
 
+import pytest
+import torch
+
 import valplateau as vp
 from rnafteval import valplateau as convergence
 
@@ -17,7 +20,8 @@ def write_v2(result_dir, val_losses, train_losses=None, status="CONVERGED",
         "epoch_val_losses": val_losses,
         "epochs_trained": len(val_losses),
         "status": status,
-        "stop_reason": stop_reason,
+        "stop_reason": stop_reason, "min_delta": vp.MIN_DELTA,
+        "patience": vp.PATIENCE, "abs_floor": vp.ABS_FLOOR,
     }
     (result_dir / "result.json").write_text(json.dumps(common))
     plateau = dict(common)
@@ -211,3 +215,244 @@ def test_tracker_nonfinite_validation_is_fatal(tmp_path):
 def test_legacy_epoch_iterator_remains_fixed():
     assert list(convergence.training_epochs(
         SimpleNamespace(converge=False, epochs=3))) == [0, 1, 2]
+
+
+def bestval_args(tmp_path, mode="bestval", converge=True):
+    return SimpleNamespace(convergence_mode=mode, converge=converge,
+                           patience=3, min_delta=0.02, epochs=1)
+
+
+def overfitting_tracker(tmp_path, callback=None):
+    saved = [] if callback is None else callback
+    tracker = convergence.BestValTracker(
+        tmp_path, run_id="bestval-rid",
+        save_best=lambda **kwargs: saved.append(kwargs))
+    for epoch in convergence.training_epochs(bestval_args(tmp_path)):
+        stop = tracker.record(epoch, 1.0 / (epoch + 1),
+                              [1.0, 0.5, 0.7, 0.8, 0.9, 0.2][epoch])
+        if epoch == 4:
+            assert stop
+            break
+    return tracker, saved
+
+
+def test_bestval_overfit_stops_at_patience_and_selects_not_last(tmp_path):
+    tracker, saved = overfitting_tracker(tmp_path)
+    assert tracker.best_epoch == 1 and tracker.best_val == 0.5
+    assert tracker.stale_epochs == 3
+    assert len(tracker.val_losses) == 5 and len(saved) == 2
+    assert tracker.val_losses[-1] != tracker.best_val
+    assert tracker.stop_reason == convergence.BESTVAL_STOP_REASON
+    plateau = json.loads((tmp_path / "plateau.json").read_text())
+    result = tracker.result_fields()
+    assert result["protocol"] == convergence.BESTVAL_PROTOCOL
+    for key in ("best_epoch", "best_val", "stale_epochs", "status",
+                "stop_reason", "epoch_val_losses"):
+        assert plateau[key] == result[key]
+    fields = convergence.result_ledger_fields(
+        dict(result, run_id="bestval-rid"))
+    assert fields["best_epoch"] == result["best_epoch"] == 1
+    assert fields["convergence_status"] == "CONVERGED"
+    assert "status" not in fields
+
+
+def test_bestval_improvement_resets_stale_and_epoch_zero_resets(tmp_path):
+    saved = []
+    tracker = convergence.BestValTracker(
+        tmp_path, save_best=lambda **kwargs: saved.append(kwargs))
+    curve = [1.0, 0.5, 0.6, 0.7, 0.4, 0.5, 0.6, 0.7]
+    stopped = [tracker.record(i, 0.1, value) for i, value in enumerate(curve)]
+    assert stopped == [False] * 7 + [True]
+    assert saved[2]["epoch"] == 4 and tracker.best_epoch == 4
+    assert tracker.stale_epochs == 3 and len(saved) == 3
+    tracker.record(0, 0.1, 2.0)
+    assert tracker.best_epoch == 0 and tracker.stale_epochs == 0
+    assert tracker.val_losses == [2.0] and tracker.status == "RUNNING"
+
+
+def test_mocked_runner_saves_restores_then_tests_best_weights(tmp_path):
+    calls = []
+    core = torch.nn.Linear(2, 1)
+    head = torch.nn.Linear(1, 1)
+    args = bestval_args(tmp_path)
+
+    def save_best(epoch, val_loss):
+        calls.append(("save", epoch))
+        convergence.save_best_checkpoint(
+            tmp_path / "best.ckpt", core, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+
+    tracker = convergence.make_tracker(tmp_path, args, "rid", save_best)
+    for epoch in convergence.training_epochs(args):
+        with torch.no_grad():
+            core.weight.fill_(epoch + 1)
+            head.weight.fill_(epoch + 1)
+        if tracker.record(epoch, 0.1, [1.0, 0.5, 0.7, 0.8, 0.9][epoch]):
+            break
+    if args.converge and args.convergence_mode == "bestval":
+        convergence.restore_best_checkpoint(tracker, core, head)
+        calls.append(("restore", tracker.best_epoch))
+    calls.append(("test", float(core.weight[0, 0].detach()),
+                  float(head.weight[0, 0].detach())))
+    assert calls[:3] == [("save", 0), ("save", 1), ("restore", 1)]
+    assert calls[-1] == ("test", 2.0, 2.0)
+    assert calls.index(("restore", 1)) < len(calls) - 1
+
+
+def test_bestval_requires_converge_at_startup_and_default_plateau_is_unchanged():
+    with pytest.raises(ValueError, match="requires --converge"):
+        convergence.validate_convergence_args(
+            SimpleNamespace(convergence_mode="bestval", converge=False))
+    convergence.validate_convergence_args(
+        SimpleNamespace(convergence_mode="plateau", converge=False))
+    assert convergence.protocol_tag(SimpleNamespace(converge=False)) == ""
+    assert convergence.protocol_tag(
+        SimpleNamespace(converge=True)) == "_valplateau_v2"
+    assert convergence.protocol_tag(
+        SimpleNamespace(converge=True, convergence_mode="bestval")) == "_bestval_v1"
+
+
+def test_make_tracker_protocols_do_not_mix(tmp_path):
+    plateau = convergence.make_tracker(
+        tmp_path, bestval_args(tmp_path, mode="plateau"), "rid", None)
+    assert type(plateau) is convergence.PlateauTracker
+    bestval = convergence.make_tracker(
+        tmp_path, bestval_args(tmp_path), "rid", lambda **kwargs: None)
+    assert type(bestval) is convergence.BestValTracker
+
+
+class _MWrapper:
+    def __init__(self, model):
+        self.m = model
+
+
+class _LoraLike(torch.nn.Module):
+    def __init__(self, model):
+        super().__init__()
+        self.base_model = model
+        self.lora_A = torch.nn.Parameter(torch.zeros(2, 3))
+
+    def forward(self, x):
+        return self.base_model(x) + x @ self.lora_A.T
+
+    def get_base_model(self):
+        return self.base_model
+
+    def state_dict(self, *args, **kwargs):
+        return {"lora_A": self.lora_A.detach()}
+
+
+@pytest.mark.parametrize("kind", ["full", "lora", "wrapper"])
+def test_best_checkpoint_restores_best_not_last_weights(tmp_path, kind):
+    torch.manual_seed(17)
+    core = _LoraLike(torch.nn.Linear(3, 2)) if kind == "lora" \
+        else torch.nn.Linear(3, 2)
+    backbone = _MWrapper(core) if kind == "wrapper" else core
+    head = torch.nn.Linear(2, 1)
+
+    def save_best(epoch, val_loss):
+        convergence.save_best_checkpoint(
+            tmp_path / "best.ckpt", backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+
+    tracker = convergence.BestValTracker(tmp_path, save_best=save_best)
+    for epoch, value in enumerate([1.0, 0.5, 0.7, 0.8, 0.9]):
+        with torch.no_grad():
+            parameter = core.lora_A if kind == "lora" else core.weight
+            parameter.fill_(epoch + 1)
+            head.weight.fill_(epoch + 10)
+        if tracker.record(epoch, 0.1, value):
+            break
+    parameter = core.lora_A if kind == "lora" else core.weight
+    assert parameter.flatten()[0].item() == 5
+    convergence.restore_best_checkpoint(tracker, backbone, head)
+    assert torch.equal(parameter, torch.full_like(parameter, 2))
+    assert torch.equal(head.weight, torch.full_like(head.weight, 11))
+    evaluated_weight = core.lora_A.clone() if kind == "lora" else core.weight.clone()
+    assert torch.equal(evaluated_weight, torch.full_like(evaluated_weight, 2))
+    state = torch.load(tmp_path / "best.ckpt", map_location="cpu",
+                       weights_only=True)
+    assert state["best_epoch"] == tracker.best_epoch == 1
+    assert state["best_val"] == tracker.best_val == 0.5
+
+
+def write_bestval(result_dir, mutate=None):
+    values = [1.0, 0.5, 0.7, 0.8, 0.9]
+    common = {
+        "protocol": convergence.BESTVAL_PROTOCOL, "loss_source": "validation",
+        "epoch_train_losses": [0.5] * 5, "epoch_val_losses": values,
+        "epochs_trained": 5, "status": "CONVERGED", "best_epoch": 1,
+        "best_val": 0.5, "stale_epochs": 3, "min_delta": 0.02,
+        "patience": 3, "abs_floor": 0.008,
+        "stop_reason": convergence.BESTVAL_STOP_REASON,
+        "best_checkpoint": "best.ckpt", "acceptance_eligible": True,
+        "n_val": 4, "runtime": {"unit_test": True},
+    }
+    result_dir.mkdir(parents=True, exist_ok=True)
+    torch.save({"backbone": {"weight": torch.tensor([2.0])},
+                "head": {"weight": torch.tensor([3.0])},
+                "epoch": 1, "best_epoch": 1, "best_val": 0.5},
+               result_dir / "best.ckpt")
+    (result_dir / "result.json").write_text(json.dumps(common))
+    plateau = dict(common)
+    plateau.pop("epochs_trained")
+    plateau["updated_epoch"] = 4
+    if mutate:
+        mutate(plateau)
+    (result_dir / "plateau.json").write_text(json.dumps(plateau))
+
+
+def test_bestval_audit_requires_complete_checkpoint_and_best_evidence(tmp_path):
+    write_bestval(tmp_path)
+    assert vp.audit_cell(str(tmp_path))[1] == "CONVERGED"
+    result = json.loads((tmp_path / "result.json").read_text())
+    result["best_epoch"] = 4
+    (tmp_path / "result.json").write_text(json.dumps(result))
+    assert vp.audit_cell(str(tmp_path))[1] == "INVALID"
+    (tmp_path / "best.ckpt").unlink()
+    assert vp.audit_cell(str(tmp_path))[1] == "INVALID"
+    for key, value in (("best_epoch", 4), ("best_val", 0.9),
+                       ("stop_reason", convergence.STOP_REASON),
+                       ("stale_epochs", 2)):
+        write_bestval(tmp_path, lambda d, k=key, v=value: d.__setitem__(k, v))
+        assert vp.audit_cell(str(tmp_path))[1] in ("INVALID", "NOT_CONVERGED")
+    write_bestval(tmp_path, lambda d: d.__setitem__("epoch_val_losses", d["epoch_val_losses"] + [0.2]))
+    assert vp.audit_cell(str(tmp_path))[1] in ("INVALID", "NOT_CONVERGED")
+
+
+def test_shared_checkpoint_proof_accepts_tensors_and_checks_ledger(tmp_path):
+    result_dir = tmp_path / "cell"
+    write_bestval(result_dir)
+    result = json.loads((result_dir / "result.json").read_text())
+    row = {"best_epoch": 1, "best_val": 0.5,
+           "best_checkpoint": "best.ckpt"}
+    assert convergence.checkpoint_proof_error(result_dir, result, row) == ""
+    row["best_epoch"] = 4
+    assert "ledger/result best_epoch" in convergence.checkpoint_proof_error(
+        result_dir, result, row)
+    for key, state in (
+            ("backbone", {}), ("head", {}),
+            ("backbone", {"weight": "not a tensor"})):
+        checkpoint = torch.load(result_dir / "best.ckpt", weights_only=True)
+        checkpoint[key] = state
+        torch.save(checkpoint, result_dir / "best.ckpt")
+        assert convergence.checkpoint_proof_error(result_dir, result)
+        assert vp.audit_cell(str(result_dir))[1] == "INVALID"
+        checkpoint[key] = {"weight": torch.tensor([2.0])}
+        torch.save(checkpoint, result_dir / "best.ckpt")
+    checkpoint = torch.load(result_dir / "best.ckpt", weights_only=True)
+    checkpoint["epoch"] = 4
+    torch.save(checkpoint, result_dir / "best.ckpt")
+    assert "best.ckpt epoch" in convergence.checkpoint_proof_error(
+        result_dir, result)
+
+
+def test_bestval_ledger_refuses_nonconvergence_and_protocol_reason_mix(tmp_path):
+    tracker, _ = overfitting_tracker(tmp_path)
+    result = tracker.result_fields()
+    assert convergence.result_ledger_fields(result)["convergence_status"] == "CONVERGED"
+    with pytest.raises(RuntimeError, match="refusing ledger done"):
+        convergence.result_ledger_fields(dict(result, status="RUNNING"))
+    with pytest.raises(RuntimeError, match="stop evidence"):
+        convergence.result_ledger_fields(
+            dict(result, stop_reason=convergence.STOP_REASON))

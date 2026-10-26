@@ -6,6 +6,7 @@ from pathlib import Path
 
 from rnafteval import ledger
 from rnafteval.e6_forget import TRAINING_SEED_PROTOCOL
+from rnafteval.valplateau import checkpoint_proof_error
 
 
 def verify(result_dir, model, strategy, seed, ledger_task="e6-forgetting",
@@ -30,11 +31,22 @@ def verify(result_dir, model, strategy, seed, ledger_task="e6-forgetting",
         "forgetting_protocol", result.get("protocol", ""))
     if not str(forgetting_protocol).startswith(protocol_prefix):
         raise SystemExit("wrong E6 protocol")
-    if result.get("protocol") == "valplateau_v2":
+    if result.get("protocol") in ("valplateau_v2", "bestval_v1"):
         import valplateau
         _cell, status, detail = valplateau.audit_cell(result_dir)
         if status != "CONVERGED":
             raise SystemExit("validation convergence proof failed: " + detail)
+        if result.get("acceptance_eligible") is not True:
+            raise SystemExit("validation result is not acceptance eligible")
+        if row.get("convergence_status") != "CONVERGED":
+            raise SystemExit("ledger convergence_status is not CONVERGED")
+        if result.get("protocol") == "bestval_v1":
+            error = checkpoint_proof_error(result_dir, result, row)
+            if error:
+                raise SystemExit("checkpoint proof failed: " + error)
+        runtime = result.get("runtime", {})
+        if not str(runtime.get("cuda_device", "")).startswith("cuda:"):
+            raise SystemExit("validation runtime is not CUDA")
     if result.get("training_seed_protocol") != TRAINING_SEED_PROTOCOL:
         raise SystemExit("wrong training seed protocol")
     if result.get("mask_rate") != 0.15:

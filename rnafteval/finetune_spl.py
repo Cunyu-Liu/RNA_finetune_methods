@@ -41,7 +41,7 @@ def _run_extra(args):
     n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
     epoch_tag = "" if getattr(args, "converge", False) or args.epochs == 10 \
         else "_ep%d" % args.epochs
-    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    protocol_tag = vp.protocol_tag(args)
     return ("_b20fix" + ("_smoke" if args.smoke else "") + n_tag +
             lr_tag + rank_tag + epoch_tag + protocol_tag)
 
@@ -65,6 +65,7 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     vp.add_convergence_args(ap)
     args = ap.parse_args()
+    vp.validate_convergence_args(args)
 
     device = torch.device("cuda:%d" % args.device)
     assert torch.cuda.is_available(), "CUDA unavailable - abort (no CPU fallback)"
@@ -158,9 +159,12 @@ def main():
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss(reduction="none")
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
@@ -241,6 +245,8 @@ def main():
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval: macro-F1 over non-pad positions (3 classes) ---
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, device)
     backbone.eval()
     head.eval()
     ys, ps = [], []
@@ -277,15 +283,14 @@ def main():
     }
     if args.converge:
         result.update(tracker.result_fields())
-        result.update(n_val=len(val), runtime=runtime)
+        result.update(n_val=len(val), runtime=runtime,
+                      acceptance_eligible=not args.smoke)
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
-    ledger_fields = dict(tracker.result_fields()) if args.converge else {}
-    if args.converge:
-        ledger_fields["convergence_status"] = ledger_fields.pop("status")
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else {}
     ledger.update(rid, "done", value=macro_f1, metric="MACRO_F1",
                   extra_fields=result, **ledger_fields)
     print(json.dumps(result))

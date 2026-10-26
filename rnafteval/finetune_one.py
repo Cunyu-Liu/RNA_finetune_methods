@@ -45,7 +45,7 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
-    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") +
             ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag +
             protocol_tag + getattr(args, "out_suffix", ""))
@@ -76,6 +76,7 @@ def main() -> int:
     ap.add_argument("--out-suffix", default="",
                     help="optional protocol label appended to the run_id")
     args = ap.parse_args()
+    vp.validate_convergence_args(args)
 
     # --- GPU discipline: no CUDA => abort with evidence ---
     if not torch.cuda.is_available():
@@ -195,9 +196,12 @@ def main() -> int:
             [p for p in backbone.m.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     # --- train ---
@@ -255,6 +259,8 @@ def main() -> int:
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, device)
     backbone.eval()
     head.eval()
     correct = 0

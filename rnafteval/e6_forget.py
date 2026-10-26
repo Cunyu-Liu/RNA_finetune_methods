@@ -27,6 +27,7 @@ import math
 import os
 import random
 import time
+from types import SimpleNamespace
 
 import torch
 
@@ -274,11 +275,14 @@ def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None,
     return tot / max(cnt, 1)
 
 
-def convergence_out_suffix(converge, out_suffix):
-    if not converge and out_suffix.endswith("_valplateau_v2"):
-        raise ValueError("valplateau_v2 suffix requires --converge")
-    if converge and not out_suffix.endswith("_valplateau_v2"):
-        return out_suffix + "_valplateau_v2"
+def convergence_out_suffix(converge, out_suffix, convergence_mode="plateau"):
+    tag = vp.protocol_tag(SimpleNamespace(
+        converge=converge, convergence_mode=convergence_mode))
+    if not converge and any(out_suffix.endswith(t) for t in (
+            "_valplateau_v2", "_bestval_v1")):
+        raise ValueError("convergence protocol suffix requires --converge")
+    if tag and not out_suffix.endswith(tag):
+        return out_suffix + tag
     return out_suffix
 
 
@@ -305,7 +309,9 @@ def main():
                          "(continuation protocol)")
     vp.add_convergence_args(ap)
     args = ap.parse_args()
-    args.out_suffix = convergence_out_suffix(args.converge, args.out_suffix)
+    vp.validate_convergence_args(args)
+    args.out_suffix = convergence_out_suffix(
+        args.converge, args.out_suffix, args.convergence_mode)
     if not torch.cuda.is_available():
         print(json.dumps({"event": "CUDA_UNAVAILABLE_ABORT"}), flush=True)
         return 2
@@ -421,9 +427,12 @@ def main():
             args.init_ckpt, state.get("epoch", -1)), flush=True)
     tr_backbone = args.strategy in ("lora", "full", "dora", "ia3", "prefix")
     enc_core = _official_encoder(backbone) if is_official else None
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, "cuda:%d" % device) \
         if args.converge else None
     for ep in vp.training_epochs(args):
@@ -504,6 +513,9 @@ def main():
         print("checkpoint saved to %s" % ck, flush=True)
 
     # --- post-finetune S0 NLL ---
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head,
+                                   "cuda:%d" % device)
     if is_official and hasattr(backbone, "merge_and_unload") and \
             args.strategy in ("lora", "dora", "ia3", "prefix"):
         merged = backbone.merge_and_unload()
@@ -559,7 +571,8 @@ def main():
     if args.converge:
         result["forgetting_protocol"] = result["protocol"]
         result.update(tracker.result_fields())
-        result.update(n_val=len(parts["val"]), runtime=runtime)
+        result.update(n_val=len(parts["val"]), runtime=runtime,
+                      acceptance_eligible=not args.smoke)
     metric_keys = ("drift",) if is_nb_drift else (
         "pre_nll_a", "pre_nll_b", "noise_band", "post_nll", "delta_nll")
     for key in metric_keys:
@@ -575,8 +588,7 @@ def main():
     os.replace(tmp_path, result_path)
     fields = {k: v for k, v in result.items() if k not in ("run_id", "protocol")}
     if args.converge:
-        fields["protocol"] = result["protocol"]
-        fields["convergence_status"] = fields.pop("status")
+        fields = vp.result_ledger_fields(result)
     update(rid, status="done", **fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0

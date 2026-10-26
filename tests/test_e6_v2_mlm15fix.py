@@ -89,20 +89,25 @@ def test_e6_val2_proof_uses_forgetting_protocol_and_validation_evidence(
     extra = "_mlm15fix_seedfix_valplateau_v2"
     rid = ledger.run_id("RiNALMo-micro", "e6-forgetting", "lora", 17,
                         "s0-heldout", extra=extra)
-    proof_rows[rid] = {"run_id": rid, "status": "done"}
+    proof_rows[rid] = {"run_id": rid, "status": "done",
+                       "convergence_status": "CONVERGED"}
     losses = [1.0, 0.8, 0.62, 0.61, 0.605, 0.602]
     result = result_payload(rid, "valplateau_v2")
     result.update(
         forgetting_protocol="E6-v1-fixed-mask-mlm: validation convergence",
         loss_source="validation", epoch_train_losses=[0.5] * 6,
         epoch_val_losses=losses, epochs_trained=6, status="CONVERGED",
-        stop_reason="validation_plateau_min_delta_patience")
+        stop_reason="validation_plateau_min_delta_patience",
+        min_delta=0.02, patience=3, abs_floor=0.008,
+        acceptance_eligible=True,
+        runtime={"cuda_device": "cuda:0", "cuda_available": True})
     write_result(tmp_path, result)
     (tmp_path / "plateau.json").write_text(json.dumps({
         "run_id": rid, "protocol": "valplateau_v2", "loss_source": "validation",
         "epoch_train_losses": [0.5] * 6, "epoch_val_losses": losses,
         "updated_epoch": 5, "status": "CONVERGED",
         "stop_reason": "validation_plateau_min_delta_patience",
+        "min_delta": 0.02, "patience": 3, "abs_floor": 0.008,
     }))
     assert proof.verify(tmp_path, "RiNALMo-micro", "lora", 17,
                         extra=extra) == rid
@@ -198,16 +203,18 @@ def test_v2_queue_runs_exactly_six_cells_with_double_proof(tmp_path):
         observed.add((option("--model"), strategy, option("--seed")))
         assert option("--task") == "modification"
         assert option("--lr") == ("3e-4" if strategy == "lora" else "1e-5")
-        assert option("--epochs") == "3"
+        assert "--epochs" not in cmd
+        assert "--converge" in cmd
+        assert option("--convergence-mode") == "bestval"
         assert option("--batch-size") == "32"
         assert option("--mask-rate") == "0.15"
-        assert option("--out-suffix") == "_mlm15fix_seedfix"
+        assert "_seqmlfix_bestval_v1" in option("--out-suffix")
     assert observed == {
         ("RiNALMo-micro", strategy, str(seed))
         for strategy in ("lora", "full") for seed in (17, 29, 43)
     }
     for cmd in proofs:
-        assert cmd[cmd.index("--extra") + 1] == "_taskm6a_s0_mlm15fix_seedfix"
+        assert "_seqmlfix_bestval_v1" in cmd[cmd.index("--extra") + 1]
         assert cmd[cmd.index("--result-task") + 1] == "modification"
         assert cmd[cmd.index("--protocol-prefix") + 1] == "E6-v2-fixed-mask-mlm"
     text = log.read_text()

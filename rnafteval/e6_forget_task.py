@@ -2,10 +2,9 @@
 """E6-v2: multi-task-origin forgetting — ncRNA vs m6A starting task.
 
 Same measurement as e6_forget (pre/post S0 held-out NLL + reorder noise band),
-but the finetune task is selectable (ncRNA per-seq or modification per-base).
-Goal: does per-base (m6A) finetuning forget less than per-seq (ncRNA)?
-This fills the 'differential forgetting' gap: granularity of the *finetune task*
-vs forgetting magnitude.
+but the finetune task is selectable. Both ncRNA and BEACON modification are
+sequence-level tasks; modification predicts 12 modification-type labels.
+The comparison therefore does not claim a per-base/per-seq granularity effect.
 
 Usage:
   python -m rnafteval.e6_forget_task --model RNA-Sc-10M --strategy lora \
@@ -14,7 +13,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import contextlib
 import json
 import math
 import os
@@ -23,6 +21,7 @@ import time
 
 import torch
 
+from . import valplateau as vp
 from .e6_forget import (
     NCRNA_SPLIT_SEED, TRAINING_SEED_PROTOCOL, epoch_rows,
     nll_eval as fixed_mask_nll_eval, seed_training)
@@ -137,8 +136,20 @@ def main():
     ap.add_argument("--batch-size", type=int, default=32)
     ap.add_argument("--mask-rate", type=float, default=0.15)
     ap.add_argument("--out-suffix", default="")
+    ap.add_argument("--smoke", action="store_true")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
+    if args.task == "modification" and not (
+            args.converge and "_seqmlfix" in args.out_suffix):
+        raise ValueError(
+            "legacy per-base modification is disabled; use --converge and "
+            "--out-suffix _seqmlfix for sequence-level 12-label training")
+    if args.convergence_mode == "bestval" and not args.converge:
+        raise ValueError("bestval requires --converge")
+    if not torch.cuda.is_available():
+        raise RuntimeError("E6 task training requires real CUDA")
     device = int(args.device)
+    torch.cuda.set_device(device)
     t0 = time.time()
     seed_training(args.seed)
     torch.cuda.set_device(device)
@@ -151,21 +162,25 @@ def main():
         args.epochs = 10 if args.task == "noncoding-rna-family" else 3
 
     from .models import load_model
-    from .strategies import apply_strategy, make_head, TokenHead
+    from .strategies import apply_strategy, make_head
     from .ledger import claim, update
     from .finetune_one import encode_seqs as enc_cls, batches
-    from .splits import random_split
+    from .splits import prepare_convergence_splits, random_split
     from .tasks.ncrna import load_ncrna
     from .tasks import modification as mod_task
     from .tasks.dedup import dedup
 
     task_tag = "ncrna" if args.task == "noncoding-rna-family" else "m6a"
+    protocol_tag = vp.protocol_tag(args)
+    smoke_tag = "_smoke" if args.smoke else ""
     out_dir = os.path.join(
         ROOT, "artifacts", "e6",
-        "%s_%s_task-%s_s%d%s" % (args.model, args.strategy, task_tag,
-                                 args.seed, args.out_suffix))
+        "%s_%s_task-%s_s%d%s%s" % (args.model, args.strategy, task_tag,
+                                   args.seed, args.out_suffix + smoke_tag,
+                                   protocol_tag))
     os.makedirs(out_dir, exist_ok=True)
-    extra = "_task%s_s0%s" % (task_tag, args.out_suffix)
+    extra = "_task%s_s0%s%s%s" % (task_tag, args.out_suffix, smoke_tag,
+                                  protocol_tag)
     res = claim(args.model, "e6-forgetting", args.strategy, args.seed,
                 "s0-heldout", device=device, out_dir=out_dir,
                 note="E6-v2 task-origin forgetting", extra=extra)
@@ -188,12 +203,27 @@ def main():
         for k in parts:
             for r in parts[k]:
                 r["label_id"] = lab2id[r["label"]]
-        train = parts["train"][:args.n_train_cap] if args.n_train_cap else parts["train"]
-        is_per_base = False
     else:
         sp = mod_task.load_official_split()
-        train = sp["train"][:args.n_train_cap] if args.n_train_cap else sp["train"]
-        is_per_base = True
+        parts = {"train": sp["train"], "val": sp["validation"],
+                 "test": sp["test"]}
+
+    data_evidence = None
+    if args.converge:
+        train, val, test, data_evidence = prepare_convergence_splits(
+            parts["train"], parts["val"], parts["test"],
+            n_train=args.n_train_cap or 0, sample_seed=args.seed,
+            validation_source="official_validation",
+            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+    else:
+        train = parts["train"][:args.n_train_cap] if args.n_train_cap \
+            else parts["train"]
+        val = parts["val"]
+    is_multilabel = args.task == "modification"
+    if is_multilabel and any(len(r["labels"]) != 12 for r in train + val):
+        raise ValueError("BEACON modification requires 12 sequence-level labels")
+    if args.smoke:
+        train, val, hold = train[:24], val[:24], hold[:24]
 
     is_official = args.model in OFFICIAL
     if is_official:
@@ -231,73 +261,79 @@ def main():
     enc_core = _official_encoder(backbone) if is_official else None
     fwd = enc_core if is_official else backbone
 
-    if not is_per_base:
-        head = make_head("per-seq", d_model, len(labels)).to(device)
-        tp = [p for p in head.parameters() if p.requires_grad]
-        if hasattr(backbone, "m"):
-            tp += [p for p in backbone.m.parameters() if p.requires_grad]
-        else:
-            tp += [p for p in backbone.parameters() if p.requires_grad]
-        opt = torch.optim.AdamW(tp, lr=args.lr)
-        lossf = torch.nn.CrossEntropyLoss()
-        for ep in range(args.epochs):
-            backbone.train(tr_backbone)
-            head.train()
-            tot, nb = 0.0, 0
-            rows = epoch_rows(train, args.seed, ep)
-            for b in batches(rows, args.batch_size):
-                enc = enc_cls(tok, [r["seq"] for r in b], device)
-                y = torch.tensor([r["label_id"] for r in b], device=device)
-                if tr_backbone:
-                    h = fwd(**enc).last_hidden_state
-                else:
-                    with torch.no_grad():
-                        h = fwd(**enc).last_hidden_state
-                pad = enc["attention_mask"] == 0
-                loss = lossf(head(h, pad), y)
-                opt.zero_grad(); loss.backward()
-                torch.nn.utils.clip_grad_norm_(tp, 1.0)
-                opt.step()
-                tot += loss.item(); nb += 1
-            print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+    n_outputs = 12 if is_multilabel else len(labels)
+    head = make_head("per-seq", d_model, n_outputs).to(device)
+    tp = [p for p in head.parameters() if p.requires_grad]
+    if hasattr(backbone, "m"):
+        tp += [p for p in backbone.m.parameters() if p.requires_grad]
     else:
-        head = TokenHead(d_model, 1, hidden=32).to(device)
-        tp = [p for p in head.parameters() if p.requires_grad] + \
-            [p for p in backbone.parameters() if p.requires_grad]
-        opt = torch.optim.AdamW(tp, lr=args.lr)
+        tp += [p for p in backbone.parameters() if p.requires_grad]
+    opt = torch.optim.AdamW(tp, lr=args.lr)
+    lossf = torch.nn.BCEWithLogitsLoss() if is_multilabel \
+        else torch.nn.CrossEntropyLoss()
 
-        def make_batch(b):
-            enc = enc_cls(tok, [r["seq"] for r in b], device, 128)
-            L = enc["input_ids"].shape[1]
-            y = torch.zeros(len(b), L, device=device)
-            for i, r in enumerate(b):
-                labs = r["labels"][:L]
-                y[i, :len(labs)] = torch.tensor(
-                    labs, dtype=torch.float32, device=device)
-            return enc, y
+    def make_batch(rows):
+        enc = enc_cls(tok, [r["seq"] for r in rows], device, 128)
+        target = "labels" if is_multilabel else "label_id"
+        y = torch.tensor([r[target] for r in rows], device=device,
+                         dtype=torch.float32 if is_multilabel else torch.long)
+        return enc, y
 
-        for ep in range(args.epochs):
-            backbone.train(tr_backbone)
-            head.train()
-            tot, nb = 0.0, 0
-            rows = epoch_rows(train, args.seed, ep)
-            for b in batches(rows, args.batch_size):
-                enc, y = make_batch(b)
-                no_grad = not tr_backbone
-                with contextlib.nullcontext() if not no_grad \
-                        else torch.no_grad():
-                    h = fwd(**enc).last_hidden_state
-                pad = enc["attention_mask"] == 0
-                logits = head(h, pad).squeeze(-1)
-                mask = enc["attention_mask"].float()
-                loss = torch.nn.functional.binary_cross_entropy_with_logits(
-                    logits, y, reduction="none") * mask
-                loss = loss.sum() / mask.sum().clamp(min=1)
-                opt.zero_grad(); loss.backward()
-                torch.nn.utils.clip_grad_norm_(tp, 1.0)
-                opt.step()
-                tot += loss.item(); nb += 1
-            print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
+    def batch_loss(rows):
+        enc, y = make_batch(rows)
+        if tr_backbone:
+            h = fwd(**enc).last_hidden_state
+        else:
+            with torch.no_grad():
+                h = fwd(**enc).last_hidden_state
+        pad = enc["attention_mask"] == 0
+        return lossf(head(h, pad), y)
+
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+
+    tracker = vp.make_tracker(out_dir, args, res["row"]["run_id"], save_best) \
+        if args.converge else None
+    runtime = vp.runtime_evidence(tok, "cuda:%d" % device) \
+        if args.converge else None
+    for ep in vp.training_epochs(args):
+        backbone.train(tr_backbone)
+        head.train()
+        tot, nb = 0.0, 0
+        rows = epoch_rows(train, args.seed, ep)
+        for b in batches(rows, args.batch_size):
+            loss = batch_loss(b)
+            opt.zero_grad()
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(tp, 1.0)
+            opt.step()
+            tot += loss.item()
+            nb += 1
+        epoch_loss = tot / max(nb, 1)
+        print("epoch %d loss %.4f" % (ep, epoch_loss), flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(val, args.batch_size * 2):
+                    val_loss = batch_loss(b)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            val_epoch_loss = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, val_epoch_loss), flush=True)
+            if tracker.record(ep, epoch_loss, val_epoch_loss):
+                print("STOP %s epoch=%d" % (tracker.stop_reason, ep), flush=True)
+                update(res["row"]["run_id"], "running", note=tracker.stop_reason)
+                break
+        update(res["row"]["run_id"], "running", note="epoch %d heartbeat" % ep)
+
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, "cuda:%d" % device)
+    backbone.eval()
+    head.eval()
 
     if is_official and hasattr(backbone, "merge_and_unload") and \
             args.strategy in ("lora", "dora", "ia3", "prefix"):
@@ -331,8 +367,20 @@ def main():
         "n_holdout": len(hold), "pre_nll_a": pre_a, "pre_nll_b": pre_b,
         "noise_band": noise_band, "post_nll": post,
         "delta_nll": post - pre_a, "forgot": (post - pre_a) > max(noise_band, 1e-6),
-        "wall_sec": round(time.time() - t0, 1), "protocol": protocol,
+        "wall_sec": round(time.time() - t0, 1),
+        "forgetting_protocol": protocol,
+        "task_label_semantics": "BEACON sequence-level 12-label" \
+            if is_multilabel else "BEACON sequence-level ncRNA family",
+        "n_train": len(train), "n_val": len(val),
+        "smoke": args.smoke,
+        "acceptance_eligible": bool(args.converge and not args.smoke),
     }
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(forgetting_protocol=protocol,
+                      runtime=runtime, data_evidence=data_evidence)
+    else:
+        result["protocol"] = protocol
     for key in ("pre_nll_a", "pre_nll_b", "noise_band", "post_nll", "delta_nll"):
         if not math.isfinite(result[key]):
             raise FloatingPointError(
@@ -344,8 +392,9 @@ def main():
         fh.flush()
         os.fsync(fh.fileno())
     os.replace(tmp_path, result_path)
-    update(res["row"]["run_id"], "done", **{k: v for k, v in result.items()
-                                             if k != "run_id"})
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else \
+        {k: v for k, v in result.items() if k != "run_id"}
+    update(res["row"]["run_id"], "done", **ledger_fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0
 

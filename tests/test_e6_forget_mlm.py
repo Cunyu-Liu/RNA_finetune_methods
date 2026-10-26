@@ -110,6 +110,20 @@ def test_e6v2_official_nll_delegates_to_fixed_mask():
     assert masks_by_length(backbone)[34]
 
 
+def test_modification_e6_is_sequence_multilabel_and_legacy_is_disabled():
+    from pathlib import Path
+    from rnafteval.task_registry import TASKS
+    source = Path(__file__).parents[1].joinpath(
+        "rnafteval/e6_forget_task.py").read_text()
+    assert TASKS["modification"].granularity == "per-seq"
+    assert "n_outputs = 12 if is_multilabel else len(labels)" in source
+    assert 'make_head("per-seq", d_model, n_outputs)' in source
+    assert "BCEWithLogitsLoss" in source
+    assert "TokenHead" not in source
+    assert "legacy per-base modification is disabled" in source
+    assert "prepare_convergence_splits" in source
+    assert "restore_best_checkpoint" in source
+
 
 def test_training_seed_controls_python_numpy_and_torch():
     import random
@@ -137,5 +151,11 @@ def test_e6_convergence_suffix_isolated_without_touching_legacy():
     assert convergence_out_suffix(True, "_mlm15fix_seedfix") == \
         "_mlm15fix_seedfix_valplateau_v2"
     assert convergence_out_suffix(True, "_valplateau_v2") == "_valplateau_v2"
+    assert convergence_out_suffix(True, "_seedfix", "bestval") == \
+        "_seedfix_bestval_v1"
+    assert convergence_out_suffix(True, "_bestval_v1", "bestval") == \
+        "_bestval_v1"
     with pytest.raises(ValueError, match="requires --converge"):
         convergence_out_suffix(False, "_valplateau_v2")
+    with pytest.raises(ValueError, match="requires --converge"):
+        convergence_out_suffix(False, "_bestval_v1", "bestval")

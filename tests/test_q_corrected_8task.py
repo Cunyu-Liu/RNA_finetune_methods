@@ -6,6 +6,7 @@ import sys
 from types import SimpleNamespace
 
 import pytest
+import torch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -149,6 +150,57 @@ def test_commands_and_rid_tags_follow_existing_runners():
     assert cmd[cmd.index("--batch-size") + 1] == "8"
     assert cmd[cmd.index("--lr") + 1] == "3e-4"
     assert q.rid_for(reg).endswith("_b20fix_valplateau_v2")
+    bestval = q.rid_for(reg, "bestval")
+    assert bestval.endswith("_b20fix_bestval_v1")
+    assert bestval != q.rid_for(reg)
+    cmd = q.build_command(reg, convergence_mode="bestval")
+    assert cmd[cmd.index("--convergence-mode") + 1] == "bestval"
+    assert q.result_path(reg) != q.result_path(reg, "bestval")
+
+
+def test_bestval_proof_requires_matching_checkpoint_and_ledger(runtime):
+    cell = make_cell(task="degradation", model="NucleicBERT", strategy="lora")
+    values = [1.0, 0.5, 0.7, 0.8, 0.9]
+    rid = q.rid_for(cell, "bestval")
+    payload = result_payload(
+        cell, run_id=rid, protocol=q.vp.BESTVAL_PROTOCOL,
+        stop_reason=q.vp.BESTVAL_STOP_REASON, epoch_val_losses=values,
+        epoch_train_losses=[0.5] * 5, epochs_trained=5,
+        best_epoch=1, best_val=0.5, stale_epochs=3,
+        best_checkpoint="best.ckpt", acceptance_eligible=True)
+    path = q.result_path(cell, "bestval")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload))
+    q.plateau_path(cell, "bestval").write_text(json.dumps({
+        "run_id": rid, "protocol": q.vp.BESTVAL_PROTOCOL,
+        "loss_source": "validation", "epoch_train_losses": [0.5] * 5,
+        "epoch_val_losses": values, "updated_epoch": 4,
+        "best_epoch": 1, "best_val": 0.5, "stale_epochs": 3,
+        "best_checkpoint": "best.ckpt",
+        "status": "CONVERGED", "stop_reason": q.vp.BESTVAL_STOP_REASON,
+        "min_delta": q.vp.MIN_DELTA, "patience": q.vp.PATIENCE,
+        "abs_floor": q.vp.ABS_FLOOR}))
+    state = {
+        "backbone": {"weight": torch.tensor([2.0])},
+        "head": {"weight": torch.tensor([3.0])},
+        "epoch": 1, "best_epoch": 1, "best_val": 0.5,
+    }
+    torch.save(state, q.checkpoint_path(cell, "bestval"))
+    row = dict(q.vp.result_ledger_fields(payload), status="done", run_id=rid)
+    runtime.rows[rid] = row
+    assert q.proof_state(cell, "bestval") == ("complete", "")
+    row["best_epoch"] = 4
+    assert q.proof_state(cell, "bestval") == (
+        "conflict", "ledger/result best_epoch differs")
+    row["best_epoch"] = 1
+    state["best_epoch"] = 4
+    torch.save(state, q.checkpoint_path(cell, "bestval"))
+    assert "best.ckpt best_epoch" in q.proof_state(cell, "bestval")[1]
+    state["best_epoch"] = 1
+    torch.save(state, q.checkpoint_path(cell, "bestval"))
+    payload.pop("acceptance_eligible")
+    path.write_text(json.dumps(payload))
+    assert "acceptance_eligible" in q.proof_state(cell, "bestval")[1]
 
 
 def test_nonzero_subprocess_failure_env_and_audit_log(runtime, monkeypatch):

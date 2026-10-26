@@ -45,7 +45,7 @@
 | noncoding-rna-family | per-seq 分类 | ACC |
 | crispr-off-target | per-seq 二分类 | PR-AUC |
 | mrl | per-seq 回归 | Pearson r |
-| modification | per-base 分类 | AUC |
+| modification | per-seq 12 标签分类（m6A = index 7） | m6A AUC（12 类 mean AUC 辅助） |
 | spliceai | per-base 三分类 | macro-F1 |
 | degradation | per-base 回归 | PCC（MCRMSE 辅助） |
 | structural-score-imputation（运行名 `ssi`） | per-base 回归 | PCC（MCRMSE 辅助） |

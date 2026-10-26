@@ -1,8 +1,8 @@
-"""RNA modification prediction (BEACON Modification) — per-base, 101-nt windows.
+"""BEACON modification: sequence-level multi-label classification.
 
-Data: sequence (101nt) + label (space-separated 101 binary values; 1 = modified).
-304,661 train / official random split. This is m6A-style per-base prediction.
-Metric: AUC (BEACON official).
+Data: 101-nt sequence plus 12 space-separated binary modification-type targets.
+The label vector is not a per-base target grid. m6A is label index 7; its AUC
+is the primary metric and the 12-label mean AUC is auxiliary.
 """
 from __future__ import annotations
 

@@ -100,23 +100,28 @@ def runner_for(cell):
     return finetune_spl if cell.task == "spliceai" else finetune_regbase
 
 
-def rid_for(cell):
+def rid_for(cell, convergence_mode="plateau"):
     args = SimpleNamespace(lr=cell.lr, rank=8, n_train=0,
-                           epochs=cell.epochs, smoke=False, converge=True)
+                           epochs=cell.epochs, smoke=False, converge=True,
+                           convergence_mode=convergence_mode)
     extra = runner_for(cell)._run_extra(args)
     return ledger.run_id(cell.model, cell.task, cell.strategy, cell.seed,
                          cell.split, extra=extra)
 
 
-def plateau_path(cell):
-    return ARTIFACTS_ROOT / rid_for(cell) / "plateau.json"
+def plateau_path(cell, convergence_mode="plateau"):
+    return ARTIFACTS_ROOT / rid_for(cell, convergence_mode) / "plateau.json"
 
 
-def result_path(cell):
-    return ARTIFACTS_ROOT / rid_for(cell) / "result.json"
+def result_path(cell, convergence_mode="plateau"):
+    return ARTIFACTS_ROOT / rid_for(cell, convergence_mode) / "result.json"
 
 
-def build_command(cell, device=0):
+def checkpoint_path(cell, convergence_mode="plateau"):
+    return ARTIFACTS_ROOT / rid_for(cell, convergence_mode) / "best.ckpt"
+
+
+def build_command(cell, device=0, convergence_mode="plateau"):
     module = ("rnafteval.finetune_spl" if cell.task == "spliceai"
               else "rnafteval.finetune_regbase")
     return [
@@ -124,8 +129,8 @@ def build_command(cell, device=0):
         "--model", cell.model, "--task", cell.task,
         "--strategy", cell.strategy, "--seed", str(cell.seed),
         "--split", cell.split, "--device", str(device),
-        "--converge", "--batch-size", str(cell.batch_size),
-        "--lr", cell.lr_arg,
+        "--converge", "--convergence-mode", convergence_mode,
+        "--batch-size", str(cell.batch_size), "--lr", cell.lr_arg,
     ]
 
 
@@ -141,9 +146,12 @@ def child_env():
     return env
 
 
-def result_error(cell, payload, rid):
+def result_error(cell, payload, rid, convergence_mode="plateau"):
     if not isinstance(payload, dict):
         return "result JSON is not an object"
+    protocol = vp.BESTVAL_PROTOCOL if convergence_mode == "bestval" else vp.PROTOCOL
+    stop_reason = vp.BESTVAL_STOP_REASON if convergence_mode == "bestval" \
+        else vp.STOP_REASON
     expected = {
         "run_id": rid, "task": cell.task, "model": cell.model,
         "seed": cell.seed, "split": cell.split,
@@ -160,10 +168,12 @@ def result_error(cell, payload, rid):
         finite = False
     if not finite:
         errors.append("primary metric value is not finite numeric")
-    if payload.get("protocol") != vp.PROTOCOL:
-        errors.append("result protocol is not valplateau_v2")
+    if payload.get("protocol") != protocol:
+        errors.append("result protocol does not match convergence mode")
     if payload.get("smoke") is not False:
-        errors.append("formal valplateau_v2 result is a smoke run")
+        errors.append("formal validation result is a smoke run")
+    if protocol == vp.BESTVAL_PROTOCOL and payload.get("acceptance_eligible") is not True:
+        errors.append("bestval result acceptance_eligible is not true")
     if "_smoke" in rid:
         errors.append("formal validation RID contains smoke tag")
     if payload.get("n_train", 0) < 1:
@@ -172,8 +182,8 @@ def result_error(cell, payload, rid):
         errors.append("result loss_source is not validation")
     if payload.get("status") != "CONVERGED":
         errors.append("result is not CONVERGED")
-    if payload.get("stop_reason") != vp.STOP_REASON:
-        errors.append("result stop_reason is not validation plateau")
+    if payload.get("stop_reason") != stop_reason:
+        errors.append("result stop_reason does not match convergence mode")
     train_losses = payload.get("epoch_train_losses")
     val_losses = payload.get("epoch_val_losses")
     if not isinstance(val_losses, list) or not val_losses:
@@ -182,8 +192,22 @@ def result_error(cell, payload, rid):
           or len(train_losses) != len(val_losses)):
         errors.append("train/validation curves have different lengths")
     else:
-        if vp.classify(val_losses)[0] != "CONVERGED":
+        if protocol == vp.BESTVAL_PROTOCOL:
+            status, _detail, best_epoch = vp.bestval_classify(val_losses)
+        else:
+            status, _detail = vp.classify(val_losses)
+            best_epoch = None
+        if status != "CONVERGED":
             errors.append("result validation curve is not converged")
+        if best_epoch is not None:
+            if payload.get("best_epoch") != best_epoch:
+                errors.append("result best_epoch does not match validation curve")
+            if payload.get("best_val") != val_losses[best_epoch]:
+                errors.append("result best_val does not match validation curve")
+            if payload.get("stale_epochs") != vp.PATIENCE:
+                errors.append("result stale_epochs does not match patience")
+            if payload.get("best_checkpoint") != "best.ckpt":
+                errors.append("result best checkpoint path is missing")
         if payload.get("epochs_trained") != len(val_losses):
             errors.append("epochs_trained does not match validation curve")
     if (not isinstance(payload.get("n_val"), int)
@@ -213,12 +237,15 @@ def result_error(cell, payload, rid):
     return "; ".join(errors)
 
 
-def plateau_error(payload, plateau, rid):
+def plateau_error(payload, plateau, rid, convergence_mode="plateau"):
     if not isinstance(plateau, dict):
         return "plateau JSON is not an object"
+    bestval = convergence_mode == "bestval"
+    protocol = vp.BESTVAL_PROTOCOL if bestval else vp.PROTOCOL
+    stop_reason = vp.BESTVAL_STOP_REASON if bestval else vp.STOP_REASON
     expected = {
-        "run_id": rid, "protocol": vp.PROTOCOL, "loss_source": "validation",
-        "status": "CONVERGED", "stop_reason": vp.STOP_REASON,
+        "run_id": rid, "protocol": protocol, "loss_source": "validation",
+        "status": "CONVERGED", "stop_reason": stop_reason,
         "min_delta": vp.MIN_DELTA, "patience": vp.PATIENCE,
         "abs_floor": vp.ABS_FLOOR,
     }
@@ -232,17 +259,37 @@ def plateau_error(payload, plateau, rid):
     if not isinstance(losses, list) or plateau.get("updated_epoch") != len(losses) - 1:
         errors.append("plateau updated_epoch does not match validation curve")
     else:
-        status, detail = vp.classify(losses)
+        if bestval:
+            status, detail, best_epoch = vp.bestval_classify(losses)
+        else:
+            status, detail = vp.classify(losses)
+            best_epoch = None
         if status != "CONVERGED":
             errors.append("validation curve is not converged: " + detail)
+        if best_epoch is not None:
+            if plateau.get("best_epoch") != best_epoch:
+                errors.append("plateau best_epoch does not match validation curve")
+            if plateau.get("best_val") != losses[best_epoch]:
+                errors.append("plateau best_val does not match validation curve")
+            if plateau.get("stale_epochs") != vp.PATIENCE:
+                errors.append("plateau stale_epochs does not match patience")
+            if plateau.get("best_checkpoint") != payload.get("best_checkpoint"):
+                errors.append("result/plateau best checkpoint paths differ")
     return "; ".join(errors)
 
 
-def proof_state(cell):
-    """complete requires ledger, result and validation-plateau proof."""
-    rid = rid_for(cell)
-    path = result_path(cell)
-    pp = plateau_path(cell)
+def checkpoint_error(payload, cell, convergence_mode):
+    if convergence_mode != "bestval":
+        return ""
+    return vp.checkpoint_proof_error(
+        ARTIFACTS_ROOT / rid_for(cell, convergence_mode), payload)
+
+
+def proof_state(cell, convergence_mode="plateau"):
+    """Complete requires matching ledger, result, curves and best checkpoint."""
+    rid = rid_for(cell, convergence_mode)
+    path = result_path(cell, convergence_mode)
+    pp = plateau_path(cell, convergence_mode)
     row = ledger.by_run_id(rid)
     ledger_done = bool(row and row.get("status") == "done")
     if not path.exists():
@@ -254,7 +301,7 @@ def proof_state(cell):
             payload = json.load(fh)
     except (OSError, ValueError) as exc:
         return "conflict", "invalid result.json: %s" % exc
-    error = result_error(cell, payload, rid)
+    error = result_error(cell, payload, rid, convergence_mode)
     if error:
         return "conflict", error
     if not pp.exists():
@@ -264,19 +311,25 @@ def proof_state(cell):
             plateau = json.load(fh)
     except (OSError, ValueError) as exc:
         return "conflict", "invalid plateau.json: %s" % exc
-    error = plateau_error(payload, plateau, rid)
+    error = plateau_error(payload, plateau, rid, convergence_mode)
+    if error:
+        return "conflict", error
+    error = checkpoint_error(payload, cell, convergence_mode)
     if error:
         return "conflict", error
     if not ledger_done:
         return "conflict", "valid result/validation proof but ledger is not done"
-    if row.get("protocol") != vp.PROTOCOL:
-        return "conflict", "ledger is missing valplateau_v2 protocol evidence"
-    if row.get("stop_reason") != vp.STOP_REASON:
+    if row.get("protocol") != payload["protocol"]:
+        return "conflict", "ledger is missing matching protocol evidence"
+    if row.get("stop_reason") != payload["stop_reason"]:
         return "conflict", "ledger is missing validation stop evidence"
     if row.get("convergence_status") != "CONVERGED":
         return "conflict", "ledger is missing CONVERGED status evidence"
     if row.get("epoch_val_losses") != payload.get("epoch_val_losses"):
         return "conflict", "ledger/result validation curves differ"
+    for key in ("best_epoch", "best_val", "stale_epochs", "best_checkpoint"):
+        if convergence_mode == "bestval" and row.get(key) != payload.get(key):
+            return "conflict", "ledger/result %s differs" % key
     return "complete", ""
 
 
@@ -291,10 +344,10 @@ def wait_for_exclusive(log):
         time.sleep(EXCLUSIVE_POLL_S)
 
 
-def run_cell(cell, device=0, log_root=None):
-    rid = rid_for(cell)
-    path = result_path(cell)
-    cmd = build_command(cell, device)
+def run_cell(cell, device=0, log_root=None, convergence_mode="plateau"):
+    rid = rid_for(cell, convergence_mode)
+    path = result_path(cell, convergence_mode)
+    cmd = build_command(cell, device, convergence_mode)
     root = LOG_ROOT if log_root is None else Path(log_root)
     log_path = root / cell.task / (cell.model + ".log")
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -313,7 +366,7 @@ def run_cell(cell, device=0, log_root=None):
                   file=log, flush=True)
             return record
 
-        state, reason = proof_state(cell)
+        state, reason = proof_state(cell, convergence_mode)
         if state == "complete":
             return finish("skipped", True, None, 0.0)
         if state == "conflict":
@@ -321,7 +374,7 @@ def run_cell(cell, device=0, log_root=None):
 
         wait_for_exclusive(log)
         # A detached old child may have finished this cell during the wait.
-        state, reason = proof_state(cell)
+        state, reason = proof_state(cell, convergence_mode)
         if state == "complete":
             return finish("skipped", True, None, 0.0)
         if state == "conflict":
@@ -347,15 +400,17 @@ def run_cell(cell, device=0, log_root=None):
         if rc != 0:
             return finish("failed", False, rc, wall,
                           reason or "runner exited %s" % rc)
-        state, reason = proof_state(cell)
+        state, reason = proof_state(cell, convergence_mode)
         if state != "complete":
             return finish("failed", False, rc, wall,
                           reason or "rc=0 but ledger/result double proof is incomplete")
         return finish("done", True, rc, wall)
 
 
-def model_worker(model, cells, device, log_root=None):
-    return [run_cell(cell, device, log_root) for cell in cells]
+def model_worker(model, cells, device, log_root=None,
+                 convergence_mode="plateau"):
+    return [run_cell(cell, device, log_root, convergence_mode)
+            for cell in cells]
 
 
 def parse_models(values):
@@ -371,11 +426,11 @@ def parse_models(values):
     return names
 
 
-def verify_complete():
+def verify_complete(convergence_mode="plateau"):
     cells = canonical_cells()
     incomplete = []
     for cell in cells:
-        state, reason = proof_state(cell)
+        state, reason = proof_state(cell, convergence_mode)
         if state != "complete":
             incomplete.append((cell, state, reason))
     if incomplete:
@@ -398,9 +453,11 @@ def main(argv=None):
                         choices=("spliceai", "degradation", "ssi"),
                         default=["spliceai", "degradation", "ssi"])
     parser.add_argument("--device", type=int, default=0)
+    parser.add_argument("--convergence-mode", choices=("plateau", "bestval"),
+                        default="plateau")
     args = parser.parse_args(argv)
     if args.verify_complete:
-        return verify_complete()
+        return verify_complete(args.convergence_mode)
     if args.workers < 1:
         parser.error("--workers must be >= 1")
     try:
@@ -416,7 +473,8 @@ def main(argv=None):
     outcomes, worker_errors = [], []
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {
-            pool.submit(model_worker, model, model_cells, args.device): model
+            pool.submit(model_worker, model, model_cells, args.device,
+                        convergence_mode=args.convergence_mode): model
             for model, model_cells in by_model.items()
         }
         for future in concurrent.futures.as_completed(futures):

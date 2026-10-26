@@ -1,5 +1,6 @@
 #!/bin/bash
-# E6-v2 RiNALMo-micro fixed-mask m6A correction: 2 strategies x 3 seeds.
+# Sequence-level 12-label modification with independent validation/best-val.
+# Legacy per-base and fixed-epoch RIDs remain read-only historical evidence.
 R=${R:-/root/rna-ft-eval}
 REPO=${REPO:-/home/cunyuliu/rna-ft-eval}
 PY=${PY:-/root/miniconda3/envs/llr_env/bin/python}
@@ -11,8 +12,8 @@ LOG=${LOG:-$R/logs/q_e6_v2_mlm15fix.log}
 mkdir -p "$(dirname "$LOG")" || exit 1
 DEV=${DEV:-0}
 TIMEOUT_S=${E6_V2_TIMEOUT_S:-21600}
-SUFFIX=_mlm15fix_seedfix
-EXTRA=_taskm6a_s0_mlm15fix_seedfix
+SUFFIX=_mlm15fix_seedfix_seqmlfix_bestval_v1
+EXTRA=_taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1
 
 proof() {
   local resdir=$1 model=$2 strat=$3 seed=$4
@@ -58,7 +59,8 @@ run_cell() {
   echo "[e6v2-mlm15fix] RUN $model $strat s$seed lr$lr bs32 $(date +%H:%M)" >> "$LOG"
   timeout "$TIMEOUT_S" "$PY" -m rnafteval.e6_forget_task \
     --model "$model" --task modification --strategy "$strat" \
-    --seed "$seed" --lr "$lr" --device "$DEV" --epochs 3 \
+    --seed "$seed" --lr "$lr" --device "$DEV" \
+    --converge --convergence-mode bestval \
     --batch-size 32 --n-holdout 2000 --mask-rate 0.15 \
     --out-suffix "$SUFFIX" >> "$LOG" 2>&1
   local rc=$?

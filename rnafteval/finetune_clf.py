@@ -18,7 +18,8 @@ import numpy as np
 import torch
 
 from . import ledger, valplateau as vp
-from .splits import assert_no_overlap, random_split
+from .splits import (
+    assert_cluster_no_overlap, assert_no_overlap, random_split, seq_hash)
 
 ROOT = "/root/rna-ft-eval"
 
@@ -40,7 +41,7 @@ def _run_extra(args):
     n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
     epoch_tag = "" if getattr(args, "converge", False) or args.epochs == 10 \
         else "_ep%d" % args.epochs
-    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") + n_tag + lr_tag + rank_tag +
             epoch_tag + protocol_tag)
 
@@ -66,6 +67,7 @@ def main():
     ap.add_argument("--random-init", action="store_true")
     vp.add_convergence_args(ap)
     args = ap.parse_args()
+    vp.validate_convergence_args(args)
 
     device = torch.device("cuda:%d" % args.device)
     assert torch.cuda.is_available(), "CUDA unavailable - abort (no CPU fallback)"
@@ -156,6 +158,58 @@ def main():
             # Keep this identical to finetune_one and the preregistered protocol.
             parts = random_split(recs, seed=17)
 
+    data_evidence = None
+    if args.converge:
+        source = "family_validation" if args.split == "family" else (
+            "official_validation" if args.task == "crispr-off-target"
+            else "random_split_validation")
+        data_evidence = {
+            "protocol": vp.protocol_tag(args).lstrip("_"),
+            "split_source": source, "split": args.split,
+            "n_train": len(parts["train"]), "n_val": len(parts["val"]),
+            "n_test": len(parts["test"]), "status": "CHECKING",
+        }
+        sides = {side: {seq_hash(row["seq"]) for row in rows}
+                 for side, rows in parts.items()}
+        overlaps = {"%s_%s" % (a, b): sorted(sides[a] & sides[b])
+                    for a, b in (("train", "val"), ("train", "test"),
+                                 ("val", "test"))}
+        data_evidence["sequence_cross_split_overlap"] = {
+            pair: len(hashes) for pair, hashes in overlaps.items()}
+        data_evidence["sequence_cross_split_examples"] = {
+            pair: hashes[:20] for pair, hashes in overlaps.items()}
+        data_evidence["deduplicated"] = all(
+            len(hashes) == len(parts[side]) for side, hashes in sides.items())
+        if args.split == "family":
+            cluster_sides = {side: {str(row["cluster"]) for row in rows}
+                             for side, rows in parts.items()}
+            cluster_overlaps = {
+                "%s_%s" % (a, b): sorted(cluster_sides[a] & cluster_sides[b])
+                for a, b in (("train", "val"), ("train", "test"),
+                             ("val", "test"))}
+            data_evidence["cluster_cross_split_overlap"] = {
+                pair: len(clusters) for pair, clusters in cluster_overlaps.items()}
+            data_evidence["cluster_cross_split_examples"] = {
+                pair: clusters[:20] for pair, clusters in cluster_overlaps.items()}
+        evidence_path = os.path.join(out_dir, "split_evidence.json")
+        with open(evidence_path + ".tmp", "w") as fh:
+            json.dump(data_evidence, fh, indent=2)
+        os.replace(evidence_path + ".tmp", evidence_path)
+        try:
+            assert_no_overlap(parts["train"], parts["val"], unit="seq")
+            assert_no_overlap(parts["train"], parts["test"], unit="seq")
+            assert_no_overlap(parts["val"], parts["test"], unit="seq")
+            if args.split == "family":
+                assert_cluster_no_overlap(parts["train"], parts["val"])
+                assert_cluster_no_overlap(parts["train"], parts["test"])
+                assert_cluster_no_overlap(parts["val"], parts["test"])
+        except Exception as exc:
+            data_evidence["status"] = "INVALID"
+            data_evidence["error"] = str(exc)
+            with open(evidence_path + ".tmp", "w") as fh:
+                json.dump(data_evidence, fh, indent=2)
+            os.replace(evidence_path + ".tmp", evidence_path)
+            raise
     if args.n_train > 0:
         rng = random.Random(args.seed)
         parts["train"] = rng.sample(parts["train"],
@@ -169,6 +223,23 @@ def main():
     for k in parts:
         for r in parts[k]:
             r["label_id"] = lab2id[r["label"]]
+    if args.converge:
+        supported = {row["label"] for row in parts["train"]}
+        data_evidence["label_support"] = {
+            side: {str(label): sum(row["label"] == label for row in parts[side])
+                   for label in labels}
+            for side in ("train", "val", "test")}
+        data_evidence["missing_label_support"] = {
+            side: sorted(row["label"] for row in parts[side]
+                         if row["label"] not in supported)
+            for side in ("train", "val", "test")}
+        data_evidence["n_train"] = len(parts["train"])
+        data_evidence["n_val"] = len(parts["val"])
+        data_evidence["n_test"] = len(parts["test"])
+        data_evidence["status"] = "OK"
+        with open(evidence_path + ".tmp", "w") as fh:
+            json.dump(data_evidence, fh, indent=2)
+        os.replace(evidence_path + ".tmp", evidence_path)
     assert_no_overlap(parts["train"], parts["val"] + parts["test"], unit="seq")
     print("data: train %d val %d test %d classes %d" % (
         len(parts["train"]), len(parts["val"]), len(parts["test"]),
@@ -190,9 +261,12 @@ def main():
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
     if args.converge and not parts["val"]:
         raise ValueError("--converge requires a non-empty validation split")
@@ -267,6 +341,8 @@ def main():
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, device)
     backbone.eval()
     head.eval()
     ys, ps = [], []
@@ -311,15 +387,15 @@ def main():
     }
     if args.converge:
         result.update(tracker.result_fields())
-        result.update(n_val=len(parts["val"]), runtime=runtime)
+        result.update(n_val=len(parts["val"]), runtime=runtime,
+                      data_evidence=data_evidence,
+                      acceptance_eligible=not args.smoke)
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
-    ledger_fields = dict(tracker.result_fields()) if args.converge else {}
-    if args.converge:
-        ledger_fields["convergence_status"] = ledger_fields.pop("status")
+    ledger_fields = vp.result_ledger_fields(result) if args.converge else {}
     ledger.update(rid, "done", value=value, metric=metric,
                   extra_fields=result, **ledger_fields)
     print(json.dumps(result))

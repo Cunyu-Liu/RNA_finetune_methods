@@ -1,4 +1,5 @@
 import os
+import ast
 import json
 import runpy
 import sys
@@ -163,6 +164,11 @@ def test_converge_rid_isolated_and_ignores_fixed_epoch_budget():
         new.epochs = 1
         tagged = runner._run_extra(new)
         assert tagged.endswith("_valplateau_v2")
+        bestval = SimpleNamespace(**vars(new))
+        bestval.convergence_mode = "bestval"
+        bestval_extra = runner._run_extra(bestval)
+        assert bestval_extra.endswith("_bestval_v1")
+        assert bestval_extra != tagged and "_valplateau_v2" not in bestval_extra
         assert tagged != legacy
         assert "_ep1" not in tagged
         assert ledger.run_id("m", "t", "frozen", 17, "random", tagged) != \
@@ -298,7 +304,8 @@ def test_claim_blocked_module_exit_uses_rc75_and_keyword_device(
 def test_old_runners_converge_rid_isolated_and_legacy_unchanged(
         runner, defaults, legacy_extra):
     base = SimpleNamespace(lr=3e-4, rank=8, epochs=3, smoke=False,
-                           random_init=False, converge=False, **defaults)
+                           random_init=False, converge=False,
+                           out_suffix="", **defaults)
     assert runner._run_extra(base) == legacy_extra
     legacy_rid = ledger.run_id("m", "t", "frozen", 17, "random", legacy_extra)
     converged = SimpleNamespace(**vars(base))
@@ -306,6 +313,11 @@ def test_old_runners_converge_rid_isolated_and_legacy_unchanged(
     converged.epochs = 1
     extra = runner._run_extra(converged)
     assert extra.endswith("_valplateau_v2")
+    bestval = SimpleNamespace(**vars(converged))
+    bestval.convergence_mode = "bestval"
+    bestval_extra = runner._run_extra(bestval)
+    assert bestval_extra.endswith("_bestval_v1")
+    assert bestval_extra != extra and "_valplateau_v2" not in bestval_extra
     assert ledger.run_id("m", "t", "frozen", 17, "random", extra) != legacy_rid
     converged.smoke = True
     smoke_extra = runner._run_extra(converged)
@@ -315,6 +327,8 @@ def test_old_runners_converge_rid_isolated_and_legacy_unchanged(
 def test_ssp_converge_rid_separates_data_budgets():
     base = SimpleNamespace(lr=3e-4, rank=8, n_train=2000, n_test=400,
                            smoke=False, converge=True)
+    bestval = SimpleNamespace(**vars(base), convergence_mode="bestval")
+    assert finetune_ssp._run_extra(bestval).endswith("_bestval_v1")
     small = SimpleNamespace(**vars(base))
     small.n_train = 100
     small_test = SimpleNamespace(**vars(base))
@@ -426,9 +440,85 @@ def test_clf_random_split_is_independent_of_formal_training_seed():
     assert random_split(rows, seed=17) != random_split(rows, seed=29)
 
 
+@pytest.mark.parametrize("module_name", [
+    "rnafteval.finetune_one", "rnafteval.finetune_base", "rnafteval.finetune_mrl",
+    "rnafteval.finetune_clf", "rnafteval.finetune_spl", "rnafteval.finetune_regbase",
+    "rnafteval.finetune_ssp", "rnafteval.e6_forget"])
+def test_bestval_without_converge_fails_before_cuda_or_training(
+        module_name, monkeypatch):
+    argv = [module_name, "--model", "mock", "--strategy", "frozen",
+            "--seed", "17", "--device", "0",
+            "--convergence-mode", "bestval"]
+    if module_name != "rnafteval.e6_forget":
+        argv += ["--split", "random"]
+    monkeypatch.setattr(sys, "argv", argv)
+    monkeypatch.setattr(torch.cuda, "is_available",
+                        lambda: pytest.fail("CUDA was touched before argument validation"))
+    if module_name == "rnafteval.finetune_regbase":
+        argv += ["--task", "degradation"]
+    elif module_name == "rnafteval.finetune_one":
+        argv += ["--task", "noncoding-rna-family"]
+    with pytest.raises(ValueError, match="requires --converge"):
+        runpy.run_module(module_name, run_name="__main__")
+
+
+def test_e6_restore_precedes_post_eval_and_save_checkpoint():
+    from rnafteval import e6_forget
+    source = open(e6_forget.__file__).read()
+    restore = source.index("vp.restore_best_checkpoint")
+    assert source.index("post_drift = drift_eval", restore) > restore
+    assert source.index("post = nll_eval", restore) > restore
+    assert "vp.validate_convergence_args(args)" in source
+    assert "vp.make_tracker(out_dir, args, rid, save_best)" in source
+
+
+def test_all_runners_guard_bestval_and_restore_before_eval():
+    runners = (finetune_one, finetune_base, finetune_mrl, finetune_clf,
+               finetune_spl, finetune_regbase, finetune_ssp)
+    for runner in runners:
+        tree = ast.parse(open(runner.__file__).read())
+        main = next(node for node in tree.body
+                    if isinstance(node, ast.FunctionDef) and node.name == "main")
+        lines = open(runner.__file__).read().splitlines()
+        validated = restored = False
+        for node in ast.walk(main):
+            if not isinstance(node, (ast.If, ast.Expr)):
+                continue
+            text = ast.get_source_segment("\n".join(lines), node)
+            if "vp.validate_convergence_args(args)" in text:
+                validated = True
+            if isinstance(node, ast.If) and "vp.restore_best_checkpoint(" in text:
+                restored = True
+                test = ast.get_source_segment("\n".join(lines), node.test)
+                assert "args.converge" in test
+                assert 'args.convergence_mode == "bestval"' in test
+                body = ast.get_source_segment("\n".join(lines), node)
+                if runner is finetune_ssp:
+                    assert open(runner.__file__).read().index(
+                        "vp.restore_best_checkpoint") < open(
+                            runner.__file__).read().index(
+                                "val_scores, val_golds = collect_scores(val)")
+                assert not any(isinstance(child, ast.IfExp)
+                               for child in ast.walk(node))
+        assert validated and restored, runner.__name__
+
+
+def test_bestval_runner_result_contracts_include_acceptance():
+    for runner in (finetune_one, finetune_base, finetune_mrl, finetune_clf,
+                   finetune_spl, finetune_regbase, finetune_ssp):
+        source = open(runner.__file__).read()
+        assert "acceptance_eligible=not args.smoke" in source
+        assert "vp.make_tracker(out_dir, args, rid, save_best)" in source
+    source = open(finetune_clf.__file__).read()
+    assert "split_evidence.json" in source
+    assert "data_evidence=data_evidence" in source
+
+
 def test_modification_is_sequence_multilabel_not_per_base():
     source = open(finetune_base.__file__).read()
     assert 'make_head("per-seq", d, 12)' in source
     assert "align_base_labels" not in source
     assert "aucs[7]" in source
     assert "BEACON sequence-level multi-label; m6A index 7" in source
+    from rnafteval.task_registry import TASKS
+    assert TASKS["modification"].granularity == "per-seq"

@@ -108,7 +108,7 @@ def _run_extra(args):
         return legacy
     n_tag = "" if args.n_train == 2000 else "_e3%d" % args.n_train
     nt_tag = "" if args.n_test == 400 else "_nt%d" % args.n_test
-    return legacy + n_tag + nt_tag + "_valplateau_v2"
+    return legacy + n_tag + nt_tag + vp.protocol_tag(args)
 
 
 def main() -> int:
@@ -133,6 +133,7 @@ def main() -> int:
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
     vp.add_convergence_args(ap)
     args = ap.parse_args()
+    vp.validate_convergence_args(args)
 
     if not torch.cuda.is_available():
         print(json.dumps({"event": "CUDA_UNAVAILABLE_ABORT"}), flush=True)
@@ -237,9 +238,12 @@ def main() -> int:
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
     pw_t = torch.tensor(pw, device=device)
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def run_batch(b, train_mode: bool):
@@ -311,6 +315,8 @@ def main() -> int:
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # ---- eval: pair-level F1, threshold tuned on val ----
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, device)
     backbone.eval()
     head.eval()
 

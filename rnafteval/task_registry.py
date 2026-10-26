@@ -39,7 +39,7 @@ TASKS: dict[str, TaskSpec] = {
         "spliceai", "structure", "per-base", "gene", "",
         "MACRO_F1", "spliceai"),
     "modification": TaskSpec(
-        "modification", "function", "per-base", "transcript", "",
+        "modification", "function", "per-seq", "transcript", "",
         "AUC", "modification"),
     "noncoding-rna-family": TaskSpec(
         "noncoding-rna-family", "function", "per-seq", "sequence", "",

@@ -1,11 +1,12 @@
-"""Per-base task runner: modification (m6A-style) — token head + BCE.
+"""BEACON sequence-level multi-label modification prediction.
+
+Each 101-nt sequence has 12 modification-type targets. The prediction head
+uses pooled sequence representations and BCE. The primary reported value is
+m6A AUC (label index 7); the 12-label mean AUC is auxiliary.
 
 Usage:
-  python -m rnafteval.finetune_base --model RNA-Sc-10M --task modification \
-      --strategy frozen --seed 17 --split random --device 6 --epochs 3
-
-Eval metric: AUC over all base positions (BEACON official), plus
-per-sequence mean AUC fallback if needed.
+  python -m rnafteval.finetune_base --model RiNALMo-micro --task modification \
+      --strategy lora --seed 17 --split random --device 0 --converge
 """
 from __future__ import annotations
 
@@ -40,7 +41,7 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
-    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
+    protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag +
             protocol_tag + getattr(args, "out_suffix", "_seqmlfix"))
 
@@ -67,6 +68,7 @@ def main() -> int:
     ap.add_argument("--out-suffix", default="",
                     help="optional protocol label appended to the run_id")
     args = ap.parse_args()
+    vp.validate_convergence_args(args)
 
     if not torch.cuda.is_available():
         print(json.dumps({"event": "CUDA_UNAVAILABLE_ABORT"}), flush=True)
@@ -188,9 +190,12 @@ def main() -> int:
     train_params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
-    tracker = vp.PlateauTracker(
-        out_dir, patience=args.patience, min_delta=args.min_delta,
-        run_id=rid) if args.converge else None
+    def save_best(epoch, val_loss):
+        vp.save_best_checkpoint(
+            os.path.join(out_dir, "best.ckpt"), backbone, head,
+            epoch=epoch, best_epoch=epoch, best_val=val_loss)
+    tracker = vp.make_tracker(out_dir, args, rid, save_best) \
+        if args.converge else None
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
@@ -256,6 +261,8 @@ def main() -> int:
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval: one AUC per modification type, m6A is official label index 7 ---
+    if args.converge and args.convergence_mode == "bestval":
+        vp.restore_best_checkpoint(tracker, backbone, head, device)
     backbone.eval()
     head.eval()
     ys, ps = [], []
