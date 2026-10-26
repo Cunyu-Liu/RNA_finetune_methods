@@ -30,9 +30,13 @@ E6_DIR = os.path.join(ROOT, "artifacts", "e6")
 
 MIN_DELTA = 0.02   # relative improvement threshold (2%)
 PATIENCE = 3       # trailing epochs that must be flat
+ABS_FLOOR = 0.008  # absolute improvement floor: at low loss (<0.05) the
+# relative rule amplifies noise; the effective tolerance is
+# max(best*MIN_DELTA, ABS_FLOOR). Preregistered 2026-10-26 (three-check).
 
 
-def classify(losses, min_delta=MIN_DELTA, patience=PATIENCE):
+def classify(losses, min_delta=MIN_DELTA, patience=PATIENCE,
+             abs_floor=ABS_FLOOR):
     """Return (status, detail) for a list of per-epoch train losses."""
     if not losses:
         return "EMPTY", "no epochs recorded"
@@ -45,15 +49,17 @@ def classify(losses, min_delta=MIN_DELTA, patience=PATIENCE):
     if best <= 0:
         return "INVALID", "non-positive loss cannot use relative delta"
     tail = losses[-patience:]
-    if all(x <= best * (1.0 + min_delta) for x in tail):
-        # flat tail at (or near) the running best → converged
-        return "CONVERGED", "tail within %.1f%% of best %.4f" % (
-            min_delta * 100, best)
+    tol = max(best * min_delta, abs_floor)
+    if all(x <= best + tol for x in tail):
+        # flat tail at (or near) the running best → converged (dual criteria:
+        # relative 2% OR absolute floor, whichever is larger)
+        return "CONVERGED", "tail within max(%.1f%%, %.3f) of best %.4f" % (
+            min_delta * 100, abs_floor, best)
     return "NOT_CONVERGED", "tail still improving (best %.4f, tail %s)" % (
         best, ["%.4f" % x for x in tail])
 
 
-def audit_cell(result_dir, min_delta, patience):
+def audit_cell(result_dir, min_delta, patience, abs_floor=ABS_FLOOR):
     p = Path(result_dir) / "plateau.json"
     rj = Path(result_dir) / "result.json"
     cell = os.path.basename(result_dir)
@@ -69,7 +75,7 @@ def audit_cell(result_dir, min_delta, patience):
     losses = d.get("epoch_train_losses", [])
     if d.get("protocol") != "valplateau_v1":
         return cell, "INVALID", "unknown protocol %r" % d.get("protocol")
-    status, detail = classify(losses, min_delta, patience)
+    status, detail = classify(losses, min_delta, patience, abs_floor)
     return cell, status, detail
 
 

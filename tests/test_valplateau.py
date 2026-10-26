@@ -12,6 +12,17 @@ def test_converged_flat_tail():
     assert s == "CONVERGED", d
 
 
+def test_converged_low_loss_oscillation_dual_criteria():
+    # loss < 0.05: relative 2% is noise-amplifying; abs floor governs
+    s, _ = vp.classify([1.0, 0.5, 0.2, 0.05, 0.0209, 0.015, 0.0131])
+    assert s == "CONVERGED", _
+
+
+def test_not_converged_low_loss_still_large_drops():
+    s, _ = vp.classify([1.0, 0.5, 0.2, 0.06, 0.05, 0.03, 0.01])
+    assert s == "NOT_CONVERGED"
+
+
 def test_not_converged_still_improving():
     s, _ = vp.classify([1.0, 0.8, 0.6, 0.4, 0.2, 0.1])
     assert s == "NOT_CONVERGED"
