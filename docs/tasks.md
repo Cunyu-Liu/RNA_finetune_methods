@@ -832,3 +832,14 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [ ] corrected 结果达到 B23 + 收敛门禁后，重刷导出表/图，进行至少三轮 ledger 原始行对账，再更新 preprint 与结果版 PPT。
 - [ ] 每个修复/实验批次完成后提交并经 Mac bundle 通道推 GitHub；大型备份与 manifest 留 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`。
 - [ ] 最终复核 spec/tasks/checklist、训练日志、PPT 与论文中的任务数、指标、有效格数和协议标签一致；T0.3.1 三签及 C/D 门禁不得因工程进度自行勾销。
+
+## F. 2026-10-27 best-val 与八任务扩展续接
+
+- [x] `bestval_v1` 保存/恢复最佳 backbone+head，独立 RID、真实 CUDA/runtime、result/plateau/ledger 与 checkpoint 内容审计；GitHub `f4f6e09`、`37959d3`。
+- [x] 远程 151 项 focused tests、本地 191 项全仓 tests 通过；ncRNA LoRA、modification LoRA、MRL full、modification-E6 LoRA 的真实 CUDA smoke 均通过，全部 `acceptance_eligible=false`。
+- [x] BEACON modification 更正为序列级 12 标签；旧 527 条任务结果与 29 条 E6 记录 invalid，旧 fixed-epoch E6 入口禁用。
+- [x] SSP 全量 13,401 条 dot-bracket 与原始 npy 配对矩阵一致；未发现需新增隔离的标签错误。
+- [~] rank8 与 MRL/m6A 正式 best-val lane 已启动，当前只证明真实子进程运行，未宣称完成；MRL/m6A 首次后台启动的 `cd` 错误已改绝对路径修复。
+- [~] ncRNA pre/LoRA/full 诊断代码已完成，post 强制 best-val 和逐 tensor 恢复核验；真实 GPU 输出、双 split 三状态联合 t-SNE 仍待验收。
+- [ ] 统一队列按实际显存和 proof 补齐 8 任务；继续 C2 LR、C3 rank/PEFT、C4 同源数据量等价线、C5b/C5c/C5d，1500/2000/2500 与三档 RiNALMo 不遗漏。
+- [ ] 所有正式结果三轮 ledger/result 对账后刷新原数据、图和 PPT；不把 450 个 registry 待办、launcher 或 smoke 记为科学完成。

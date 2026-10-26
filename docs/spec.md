@@ -488,3 +488,24 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 **⑨ E6 阶段自推进**：E6-v1 micro 已 6/6 双证收口，模型清单自动推进到 ERNIE-RNA/RNA-FM。`e6_phase` 逐格验证并原子更新；E6-v2 6 格与 corrected 342 格均有只读 verify-complete，未完成不得标 DONE，完成后禁止 monitor 空跑复活。遗留 `bash -s` 旧父进程及其 q_splmore/q_master 已清剿。
 
 **⑩ AIDO 协作式独占窗口**：`exclusive_aido` 以原子标志协调 corrected/E6/CRISPR 在新 cell 前等待，当前 child 自然结束后执行 AIDO MRL s43，finally 清标志并恢复队列。排空判据允许等待 parent 的小型 CUDA context，但要求实际训练进程清空且总显存≤512MiB。完成必须 `finetune_mrl` 的 PEARSON_R 双证 + `audit_1016=0`；未达前仍为在途，不得写完成。
+
+### 10.15 导师汇报八任务扩展与验收计划（2026-10-27）
+
+- 统一 random/family、17/29/43、frozen/LoRA/full，官方模型优先；结论①–⑤、同源 small-full(n) vs large-LoRA(m)、三状态 t-SNE、C5b/C5c/C5d 均须逐格 result+ledger 回源。C5c 固定补 {1500,2000,2500} 与 RiNALMo micro/mega/giga。
+- 先修协议再跑图：validation 不参与 test，早停不用 test；历史 fixed-epoch、smoke、cancelled/invalid 不与新正式臂混均值。PPT 原第3页后插任务地图，结论①a后插同构任务扩展图；未验收数值只标在测。
+
+### 10.16 BEACON modification 官方任务语义
+
+- `modification` 是 101nt 序列级 12 标签 BCE，m6A=index 7，m6A AUC 主指标、12 类 mean AUC 辅助；不是 per-base 位点预测。真实 8 任务为序列级分类3、序列级回归1、碱基级分类2、碱基级回归2。
+- 527 条旧 modification 结果与 29 条旧 modification-E6 记录保持 invalid；新结果强制 `_seqmlfix`。不得恢复“逐碱基免疫”或 granularity 因果结论。真正 per-base m6A 须另找数据源并独立注册。
+
+### 10.17 `valplateau_v2` 与 `bestval_v1`
+
+- 旧 val2 诊断出现过拟合的格标 cancelled，保留曲线，不强训到末轮。`bestval_v1` 固定 patience=3、min_delta=.02、abs_floor=.008；实质改善时保存 backbone+head，停止后恢复最佳 checkpoint 再评估。
+- best-val 与 plateau 使用不同 RID/目录/报告口径；`--convergence-mode bestval` 必须搭配 `--converge`，fixed epoch 不得隐式走 best-val。split evidence 的 protocol 与实际选择协议一致。
+
+### 10.18 调度证明与机制诊断
+
+- 调度器按唯一 job key/RID/result_dir、显存预算与 model/cell 锁派发；best.ckpt 须真实 tensor state，result/plateau/ledger 的曲线、best 元组、checkpoint、runtime 一致。rc=75 是跳过，rc=0 无完整证明仍失败；jobs registry 不是完成清单。
+- ncRNA 同一 test manifest 比较 pre/Post-LoRA/Post-full，保存 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family。post 恢复 best-val 后逐 tensor 核验；pre 参考头 seed=201，其 ACC 不作 zero-shot。联合 t-SNE 一次拟合，silhouette 用原始高维表示，不作因果证明。
+- 当前只完成工程验收与专用 lane 启动；8 任务、C2–C5 和最终图仍按实际 result 完成，不能用 smoke 或计划数替代。

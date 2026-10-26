@@ -1,4 +1,13 @@
 
+## 2026-10-27 · best-val 工程验收、正式 lane 与机制诊断
+
+- `f4f6e09` 实现 best-val checkpoint 保存/恢复与严格调度证明，`37959d3` 修正 split evidence 的协议标签；两提交均已推 GitHub 并经 bundle fast-forward 部署。远程同提交 151 项 focused tests 通过；本地全仓 191 项通过。
+- 真实 RTX 5090 smoke：ncRNA LoRA、modification LoRA、MRL full 与 modification-E6 LoRA 均完成 best-val 停止、checkpoint 内容审计和 runtime 证据。smoke RID 独立且 `acceptance_eligible=false`，所有指标只用于工程验证。
+- 短时并发初始化曾触发 CUDA OOM，未开始对应训练、未写 result；错峰后 full 与 E6 smoke 均成功。不得将该现象误记为模型收敛失败，也不得 CPU 降级。
+- rank8 launcher 两个 random 正式子进程已启动；MRL/m6A launcher 初次因后台 `cd` 作用域报 `No such file or directory`，改绝对路径后 MRL 两个正式子进程已启动。两者均使用 best-val；launcher 启动不代表矩阵完成。
+- 机制诊断保存相同样本的 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family 信息。post 强制 best-val，并在导出前恢复最佳权重、逐 tensor 核验；pre 使用 seed 201 的未训练参考头，其 ACC 不作 zero-shot 结论。三状态 manifest 一致才联合 t-SNE，silhouette 只用原始高维表示。
+- 全量 SSP 13,401 条 dot-bracket 与原始 npy 配对矩阵一致，无需因此重跑。旧 modification-E6 的 29 条记录已确认 invalid，旧 fixed-epoch modification 入口现拒绝执行，新 RID 强制 `_seqmlfix`。
+
 ## 2026-10-27 · 过拟合分支切换 best-val 与任务语义复核
 
 - 复核 rank8/MRL 的真实训练日志和 validation 曲线：5 个在训格出现训练损失持续下降、验证损失长期回升，未满足 `valplateau_v2`。这些格不作为完成结果，也不继续无上限训练。
