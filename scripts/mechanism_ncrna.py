@@ -497,6 +497,14 @@ def aligned_tsne(states, output_path):
             silhouette[state] = None
         else:
             silhouette[state] = float(silhouette_score(values, arrays["labels"]))
+    split_values = {str(arrays["split"]) for _, arrays, _, _ in states
+                    if "split" in arrays}
+    seed_values = {int(arrays["seed"]) for _, arrays, _, _ in states
+                   if "seed" in arrays}
+    if len(split_values) > 1 or len(seed_values) > 1:
+        raise ValueError("states do not share split and seed")
+    split = next(iter(split_values), "unknown")
+    seed = next(iter(seed_values), -1)
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez(output_path, tsne=coordinates, cls=cls, head_embedding=head_embedding,
@@ -504,11 +512,13 @@ def aligned_tsne(states, output_path):
              state=np.concatenate([
                  np.full(len(arrays["sample_ids"]), state) for state, arrays, _, _ in states]),
              sample_ids=np.tile(ids, len(states)),
+             split=np.asarray(split), seed=np.asarray(seed, dtype=np.int64),
              silhouette=np.asarray(json.dumps(silhouette)),
              tsne_random_state=np.asarray(17), tsne_perplexity=np.asarray(perplexity),
              test_manifest_sha256=np.asarray(states[0][2]),
              interpretation=np.asarray("descriptive_only_no_head_causality"))
-    return {"path": str(output_path), "n_per_state": len(ids),
+    return {"path": str(output_path), "split": split, "seed": seed,
+            "n_per_state": len(ids),
             "n_total": len(head_embedding), "perplexity": perplexity,
             "random_state": 17, "silhouette_head_embedding": silhouette,
             "silhouette_input": "original_head_embedding",
