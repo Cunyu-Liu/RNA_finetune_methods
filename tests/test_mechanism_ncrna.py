@@ -645,7 +645,7 @@ def test_cli_contract_and_diagnostic_rid():
     assert args.max_per_family == 60 and args.convergence_mode == "bestval"
     assert mech.run_id("lora", "family", 17) == \
         "mech_rinalmomicro_ncrna_lora_family_s17_mech_v1"
-    assert mech.ARTIFACT_ROOT == Path("/root/rnaft/artifacts/mechanism")
+    assert mech.ARTIFACT_ROOT == mech.TEAMS_ROOT / "artifacts" / "mechanism"
     assert mech.MODEL == "RiNALMo-micro"
 
 

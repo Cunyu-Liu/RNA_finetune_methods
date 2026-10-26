@@ -34,7 +34,7 @@ STATES = ("pre", "lora", "full")
 TEAMS_ROOT = Path(os.environ.get(
     "RNAFT_TEAMS_ROOT", "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval"))
 ARTIFACT_ROOT = Path(os.environ.get(
-    "RNAFT_MECHANISM_ROOT", "/root/rnaft/artifacts/mechanism"))
+    "RNAFT_MECHANISM_ROOT", str(TEAMS_ROOT / "artifacts" / "mechanism")))
 DATA_ROOT = Path(os.environ.get("RNAFT_DATA_ROOT", str(TEAMS_ROOT / "data")))
 LOCAL_DATA_ROOT = Path("/root/rna-ft-eval/data")
 MAX_LEN = 512
