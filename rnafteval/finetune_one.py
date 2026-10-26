@@ -45,9 +45,10 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     e3_tag = "" if not args.n_train else "_e3%d" % args.n_train
+    dense_tag = "_dense" if getattr(args, "dense_clusters", False) else ""
     protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") +
-            ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag +
+            ("_ri" if args.random_init else "") + lr_tag + e3_tag + dense_tag + rank_tag +
             protocol_tag + getattr(args, "out_suffix", ""))
 
 
@@ -70,6 +71,8 @@ def main() -> int:
                     help="random-init control arm (pretrained vs random gap)")
     ap.add_argument("--n-train", type=int, default=0,
                     help="E3 小数据档: 10/100/1000 (簇级子集); 0=全量")
+    ap.add_argument("--dense-clusters", action="store_true",
+                    help="use nested whole-cluster _dense subsets for C5c")
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
     vp.add_convergence_args(ap)
@@ -77,6 +80,8 @@ def main() -> int:
                     help="optional protocol label appended to the run_id")
     args = ap.parse_args()
     vp.validate_convergence_args(args)
+    if args.dense_clusters and (args.split != "family" or args.n_train <= 0):
+        raise ValueError("--dense-clusters requires --split family and --n-train > 0")
 
     # --- GPU discipline: no CUDA => abort with evidence ---
     if not torch.cuda.is_available():
@@ -124,9 +129,9 @@ def main() -> int:
         }
         if args.n_train > 0:
             # E3 小数据档: 簇级降采样子集（行号表, e3_subsampler 产物）
-            sub_path = os.path.join(
-                ROOT, "data", "e3_subsets",
-                "ncrna_%d_s%d.txt" % (args.n_train, args.seed))
+            subset_name = "ncrna_%d_s%d%s.txt" % (
+                args.n_train, args.seed, "_dense" if args.dense_clusters else "")
+            sub_path = os.path.join(ROOT, "data", "e3_subsets", subset_name)
             with open(sub_path) as f:
                 keep = {int(x) for x in f.read().split()}
             train_rows = [r for r, sp in zip(recs, d["split"])
@@ -147,18 +152,24 @@ def main() -> int:
         parts = random_split(recs, seed=17)
     data_evidence = None
     if args.converge:
+        prepare_n = 0 if args.dense_clusters and args.split == "family" \
+            else args.n_train
         (parts["train"], parts["val"], parts["test"],
          data_evidence) = prepare_convergence_splits(
             parts["train"], parts["val"], parts["test"],
-            n_train=args.n_train, sample_seed=args.seed,
+            n_train=prepare_n, sample_seed=args.seed,
             family=args.split == "family",
             validation_source="family_validation" if args.split == "family"
             else "random_split_validation",
             evidence_path=os.path.join(out_dir, "split_evidence.json"),
             protocol=vp.protocol_tag(args).lstrip("_"))
         if args.split == "family" and args.n_train > 0:
-            data_evidence["train_sampling"]["candidate_pool"] = \
-                "precomputed_cluster_subset"
+            data_evidence["train_sampling"].update({
+                "candidate_pool": "precomputed_nested_cluster_subset"
+                if args.dense_clusters else "precomputed_cluster_subset",
+                "requested_n_train": args.n_train,
+                "whole_cluster_retained_after_prepare": args.dense_clusters,
+            })
     if args.smoke:
         # 全量数据取 labels（防止截断后 label 集不全导致 KeyError），
         # parts 各截前 60 条
@@ -292,6 +303,8 @@ def main() -> int:
         "ckpt_bytes": ckpt_size, "head_params": head_params,
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
+        "dense_clusters": args.dense_clusters,
+        "requested_n_train": args.n_train,
     }
     if args.converge:
         result.update(tracker.result_fields())

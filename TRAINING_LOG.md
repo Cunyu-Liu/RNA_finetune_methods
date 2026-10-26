@@ -10,6 +10,7 @@
 - 真实 pre 已完成 random 757 条、family 856 条并落 `/teams`；首次两个 post 因多任务叠加 OOM，失败目录与日志已隔离到 `handoff_20261027/mechanism_oom_20261027/`。后续单 worker 按 LoRA 8 GiB、full 12 GiB 启动前门槛等待，不无限重试、不 CPU 降级。
 - 机制绘图代码分别导出 CLS/head.pool 三状态 PNG、PDF、逐点坐标 CSV 与 silhouette/metadata；RiNALMo 参考口径为 CLS+family 着色。坐标文件显式保存 split/seed，禁止把 head.pool 坐标冒充 CLS。本机 sklearn 1.6.1 的 t-SNE 实测出现进程崩溃，测试使用确定性投影检查布局；远程 sklearn 1.7.2 的真实 t-SNE 已通过，正式图在远程生成并另行验收。
 - 统一注册表 450 格分为专用 MRL/m6A/rank8 lane 与 324 个 complementary 格，已断言无 micro-rank8 或 MRL/m6A LoRA/full 重复。调度器将显存压力视为等待，只有需求超过整卡才拒绝；外部释放显存后可继续派发。新批次通过 `RNAFT_ARTIFACT_ROOT` 将 result/checkpoint 直接写 `/teams`，registry 与 runner 共用同一路径，避免 `artifacts/artifacts` 错配。
+- C5c 新增 `dense` 整簇采样协议：{10,100,1000,1500,2000,2500,3000} × seeds 17/29/43/101，同 seed 簇顺序只排一次、档位嵌套、簇内不截断。旧 E3 文件不改；dense 使用独立 RID 和文件，runner 不再做第二次行级抽样，result 同时记录 requested_n_train 与实际 n_train。
 - E6 旧 launcher 已完成 s17 LoRA/full：ΔNLL=0.590438/0.764648（单种子，不作最终倍数结论），序列级 12 标签、masked-NLL、best-val、CUDA 和 checkpoint 均有效，无需因重复后缀重跑。旧 launcher 的后续种子保持运行；兼容 proof 待其结束后部署，避免修改运行中的脚本。
 - s17 LoRA 的 `data_evidence.protocol` 旧标签已仅做元数据修正为 bestval，原始 result/split/plateau/ledger 已备份至 `handoff_20261027/e6_metadata_label_s17_lora/`；完整 E6 proof 复验通过，指标未改。下游导出显式排除 `s0-heldout`，E6 不混入任务性能 CSV。
 - 全量 SSP 13,401 条 dot-bracket 与原始 npy 配对矩阵一致，无需因此重跑。旧 modification-E6 的 29 条记录已确认 invalid，旧 fixed-epoch modification 入口现拒绝执行，新 RID 强制 `_seqmlfix`。

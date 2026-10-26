@@ -50,7 +50,7 @@ DEFAULTS = {
 def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
              n_train=None, rank=8, out_suffix="", module=None,
              max_len=None, n_test=None, batch_size=None, need_gb=None,
-             lr=None, smoke=False):
+             lr=None, smoke=False, dense_clusters=False):
     runner = module or TASK_MODULES[task]
     config = DEFAULTS[task]
     n_train = config["n_train"] if n_train is None else n_train
@@ -62,7 +62,10 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
                            epochs=config["epochs"], smoke=smoke,
                            converge=True, convergence_mode=mode,
                            out_suffix=out_suffix, n_test=n_test,
-                           random_init=False)
+                           random_init=False, dense_clusters=dense_clusters)
+    if dense_clusters and (task != "noncoding-rna-family" or split != "family"
+                           or n_train <= 0 or runner is not finetune_one):
+        raise ValueError("dense clusters require finetune_one, family split and n_train > 0")
     if protocol != vp.PROTOCOL and protocol != vp.BESTVAL_PROTOCOL:
         raise ValueError("unsupported protocol: " + protocol)
     extra = runner._run_extra(args)
@@ -71,7 +74,7 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     job = {
         "task": task, "model": model, "strategy": strategy, "split": split,
         "seed": seed, "lr": lr, "rank": rank, "n_train": n_train,
-        "protocol": protocol, "rid": rid,
+        "protocol": protocol, "rid": rid, "dense_clusters": dense_clusters,
         "result_dir": str(ROOT / rid),
         "module": module_name, "expected_metric": METRICS[task],
         "need_gb": need_gb if need_gb is not None else (
@@ -83,6 +86,8 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     }
     if out_suffix:
         job["args"] += ["--out-suffix", out_suffix]
+    if dense_clusters:
+        job["args"] += ["--dense-clusters"]
     if max_len is not None:
         job["args"] += ["--max-len", str(max_len)]
     if n_test is not None:
