@@ -22,8 +22,7 @@ import torch
 
 from . import ledger, valplateau as vp
 from .splits import (
-    assert_no_overlap, family_split, prepare_convergence_splits, random_split,
-    seeded_sample)
+    assert_no_overlap, family_split, prepare_convergence_splits, random_split)
 from .strategies import apply_strategy, make_head
 from .tasks import ncrna
 
@@ -49,7 +48,7 @@ def _run_extra(args):
     protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
     return (("_smoke" if args.smoke else "") +
             ("_ri" if args.random_init else "") + lr_tag + e3_tag + rank_tag +
-            protocol_tag)
+            protocol_tag + getattr(args, "out_suffix", ""))
 
 
 def main() -> int:
@@ -74,6 +73,8 @@ def main() -> int:
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
     vp.add_convergence_args(ap)
+    ap.add_argument("--out-suffix", default="",
+                    help="optional protocol label appended to the run_id")
     args = ap.parse_args()
 
     # --- GPU discipline: no CUDA => abort with evidence ---
@@ -145,19 +146,17 @@ def main() -> int:
         parts = random_split(recs, seed=17)
     data_evidence = None
     if args.converge:
-        e3_family = args.split == "family" and args.n_train > 0
         (parts["train"], parts["val"], parts["test"],
          data_evidence) = prepare_convergence_splits(
             parts["train"], parts["val"], parts["test"],
-            n_train=0 if e3_family else args.n_train, sample_seed=args.seed,
+            n_train=args.n_train, sample_seed=args.seed,
             family=args.split == "family",
             validation_source="family_validation" if args.split == "family"
             else "random_split_validation",
             evidence_path=os.path.join(out_dir, "split_evidence.json"))
-        if e3_family:
-            data_evidence["train_sampling"] = {
-                "method": "precomputed_cluster_subset", "n_train": args.n_train,
-                "seed": args.seed, "rows_after": len(parts["train"])}
+        if args.split == "family" and args.n_train > 0:
+            data_evidence["train_sampling"]["candidate_pool"] = \
+                "precomputed_cluster_subset"
     if args.smoke:
         # 全量数据取 labels（防止截断后 label 集不全导致 KeyError），
         # parts 各截前 60 条
