@@ -17,6 +17,24 @@ EXTRA_EP=${EXTRA_EP:-10}
 
 echo "[e6cont] start $(date)" >> "$LOG"
 
+wait_for_vram() {
+  local need_mb=${1:-9000}
+  local waited=0
+  while true; do
+    local free_mb
+    free_mb=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+    [ "$free_mb" -ge "$need_mb" ] && break
+    if [ "$waited" -eq 0 ]; then
+      echo "[e6cont] WAIT_VRAM need=${need_mb}MB free=${free_mb}MB $(date +%H:%M)" >> "$LOG"
+    fi
+    sleep 300
+    waited=$((waited+300))
+    [ "$waited" -ge 21600 ] && return 1
+  done
+  [ "$waited" -gt 0 ] && echo "[e6cont] VRAM_OK free=${free_mb}MB after ${waited}s" >> "$LOG"
+  return 0
+}
+
 run_cell() {
   local model=$1 strat=$2 seed=$3 lr=$4
   local base=$R/artifacts/e6/${model}_${strat}_s${seed}_mlm15fix_seedfix
@@ -35,6 +53,7 @@ run_cell() {
     EP=$((EXTRA_EP * 3))
     echo "[e6cont] no base ckpt -> full rerun epochs=$EP $model $strat s$seed" >> "$LOG"
   fi
+  wait_for_vram 9500 || return 1
   echo "[e6cont] RUN $model $strat s$seed (epochs=$EP) $(date +%H:%M)" >> "$LOG"
   timeout 86400 "$PY" -m rnafteval.e6_forget \
     --model "$model" --strategy "$strat" --seed "$seed" --lr "$lr" \

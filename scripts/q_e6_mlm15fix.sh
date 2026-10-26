@@ -25,6 +25,26 @@ proof() {
 }
 
 ok=0
+
+wait_for_vram() {
+  # E6 优先窗口：显存不足时等待（而非立刻 OOM）；每 5min 检查，最长 6h
+  local need_mb=${1:-9000}
+  local waited=0
+  while true; do
+    local free_mb
+    free_mb=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits | head -1)
+    [ "$free_mb" -ge "$need_mb" ] && break
+    if [ "$waited" -eq 0 ]; then
+      echo "[mlm15fix] WAIT_VRAM need=${need_mb}MB free=${free_mb}MB $(date +%H:%M)" >> "$LOG"
+    fi
+    sleep 300
+    waited=$((waited+300))
+    [ "$waited" -ge 21600 ] && return 1
+  done
+  [ "$waited" -gt 0 ] && echo "[mlm15fix] VRAM_OK free=${free_mb}MB after ${waited}s" >> "$LOG"
+  return 0
+}
+
 run_cell() {
   local model=$1 strat=$2 seed=$3 lr=$4 bs=$5
   if [ -n "${MODELS:-}" ] && [[ " $MODELS " != *" $model "* ]]; then
@@ -60,6 +80,7 @@ run_cell() {
       return 1
     fi
   fi
+  wait_for_vram 9500 || return 1
   echo "[mlm15fix] RUN $model $strat s$seed lr$lr bs$bs $(date +%H:%M)" >> $LOG
   $PY -m rnafteval.e6_forget --model "$model" --strategy "$strat" \
     --seed "$seed" --lr "$lr" --device "$DEV" --epochs 10 \
