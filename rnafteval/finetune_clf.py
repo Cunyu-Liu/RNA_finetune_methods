@@ -152,7 +152,9 @@ def main():
                 ROOT, "data", "beacon_raw", "noncoding-rna-family", "data"))
             from .tasks.dedup import dedup
             recs = dedup(recs)
-            parts = random_split(recs, seed=args.seed)
+            # Formal seeds vary training/subsampling, not the data split.
+            # Keep this identical to finetune_one and the preregistered protocol.
+            parts = random_split(recs, seed=17)
 
     if args.n_train > 0:
         rng = random.Random(args.seed)

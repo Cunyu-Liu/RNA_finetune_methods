@@ -414,3 +414,13 @@ def test_family_cluster_overlap_fails_and_preserves_evidence(tmp_path):
     saved = json.loads(path.read_text())
     assert saved["status"] == "INVALID"
     assert "FAMILY OVERLAP" in saved["error"]
+
+
+def test_clf_random_split_is_independent_of_formal_training_seed():
+    from rnafteval.splits import random_split
+    source = open(finetune_clf.__file__).read()
+    assert "parts = random_split(recs, seed=17)" in source
+    assert "parts = random_split(recs, seed=args.seed)" not in source
+    rows = [{"seq": "ACGU" * 5 + str(i)} for i in range(100)]
+    assert random_split(rows, seed=17) == random_split(rows, seed=17)
+    assert random_split(rows, seed=17) != random_split(rows, seed=29)
