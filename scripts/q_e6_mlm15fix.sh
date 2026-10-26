@@ -80,7 +80,9 @@ run_cell() {
       return 1
     fi
   fi
-  wait_for_vram 9500 || return 1
+  local NEED=9500
+  if [ "$strat" = "lora" ]; then NEED=8000; fi
+  wait_for_vram $NEED || return 1
   echo "[mlm15fix] RUN $model $strat s$seed lr$lr bs$bs $(date +%H:%M)" >> $LOG
   $PY -m rnafteval.e6_forget --model "$model" --strategy "$strat" \
     --seed "$seed" --lr "$lr" --device "$DEV" --epochs 10 \
