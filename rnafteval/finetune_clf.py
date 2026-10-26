@@ -395,9 +395,11 @@ def main():
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
-    ledger_fields = vp.result_ledger_fields(result) if args.converge else {}
-    ledger.update(rid, "done", value=value, metric=metric,
-                  extra_fields=result, **ledger_fields)
+    if args.converge:
+        ledger.update(rid, "done", **vp.result_ledger_fields(result))
+    else:
+        ledger.update(rid, "done", value=value, metric=metric,
+                      extra_fields=result)
     print(json.dumps(result))
     return 0
 

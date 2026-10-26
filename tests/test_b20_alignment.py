@@ -528,3 +528,9 @@ def test_modification_is_sequence_multilabel_not_per_base():
     from rnafteval import finetune_mrl, finetune_ssp
     for runner in (finetune_mrl, finetune_ssp):
         assert 'protocol=vp.protocol_tag(args).lstrip("_")' in open(runner.__file__).read()
+
+
+def test_clf_converged_ledger_update_has_no_duplicate_metric():
+    source = open(finetune_clf.__file__).read()
+    assert 'ledger.update(rid, "done", **vp.result_ledger_fields(result))' in source
+    assert 'extra_fields=result, **ledger_fields' not in source
