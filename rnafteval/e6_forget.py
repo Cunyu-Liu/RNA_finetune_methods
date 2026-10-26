@@ -286,6 +286,12 @@ def main():
                     help="0 = full ncRNA train set")
     ap.add_argument("--mask-rate", type=float, default=0.15)
     ap.add_argument("--out-suffix", default="")
+    ap.add_argument("--save-ckpt", action="store_true",
+                    help="save backbone/head/optimizer checkpoint for "
+                         "valplateau continuation runs")
+    ap.add_argument("--init-ckpt", default="",
+                    help="resume weights from a saved ckpt.pt "
+                         "(continuation protocol)")
     args = ap.parse_args()
     device = int(args.device)
     t0 = time.time()
@@ -386,6 +392,13 @@ def main():
         tp += [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(tp, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
+    if args.init_ckpt:
+        state = torch.load(args.init_ckpt, map_location="cuda:%d" % device)
+        if hasattr(backbone, "load_state_dict"):
+            backbone.load_state_dict(state["backbone"])
+        head.load_state_dict(state["head"])
+        print("resumed weights from %s (epoch %d)" % (
+            args.init_ckpt, state.get("epoch", -1)), flush=True)
     tr_backbone = args.strategy in ("lora", "full", "dora", "ia3", "prefix")
     enc_core = _official_encoder(backbone) if is_official else None
     for ep in range(args.epochs):
@@ -431,6 +444,16 @@ def main():
             os.replace(_tmp, _pl)
         except Exception as _e:
             print("plateau-persist skipped: %s" % _e, flush=True)
+
+    if args.save_ckpt:
+        ck = os.path.join(out_dir, "ckpt.pt")
+        tmp_ck = ck + ".tmp"
+        torch.save({"backbone": backbone.state_dict(),
+                    "head": head.state_dict(),
+                    "epoch": args.epochs - 1,
+                    "run_id": rid}, tmp_ck)
+        os.replace(tmp_ck, ck)
+        print("checkpoint saved to %s" % ck, flush=True)
 
     # --- post-finetune S0 NLL ---
     if is_official and hasattr(backbone, "merge_and_unload") and \
