@@ -6,6 +6,8 @@
 - 短时并发初始化曾触发 CUDA OOM，未开始对应训练、未写 result；错峰后 full 与 E6 smoke 均成功。不得将该现象误记为模型收敛失败，也不得 CPU 降级。
 - rank8 launcher 两个 random 正式子进程已启动；MRL/m6A launcher 初次因后台 `cd` 作用域报 `No such file or directory`，改绝对路径后 MRL 两个正式子进程已启动。两者均使用 best-val；launcher 启动不代表矩阵完成。
 - 首批正式三证结果：rank8 random s17/s29 ACC=0.926573/0.907925（best epoch 10/7）；MRL random LoRA s17/s29/s43 Pearson r=0.803231/0.803096/0.805451（best epoch 3/7/6）。result、ledger、best.ckpt、validation/CUDA 一致，5 个 artifact 已迁移 `/teams` 并保留原 out_dir symlink，迁移后 proof 复验通过。family 与剩余种子未完成，不能据此宣称旧评测错误已定位。
+- rank8 已完成 6/6：random 0.918026±0.009421、family 0.900312±0.005268；MRL micro 已完成 12/12：LoRA random/family=0.803926/0.711024，full random/family=0.799254/0.702377。均通过 ledger/result/curve+checkpoint 三层验收，旧低值未复现但不据此宣称根因已定位。
+- 结论③页换成 `rank_review.png`：ncRNA best-val 与 SSP/MRL legacy rank 分开展示，m6A 旧数值撤下。legacy 精确 RID 共 108 条/36 组 n=3；seed101 和非默认 LR 不入图。整份 PPT 文本 diff 仅该页改变，布局 Issues=0、CRC 和实际渲染通过，旧媒体归档未删除。
 - 机制诊断保存相同样本的 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family 信息。post 强制 best-val，并在导出前恢复最佳权重、逐 tensor 核验；pre 使用 seed 201 的未训练参考头，其 ACC 不作 zero-shot 结论。三状态 manifest 一致才联合 t-SNE，silhouette 只用原始高维表示。
 - 真实 pre 已完成 random 757 条、family 856 条并落 `/teams`；首次两个 post 因多任务叠加 OOM，失败目录与日志已隔离到 `handoff_20261027/mechanism_oom_20261027/`。后续单 worker 按 LoRA 8 GiB、full 12 GiB 启动前门槛等待，不无限重试、不 CPU 降级。
 - 机制绘图代码分别导出 CLS/head.pool 三状态 PNG、PDF、逐点坐标 CSV 与 silhouette/metadata；RiNALMo 参考口径为 CLS+family 着色。坐标文件显式保存 split/seed，禁止把 head.pool 坐标冒充 CLS。本机 sklearn 1.6.1 的 t-SNE 实测出现进程崩溃，测试使用确定性投影检查布局；远程 sklearn 1.7.2 的真实 t-SNE 已通过，正式图在远程生成并另行验收。
