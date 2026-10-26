@@ -273,6 +273,8 @@ def proof_state(cell):
         return "conflict", "ledger is missing valplateau_v2 protocol evidence"
     if row.get("stop_reason") != vp.STOP_REASON:
         return "conflict", "ledger is missing validation stop evidence"
+    if row.get("convergence_status") != "CONVERGED":
+        return "conflict", "ledger is missing CONVERGED status evidence"
     if row.get("epoch_val_losses") != payload.get("epoch_val_losses"):
         return "conflict", "ledger/result validation curves differ"
     return "complete", ""

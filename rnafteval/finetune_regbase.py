@@ -318,6 +318,7 @@ def main() -> int:
     }
     if args.converge:
         ledger_fields.update(tracker.result_fields())
+        ledger_fields["convergence_status"] = ledger_fields.pop("status")
         ledger_fields.update(n_val=len(val), runtime=runtime)
     ledger.update(rid, "done", value=pcc, metric="PCC", **ledger_fields)
     print(json.dumps(result, default=str)[:400], flush=True)

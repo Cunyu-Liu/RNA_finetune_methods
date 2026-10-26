@@ -315,9 +315,11 @@ def main():
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
+    ledger_fields = dict(tracker.result_fields()) if args.converge else {}
+    if args.converge:
+        ledger_fields["convergence_status"] = ledger_fields.pop("status")
     ledger.update(rid, "done", value=value, metric=metric,
-                  extra_fields=result, **(tracker.result_fields()
-                                         if args.converge else {}))
+                  extra_fields=result, **ledger_fields)
     print(json.dumps(result))
     return 0
 

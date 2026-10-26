@@ -64,8 +64,19 @@ def mark_done(runtime, cell, payload=None):
     runtime.rows[q.rid_for(cell)] = {
         "run_id": q.rid_for(cell), "status": "done",
         "protocol": q.vp.PROTOCOL, "stop_reason": q.vp.STOP_REASON,
+        "convergence_status": "CONVERGED",
         "epoch_val_losses": payload["epoch_val_losses"],
     }
+
+
+def test_ledger_convergence_status_is_required(runtime, monkeypatch):
+    cell = make_cell()
+    make_double_proof(runtime, cell)
+    runtime.rows[q.rid_for(cell)].pop("convergence_status")
+    monkeypatch.setattr(q.subprocess, "run",
+                        lambda *args, **kwargs: pytest.fail("must not rerun"))
+    outcome = q.run_cell(cell)
+    assert not outcome["ok"] and "CONVERGED status" in outcome["reason"]
 
 
 def write_plateau(cell, payload=None):

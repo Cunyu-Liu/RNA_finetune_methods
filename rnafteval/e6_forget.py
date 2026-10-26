@@ -576,6 +576,7 @@ def main():
     fields = {k: v for k, v in result.items() if k not in ("run_id", "protocol")}
     if args.converge:
         fields["protocol"] = result["protocol"]
+        fields["convergence_status"] = fields.pop("status")
     update(rid, status="done", **fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0
