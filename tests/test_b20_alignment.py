@@ -424,3 +424,11 @@ def test_clf_random_split_is_independent_of_formal_training_seed():
     rows = [{"seq": "ACGU" * 5 + str(i)} for i in range(100)]
     assert random_split(rows, seed=17) == random_split(rows, seed=17)
     assert random_split(rows, seed=17) != random_split(rows, seed=29)
+
+
+def test_modification_is_sequence_multilabel_not_per_base():
+    source = open(finetune_base.__file__).read()
+    assert 'make_head("per-seq", d, 12)' in source
+    assert "align_base_labels" not in source
+    assert "aucs[7]" in source
+    assert "BEACON sequence-level multi-label; m6A index 7" in source

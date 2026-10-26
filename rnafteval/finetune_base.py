@@ -176,14 +176,15 @@ def main() -> int:
         test = test[:320]
 
     from .models import load_model
-    from .strategies import apply_strategy, TokenHead
+    from .strategies import apply_strategy, make_head
     spec, tok, backbone = load_model(args.model, device)
     with torch.no_grad():
         probe = encode_seqs(tok, [train[0]["seq"]], device, 128)
         d = backbone(**probe).last_hidden_state.shape[-1]
     backbone, n_trainable = apply_strategy(backbone, args.strategy, lora_rank=args.rank)
-    # token-level BCE head: outputs 1 logit per token
-    head = TokenHead(d, 1, hidden=32).to(device)
+    # BEACON Modification is sequence-level multi-label prediction of 12
+    # modification types, not a per-base label grid (official train_modification).
+    head = make_head("per-seq", d, 12).to(device)
     train_params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
@@ -193,11 +194,12 @@ def main() -> int:
     runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
-        from .base_alignment import align_base_labels
         enc = encode_seqs(tok, [r["seq"] for r in b], device, 128)
-        y, supervision = align_base_labels(
-            tok, enc, b, 128, dtype=torch.float32)
-        return enc, y, supervision
+        labels = [r["labels"] for r in b]
+        if any(len(x) != 12 for x in labels):
+            raise ValueError("BEACON modification requires 12 multi-label targets")
+        y = torch.tensor(labels, dtype=torch.float32, device=device)
+        return enc, y
 
     for ep in vp.training_epochs(args):
         import random as _rd
@@ -208,7 +210,7 @@ def main() -> int:
         head.train()
         tot, nb = 0.0, 0
         for b in batches(_rows, args.batch_size):
-            enc, y, supervision = make_batch(b)
+            enc, y = make_batch(b)
             no_grad = args.strategy in ("frozen", "head-only")
             import contextlib
             with contextlib.nullcontext() if not no_grad \
@@ -216,7 +218,7 @@ def main() -> int:
                 h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
             logits = head(h, pad).squeeze(-1)
-            mask = supervision.float()
+            mask = torch.ones_like(y)
             loss = torch.nn.functional.binary_cross_entropy_with_logits(
                 logits, y, reduction="none") * mask
             loss = loss.sum() / mask.sum().clamp(min=1)
@@ -234,11 +236,11 @@ def main() -> int:
             val_tot, val_nb = 0.0, 0
             with torch.no_grad():
                 for b in batches(val, args.batch_size * 2):
-                    enc, y, supervision = make_batch(b)
+                    enc, y = make_batch(b)
                     h = backbone(**enc).last_hidden_state
                     pad = enc["attention_mask"] == 0
                     logits = head(h, pad).squeeze(-1)
-                    mask = supervision.float()
+                    mask = torch.ones_like(y)
                     loss_map = torch.nn.functional.binary_cross_entropy_with_logits(
                         logits, y, reduction="none") * mask
                     val_loss = loss_map.sum() / mask.sum().clamp(min=1)
@@ -253,24 +255,28 @@ def main() -> int:
                 break
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
-    # --- eval: AUC over non-pad positions ---
+    # --- eval: one AUC per modification type, m6A is official label index 7 ---
     backbone.eval()
     head.eval()
     ys, ps = [], []
     with torch.no_grad():
         for b in batches(test, args.batch_size * 2):
-            enc, y, supervision = make_batch(b)
+            enc, y = make_batch(b)
             h = backbone(**enc).last_hidden_state
             pad = enc["attention_mask"] == 0
-            logits = head(h, pad).squeeze(-1)
-            m = supervision
-            ys.append(y[m].cpu().numpy())
-            ps.append(torch.sigmoid(logits[m]).cpu().numpy())
+            logits = head(h, pad)
+            ys.append(y.cpu().numpy())
+            ps.append(torch.sigmoid(logits).cpu().numpy())
     from sklearn.metrics import roc_auc_score
     y_all = np.concatenate(ys)
     p_all = np.concatenate(ps)
-    auc = float(roc_auc_score(y_all, p_all)) if len(set(y_all.tolist())) > 1 \
-        else float("nan")
+    aucs = np.full(12, 0.5, dtype=float)
+    for label_idx in range(12):
+        if len(np.unique(y_all[:, label_idx])) > 1:
+            aucs[label_idx] = roc_auc_score(
+                y_all[:, label_idx], p_all[:, label_idx])
+    auc = float(aucs[7])
+    mean_auc = float(aucs.mean())
 
     wall = time.time() - t0
     peak = torch.cuda.max_memory_allocated(args.device) / (1 << 20)
@@ -279,6 +285,8 @@ def main() -> int:
         "strategy": args.strategy, "seed": args.seed, "split": args.split,
         "metric": "AUC", "value": auc, "n_train": len(train),
         "n_test": len(test), "wall_sec": round(wall, 1),
+        "metric_mean_auc": mean_auc, "aucs_by_modification": aucs.tolist(),
+        "label_semantics": "BEACON sequence-level multi-label; m6A index 7",
         "peak_mem_mb": round(peak, 1),
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
