@@ -558,13 +558,22 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
     if not pending:
         return _report(jobs, outcomes)
     try:
-        free_bytes, _total = torch.cuda.mem_get_info(device)
+        free_bytes, total_bytes = torch.cuda.mem_get_info(device)
     except Exception as exc:
         for job in pending:
             outcomes.append(_finish(store, records[job.job_key], "failed",
                                     "CUDA memory check failed: %s" % exc))
         return _report(jobs, outcomes)
     budget_gb = free_bytes / GI
+    for job in list(pending):
+        if job.need_gb * GI > total_bytes:
+            outcomes.append(_finish(
+                store, records[job.job_key], "failed",
+                "need_gb %.3f exceeds total device memory %.3f" %
+                (job.need_gb, total_bytes / GI)))
+            pending.remove(job)
+    if not pending:
+        return _report(jobs, outcomes)
     running = {}
 
     def finish_running(job, rc, reason=""):
@@ -595,6 +604,14 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
             if rc is not None:
                 finish_running(job["job"], rc)
         while pending and len(running) < workers:
+            if not running:
+                # External workers may release memory while this queue waits.
+                # Refresh only with no owned jobs, avoiding double subtraction.
+                try:
+                    free_now, _ = torch.cuda.mem_get_info(device)
+                    budget_gb = max(budget_gb, free_now / GI)
+                except Exception:
+                    pass
             job = pending[0]
             record = records[job.job_key]
             state, reason = proof_state(job)
@@ -611,13 +628,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                 pending.pop(0)
                 continue
             if job.need_gb > budget_gb:
-                if not running:
-                    outcomes.append(_finish(
-                        store, record, "failed",
-                        "need_gb %.3f exceeds initial free budget %.3f" %
-                        (job.need_gb, budget_gb)))
-                    pending.pop(0)
-                    continue
+                # Memory pressure is a wait state, not a failed scientific run.
                 break
             if any(item["job"].model == job.model for item in running.values()):
                 break

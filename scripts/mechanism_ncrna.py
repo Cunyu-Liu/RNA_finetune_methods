@@ -12,6 +12,7 @@ import random
 import re
 import subprocess
 import sys
+import time
 
 import numpy as np
 import torch
@@ -63,6 +64,24 @@ def require_cuda(device=0):
                            (device, count))
     torch.cuda.set_device(device)
     return "cuda:%d" % device
+
+
+def wait_for_cuda_memory(device, required_gb, poll_s=60.0):
+    if required_gb <= 0:
+        return None
+    index = torch.device(device).index
+    required = required_gb * (1024 ** 3)
+    while True:
+        free, total = torch.cuda.mem_get_info(index)
+        if required > total:
+            raise RuntimeError("required CUDA memory exceeds total device capacity")
+        if free >= required:
+            print("CUDA_MEMORY_READY free_gb=%.3f required_gb=%.3f" %
+                  (free / 1024 ** 3, required_gb), flush=True)
+            return {"free_bytes_at_start": free, "required_gb": required_gb}
+        print("WAIT_CUDA_MEMORY free_gb=%.3f required_gb=%.3f" %
+              (free / 1024 ** 3, required_gb), flush=True)
+        time.sleep(poll_s)
 
 
 def sha256_file(path):
@@ -517,6 +536,9 @@ def build_parser():
     parser.add_argument("--out-suffix", default="_mech_v1")
     parser.add_argument("--n-test", type=int, default=0)
     parser.add_argument("--max-per-family", type=int, default=60)
+    parser.add_argument("--wait-free-gb", type=float, default=0.0,
+                        help="wait for this free CUDA memory before loading the model")
+    parser.add_argument("--memory-poll-s", type=float, default=60.0)
     vp.add_convergence_args(parser)
     parser.set_defaults(convergence_mode="bestval")
     return parser
@@ -527,6 +549,9 @@ def validate_args(args):
         raise ValueError("out-suffix must begin with _ and contain no path separators")
     if args.batch_size <= 0 or args.epochs <= 0:
         raise ValueError("batch-size and epochs must be positive")
+    if getattr(args, "wait_free_gb", 0.0) < 0 \
+            or getattr(args, "memory_poll_s", 60.0) <= 0:
+        raise ValueError("wait-free-gb must be nonnegative and memory-poll-s positive")
     if args.strategy != "pre" and not args.converge:
         raise ValueError("post diagnostic requires --converge and held-out validation")
     if args.strategy != "pre" and getattr(args, "convergence_mode", "bestval") != "bestval":
@@ -540,6 +565,8 @@ def run(args):
         raise RuntimeError("formal diagnostic cannot replace requested GPU with CPU")
     cuda_index = args.device
     args.device = device
+    memory_evidence = wait_for_cuda_memory(
+        device, args.wait_free_gb, args.memory_poll_s)
     rid = run_id(args.strategy, args.split, args.seed, args.out_suffix)
     out_dir = ARTIFACT_ROOT / rid
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -559,6 +586,8 @@ def run(args):
         "max_per_family": args.max_per_family, "n_classes": N_CLASSES,
         "out_suffix": args.out_suffix, "converge": bool(args.converge),
         "cuda_device": device, "patience": args.patience, "min_delta": args.min_delta,
+        "wait_free_gb": args.wait_free_gb, "memory_poll_s": args.memory_poll_s,
+        "memory_evidence": memory_evidence,
         "abs_floor": vp.ABS_FLOOR,
         "convergence_mode": (getattr(args, "convergence_mode", "plateau")
                              if args.strategy == "pre" else "bestval"),

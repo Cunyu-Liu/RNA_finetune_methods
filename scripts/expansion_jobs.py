@@ -102,11 +102,20 @@ def main(argv=None):
     parser.add_argument("--strategies", default="frozen,lora,full")
     parser.add_argument("--protocol", choices=("bestval_v1", "valplateau_v2"),
                         default="bestval_v1")
+    parser.add_argument("--lane", choices=("complementary", "all"),
+                        default="complementary",
+                        help="exclude cells owned by specialized MRL/m6A/rank8 lanes")
     args = parser.parse_args(argv)
     jobs = []
     for model in args.models.split(","):
         for task in args.tasks.split(","):
             for strategy in args.strategies.split(","):
+                if args.lane == "complementary":
+                    if task in ("mrl", "modification") and strategy in ("lora", "full"):
+                        continue
+                    if (task == "noncoding-rna-family"
+                            and model == "RiNALMo-micro" and strategy == "lora"):
+                        continue
                 for split in ("random", "family"):
                     for seed in (17, 29, 43):
                         jobs.append(job_for(task, model, strategy, split, seed,
@@ -118,7 +127,8 @@ def main(argv=None):
     os.replace(temporary, path)
     print(json.dumps({"jobs": len(jobs), "models": args.models,
                       "tasks": args.tasks, "strategies": args.strategies,
-                      "protocol": args.protocol, "output": str(path)}, indent=2))
+                      "protocol": args.protocol, "lane": args.lane,
+                      "output": str(path)}, indent=2))
     return 0
 
 

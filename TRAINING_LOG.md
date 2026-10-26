@@ -6,6 +6,8 @@
 - 短时并发初始化曾触发 CUDA OOM，未开始对应训练、未写 result；错峰后 full 与 E6 smoke 均成功。不得将该现象误记为模型收敛失败，也不得 CPU 降级。
 - rank8 launcher 两个 random 正式子进程已启动；MRL/m6A launcher 初次因后台 `cd` 作用域报 `No such file or directory`，改绝对路径后 MRL 两个正式子进程已启动。两者均使用 best-val；launcher 启动不代表矩阵完成。
 - 机制诊断保存相同样本的 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family 信息。post 强制 best-val，并在导出前恢复最佳权重、逐 tensor 核验；pre 使用 seed 201 的未训练参考头，其 ACC 不作 zero-shot 结论。三状态 manifest 一致才联合 t-SNE，silhouette 只用原始高维表示。
+- 真实 pre 已完成 random 757 条、family 856 条并落 `/teams`；首次两个 post 因多任务叠加 OOM，失败目录与日志已隔离到 `handoff_20261027/mechanism_oom_20261027/`。后续单 worker 按 LoRA 8 GiB、full 12 GiB 启动前门槛等待，不无限重试、不 CPU 降级。
+- 统一注册表 450 格分为专用 MRL/m6A/rank8 lane 与 324 个 complementary 格，已断言无 micro-rank8 或 MRL/m6A LoRA/full 重复。调度器将显存压力视为等待，只有需求超过整卡才拒绝；外部释放显存后可继续派发。
 - 全量 SSP 13,401 条 dot-bracket 与原始 npy 配对矩阵一致，无需因此重跑。旧 modification-E6 的 29 条记录已确认 invalid，旧 fixed-epoch modification 入口现拒绝执行，新 RID 强制 `_seqmlfix`。
 
 ## 2026-10-27 · 过拟合分支切换 best-val 与任务语义复核

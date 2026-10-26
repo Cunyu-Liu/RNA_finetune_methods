@@ -442,3 +442,43 @@ def test_custom_patience_is_used_by_protocol_audit(proof_env):
                         plateau_updates={"patience": 4})
     state, reason = q.proof_state(proof_env.job)
     assert state == "conflict" and "patience not exhausted" in reason
+
+
+def test_complementary_registry_excludes_specialized_lane_cells(tmp_path):
+    import expansion_jobs as registry
+    output = tmp_path / "jobs.json"
+    assert registry.main(["--output", str(output)]) == 0
+    jobs = json.loads(output.read_text())
+    assert len(jobs) == 324
+    cells = {(j["model"], j["task"], j["strategy"]) for j in jobs}
+    assert not any(task in ("mrl", "modification") and strategy in ("lora", "full")
+                   for _model, task, strategy in cells)
+    assert ("RiNALMo-micro", "noncoding-rna-family", "lora") not in cells
+    assert ("RiNALMo-micro", "noncoding-rna-family", "full") in cells
+    assert len({j["rid"] for j in jobs}) == len(jobs)
+    assert all("_bestval_v1" in j["rid"] for j in jobs)
+
+
+def test_external_memory_release_is_wait_not_permanent_failure(proof_env, monkeypatch):
+    readings = iter([(4 * q.GI, 32 * q.GI), (4 * q.GI, 32 * q.GI),
+                     (20 * q.GI, 32 * q.GI), (20 * q.GI, 32 * q.GI)])
+    monkeypatch.setattr(q.torch.cuda, "mem_get_info", lambda device: next(readings))
+    monkeypatch.setattr(q.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(q.subprocess, "Popen", lambda *a, **k: FakeProcess(rc=9))
+    state_dir = Path(proof_env.job.result_dir).parent / "memory-wait-state"
+    assert q.dispatch([proof_env.job], state_dir=state_dir, poll_s=0.01) == 1
+    rows = [json.loads(x) for x in (state_dir / "manifest.jsonl").read_text().splitlines()]
+    assert rows[0]["status"] == "running"
+    assert rows[-1]["status"] == "failed" and "exited 9" in rows[-1]["reason"]
+    assert "initial free budget" not in rows[-1]["reason"]
+
+
+def test_need_above_total_device_is_rejected_before_launch(proof_env, monkeypatch):
+    proof_env.job.need_gb = 40
+    monkeypatch.setattr(q.torch.cuda, "mem_get_info", lambda device: (20 * q.GI, 32 * q.GI))
+    monkeypatch.setattr(q.subprocess, "Popen",
+                        lambda *a, **k: pytest.fail("impossible job launched"))
+    state_dir = Path(proof_env.job.result_dir).parent / "memory-total-state"
+    assert q.dispatch([proof_env.job], state_dir=state_dir) == 1
+    row = json.loads((state_dir / "manifest.jsonl").read_text().splitlines()[-1])
+    assert row["status"] == "failed" and "exceeds total device memory" in row["reason"]

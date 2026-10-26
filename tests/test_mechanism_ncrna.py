@@ -663,3 +663,18 @@ def test_outputs_only_descriptive_status_no_fabricated_causal_claim():
         assert "causal" not in payload["interpretation"]
         assert "mechanism_conclusion" not in payload or \
             "no_mechanism_conclusion" in payload["interpretation"]
+
+
+def test_cuda_memory_gate_waits_without_cpu_fallback(monkeypatch):
+    gi = 1024 ** 3
+    readings = iter([(2 * gi, 32 * gi), (4 * gi, 32 * gi), (10 * gi, 32 * gi)])
+    monkeypatch.setattr(mech.torch.cuda, "mem_get_info", lambda index: next(readings))
+    sleeps = []
+    monkeypatch.setattr(mech.time, "sleep", sleeps.append)
+    evidence = mech.wait_for_cuda_memory("cuda:0", 8, poll_s=0.01)
+    assert evidence["required_gb"] == 8
+    assert evidence["free_bytes_at_start"] == 10 * gi
+    assert sleeps == [0.01, 0.01]
+    monkeypatch.setattr(mech.torch.cuda, "mem_get_info", lambda index: (31 * gi, 32 * gi))
+    with pytest.raises(RuntimeError, match="exceeds total"):
+        mech.wait_for_cuda_memory("cuda:0", 33)
