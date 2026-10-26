@@ -229,6 +229,34 @@ def test_train_validation_holdout_rejects_sequence_leakage():
         split_train_validation(rows, seed=17)
 
 
+def test_spliceai_official_validation_is_not_test(monkeypatch):
+    calls = []
+    monkeypatch.setattr(finetune_spl.spl_task, "load_official_split",
+                        lambda: calls.append(()) or {
+                            "train": [], "validation": [], "test": []})
+    source = finetune_spl.__file__
+    assert source
+    text = open(source).read()
+    assert 'sp["validation"]' in text
+    assert 'sp["val"]' not in text
+    assert 'sp["train"], sp["test"]' not in text
+    from rnafteval.tasks.dedup import dedup
+    official = {
+        "train": [{"seq": "A"}, {"seq": "B"}],
+        "validation": [{"seq": "B"}, {"seq": "C"}],
+        "test": [{"seq": "C"}, {"seq": "D"}],
+    }
+    train = dedup(official["train"])
+    val = [r for r in dedup(official["validation"])
+           if r["seq"] not in {x["seq"] for x in train}]
+    test = [r for r in dedup(official["test"])
+            if r["seq"] not in {x["seq"] for x in train + val}]
+    assert_no_overlap(train, val + test, unit="seq")
+    assert_no_overlap(val, test, unit="seq")
+    assert [r["seq"] for r in val] == ["C"]
+    assert [r["seq"] for r in test] == ["D"]
+
+
 @pytest.mark.parametrize("module_name", ["rnafteval.finetune_clf",
                                          "rnafteval.finetune_spl"])
 def test_claim_blocked_module_exit_uses_rc75_and_keyword_device(

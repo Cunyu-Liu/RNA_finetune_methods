@@ -107,7 +107,20 @@ def main():
         train, test = by_side["train"], by_side["test"]
     else:
         sp = spl_task.load_official_split()
-        train, test = sp["train"], sp["test"]
+        from .tasks.dedup import dedup
+        # Official rows contain exact sequence duplicates across train,
+        # validation and test. Preserve the earlier side and never reuse
+        # test for validation-loss convergence or model selection.
+        train = dedup(sp["train"])
+        official_val = dedup(sp["validation"])
+        test = dedup(sp["test"])
+        seen_train = {r["seq"] for r in train}
+        official_val = [r for r in official_val if r["seq"] not in seen_train]
+        seen_train.update(r["seq"] for r in official_val)
+        test = [r for r in test if r["seq"] not in seen_train]
+        if args.converge:
+            assert_no_overlap(train, official_val + test, unit="seq")
+            assert_no_overlap(official_val, test, unit="seq")
 
     val = None
     if args.converge:
