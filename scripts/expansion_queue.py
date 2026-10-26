@@ -87,9 +87,7 @@ class Job:
             if self.module == "rnafteval.e6_forget":
                 return cmd + list(self.args)
             cmd += ["--split", self.split]
-            if self.module not in ("rnafteval.finetune_clf",
-                                   "rnafteval.finetune_spl",
-                                   "rnafteval.finetune_regbase"):
+            if self.module != "rnafteval.finetune_spl":
                 cmd += ["--task", self.task]
         else:
             cmd += ["--device", str(device)]

@@ -843,3 +843,5 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [~] ncRNA pre/LoRA/full 诊断代码已完成，post 强制 best-val 和逐 tensor 恢复核验；真实 GPU 输出、双 split 三状态联合 t-SNE 仍待验收。
 - [ ] 统一队列按实际显存和 proof 补齐 8 任务；继续 C2 LR、C3 rank/PEFT、C4 同源数据量等价线、C5b/C5c/C5d，1500/2000/2500 与三档 RiNALMo 不遗漏。
 - [ ] 所有正式结果三轮 ledger/result 对账后刷新原数据、图和 PPT；不把 450 个 registry 待办、launcher 或 smoke 记为科学完成。
+- [x] 28 个 dense 整簇嵌套子集已生成、逐档验证并备份 `/teams`；C5c 全任务 2016 格 dry-run 唯一性和显式 `--task` 已核验，MRL/SSP evidence 协议标签已统一。
+- [ ] C5c 2016 格在主矩阵后按资源窗口执行；ncRNA family dense 126 格不与旧 E3 混算，全量点复用主矩阵。

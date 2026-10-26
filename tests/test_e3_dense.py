@@ -75,3 +75,33 @@ def test_dense_job_registry_preserves_protocol_and_command(tmp_path):
         jobs.job_for("noncoding-rna-family", "RiNALMo-micro", "full",
                      "random", 17, n_train=1500, dense_clusters=True,
                      module=finetune_one)
+
+
+def test_c5c_ncrna_wave_has_paired_random_and_dense_family_cells():
+    wave = jobs.c5c_ncrna_jobs()
+    assert len(wave) == 252
+    assert len({job["rid"] for job in wave}) == 252
+    family = [job for job in wave if job["split"] == "family"]
+    random = [job for job in wave if job["split"] == "random"]
+    assert len(family) == len(random) == 126
+    assert all(job["dense_clusters"] and "--dense-clusters" in job["args"]
+               for job in family)
+    assert all(not job["dense_clusters"] for job in random)
+    assert {job["n_train"] for job in wave} == set(jobs.DENSE_LEVELS)
+    giga_full = [job for job in wave if job["model"] == "RiNALMo-650M"
+                 and job["strategy"] == "full"]
+    assert all("--batch-size 8" in " ".join(job["args"]) for job in giga_full)
+    assert all(job["need_gb"] == 28 for job in giga_full)
+
+
+def test_c5c_all_tasks_wave_is_unique_and_preserves_task_commands():
+    wave = jobs.c5c_all_jobs()
+    assert len(wave) == 2016
+    assert len({job["rid"] for job in wave}) == 2016
+    assert {job["task"] for job in wave} == {
+        "noncoding-rna-family", "crispr-off-target", "mrl", "modification",
+        "secondary-structure", "spliceai", "degradation", "ssi"}
+    assert sum(job["split"] == "family" and job["dense_clusters"] for job in wave) == 126
+    assert all("--batch-size 1" in " ".join(job["args"])
+               for job in wave if job["task"] == "secondary-structure"
+               and job["model"] == "RiNALMo-650M")

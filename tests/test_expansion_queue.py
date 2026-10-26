@@ -498,3 +498,14 @@ def test_artifact_root_env_is_shared_by_registry_and_runners(tmp_path):
     lines = subprocess.check_output([sys.executable, "-c", code], env=env,
                                     cwd=ROOT, text=True).splitlines()
     assert lines == [root, root + "/ft_rinalmomicro_mrl_lora_s17_random_bestval_v1"]
+
+
+@pytest.mark.parametrize("module,task", [
+    ("rnafteval.finetune_clf", "crispr-off-target"),
+    ("rnafteval.finetune_regbase", "degradation"),
+    ("rnafteval.finetune_regbase", "ssi"),
+])
+def test_task_specific_runners_receive_explicit_task(tmp_path, module, task):
+    job = make_job(tmp_path, module=module, task=task)
+    command = job.build_command(device=0)
+    assert command[command.index("--task") + 1] == task

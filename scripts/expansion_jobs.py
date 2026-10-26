@@ -16,7 +16,8 @@ from types import SimpleNamespace
 from rnafteval import valplateau as vp
 
 from rnafteval import (finetune_base, finetune_clf, finetune_mrl,
-                       finetune_one, finetune_ssp, ledger)
+                       finetune_one, finetune_regbase, finetune_spl,
+                       finetune_ssp, ledger)
 
 ROOT = Path(ledger.ARTIFACT_ROOT)
 MODELS = ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M",
@@ -34,6 +35,7 @@ METRICS = {
     "secondary-structure": "F1", "spliceai": "MACRO_F1",
     "degradation": "PCC", "ssi": "PCC",
 }
+DENSE_LEVELS = (10, 100, 1000, 1500, 2000, 2500, 3000)
 DEFAULTS = {
     "noncoding-rna-family": {"batch": 16, "n_train": 0, "epochs": 10},
     "crispr-off-target": {"batch": 8, "n_train": 0, "epochs": 10},
@@ -99,6 +101,58 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     return job
 
 
+def c5c_ncrna_jobs():
+    jobs = []
+    for model in ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"):
+        for strategy in ("lora", "full"):
+            for split in ("random", "family"):
+                for level in DENSE_LEVELS:
+                    for seed in (17, 29, 43):
+                        batch_size = (32 if model == "RiNALMo-micro" else
+                                      16 if model == "RiNALMo-mega" and strategy == "lora" else 8)
+                        need_gb = 8 if model == "RiNALMo-micro" else (
+                            16 if model == "RiNALMo-mega" else 28)
+                        jobs.append(job_for(
+                            "noncoding-rna-family", model, strategy, split, seed,
+                            n_train=level, module=finetune_one,
+                            dense_clusters=split == "family",
+                            batch_size=batch_size, need_gb=need_gb))
+    return jobs
+
+
+def c5c_other_task_jobs():
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    jobs = []
+    for task in ("crispr-off-target", "mrl", "modification",
+                 "secondary-structure", "spliceai", "degradation", "ssi"):
+        for model in ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"):
+            for strategy in ("lora", "full"):
+                for split in ("random", "family"):
+                    for level in DENSE_LEVELS:
+                        for seed in (17, 29, 43):
+                            base = DEFAULTS[task]["batch"]
+                            if model == "RiNALMo-650M":
+                                batch_size = 1 if task == "secondary-structure" \
+                                    else min(base, 4 if strategy == "full" else 8)
+                            elif model == "RiNALMo-mega" and strategy == "full":
+                                batch_size = 2 if task == "secondary-structure" \
+                                    else min(base, 8)
+                            else:
+                                batch_size = base
+                            jobs.append(job_for(
+                                task, model, strategy, split, seed,
+                                n_train=level, module=runners[task],
+                                batch_size=batch_size,
+                                need_gb=8 if model == "RiNALMo-micro" else
+                                16 if model == "RiNALMo-mega" else 28))
+    return jobs
+
+
+def c5c_all_jobs():
+    return c5c_ncrna_jobs() + c5c_other_task_jobs()
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True)
@@ -110,30 +164,39 @@ def main(argv=None):
     parser.add_argument("--lane", choices=("complementary", "all"),
                         default="complementary",
                         help="exclude cells owned by specialized MRL/m6A/rank8 lanes")
+    parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all"),
+                        default="complementary")
     args = parser.parse_args(argv)
-    jobs = []
-    for model in args.models.split(","):
-        for task in args.tasks.split(","):
-            for strategy in args.strategies.split(","):
-                if args.lane == "complementary":
-                    if task in ("mrl", "modification") and strategy in ("lora", "full"):
-                        continue
-                    if (task == "noncoding-rna-family"
-                            and model == "RiNALMo-micro" and strategy == "lora"):
-                        continue
-                for split in ("random", "family"):
-                    for seed in (17, 29, 43):
-                        jobs.append(job_for(task, model, strategy, split, seed,
-                                            protocol=args.protocol))
+    if args.wave == "c5c-ncrna":
+        jobs = c5c_ncrna_jobs()
+    elif args.wave == "c5c-all":
+        jobs = c5c_all_jobs()
+    else:
+        jobs = []
+        for model in args.models.split(","):
+            for task in args.tasks.split(","):
+                for strategy in args.strategies.split(","):
+                    if args.lane == "complementary":
+                        if task in ("mrl", "modification") and strategy in ("lora", "full"):
+                            continue
+                        if (task == "noncoding-rna-family"
+                                and model == "RiNALMo-micro" and strategy == "lora"):
+                            continue
+                    for split in ("random", "family"):
+                        for seed in (17, 29, 43):
+                            jobs.append(job_for(task, model, strategy, split, seed,
+                                                protocol=args.protocol))
     path = Path(args.output)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(json.dumps(jobs, indent=2) + "\n")
     os.replace(temporary, path)
-    print(json.dumps({"jobs": len(jobs), "models": args.models,
-                      "tasks": args.tasks, "strategies": args.strategies,
+    print(json.dumps({"jobs": len(jobs),
+                      "models": sorted({job["model"] for job in jobs}),
+                      "tasks": sorted({job["task"] for job in jobs}),
+                      "strategies": sorted({job["strategy"] for job in jobs}),
                       "protocol": args.protocol, "lane": args.lane,
-                      "output": str(path)}, indent=2))
+                      "wave": args.wave, "output": str(path)}, indent=2))
     return 0
 
 

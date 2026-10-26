@@ -122,7 +122,8 @@ def main() -> int:
             family=args.split == "family",
             validation_source="official_validation" if args.split == "random"
             else "family_validation",
-            evidence_path=os.path.join(out_dir, "split_evidence.json"))
+            evidence_path=os.path.join(out_dir, "split_evidence.json"),
+            protocol=vp.protocol_tag(args).lstrip("_"))
         print("data: train %d val %d test %d" % (
             len(train), len(val), len(test)), flush=True)
     if args.smoke:

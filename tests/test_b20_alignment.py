@@ -525,3 +525,6 @@ def test_modification_is_sequence_multilabel_not_per_base():
     source_one = open(finetune_one.__file__).read()
     assert 'protocol=vp.protocol_tag(args).lstrip("_")' in source_one
     assert 'protocol=vp.protocol_tag(args).lstrip("_")' in source
+    from rnafteval import finetune_mrl, finetune_ssp
+    for runner in (finetune_mrl, finetune_ssp):
+        assert 'protocol=vp.protocol_tag(args).lstrip("_")' in open(runner.__file__).read()

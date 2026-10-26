@@ -509,3 +509,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 - 调度器按唯一 job key/RID/result_dir、显存预算与 model/cell 锁派发；best.ckpt 须真实 tensor state，result/plateau/ledger 的曲线、best 元组、checkpoint、runtime 一致。rc=75 是跳过，rc=0 无完整证明仍失败；jobs registry 不是完成清单。
 - ncRNA 同一 test manifest 比较 pre/Post-LoRA/Post-full，保存 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family。post 恢复 best-val 后逐 tensor 核验；pre 参考头 seed=201，其 ACC 不作 zero-shot。联合 t-SNE 一次拟合，silhouette 用原始高维表示，不作因果证明。
 - 当前只完成工程验收与专用 lane 启动；8 任务、C2–C5 和最终图仍按实际 result 完成，不能用 smoke 或计划数替代。
+
+### 10.19 C5c dense 数据档与全任务波次
+
+- `prepare_e3_dense.py` 已生成 28 个 {10,100,1000,1500,2000,2500,3000}×4 seeds 的 ncRNA family 子集；同 seed 簇顺序固定、整簇累加、档位嵌套，旧 E3 文件不改。dense 文件/RID 独立，训练后不做第二次行级抽样，result 保留请求档位与实际行数。
+- C5c 注册总数为 **2016 格**：8 任务×3 个 RiNALMo 档×LoRA/full×双 split×7 数据档×3 seeds；ncRNA family dense 126 格，其余任务按各自采样协议，全量点复用主矩阵。
+- 子集和 dry-run 唯一性已通过并备份 `/teams`；当前仍是待执行矩阵。调度器必须显式传 CRISPR/degradation/SSI 的 `--task`，MRL/SSP evidence protocol 与 best-val 一致。
