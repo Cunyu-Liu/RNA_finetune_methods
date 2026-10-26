@@ -42,7 +42,7 @@ def _run_extra(args):
     e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
     protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
     return (("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag +
-            protocol_tag)
+            protocol_tag + getattr(args, "out_suffix", ""))
 
 
 def main() -> int:
@@ -64,6 +64,8 @@ def main() -> int:
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
     vp.add_convergence_args(ap)
+    ap.add_argument("--out-suffix", default="",
+                    help="optional protocol label appended to the run_id")
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
