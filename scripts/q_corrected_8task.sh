@@ -2,6 +2,12 @@
 # Single owner for B20-corrected cells; completion is decided by the dispatcher.
 set -e
 cd /home/cunyuliu/rna-ft-eval
+TASK_LANE_LOCK=/tmp/rnaft_8task_lane.lock
+exec 8>>"$TASK_LANE_LOCK"
+if ! flock -n 8; then
+  echo "[8task] another launcher holds the lock; exiting" >> /root/rnaft/logs/q_corrected_8task_outer.log
+  exit 75
+fi
 export PYTHONPATH=/root/rnaft/pypath:/home/cunyuliu/rna-ft-eval:/home/cunyuliu/rna-sc
 export HF_HOME=/root/hf_home
 export HF_ENDPOINT=https://hf-mirror.com

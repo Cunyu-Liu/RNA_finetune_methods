@@ -26,6 +26,13 @@ proof() {
 
 ok=0
 
+E6_LANE_LOCK=/tmp/rnaft_e6mlm_lane.lock
+exec 8>>"$E6_LANE_LOCK"
+if ! flock -n 8; then
+  echo "[mlm15fix] another lane instance holds the lock; exiting" >> "$LOG"
+  exit 75
+fi
+
 wait_for_vram() {
   # E6 优先窗口：显存不足时等待（而非立刻 OOM）；每 5min 检查，最长 6h
   local need_mb=${1:-9000}

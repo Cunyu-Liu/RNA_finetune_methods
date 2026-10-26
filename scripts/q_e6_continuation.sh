@@ -15,7 +15,13 @@ DEV=${DEV:-0}
 MAX_ROUNDS=${MAX_ROUNDS:-3}
 EXTRA_EP=${EXTRA_EP:-10}
 
-echo "[e6cont] start $(date)" >> "$LOG"
+CONT_LANE_LOCK=/tmp/rnaft_e6cont_lane.lock
+exec 8>>"$CONT_LANE_LOCK"
+if ! flock -n 8; then
+  echo "[e6cont] another lane instance holds the lock; exiting" >> "$LOG"
+  exit 75
+fi
+echo "[e6cont] start $(date) pid=$$" >> "$LOG"
 
 wait_for_vram() {
   local need_mb=${1:-9000}
