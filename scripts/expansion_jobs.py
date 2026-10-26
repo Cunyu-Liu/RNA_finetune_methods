@@ -18,7 +18,7 @@ from rnafteval import valplateau as vp
 from rnafteval import (finetune_base, finetune_clf, finetune_mrl,
                        finetune_one, finetune_ssp, ledger)
 
-ROOT = Path("/root/rna-ft-eval")
+ROOT = Path(ledger.ARTIFACT_ROOT)
 MODELS = ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M",
           "ERNIE-RNA", "RNA-FM")
 TASK_MODULES = {
@@ -72,7 +72,7 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
         "task": task, "model": model, "strategy": strategy, "split": split,
         "seed": seed, "lr": lr, "rank": rank, "n_train": n_train,
         "protocol": protocol, "rid": rid,
-        "result_dir": str(ROOT / "artifacts" / rid),
+        "result_dir": str(ROOT / rid),
         "module": module_name, "expected_metric": METRICS[task],
         "need_gb": need_gb if need_gb is not None else (
             8.0 if model == "RiNALMo-micro" else
@@ -90,7 +90,7 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     if smoke:
         job["args"] += ["--smoke"]
     if module is not None:
-        job["result_dir"] = str(ROOT / "artifacts" / rid)
+        job["result_dir"] = str(ROOT / rid)
     return job
 
 

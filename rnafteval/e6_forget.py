@@ -327,9 +327,9 @@ def main():
     from .splits import random_split
     from .tasks.ncrna import load_ncrna
     from .tasks.dedup import dedup
-    from .ledger import claim, update
+    from .ledger import ARTIFACT_ROOT, claim, update
 
-    out_dir = os.path.join(ROOT, "artifacts", "e6",
+    out_dir = os.path.join(ARTIFACT_ROOT, "e6",
                            "%s_%s_s%d%s" % (args.model, args.strategy,
                                             args.seed, args.out_suffix))
     os.makedirs(out_dir, exist_ok=True)

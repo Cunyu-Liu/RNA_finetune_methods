@@ -163,7 +163,7 @@ def main():
 
     from .models import load_model
     from .strategies import apply_strategy, make_head
-    from .ledger import claim, update
+    from .ledger import ARTIFACT_ROOT, claim, update
     from .finetune_one import encode_seqs as enc_cls, batches
     from .splits import prepare_convergence_splits, random_split
     from .tasks.ncrna import load_ncrna
@@ -174,7 +174,7 @@ def main():
     protocol_tag = vp.protocol_tag(args)
     smoke_tag = "_smoke" if args.smoke else ""
     out_dir = os.path.join(
-        ROOT, "artifacts", "e6",
+        ARTIFACT_ROOT, "e6",
         "%s_%s_task-%s_s%d%s%s" % (args.model, args.strategy, task_tag,
                                    args.seed, args.out_suffix + smoke_tag,
                                    protocol_tag))

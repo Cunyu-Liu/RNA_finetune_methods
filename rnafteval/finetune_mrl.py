@@ -76,7 +76,7 @@ def main() -> int:
     extra = _run_extra(args)
     rid = ledger.run_id(args.model, args.task, args.strategy, args.seed,
                         args.split, extra)
-    out_dir = os.path.join(ROOT, "artifacts", rid)
+    out_dir = os.path.join(ledger.ARTIFACT_ROOT, rid)
     os.makedirs(out_dir, exist_ok=True)
     claim = ledger.claim(args.model, args.task, args.strategy, args.seed,
                          args.split, device=args.device, out_dir=out_dir,

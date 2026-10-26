@@ -1,4 +1,6 @@
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -482,3 +484,17 @@ def test_need_above_total_device_is_rejected_before_launch(proof_env, monkeypatc
     assert q.dispatch([proof_env.job], state_dir=state_dir) == 1
     row = json.loads((state_dir / "manifest.jsonl").read_text().splitlines()[-1])
     assert row["status"] == "failed" and "exceeds total device memory" in row["reason"]
+
+
+def test_artifact_root_env_is_shared_by_registry_and_runners(tmp_path):
+    root = str(tmp_path / "team-artifacts")
+    env = dict(os.environ, PYTHONPATH=str(ROOT), RNAFT_ARTIFACT_ROOT=root)
+    code = (
+        "from rnafteval import ledger; "
+        "from scripts import expansion_jobs; "
+        "j=expansion_jobs.job_for('mrl','RiNALMo-micro','lora','random',17); "
+        "print(ledger.ARTIFACT_ROOT); print(j['result_dir'])"
+    )
+    lines = subprocess.check_output([sys.executable, "-c", code], env=env,
+                                    cwd=ROOT, text=True).splitlines()
+    assert lines == [root, root + "/ft_rinalmomicro_mrl_lora_s17_random_bestval_v1"]

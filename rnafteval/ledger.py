@@ -13,6 +13,8 @@ import json
 import os
 
 ROOT = "/root/rna-ft-eval"
+ARTIFACT_ROOT = os.environ.get(
+    "RNAFT_ARTIFACT_ROOT", os.path.join(ROOT, "artifacts"))
 LEDGER = os.path.join(ROOT, "ledger.jsonl")
 LOCK = os.path.join(ROOT, "ledger.lock")
 

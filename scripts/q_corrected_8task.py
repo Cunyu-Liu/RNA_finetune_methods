@@ -30,7 +30,7 @@ REG_MODELS = tuple(m for m in SPLICE_MODELS if m != "RiNALMo-micro")
 STRATEGIES = ("frozen", "lora", "full")
 SPLITS = ("random", "family")
 SEEDS = (17, 29, 43)
-ARTIFACTS_ROOT = Path(finetune_spl.ROOT) / "artifacts"
+ARTIFACTS_ROOT = Path(ledger.ARTIFACT_ROOT)
 LOG_ROOT = Path("/root/rnaft/logs/q_corrected_8task")
 SPLICE_TIMEOUT_S = 24 * 60 * 60
 REGBASE_TIMEOUT_S = 12 * 60 * 60
