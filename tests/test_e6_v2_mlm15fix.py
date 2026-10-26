@@ -84,6 +84,35 @@ def test_proof_rejects_v2_task_mismatch(tmp_path, proof_rows):
                      protocol_prefix="E6-v2-fixed-mask-mlm")
 
 
+def test_e6_val2_proof_uses_forgetting_protocol_and_validation_evidence(
+        tmp_path, proof_rows):
+    extra = "_mlm15fix_seedfix_valplateau_v2"
+    rid = ledger.run_id("RiNALMo-micro", "e6-forgetting", "lora", 17,
+                        "s0-heldout", extra=extra)
+    proof_rows[rid] = {"run_id": rid, "status": "done"}
+    losses = [1.0, 0.8, 0.62, 0.61, 0.605, 0.602]
+    result = result_payload(rid, "valplateau_v2")
+    result.update(
+        forgetting_protocol="E6-v1-fixed-mask-mlm: validation convergence",
+        loss_source="validation", epoch_train_losses=[0.5] * 6,
+        epoch_val_losses=losses, epochs_trained=6, status="CONVERGED",
+        stop_reason="validation_plateau_min_delta_patience")
+    write_result(tmp_path, result)
+    (tmp_path / "plateau.json").write_text(json.dumps({
+        "run_id": rid, "protocol": "valplateau_v2", "loss_source": "validation",
+        "epoch_train_losses": [0.5] * 6, "epoch_val_losses": losses,
+        "updated_epoch": 5, "status": "CONVERGED",
+        "stop_reason": "validation_plateau_min_delta_patience",
+    }))
+    assert proof.verify(tmp_path, "RiNALMo-micro", "lora", 17,
+                        extra=extra) == rid
+
+    result["epoch_val_losses"] = [1.0, 0.8, 0.6, 0.4, 0.2, 0.1]
+    write_result(tmp_path, result)
+    with pytest.raises(SystemExit, match="validation convergence proof failed"):
+        proof.verify(tmp_path, "RiNALMo-micro", "lora", 17, extra=extra)
+
+
 def fake_queue_runtime(tmp_path):
     state = tmp_path / "state"
     state.mkdir()
@@ -92,7 +121,7 @@ def fake_queue_runtime(tmp_path):
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     fake_py = fake_bin / "fake_python"
-    fake_py.write_text("""#!/root/miniconda3/envs/llr_env/bin/python
+    fake_py.write_text("""#!%s
 import json
 import os
 from pathlib import Path
@@ -118,7 +147,7 @@ if args[:2] == ["-m", "rnafteval.e6_forget_task"]:
     (state / (model + "_" + strategy + "_" + seed + ".done")).touch()
     raise SystemExit(0)
 raise SystemExit(2)
-""")
+""" % sys.executable)
     fake_py.chmod(0o755)
     fake_timeout = fake_bin / "timeout"
     fake_timeout.write_text("#!/bin/sh\nshift\nexec \"$@\"\n")

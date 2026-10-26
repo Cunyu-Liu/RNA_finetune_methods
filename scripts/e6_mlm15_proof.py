@@ -26,8 +26,15 @@ def verify(result_dir, model, strategy, seed, ledger_task="e6-forgetting",
     for key, value in expected.items():
         if result.get(key) != value:
             raise SystemExit("result mismatch: " + key)
-    if not str(result.get("protocol", "")).startswith(protocol_prefix):
+    forgetting_protocol = result.get(
+        "forgetting_protocol", result.get("protocol", ""))
+    if not str(forgetting_protocol).startswith(protocol_prefix):
         raise SystemExit("wrong E6 protocol")
+    if result.get("protocol") == "valplateau_v2":
+        import valplateau
+        _cell, status, detail = valplateau.audit_cell(result_dir)
+        if status != "CONVERGED":
+            raise SystemExit("validation convergence proof failed: " + detail)
     if result.get("training_seed_protocol") != TRAINING_SEED_PROTOCOL:
         raise SystemExit("wrong training seed protocol")
     if result.get("mask_rate") != 0.15:

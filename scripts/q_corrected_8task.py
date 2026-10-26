@@ -20,6 +20,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from rnafteval import finetune_regbase, finetune_spl, ledger
+from rnafteval import valplateau as vp
 
 SPLICE_MODELS = (
     "RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M", "ERNIE-RNA",
@@ -101,10 +102,14 @@ def runner_for(cell):
 
 def rid_for(cell):
     args = SimpleNamespace(lr=cell.lr, rank=8, n_train=0,
-                           epochs=cell.epochs, smoke=False)
+                           epochs=cell.epochs, smoke=False, converge=True)
     extra = runner_for(cell)._run_extra(args)
     return ledger.run_id(cell.model, cell.task, cell.strategy, cell.seed,
                          cell.split, extra=extra)
+
+
+def plateau_path(cell):
+    return ARTIFACTS_ROOT / rid_for(cell) / "plateau.json"
 
 
 def result_path(cell):
@@ -119,7 +124,7 @@ def build_command(cell, device=0):
         "--model", cell.model, "--task", cell.task,
         "--strategy", cell.strategy, "--seed", str(cell.seed),
         "--split", cell.split, "--device", str(device),
-        "--epochs", str(cell.epochs), "--batch-size", str(cell.batch_size),
+        "--converge", "--batch-size", str(cell.batch_size),
         "--lr", cell.lr_arg,
     ]
 
@@ -155,13 +160,89 @@ def result_error(cell, payload, rid):
         finite = False
     if not finite:
         errors.append("primary metric value is not finite numeric")
+    if payload.get("protocol") != vp.PROTOCOL:
+        errors.append("result protocol is not valplateau_v2")
+    if payload.get("smoke") is not False:
+        errors.append("formal valplateau_v2 result is a smoke run")
+    if "_smoke" in rid:
+        errors.append("formal validation RID contains smoke tag")
+    if payload.get("n_train", 0) < 1:
+        errors.append("training row count is missing or invalid")
+    if payload.get("loss_source") != "validation":
+        errors.append("result loss_source is not validation")
+    if payload.get("status") != "CONVERGED":
+        errors.append("result is not CONVERGED")
+    if payload.get("stop_reason") != vp.STOP_REASON:
+        errors.append("result stop_reason is not validation plateau")
+    train_losses = payload.get("epoch_train_losses")
+    val_losses = payload.get("epoch_val_losses")
+    if not isinstance(val_losses, list) or not val_losses:
+        errors.append("validation curve is missing or empty")
+    elif (not isinstance(train_losses, list)
+          or len(train_losses) != len(val_losses)):
+        errors.append("train/validation curves have different lengths")
+    else:
+        if vp.classify(val_losses)[0] != "CONVERGED":
+            errors.append("result validation curve is not converged")
+        if payload.get("epochs_trained") != len(val_losses):
+            errors.append("epochs_trained does not match validation curve")
+    if (not isinstance(payload.get("n_val"), int)
+            or isinstance(payload.get("n_val"), bool)
+            or payload["n_val"] < 1):
+        errors.append("n_val is missing or invalid")
+    runtime = payload.get("runtime")
+    if not isinstance(runtime, dict):
+        errors.append("tokenizer/CUDA runtime evidence is missing")
+    else:
+        if runtime.get("cuda_available") is not True:
+            errors.append("runtime does not prove CUDA availability")
+        if not str(runtime.get("cuda_device", "")).startswith("cuda:"):
+            errors.append("runtime device is not CUDA")
+        if not runtime.get("cuda_device_name"):
+            errors.append("CUDA device name is missing")
+        if not runtime.get("cuda_runtime_version"):
+            errors.append("CUDA runtime version is missing")
+        if not runtime.get("tokenizer_class"):
+            errors.append("tokenizer class is missing")
+        if not runtime.get("tokenizer_name_or_path"):
+            errors.append("tokenizer name/path is missing")
+        vocab_size = runtime.get("tokenizer_vocab_size")
+        if (not isinstance(vocab_size, int) or isinstance(vocab_size, bool)
+                or vocab_size < 1):
+            errors.append("tokenizer vocab size is missing or invalid")
+    return "; ".join(errors)
+
+
+def plateau_error(payload, plateau, rid):
+    if not isinstance(plateau, dict):
+        return "plateau JSON is not an object"
+    expected = {
+        "run_id": rid, "protocol": vp.PROTOCOL, "loss_source": "validation",
+        "status": "CONVERGED", "stop_reason": vp.STOP_REASON,
+        "min_delta": vp.MIN_DELTA, "patience": vp.PATIENCE,
+        "abs_floor": vp.ABS_FLOOR,
+    }
+    errors = ["plateau %s mismatch" % key for key, value in expected.items()
+              if plateau.get(key) != value]
+    losses = plateau.get("epoch_val_losses")
+    if losses != payload.get("epoch_val_losses"):
+        errors.append("result/plateau validation curves differ")
+    if plateau.get("epoch_train_losses") != payload.get("epoch_train_losses"):
+        errors.append("result/plateau train curves differ")
+    if not isinstance(losses, list) or plateau.get("updated_epoch") != len(losses) - 1:
+        errors.append("plateau updated_epoch does not match validation curve")
+    else:
+        status, detail = vp.classify(losses)
+        if status != "CONVERGED":
+            errors.append("validation curve is not converged: " + detail)
     return "; ".join(errors)
 
 
 def proof_state(cell):
-    """complete = double proof; runnable = no result and ledger not done."""
+    """complete requires ledger, result and validation-plateau proof."""
     rid = rid_for(cell)
     path = result_path(cell)
+    pp = plateau_path(cell)
     row = ledger.by_run_id(rid)
     ledger_done = bool(row and row.get("status") == "done")
     if not path.exists():
@@ -176,8 +257,24 @@ def proof_state(cell):
     error = result_error(cell, payload, rid)
     if error:
         return "conflict", error
+    if not pp.exists():
+        return "conflict", "result exists but validation plateau.json is missing"
+    try:
+        with pp.open() as fh:
+            plateau = json.load(fh)
+    except (OSError, ValueError) as exc:
+        return "conflict", "invalid plateau.json: %s" % exc
+    error = plateau_error(payload, plateau, rid)
+    if error:
+        return "conflict", error
     if not ledger_done:
-        return "conflict", "valid result.json but ledger is not done"
+        return "conflict", "valid result/validation proof but ledger is not done"
+    if row.get("protocol") != vp.PROTOCOL:
+        return "conflict", "ledger is missing valplateau_v2 protocol evidence"
+    if row.get("stop_reason") != vp.STOP_REASON:
+        return "conflict", "ledger is missing validation stop evidence"
+    if row.get("epoch_val_losses") != payload.get("epoch_val_losses"):
+        return "conflict", "ledger/result validation curves differ"
     return "complete", ""
 
 
@@ -280,11 +377,11 @@ def verify_complete():
         if state != "complete":
             incomplete.append((cell, state, reason))
     if incomplete:
-        print("CORRECTED_VERIFY_INCOMPLETE cells=%d complete=%d incomplete=%d" %
+        print("CORRECTED_3TASK_VERIFY_INCOMPLETE tasks=3 cells=%d complete=%d incomplete=%d" %
               (len(cells), len(cells) - len(incomplete), len(incomplete)),
               flush=True)
         return 1
-    print("CORRECTED_VERIFY_COMPLETE cells=%d" % len(cells), flush=True)
+    print("CORRECTED_3TASK_VERIFY_COMPLETE tasks=3 cells=%d" % len(cells), flush=True)
     return 0
 
 

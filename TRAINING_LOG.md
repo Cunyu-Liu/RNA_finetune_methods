@@ -188,3 +188,13 @@
 - **主审修正**：等待中的 corrected parent 可保留 ~418MiB CUDA context，drain 判据改为“实际训练进程清空 + 总显存≤512MiB”，不再要求 compute PID 绝对为空，避免 AIDO 永久饿死。59 tests + monitor 故障注入通过。
 - **部署**：只停止 monitor 与 lane parent，当前 splice/CRISPR child 全部自然继续；新 monitor 启动后 AIDO 标志已建立，其它 parent 在边界等待，当前正在等待 GPU 排空。无重复 monitor，未强制中止任何训练 child。
 - **当前判读**：AIDO MRL s43 尚未出结果；窗口成功后自动清除标志并恢复其它队列，失败也清理等待状态，不能造成永久阻塞。
+
+## 2026-10-26 晚（validation v2 修复与导师讨论 PPT，未执行远程训练）
+
+- **科学边界**：本轮读取全部交接、spec/tasks/checklist、图集与 20 页 PPT。用户确认最终 8 任务按真实粒度分类：ncRNA/CRISPR（序列级分类）、MRL（序列级回归）、m6A/SpliceAI/SSP（碱基级分类）、degradation/SSI（碱基级回归）。不沿用旧“每类两个”或 CRISPR 未定连续/三档口径。
+- **发现**：`valplateau_v1` 实际读取训练损失，不满足 validation-loss 合同；SPL/regbase 官方 train/test 数据没有独立 validation；regbase 的 n_train 头切片不随正式 seed 改变；三任务 verify 不能覆盖全 8 任务。空审计目录可能假成功，family 的 train/val/test cluster 也需三方隔离。
+- **实现**：新增 `valplateau_v2` 共用跟踪器与审计。clf/spl/regbase/e6 启用 `--converge` 后以独立 held-out validation 的逐 epoch loss 判断 `min_delta+patience`，不受固定 epochs 上限；真实 CUDA/tokenizer 上下文、独立 RID、原子曲线、停止原因与 result/ledger 顶层证据一并保存。旧 v1 标 TRAIN_ONLY，不能与 v2 混算。SPL/regbase 从 train 确定性划 validation，test 不参与停止；regbase 改 seeded sample，family 三方 cluster 断言补齐。E6 的 validation 是 ncRNA 分类 CE，S0 NLL 仍只用于遗忘。
+- **验收**：q_corrected_8task 新格使用 `--converge`；ledger+result+validation 收敛+CUDA/tokenizer 才可通过。输出明确为三任务子验收，不宣称全 8 任务验收。77 项 focused tests 连续三遍通过（环境 `PYTHONPATH=scripts:.`），语法检查通过。测试只覆盖逻辑与协议，未声称真实 CUDA 或模型训练已执行。
+- **远程状态**：用户提供入口 `px2-jcy.matpool.com:29375` 多次在认证前被关闭/重置，或密码认证失败。未启动、停止或修改任何远程队列，未访问实时 ledger，未新增 GPU 实验。恢复后先盘点真实 HEAD/GPU/队列，再做 tokenizer/CUDA smoke 和小格复算，之后按 spec §10.15/tasks v3.28 并行补齐，禁止无锁双开。
+- **PPT 与数据**：交付独立 21 页导师讨论修订版，不覆盖原件。新增 8 任务地图、MRL/m6A 四柱图和 RNA-Sc/RiNALMo 同源规模图；清理批注、旧文字层与跨家族混用。全页布局 Issues=0、pptx_lint PASS、CRC/嵌图 MD5/中文实际渲染通过。三任务扩展仍只作阶段性展示，8 任务完整补测、三策略 t-SNE、33M rank8、同源 n↔m 等价线、C5b/C5c/C5d 等均未宣称完成。
+- **交接**：历史快照/已合并增量/临时脚本移入 `archive_20261026/`，不删除实验证据；绘图 CSV、生成脚本、协议边界和远程待办见 `绘图数据索引_20261026.md`。代码批次通过复核后提交 GitHub，远程 artifacts 与大文件不得放进 `/home` 仓库。

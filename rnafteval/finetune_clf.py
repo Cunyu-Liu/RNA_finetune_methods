@@ -17,7 +17,7 @@ import time
 import numpy as np
 import torch
 
-from . import ledger
+from . import ledger, valplateau as vp
 from .splits import assert_no_overlap, random_split
 
 ROOT = "/root/rna-ft-eval"
@@ -38,9 +38,11 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
-    epoch_tag = "" if args.epochs == 10 else "_ep%d" % args.epochs
+    epoch_tag = "" if getattr(args, "converge", False) or args.epochs == 10 \
+        else "_ep%d" % args.epochs
+    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
     return (("_smoke" if args.smoke else "") + n_tag + lr_tag + rank_tag +
-            epoch_tag)
+            epoch_tag + protocol_tag)
 
 
 def main():
@@ -62,6 +64,7 @@ def main():
     ap.add_argument("--n-train", type=int, default=0)
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--random-init", action="store_true")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     device = torch.device("cuda:%d" % args.device)
@@ -185,13 +188,19 @@ def main():
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss()
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
+    if args.converge and not parts["val"]:
+        raise ValueError("--converge requires a non-empty validation split")
 
     def run_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
         y = torch.tensor([r["label_id"] for r in b], device=device)
         return enc, y
 
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         _sh = random.Random(args.seed * 1000 + ep)
         _rows = list(parts["train"])
         _sh.shuffle(_rows)
@@ -217,22 +226,42 @@ def main():
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
 
         _el = tot / max(nb, 1)
-        # valplateau_v1: persist per-epoch train loss atomically
-        try:
-            import json as _json
-            _pl = os.path.join(out_dir, "plateau.json")
-            _cur = {}
-            if os.path.exists(_pl):
-                _cur = _json.load(open(_pl))
-            _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
-            _cur["protocol"] = "valplateau_v1"
-            _cur["updated_epoch"] = ep
-            _tmp = _pl + ".tmp"
-            with open(_tmp, "w") as fh:
-                _json.dump(_cur, fh, indent=2)
-            os.replace(_tmp, _pl)
-        except Exception as _e:
-            print("plateau-persist skipped: %s" % _e, flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(parts["val"], args.batch_size * 2):
+                    enc, y = run_batch(b)
+                    h = backbone(**enc).last_hidden_state
+                    pad = enc["attention_mask"] == 0
+                    val_loss = lossf(head(h, pad), y)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            _vl = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, _vl), flush=True)
+            if tracker.record(ep, _el, _vl):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
+        else:
+            # Legacy fixed-epoch evidence remains train-only v1.
+            try:
+                import json as _json
+                _pl = os.path.join(out_dir, "plateau.json")
+                _cur = {}
+                if os.path.exists(_pl):
+                    _cur = _json.load(open(_pl))
+                _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
+                _cur["protocol"] = "valplateau_v1"
+                _cur["updated_epoch"] = ep
+                _tmp = _pl + ".tmp"
+                with open(_tmp, "w") as fh:
+                    _json.dump(_cur, fh, indent=2)
+                os.replace(_tmp, _pl)
+            except Exception as _e:
+                print("plateau-persist skipped: %s" % _e, flush=True)
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval ---
@@ -278,12 +307,17 @@ def main():
         "peak_mem_mb": round(peak, 1), "backbone_trainable": n_trainable,
         "lr": args.lr, "epochs": args.epochs, "smoke": args.smoke,
     }
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(n_val=len(parts["val"]), runtime=runtime)
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
-    ledger.update(rid, "done", value=value, metric=metric, extra_fields=result)
+    ledger.update(rid, "done", value=value, metric=metric,
+                  extra_fields=result, **(tracker.result_fields()
+                                         if args.converge else {}))
     print(json.dumps(result))
     return 0
 

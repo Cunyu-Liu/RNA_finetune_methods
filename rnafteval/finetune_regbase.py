@@ -21,8 +21,11 @@ import time
 import numpy as np
 import torch
 
-from . import ledger
+from . import ledger, valplateau as vp
 from .base_alignment import align_base_labels
+from .splits import (
+    assert_cluster_no_overlap, assert_no_overlap, seeded_sample,
+    split_train_validation)
 from .tasks import degradation as deg_task
 from .tasks import ssi as ssi_task
 
@@ -56,9 +59,11 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
-    epoch_tag = "" if args.epochs == 3 else "_ep%d" % args.epochs
+    epoch_tag = "" if getattr(args, "converge", False) or args.epochs == 3 \
+        else "_ep%d" % args.epochs
+    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
     return ("_b20fix" + ("_smoke" if args.smoke else "") + n_tag +
-            lr_tag + rank_tag + epoch_tag)
+            lr_tag + rank_tag + epoch_tag + protocol_tag)
 
 
 def main() -> int:
@@ -80,6 +85,7 @@ def main() -> int:
     ap.add_argument("--max-len", type=int, default=192)
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--rank", type=int, default=8)
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     if not torch.cuda.is_available():
@@ -115,9 +121,11 @@ def main() -> int:
             assert os.path.exists(fam), "run make_family_split first"
             t = pq.read_table(fam).to_pydict()
             train, test = [], []
-            for seq, lab, sd in zip(t["seq"], t["labels"], t["split"]):
+            for seq, lab, sd, cid in zip(
+                    t["seq"], t["labels"], t["split"], t["cluster_id"]):
                 r = {"seq": seq,
-                     "labels": np.asarray(lab, dtype=np.float32)}
+                     "labels": np.asarray(lab, dtype=np.float32),
+                     "cluster": cid}
                 if sd == "train":
                     train.append(r)
                 elif sd == "test":
@@ -133,9 +141,11 @@ def main() -> int:
             assert os.path.exists(fam), "run make_family_split first"
             t = pq.read_table(fam).to_pydict()
             train, test = [], []
-            for seq, lab, sd in zip(t["seq"], t["labels"], t["split"]):
+            for seq, lab, sd, cid in zip(
+                    t["seq"], t["labels"], t["split"], t["cluster_id"]):
                 r = {"seq": seq,
-                     "labels": np.asarray(lab, dtype=np.float32)}
+                     "labels": np.asarray(lab, dtype=np.float32),
+                     "cluster": cid}
                 if sd == "train":
                     train.append(r)
                 elif sd == "test":
@@ -145,12 +155,25 @@ def main() -> int:
             train = sp["train"]
             test = sp["test"]
 
-    if args.n_train and args.n_train < len(train):
-        train = train[:args.n_train]
+    val = None
+    if args.converge:
+        train, val = split_train_validation(train, seed=17)
+    train = seeded_sample(train, args.n_train, args.seed)
     if args.smoke:
         train = train[:60]
         test = test[:60]
-    print("data: train %d test %d" % (len(train), len(test)), flush=True)
+        if val is not None:
+            val = val[:60]
+    if args.converge:
+        assert_no_overlap(train, val + test, unit="seq")
+        assert_no_overlap(val, test, unit="seq")
+        if args.split == "family":
+            assert_cluster_no_overlap(train, val + test)
+            assert_cluster_no_overlap(val, test)
+        print("data: train %d val %d test %d" % (
+            len(train), len(val), len(test)), flush=True)
+    else:
+        print("data: train %d test %d" % (len(train), len(test)), flush=True)
 
     from .models import load_model
     from .strategies import apply_strategy, TokenHead
@@ -164,6 +187,10 @@ def main() -> int:
     train_params = [p for p in head.parameters() if p.requires_grad] + \
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
@@ -178,7 +205,7 @@ def main() -> int:
             return None
         return (am == 0)
 
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         import random as _rd
         _epshuf = _rd.Random(args.seed * 1000 + ep)
         _rows = list(train)
@@ -203,22 +230,43 @@ def main() -> int:
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
 
         _el = tot / max(nb, 1)
-        # valplateau_v1: persist per-epoch train loss atomically
-        try:
-            import json as _json
-            _pl = os.path.join(out_dir, "plateau.json")
-            _cur = {}
-            if os.path.exists(_pl):
-                _cur = _json.load(open(_pl))
-            _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
-            _cur["protocol"] = "valplateau_v1"
-            _cur["updated_epoch"] = ep
-            _tmp = _pl + ".tmp"
-            with open(_tmp, "w") as fh:
-                _json.dump(_cur, fh, indent=2)
-            os.replace(_tmp, _pl)
-        except Exception as _e:
-            print("plateau-persist skipped: %s" % _e, flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(val, args.batch_size * 2):
+                    enc, y, m = make_batch(b)
+                    h = backbone(**enc).last_hidden_state
+                    logits = head(h, _pad_mask(enc)).squeeze(-1)
+                    val_loss = ((logits - y) ** 2 * m).sum() / \
+                        m.sum().clamp(min=1)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            _vl = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, _vl), flush=True)
+            if tracker.record(ep, _el, _vl):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
+        else:
+            # Legacy fixed-epoch evidence remains train-only v1.
+            try:
+                import json as _json
+                _pl = os.path.join(out_dir, "plateau.json")
+                _cur = {}
+                if os.path.exists(_pl):
+                    _cur = _json.load(open(_pl))
+                _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
+                _cur["protocol"] = "valplateau_v1"
+                _cur["updated_epoch"] = ep
+                _tmp = _pl + ".tmp"
+                with open(_tmp, "w") as fh:
+                    _json.dump(_cur, fh, indent=2)
+                os.replace(_tmp, _pl)
+            except Exception as _e:
+                print("plateau-persist skipped: %s" % _e, flush=True)
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval: per-base PCC (primary) + MCRMSE ---
@@ -256,14 +304,22 @@ def main() -> int:
         "wall_sec": round(wall, 1), "peak_mem_mb": round(peak, 1),
         "n_trainable": n_trainable, "smoke": args.smoke,
     }
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(n_val=len(val), runtime=runtime)
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as f:
         json.dump(result, f, indent=1, default=str)
     os.replace(tmp_path, result_path)
-    ledger.update(rid, "done", value=pcc, metric="PCC",
-                  wall_sec=round(wall, 1), peak_mem_mb=round(peak, 1),
-                  n_train=len(train), n_test=len(test))
+    ledger_fields = {
+        "wall_sec": round(wall, 1), "peak_mem_mb": round(peak, 1),
+        "n_train": len(train), "n_test": len(test),
+    }
+    if args.converge:
+        ledger_fields.update(tracker.result_fields())
+        ledger_fields.update(n_val=len(val), runtime=runtime)
+    ledger.update(rid, "done", value=pcc, metric="PCC", **ledger_fields)
     print(json.dumps(result, default=str)[:400], flush=True)
     return 0
 

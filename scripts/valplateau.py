@@ -1,17 +1,9 @@
 #!/usr/bin/env python3
-"""valplateau_v1 convergence audit (spec §10.14-⑤).
+"""Validation-only convergence audit for valplateau_v2 artifacts.
 
-Reads plateau.json (written atomically per epoch by the runners) and
-classifies each cell as converged / not-converged per a preregistered
-min_delta + patience rule, or legacy when no plateau.json exists.
-
-Rules (frozen, do not tune post hoc):
-  - A cell is CONVERGED if the last `patience` epochs all sit within
-    min_delta (relative) of the best (lowest) loss seen so far.
-  - A cell is NOT_CONVERGED otherwise (loss still materially decreasing).
-  - LEGACY: no plateau.json (fixed-epoch runs before 2026-10-25) —
-    reported separately, never pooled with audited cells.
-  - Instability guard: NaN or non-finite losses make the cell INVALID.
+Only a complete v2 validation curve with a matching converged result can be
+CONVERGED. Train-only v1 and older fixed-epoch artifacts remain explicitly
+LEGACY/TRAIN_ONLY and can never satisfy the new acceptance gate.
 
 Exit codes: 0 = all audited cells converged; 1 = at least one
 not-converged/invalid; 2 = usage error.
@@ -20,63 +12,63 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 from pathlib import Path
 
+from rnafteval.valplateau import (
+    ABS_FLOOR, LEGACY_PROTOCOL, MIN_DELTA, PATIENCE, PROTOCOL, STOP_REASON,
+    classify)
+
 ROOT = "/root/rna-ft-eval"
 E6_DIR = os.path.join(ROOT, "artifacts", "e6")
 
-MIN_DELTA = 0.02   # relative improvement threshold (2%)
-PATIENCE = 3       # trailing epochs that must be flat
-ABS_FLOOR = 0.008  # absolute improvement floor: at low loss (<0.05) the
-# relative rule amplifies noise; the effective tolerance is
-# max(best*MIN_DELTA, ABS_FLOOR). Preregistered 2026-10-26 (three-check).
 
-
-def classify(losses, min_delta=MIN_DELTA, patience=PATIENCE,
-             abs_floor=ABS_FLOOR):
-    """Return (status, detail) for a list of per-epoch train losses."""
-    if not losses:
-        return "EMPTY", "no epochs recorded"
-    if any(not math.isfinite(x) for x in losses):
-        return "INVALID", "non-finite epoch loss"
-    if len(losses) < patience + 1:
-        return "TOO_SHORT", "n=%d < patience+1=%d" % (len(losses),
-                                                      patience + 1)
-    best = min(losses)
-    if best <= 0:
-        return "INVALID", "non-positive loss cannot use relative delta"
-    tail = losses[-patience:]
-    tol = max(best * min_delta, abs_floor)
-    if all(x <= best + tol for x in tail):
-        # flat tail at (or near) the running best → converged (dual criteria:
-        # relative 2% OR absolute floor, whichever is larger)
-        return "CONVERGED", "tail within max(%.1f%%, %.3f) of best %.4f" % (
-            min_delta * 100, abs_floor, best)
-    return "NOT_CONVERGED", "tail still improving (best %.4f, tail %s)" % (
-        best, ["%.4f" % x for x in tail])
-
-
-def audit_cell(result_dir, min_delta, patience, abs_floor=ABS_FLOOR):
+def audit_cell(result_dir, min_delta=MIN_DELTA, patience=PATIENCE,
+               abs_floor=ABS_FLOOR):
     p = Path(result_dir) / "plateau.json"
     rj = Path(result_dir) / "result.json"
     cell = os.path.basename(result_dir)
     if not rj.exists():
         return cell, "NO_RESULT", "result.json missing"
     if not p.exists():
-        # legacy protocol: fixed-epoch run predating plateau persistence
         return cell, "LEGACY", "no plateau.json (fixed-epoch protocol)"
     try:
         d = json.loads(p.read_text())
     except (ValueError, OSError) as e:
         return cell, "INVALID", "plateau.json unreadable: %s" % e
-    losses = d.get("epoch_train_losses", [])
-    if d.get("protocol") != "valplateau_v1":
-        return cell, "INVALID", "unknown protocol %r" % d.get("protocol")
+    protocol = d.get("protocol")
+    if protocol == LEGACY_PROTOCOL:
+        return cell, "TRAIN_ONLY", "valplateau_v1 used epoch_train_losses"
+    if protocol != PROTOCOL:
+        return cell, "INVALID", "unknown protocol %r" % protocol
+    if d.get("loss_source") != "validation":
+        return cell, "INVALID", "v2 loss_source is not validation"
+    losses = d.get("epoch_val_losses", [])
     status, detail = classify(losses, min_delta, patience, abs_floor)
-    return cell, status, detail
+    if status != "CONVERGED":
+        return cell, status, "validation: " + detail
+    try:
+        result = json.loads(rj.read_text())
+    except (ValueError, OSError) as e:
+        return cell, "INVALID", "result.json unreadable: %s" % e
+    if d.get("status") != "CONVERGED" or d.get("stop_reason") != STOP_REASON:
+        return cell, "NOT_CONVERGED", "plateau has no converged stop evidence"
+    if result.get("protocol") != PROTOCOL:
+        return cell, "INVALID", "result protocol is not valplateau_v2"
+    if result.get("status") != "CONVERGED":
+        return cell, "NOT_CONVERGED", "result status is not CONVERGED"
+    if result.get("loss_source") != "validation":
+        return cell, "INVALID", "result loss_source is not validation"
+    if result.get("epoch_val_losses") != losses:
+        return cell, "INVALID", "result/plateau validation curves differ"
+    if result.get("stop_reason") != STOP_REASON:
+        return cell, "NOT_CONVERGED", "result has no converged stop_reason"
+    if result.get("epochs_trained") != len(losses):
+        return cell, "INVALID", "epochs_trained does not match validation curve"
+    if d.get("updated_epoch") != len(losses) - 1:
+        return cell, "INVALID", "updated_epoch does not match validation curve"
+    return cell, "CONVERGED", "validation: " + detail
 
 
 def main(argv=None):
@@ -95,10 +87,18 @@ def main(argv=None):
     if not root.is_dir():
         print("no e6 artifacts dir: %s" % root, file=sys.stderr)
         return 2
-    for d in sorted(root.iterdir()):
-        if not d.is_dir():
-            continue
-        cells.append(audit_cell(str(d), args.min_delta, args.patience))
+    if (root / "result.json").exists() or (root / "plateau.json").exists():
+        cells.append(audit_cell(str(root), args.min_delta, args.patience))
+    else:
+        for d in sorted(root.iterdir()):
+            if not d.is_dir():
+                continue
+            cells.append(audit_cell(str(d), args.min_delta, args.patience))
+    if not cells:
+        print("EMPTY no artifact cells found")
+        if args.json_out:
+            Path(args.json_out).write_text("[]")
+        return 1
 
     counts = {}
     for _cell, status, _detail in cells:
@@ -110,7 +110,7 @@ def main(argv=None):
         Path(args.json_out).write_text(json.dumps(
             [{"cell": c, "status": s, "detail": d} for c, s, d in cells],
             indent=2))
-    bad = counts.get("NOT_CONVERGED", 0) + counts.get("INVALID", 0)
+    bad = sum(status != "CONVERGED" for _cell, status, _detail in cells)
     return 1 if bad else 0
 
 

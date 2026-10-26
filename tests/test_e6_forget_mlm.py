@@ -1,8 +1,10 @@
 from types import SimpleNamespace
 
+import pytest
 import torch
 
-from rnafteval.e6_forget import epoch_rows, nll_eval, seed_training
+from rnafteval.e6_forget import (
+    convergence_out_suffix, epoch_rows, nll_eval, seed_training)
 
 
 class ToyTokenizer:
@@ -128,3 +130,12 @@ def test_epoch_rows_are_seeded_per_epoch_and_do_not_mutate_split():
     assert epoch_rows(source, 17, 0) != epoch_rows(source, 29, 0)
     assert epoch_rows(source, 17, 0) != epoch_rows(source, 17, 1)
     assert source == original
+
+
+def test_e6_convergence_suffix_isolated_without_touching_legacy():
+    assert convergence_out_suffix(False, "_mlm15fix_seedfix") == "_mlm15fix_seedfix"
+    assert convergence_out_suffix(True, "_mlm15fix_seedfix") == \
+        "_mlm15fix_seedfix_valplateau_v2"
+    assert convergence_out_suffix(True, "_valplateau_v2") == "_valplateau_v2"
+    with pytest.raises(ValueError, match="requires --converge"):
+        convergence_out_suffix(False, "_valplateau_v2")

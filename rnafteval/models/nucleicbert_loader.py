@@ -17,6 +17,8 @@ sys.path.insert(0, NB_CODE)
 class _NucleicBertTok:
     """U->T char tokenizer with [CLS]/[SEP]; HF-ish __call__ contract."""
 
+    name_or_path = NB_TOKENIZER
+
     def __init__(self):
         from transformers import PreTrainedTokenizerFast
         self._fast = PreTrainedTokenizerFast(tokenizer_file=NB_TOKENIZER)

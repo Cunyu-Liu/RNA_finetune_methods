@@ -182,6 +182,9 @@ class _RnaScWrapper:
 class _RnaScTok:
     """nt-level tokenizer matching RNA-Sc vocab (A=0 C=1 G=2 U/T=3, PAD=4)."""
 
+    vocab_size = 5
+    name_or_path = "rna-sc:char-acgut-pad-v1"
+
     def __call__(self, seqs, padding=True, truncation=True, max_length=512,
                  return_tensors="pt"):
         import torch

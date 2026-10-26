@@ -15,8 +15,10 @@ import time
 import numpy as np
 import torch
 
-from . import ledger
+from . import ledger, valplateau as vp
 from .base_alignment import align_base_labels
+from .splits import (
+    assert_cluster_no_overlap, assert_no_overlap, split_train_validation)
 from .tasks import spliceai as spl_task
 
 ROOT = "/root/rna-ft-eval"
@@ -37,9 +39,11 @@ def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
     n_tag = "" if args.n_train == 0 else "_e3%d" % args.n_train
-    epoch_tag = "" if args.epochs == 10 else "_ep%d" % args.epochs
+    epoch_tag = "" if getattr(args, "converge", False) or args.epochs == 10 \
+        else "_ep%d" % args.epochs
+    protocol_tag = "_valplateau_v2" if getattr(args, "converge", False) else ""
     return ("_b20fix" + ("_smoke" if args.smoke else "") + n_tag +
-            lr_tag + rank_tag + epoch_tag)
+            lr_tag + rank_tag + epoch_tag + protocol_tag)
 
 
 def main():
@@ -59,6 +63,7 @@ def main():
     ap.add_argument("--max-len", type=int, default=128)
     ap.add_argument("--n-train", type=int, default=0)
     ap.add_argument("--smoke", action="store_true")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
 
     device = torch.device("cuda:%d" % args.device)
@@ -104,13 +109,27 @@ def main():
         sp = spl_task.load_official_split()
         train, test = sp["train"], sp["test"]
 
+    val = None
+    if args.converge:
+        train, val = split_train_validation(train, seed=17)
     if args.n_train > 0:
         rng = random.Random(args.seed)
         train = rng.sample(train, min(args.n_train, len(train)))
     if args.smoke:
         train, test = train[:320], test[:320]
+        if val is not None:
+            val = val[:320]
 
-    print("data: train %d test %d" % (len(train), len(test)), flush=True)
+    if args.converge:
+        assert_no_overlap(train, val + test, unit="seq")
+        assert_no_overlap(val, test, unit="seq")
+        if args.split == "family":
+            assert_cluster_no_overlap(train, val + test)
+            assert_cluster_no_overlap(val, test)
+        print("data: train %d val %d test %d" % (
+            len(train), len(val), len(test)), flush=True)
+    else:
+        print("data: train %d test %d" % (len(train), len(test)), flush=True)
 
     from .models import load_model
     from .strategies import apply_strategy, TokenHead
@@ -126,13 +145,17 @@ def main():
         [p for p in backbone.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(train_params, lr=args.lr)
     lossf = torch.nn.CrossEntropyLoss(reduction="none")
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, device) if args.converge else None
 
     def make_batch(b):
         enc = encode_seqs(tok, [r["seq"] for r in b], device, args.max_len)
         y, m = align_base_labels(tok, enc, b, args.max_len, dtype=torch.long)
         return enc, y, m
 
-    for ep in range(args.epochs):
+    for ep in vp.training_epochs(args):
         _sh = random.Random(args.seed * 1000 + ep)
         _rows = list(train)
         _sh.shuffle(_rows)
@@ -162,22 +185,46 @@ def main():
         print("epoch %d loss %.4f" % (ep, tot / max(nb, 1)), flush=True)
 
         _el = tot / max(nb, 1)
-        # valplateau_v1: persist per-epoch train loss atomically
-        try:
-            import json as _json
-            _pl = os.path.join(out_dir, "plateau.json")
-            _cur = {}
-            if os.path.exists(_pl):
-                _cur = _json.load(open(_pl))
-            _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
-            _cur["protocol"] = "valplateau_v1"
-            _cur["updated_epoch"] = ep
-            _tmp = _pl + ".tmp"
-            with open(_tmp, "w") as fh:
-                _json.dump(_cur, fh, indent=2)
-            os.replace(_tmp, _pl)
-        except Exception as _e:
-            print("plateau-persist skipped: %s" % _e, flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(val, args.batch_size * 2):
+                    enc, y, m = make_batch(b)
+                    h = backbone(**enc).last_hidden_state
+                    pad = enc["attention_mask"] == 0
+                    logits = head(h, pad)
+                    mask = m.float()
+                    loss_map = lossf(logits.reshape(-1, 3), y.reshape(-1))
+                    val_loss = (loss_map.reshape(len(b), -1) * mask).sum() / \
+                        mask.sum().clamp(min=1)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            _vl = val_tot / max(val_nb, 1)
+            print("epoch %d val_loss %.6f" % (ep, _vl), flush=True)
+            if tracker.record(ep, _el, _vl):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                ledger.update(rid, "running", note=tracker.stop_reason)
+                break
+        else:
+            # Legacy fixed-epoch evidence remains train-only v1.
+            try:
+                import json as _json
+                _pl = os.path.join(out_dir, "plateau.json")
+                _cur = {}
+                if os.path.exists(_pl):
+                    _cur = _json.load(open(_pl))
+                _cur.setdefault("epoch_train_losses", []).append(round(_el, 6))
+                _cur["protocol"] = "valplateau_v1"
+                _cur["updated_epoch"] = ep
+                _tmp = _pl + ".tmp"
+                with open(_tmp, "w") as fh:
+                    _json.dump(_cur, fh, indent=2)
+                os.replace(_tmp, _pl)
+            except Exception as _e:
+                print("plateau-persist skipped: %s" % _e, flush=True)
         ledger.update(rid, "running", note="epoch %d heartbeat" % ep)
 
     # --- eval: macro-F1 over non-pad positions (3 classes) ---
@@ -215,13 +262,17 @@ def main():
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "smoke": args.smoke,
     }
+    if args.converge:
+        result.update(tracker.result_fields())
+        result.update(n_val=len(val), runtime=runtime)
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as fh:
         json.dump(result, fh, indent=2)
     os.replace(tmp_path, result_path)
     ledger.update(rid, "done", value=macro_f1, metric="MACRO_F1",
-                  extra_fields=result)
+                  extra_fields=result, **(tracker.result_fields()
+                                         if args.converge else {}))
     print(json.dumps(result))
     return 0
 

@@ -28,10 +28,24 @@ def runtime(tmp_path, monkeypatch):
 
 
 def result_payload(cell, **updates):
+    val_losses = [1.0, 0.8, 0.62, 0.61, 0.605, 0.602]
     payload = {
         "run_id": q.rid_for(cell), "task": cell.task, "model": cell.model,
         "seed": cell.seed, "split": cell.split, "strategy": cell.strategy,
-        "metric": cell.metric, "value": 0.75,
+        "metric": cell.metric, "value": 0.75, "n_train": 100, "smoke": False,
+        "protocol": q.vp.PROTOCOL, "loss_source": "validation",
+        "epoch_train_losses": [0.5] * len(val_losses),
+        "epoch_val_losses": val_losses, "epochs_trained": len(val_losses),
+        "status": "CONVERGED", "stop_reason": q.vp.STOP_REASON, "n_val": 12,
+        "min_delta": q.vp.MIN_DELTA, "patience": q.vp.PATIENCE,
+        "abs_floor": q.vp.ABS_FLOOR,
+        "runtime": {
+            "cuda_available": True, "cuda_device": "cuda:0",
+            "cuda_device_name": "unit-test-metadata", "cuda_runtime_version": "test",
+            "tokenizer_class": "unit.TestTokenizer",
+            "tokenizer_name_or_path": "unit-test-tokenizer",
+            "tokenizer_vocab_size": 12,
+        },
     }
     payload.update(updates)
     return payload
@@ -45,15 +59,37 @@ def write_result(cell, payload=None, raw=None):
     return path
 
 
-def mark_done(runtime, cell):
+def mark_done(runtime, cell, payload=None):
+    payload = payload or result_payload(cell)
     runtime.rows[q.rid_for(cell)] = {
         "run_id": q.rid_for(cell), "status": "done",
+        "protocol": q.vp.PROTOCOL, "stop_reason": q.vp.STOP_REASON,
+        "epoch_val_losses": payload["epoch_val_losses"],
     }
 
 
+def write_plateau(cell, payload=None):
+    payload = payload or result_payload(cell)
+    path = q.plateau_path(cell)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "run_id": q.rid_for(cell), "protocol": q.vp.PROTOCOL,
+        "loss_source": "validation",
+        "epoch_train_losses": payload["epoch_train_losses"],
+        "epoch_val_losses": payload["epoch_val_losses"],
+        "updated_epoch": payload["epochs_trained"] - 1,
+        "status": payload["status"], "stop_reason": payload["stop_reason"],
+        "min_delta": q.vp.MIN_DELTA, "patience": q.vp.PATIENCE,
+        "abs_floor": q.vp.ABS_FLOOR,
+    }))
+    return path
+
+
 def make_double_proof(runtime, cell):
-    mark_done(runtime, cell)
-    return write_result(cell)
+    payload = result_payload(cell)
+    mark_done(runtime, cell, payload)
+    write_plateau(cell, payload)
+    return write_result(cell, payload)
 
 
 def test_canonical_counts_and_cell_and_rid_uniqueness():
@@ -87,19 +123,21 @@ def test_commands_and_rid_tags_follow_existing_runners():
     spl = make_cell(model="RiNALMo-650M", strategy="full", split="family", seed=43)
     cmd = q.build_command(spl, device=2)
     assert cmd[1:3] == ["-m", "rnafteval.finetune_spl"]
-    assert cmd[cmd.index("--epochs") + 1] == "6"
+    assert "--epochs" not in cmd
+    assert "--converge" in cmd
     assert cmd[cmd.index("--batch-size") + 1] == "8"
     assert cmd[cmd.index("--lr") + 1] == "1e-5"
     assert cmd[cmd.index("--device") + 1] == "2"
-    assert "_b20fix_lr1e-05_ep6" in q.rid_for(spl)
+    assert q.rid_for(spl).endswith("_b20fix_lr1e-05_valplateau_v2")
 
     reg = make_cell(task="degradation", model="NucleicBERT", strategy="lora")
     cmd = q.build_command(reg)
     assert cmd[1:3] == ["-m", "rnafteval.finetune_regbase"]
-    assert cmd[cmd.index("--epochs") + 1] == "10"
+    assert "--epochs" not in cmd
+    assert "--converge" in cmd
     assert cmd[cmd.index("--batch-size") + 1] == "8"
     assert cmd[cmd.index("--lr") + 1] == "3e-4"
-    assert "_b20fix_ep10" in q.rid_for(reg)
+    assert q.rid_for(reg).endswith("_b20fix_valplateau_v2")
 
 
 def test_nonzero_subprocess_failure_env_and_audit_log(runtime, monkeypatch):
@@ -192,7 +230,9 @@ def test_done_ledger_missing_result_conflicts_without_rerun(runtime, monkeypatch
 def test_valid_result_without_ledger_done_conflicts_without_rerun(
         runtime, monkeypatch):
     cell = make_cell()
-    write_result(cell)
+    payload = result_payload(cell)
+    write_result(cell, payload)
+    write_plateau(cell, payload)
     monkeypatch.setattr(q.subprocess, "run",
                         lambda *args, **kwargs: pytest.fail("must not rerun"))
     outcome = q.run_cell(cell)
@@ -287,11 +327,71 @@ def test_verify_complete_is_read_only_and_requires_all_342_double_proofs(
         lambda *args, **kwargs: pytest.fail("verify-complete launched training"))
 
     assert q.main(["--verify-complete"]) == 0
-    assert "CORRECTED_VERIFY_COMPLETE cells=342" in capsys.readouterr().out
+    assert "CORRECTED_3TASK_VERIFY_COMPLETE tasks=3 cells=342" in capsys.readouterr().out
 
     missing = cells[-1]
     runtime.rows[q.rid_for(missing)]["status"] = "running"
     assert q.main(["--verify-complete"]) == 1
     output = capsys.readouterr().out
-    assert "CORRECTED_VERIFY_INCOMPLETE cells=342 complete=341 incomplete=1" in output
+    assert "CORRECTED_3TASK_VERIFY_INCOMPLETE tasks=3 cells=342 complete=341 incomplete=1" in output
     assert not q.LOG_ROOT.exists()
+
+
+def test_proof_rejects_missing_plateau_and_legacy_train_only(runtime):
+    cell = make_cell()
+    payload = result_payload(cell)
+    mark_done(runtime, cell, payload)
+    write_result(cell, payload)
+    state, reason = q.proof_state(cell)
+    assert state == "conflict" and "plateau.json is missing" in reason
+
+    q.plateau_path(cell).write_text(json.dumps({
+        "protocol": "valplateau_v1", "epoch_train_losses": [0.5] * 6,
+    }))
+    state, reason = q.proof_state(cell)
+    assert state == "conflict" and "protocol mismatch" in reason
+
+
+def test_proof_rejects_flat_train_but_still_improving_validation(runtime):
+    cell = make_cell()
+    payload = result_payload(
+        cell, epoch_train_losses=[0.5] * 6,
+        epoch_val_losses=[1.0, 0.8, 0.6, 0.4, 0.2, 0.1])
+    mark_done(runtime, cell, payload)
+    write_result(cell, payload)
+    write_plateau(cell, payload)
+    state, reason = q.proof_state(cell)
+    assert state == "conflict"
+    assert "validation curve is not converged" in reason
+
+
+def test_old_corrected_result_cannot_satisfy_new_rid(runtime):
+    cell = make_cell()
+    args = SimpleNamespace(lr=cell.lr, rank=8, n_train=0,
+                           epochs=cell.epochs, smoke=False)
+    old_extra = q.runner_for(cell)._run_extra(args)
+    old_rid = q.ledger.run_id(cell.model, cell.task, cell.strategy, cell.seed,
+                              cell.split, extra=old_extra)
+    old_dir = q.ARTIFACTS_ROOT / old_rid
+    old_dir.mkdir(parents=True)
+    (old_dir / "result.json").write_text(json.dumps(result_payload(cell)))
+    runtime.rows[old_rid] = {"run_id": old_rid, "status": "done"}
+
+    assert old_rid != q.rid_for(cell)
+    assert not q.result_path(cell).exists()
+    assert q.proof_state(cell)[0] == "runnable"
+
+
+def test_proof_requires_tokenizer_cuda_and_ledger_validation_evidence(runtime):
+    cell = make_cell()
+    payload = result_payload(cell, runtime=None)
+    mark_done(runtime, cell, payload)
+    write_result(cell, payload)
+    write_plateau(cell, payload)
+    state, reason = q.proof_state(cell)
+    assert state == "conflict" and "runtime evidence is missing" in reason
+
+    make_double_proof(runtime, cell)
+    runtime.rows[q.rid_for(cell)]["epoch_val_losses"] = [1.0]
+    state, reason = q.proof_state(cell)
+    assert state == "conflict" and "ledger/result validation curves differ" in reason

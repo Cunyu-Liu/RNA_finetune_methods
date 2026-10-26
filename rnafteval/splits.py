@@ -73,6 +73,55 @@ def family_split(records: list[dict], family_key: str = "family_id",
     return out
 
 
+def split_train_validation(rows: list[dict], seed: int = 17,
+                           val_fraction: float = 0.1) -> tuple[list[dict], list[dict]]:
+    """Deterministically hold out validation rows from the training side only."""
+    if len(rows) < 2:
+        raise ValueError("at least two training rows are required for validation")
+    if not 0.0 < val_fraction < 1.0:
+        raise ValueError("val_fraction must be in (0, 1)")
+    if any("cluster" in row for row in rows):
+        if not all(row.get("cluster") is not None for row in rows):
+            raise ValueError("family validation split requires cluster on every row")
+        by_cluster = defaultdict(list)
+        for i, row in enumerate(rows):
+            by_cluster[str(row["cluster"])].append(i)
+        clusters = sorted(by_cluster)
+        random.Random(seed).shuffle(clusters)
+        target = max(1, int(len(rows) * val_fraction))
+        val_idx = set()
+        for cluster in clusters:
+            indices = by_cluster[cluster]
+            if len(val_idx) < target and len(val_idx) + len(indices) < len(rows):
+                val_idx.update(indices)
+        if not val_idx or len(val_idx) == len(rows):
+            raise ValueError("family validation split requires at least two clusters")
+        train = [row for i, row in enumerate(rows) if i not in val_idx]
+        val = [row for i, row in enumerate(rows) if i in val_idx]
+        assert_no_overlap(train, val, unit="seq")
+        return train, val
+    indices = list(range(len(rows)))
+    random.Random(seed).shuffle(indices)
+    n_val = min(len(rows) - 1, max(1, int(len(rows) * val_fraction)))
+    val_idx = set(indices[:n_val])
+    train = [row for i, row in enumerate(rows) if i not in val_idx]
+    val = [row for i, row in enumerate(rows) if i in val_idx]
+    assert_no_overlap(train, val, unit="seq")
+    return train, val
+
+
+def assert_cluster_no_overlap(train: list[dict], eval_: list[dict]) -> None:
+    train_clusters = {str(row["cluster"]) for row in train}
+    overlap = train_clusters & {str(row["cluster"]) for row in eval_}
+    assert not overlap, "FAMILY OVERLAP DETECTED: %s" % sorted(overlap)[:3]
+
+
+def seeded_sample(rows: list[dict], n_train: int, seed: int) -> list[dict]:
+    if n_train <= 0 or n_train >= len(rows):
+        return rows
+    return random.Random(seed).sample(rows, n_train)
+
+
 def assert_no_overlap(train: list[dict], eval_: list[dict],
                       unit: str = "seq", host_field: str = "") -> None:
     """Zero-overlap assertion (B1). unit: 'seq' | 'host'."""

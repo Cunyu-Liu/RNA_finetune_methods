@@ -30,6 +30,9 @@ import time
 
 import torch
 
+from . import valplateau as vp
+from .splits import assert_no_overlap
+
 ROOT = "/root/rna-ft-eval"
 TRAINING_SEED_PROTOCOL = (
     "global-seed-v1+per-epoch-shuffle-v1; task split independent of formal seed")
@@ -271,6 +274,14 @@ def nll_eval(backbone, tok, seqs, device, bs=8, shuffle_seed=None,
     return tot / max(cnt, 1)
 
 
+def convergence_out_suffix(converge, out_suffix):
+    if not converge and out_suffix.endswith("_valplateau_v2"):
+        raise ValueError("valplateau_v2 suffix requires --converge")
+    if converge and not out_suffix.endswith("_valplateau_v2"):
+        return out_suffix + "_valplateau_v2"
+    return out_suffix
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -292,7 +303,12 @@ def main():
     ap.add_argument("--init-ckpt", default="",
                     help="resume weights from a saved ckpt.pt "
                          "(continuation protocol)")
+    vp.add_convergence_args(ap)
     args = ap.parse_args()
+    args.out_suffix = convergence_out_suffix(args.converge, args.out_suffix)
+    if not torch.cuda.is_available():
+        print(json.dumps({"event": "CUDA_UNAVAILABLE_ABORT"}), flush=True)
+        return 2
     device = int(args.device)
     t0 = time.time()
     seed_training(args.seed)
@@ -336,6 +352,10 @@ def main():
             r["label_id"] = lab2id[r["label"]]
     if args.n_train_cap:
         parts["train"] = parts["train"][:args.n_train_cap]
+    if args.converge:
+        assert_no_overlap(parts["train"], parts["val"], unit="seq")
+        print("ncRNA: train %d val %d (validation CE; S0 is forgetting only)" % (
+            len(parts["train"]), len(parts["val"])), flush=True)
 
     # --- model ---
     is_official = args.model in OFFICIAL
@@ -401,7 +421,12 @@ def main():
             args.init_ckpt, state.get("epoch", -1)), flush=True)
     tr_backbone = args.strategy in ("lora", "full", "dora", "ia3", "prefix")
     enc_core = _official_encoder(backbone) if is_official else None
-    for ep in range(args.epochs):
+    tracker = vp.PlateauTracker(
+        out_dir, patience=args.patience, min_delta=args.min_delta,
+        run_id=rid) if args.converge else None
+    runtime = vp.runtime_evidence(tok, "cuda:%d" % device) \
+        if args.converge else None
+    for ep in vp.training_epochs(args):
         backbone.train(tr_backbone)
         head.train()
         tot, nb = 0.0, 0
@@ -426,31 +451,54 @@ def main():
             nb += 1
         epoch_loss = tot / max(nb, 1)
         print("epoch %d loss %.4f" % (ep, epoch_loss), flush=True)
-        # valplateau_v1: persist per-epoch train loss atomically so a
-        # convergence audit can run even if the process dies mid-run.
-        try:
-            import json as _json
-            _pl = os.path.join(out_dir, "plateau.json")
-            _cur = {}
-            if os.path.exists(_pl):
-                _cur = _json.load(open(_pl))
-            _cur.setdefault("epoch_train_losses", []).append(
-                round(epoch_loss, 6))
-            _cur["protocol"] = "valplateau_v1"
-            _cur["updated_epoch"] = ep
-            _tmp = _pl + ".tmp"
-            with open(_tmp, "w") as fh:
-                _json.dump(_cur, fh, indent=2)
-            os.replace(_tmp, _pl)
-        except Exception as _e:
-            print("plateau-persist skipped: %s" % _e, flush=True)
+        if args.converge:
+            backbone.eval()
+            head.eval()
+            val_tot, val_nb = 0.0, 0
+            with torch.no_grad():
+                for b in batches(parts["val"], args.batch_size * 2):
+                    enc = encode_seqs(tok, [r["seq"] for r in b], device)
+                    y = torch.tensor([r["label_id"] for r in b], device=device)
+                    fwd = enc_core if is_official else backbone
+                    h = fwd(**enc).last_hidden_state
+                    pad = enc["attention_mask"] == 0
+                    val_loss = lossf(head(h, pad), y)
+                    val_tot += val_loss.item()
+                    val_nb += 1
+            val_epoch_loss = val_tot / max(val_nb, 1)
+            print("epoch %d ncRNA val_loss %.6f" % (
+                ep, val_epoch_loss), flush=True)
+            if tracker.record(ep, epoch_loss, val_epoch_loss):
+                print("STOP %s epoch=%d epochs_trained=%d" % (
+                    tracker.stop_reason, ep, ep + 1), flush=True)
+                update(rid, status="running", note=tracker.stop_reason)
+                break
+        else:
+            # Legacy fixed-epoch evidence remains train-only v1.
+            try:
+                import json as _json
+                _pl = os.path.join(out_dir, "plateau.json")
+                _cur = {}
+                if os.path.exists(_pl):
+                    _cur = _json.load(open(_pl))
+                _cur.setdefault("epoch_train_losses", []).append(
+                    round(epoch_loss, 6))
+                _cur["protocol"] = "valplateau_v1"
+                _cur["updated_epoch"] = ep
+                _tmp = _pl + ".tmp"
+                with open(_tmp, "w") as fh:
+                    _json.dump(_cur, fh, indent=2)
+                os.replace(_tmp, _pl)
+            except Exception as _e:
+                print("plateau-persist skipped: %s" % _e, flush=True)
 
     if args.save_ckpt:
         ck = os.path.join(out_dir, "ckpt.pt")
         tmp_ck = ck + ".tmp"
         torch.save({"backbone": backbone.state_dict(),
                     "head": head.state_dict(),
-                    "epoch": args.epochs - 1,
+                    "epoch": (len(tracker.val_losses) if args.converge
+                              else args.epochs) - 1,
                     "run_id": rid}, tmp_ck)
         os.replace(tmp_ck, ck)
         print("checkpoint saved to %s" % ck, flush=True)
@@ -508,6 +556,10 @@ def main():
             "forgot": bool((post - pre_a) > max(noise_band, 1e-6)),
             "wall_sec": time.time() - t0, "protocol": protocol,
         }
+    if args.converge:
+        result["forgetting_protocol"] = result["protocol"]
+        result.update(tracker.result_fields())
+        result.update(n_val=len(parts["val"]), runtime=runtime)
     metric_keys = ("drift",) if is_nb_drift else (
         "pre_nll_a", "pre_nll_b", "noise_band", "post_nll", "delta_nll")
     for key in metric_keys:
@@ -522,6 +574,8 @@ def main():
         os.fsync(f.fileno())
     os.replace(tmp_path, result_path)
     fields = {k: v for k, v in result.items() if k not in ("run_id", "protocol")}
+    if args.converge:
+        fields["protocol"] = result["protocol"]
     update(rid, status="done", **fields)
     print(json.dumps(result, indent=2), flush=True)
     return 0

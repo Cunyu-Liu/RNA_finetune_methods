@@ -9,6 +9,9 @@ import torch
 
 from rnafteval import finetune_clf, finetune_regbase, finetune_spl, ledger
 from rnafteval.base_alignment import align_base_labels
+from rnafteval.splits import (
+    assert_cluster_no_overlap, assert_no_overlap, seeded_sample,
+    split_train_validation)
 
 
 class _MockTokenizer:
@@ -145,6 +148,85 @@ def test_run_id_extra_marks_b20fix_and_separates_nondefaults():
             assert tag in extra
             assert ("_b20fix" in extra) is (runner is not finetune_clf)
             assert ledger.run_id("m", "t", "frozen", 17, "random", extra) != base_rid
+
+
+def test_converge_rid_isolated_and_ignores_fixed_epoch_budget():
+    for runner in (finetune_clf, finetune_spl, finetune_regbase):
+        base = SimpleNamespace(lr=3e-4, rank=8, n_train=0, epochs=10,
+                               smoke=False, converge=False)
+        legacy = runner._run_extra(base)
+        new = SimpleNamespace(**vars(base))
+        new.converge = True
+        new.epochs = 1
+        tagged = runner._run_extra(new)
+        assert tagged.endswith("_valplateau_v2")
+        assert tagged != legacy
+        assert "_ep1" not in tagged
+        assert ledger.run_id("m", "t", "frozen", 17, "random", tagged) != \
+            ledger.run_id("m", "t", "frozen", 17, "random", legacy)
+
+
+def test_train_validation_holdout_is_deterministic_and_three_way_disjoint():
+    official_train = [{"seq": "ACGU" * 5 + str(i), "labels": [0]}
+                      for i in range(40)]
+    official_test = [{"seq": "UGCA" * 5 + str(i), "labels": [0]}
+                     for i in range(10)]
+    train_a, val_a = split_train_validation(official_train, seed=17)
+    train_b, val_b = split_train_validation(official_train, seed=17)
+    assert train_a == train_b and val_a == val_b
+    assert len(train_a) == 36 and len(val_a) == 4
+    assert_no_overlap(train_a, val_a + official_test)
+    assert_no_overlap(val_a, official_test)
+    assert {r["seq"] for r in train_a + val_a} == {
+        r["seq"] for r in official_train}
+    assert not set(r["seq"] for r in official_test) & {
+        r["seq"] for r in train_a + val_a}
+
+
+def test_family_validation_holdout_keeps_clusters_together():
+    rows = [{"seq": "ACGU" * 4 + str(i), "labels": [0],
+             "cluster": "cluster-%d" % (i // 2)} for i in range(20)]
+    train, val = split_train_validation(rows, seed=17)
+    train_clusters = {row["cluster"] for row in train}
+    val_clusters = {row["cluster"] for row in val}
+    assert train_clusters.isdisjoint(val_clusters)
+    assert len(train) + len(val) == len(rows)
+    assert_cluster_no_overlap(train, val)
+    with pytest.raises(AssertionError, match="FAMILY OVERLAP"):
+        assert_cluster_no_overlap(train, train[:1])
+    assert len(train) + len(val) == len({row["seq"] for row in rows})
+
+
+def test_uneven_family_clusters_do_not_drop_training_rows():
+    rows = []
+    for cluster, count in (("large", 100), ("small-a", 10), ("small-b", 5)):
+        for i in range(count):
+            rows.append({"seq": "%s-%d" % (cluster, i), "cluster": cluster,
+                         "labels": [0]})
+    train, val = split_train_validation(rows, seed=17, val_fraction=0.1)
+    assert len(train) + len(val) == len(rows)
+    assert val
+    assert_cluster_no_overlap(train, val)
+
+
+def test_seeded_training_subsample_changes_with_formal_seed():
+    rows = [{"seq": "ACGU" * 4 + str(i)} for i in range(50)]
+    sample17 = seeded_sample(rows, 10, 17)
+    sample17_again = seeded_sample(rows, 10, 17)
+    sample29 = seeded_sample(rows, 10, 29)
+    sample43 = seeded_sample(rows, 10, 43)
+    assert sample17 == sample17_again
+    assert len(sample17) == len(sample29) == len(sample43) == 10
+    assert sample17 != sample29 != sample43
+    assert sample17 != rows[:10]
+    assert seeded_sample(rows, 0, 17) is rows
+    assert seeded_sample(rows, 100, 17) is rows
+
+
+def test_train_validation_holdout_rejects_sequence_leakage():
+    rows = [{"seq": "ACGU"}, {"seq": "ACGT"}, {"seq": "ACGU"}]
+    with pytest.raises(AssertionError, match="OVERLAP DETECTED"):
+        split_train_validation(rows, seed=17)
 
 
 @pytest.mark.parametrize("module_name", ["rnafteval.finetune_clf",
