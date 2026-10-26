@@ -34,12 +34,14 @@ def test_export_requires_complete_proof_and_preserves_source(tmp_path, monkeypat
     monkeypatch.setattr(exporter.queue, "proof_state", lambda job: (
         ("complete", "") if job.rid == "ft_valid" else ("conflict", "bad checkpoint")))
     accepted, rejected = exporter.collect([
-        valid, invalid, missing_metric, row(tmp_path, "ft_smoke", status="running")])
+        valid, invalid, missing_metric, row(tmp_path, "ft_smoke", status="running"),
+        row(tmp_path, "ft_e6", split="s0-heldout")])
     assert [item["run_id"] for item in accepted] == ["ft_valid"]
     assert accepted[0]["artifact_dir"] == valid["out_dir"]
     assert accepted[0]["best_checkpoint"].endswith("best.ckpt")
     assert accepted[0]["cuda_device_name"] == "RTX 5090"
     assert {item["run_id"] for item in rejected} == {"ft_invalid", "ft_missing_metric"}
+    assert all(item["run_id"] != "ft_e6" for item in accepted + rejected)
 
 
 def test_export_writes_accepted_csv_and_rejected_json(tmp_path, monkeypatch):

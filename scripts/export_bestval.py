@@ -45,7 +45,7 @@ def collect(rows=None):
     for row in candidates:
         if row.get("protocol") != "bestval_v1" or row.get("status") != "done":
             continue
-        if row.get("task") == "e6-forgetting":
+        if row.get("task") == "e6-forgetting" or row.get("split") == "s0-heldout":
             continue
         try:
             if not row.get("metric"):

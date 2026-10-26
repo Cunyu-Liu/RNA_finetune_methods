@@ -58,16 +58,27 @@ observe_launcher() {
   # Observation is informational only; never kill or spawn from ps/pgrep text.
 }
 
+e6_v2_cell_complete() {
+  local seed=$1 strategy=$2
+  "$PY" scripts/e6_mlm15_proof.py \
+    "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix_seqmlfix_bestval_v1" \
+    RiNALMo-micro "$strategy" "$seed" \
+    --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1 \
+    --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
+    >/dev/null 2>&1 && return 0
+  "$PY" scripts/e6_mlm15_proof.py \
+    "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix_seqmlfix_bestval_v1_bestval_v1" \
+    RiNALMo-micro "$strategy" "$seed" \
+    --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1_bestval_v1 \
+    --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
+    >/dev/null 2>&1
+}
+
 e6_v2_complete() {
   local seed strategy
   for seed in 17 29 43; do
     for strategy in lora full; do
-      "$PY" scripts/e6_mlm15_proof.py \
-        "$E6_ARTIFACTS/RiNALMo-micro_${strategy}_task-m6a_s${seed}_mlm15fix_seedfix_seqmlfix_bestval_v1" \
-        RiNALMo-micro "$strategy" "$seed" \
-        --ledger-task e6-forgetting --extra _taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1 \
-        --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
-        >/dev/null 2>&1 || return 1
+      e6_v2_cell_complete "$seed" "$strategy" || return 1
     done
   done
   return 0

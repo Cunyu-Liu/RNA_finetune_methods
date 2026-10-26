@@ -137,6 +137,8 @@ with open(os.environ["FAKE_CALLS"], "a") as fh:
     fh.write(json.dumps(args) + "\\n")
 state = Path(os.environ["FAKE_STATE"])
 if args and args[0].endswith("e6_mlm15_proof.py"):
+    if os.environ.get("FAKE_LEGACY_ONLY") and "bestval_v1_bestval_v1" not in args[1]:
+        raise SystemExit(1)
     model, strategy, seed = args[2:5]
     marker = state / (model + "_" + strategy + "_" + seed + ".done")
     raise SystemExit(0 if marker.exists() else 1)
@@ -193,7 +195,7 @@ def test_v2_queue_runs_exactly_six_cells_with_double_proof(tmp_path):
     runs = [r for r in records if r[:2] == ["-m", "rnafteval.e6_forget_task"]]
     proofs = [r for r in records if r and r[0].endswith("e6_mlm15_proof.py")]
     assert len(runs) == 6
-    assert len(proofs) == 12
+    assert len(proofs) == 18
     assert len(list(state.glob("*.done"))) == 6
     observed = set()
     for cmd in runs:
@@ -219,6 +221,21 @@ def test_v2_queue_runs_exactly_six_cells_with_double_proof(tmp_path):
         assert cmd[cmd.index("--protocol-prefix") + 1] == "E6-v2-fixed-mask-mlm"
     text = log.read_text()
     assert "DONE cells=6/6" in text and "INCOMPLETE" not in text
+
+
+def test_v2_queue_accepts_valid_legacy_duplicate_suffix_without_rerun(tmp_path):
+    env, state, calls, log = fake_queue_runtime(tmp_path)
+    for seed in (17, 29, 43):
+        for strategy in ("lora", "full"):
+            (state / ("RiNALMo-micro_%s_%d.done" % (strategy, seed))).touch()
+    env["FAKE_LEGACY_ONLY"] = "1"
+    completed = run_queue(env)
+    assert completed.returncode == 0, completed.stderr
+    runs = [r for r in read_calls(calls)
+            if r[:2] == ["-m", "rnafteval.e6_forget_task"]]
+    assert not runs
+    assert "DONE cells=6/6" in log.read_text()
+    assert "skip(done-legacy-suffix)" in log.read_text()
 
 
 def test_v2_queue_waits_at_cell_boundary_until_exclusive_flag_clears(tmp_path):

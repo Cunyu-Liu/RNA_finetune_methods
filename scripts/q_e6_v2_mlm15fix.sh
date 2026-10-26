@@ -14,11 +14,12 @@ DEV=${DEV:-0}
 ARTIFACTS=${RNAFT_ARTIFACT_ROOT:-$R/artifacts}
 SUFFIX=_mlm15fix_seedfix_seqmlfix
 EXTRA=_taskm6a_s0_mlm15fix_seedfix_seqmlfix_bestval_v1
+LEGACY_EXTRA=${EXTRA}_bestval_v1
 
 proof() {
-  local resdir=$1 model=$2 strat=$3 seed=$4
+  local resdir=$1 model=$2 strat=$3 seed=$4 extra=${5:-$EXTRA}
   "$PY" scripts/e6_mlm15_proof.py "$resdir" "$model" "$strat" "$seed" \
-    --ledger-task e6-forgetting --extra "$EXTRA" \
+    --ledger-task e6-forgetting --extra "$extra" \
     --result-task modification --protocol-prefix E6-v2-fixed-mask-mlm \
     >/dev/null 2>&1
 }
@@ -27,12 +28,18 @@ ok=0
 run_cell() {
   local model=$1 strat=$2 seed=$3 lr=$4
   local resdir=$ARTIFACTS/e6/${model}_${strat}_task-m6a_s${seed}${SUFFIX}_bestval_v1
+  local legacy_resdir=$ARTIFACTS/e6/${model}_${strat}_task-m6a_s${seed}${SUFFIX}_bestval_v1_bestval_v1
   if proof "$resdir" "$model" "$strat" "$seed"; then
     echo "[e6v2-mlm15fix] skip(done) $model $strat s$seed" >> "$LOG"
     ok=$((ok+1))
     return 0
   fi
-  if [ -e "$resdir/result.json" ]; then
+  if proof "$legacy_resdir" "$model" "$strat" "$seed" "$LEGACY_EXTRA"; then
+    echo "[e6v2-mlm15fix] skip(done-legacy-suffix) $model $strat s$seed" >> "$LOG"
+    ok=$((ok+1))
+    return 0
+  fi
+  if [ -e "$resdir/result.json" ] || [ -e "$legacy_resdir/result.json" ]; then
     echo "[e6v2-mlm15fix] CONFLICT result exists without valid double proof: $model $strat s$seed" >> "$LOG"
     return 1
   fi
@@ -51,7 +58,12 @@ run_cell() {
       ok=$((ok+1))
       return 0
     fi
-    if [ -e "$resdir/result.json" ]; then
+    if proof "$legacy_resdir" "$model" "$strat" "$seed" "$LEGACY_EXTRA"; then
+      echo "[e6v2-mlm15fix] skip(done-after-wait-legacy-suffix) $model $strat s$seed" >> "$LOG"
+      ok=$((ok+1))
+      return 0
+    fi
+    if [ -e "$resdir/result.json" ] || [ -e "$legacy_resdir/result.json" ]; then
       echo "[e6v2-mlm15fix] CONFLICT after wait: $model $strat s$seed" >> "$LOG"
       return 1
     fi

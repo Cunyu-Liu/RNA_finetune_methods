@@ -9,6 +9,8 @@
 - 机制诊断保存相同样本的 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family 信息。post 强制 best-val，并在导出前恢复最佳权重、逐 tensor 核验；pre 使用 seed 201 的未训练参考头，其 ACC 不作 zero-shot 结论。三状态 manifest 一致才联合 t-SNE，silhouette 只用原始高维表示。
 - 真实 pre 已完成 random 757 条、family 856 条并落 `/teams`；首次两个 post 因多任务叠加 OOM，失败目录与日志已隔离到 `handoff_20261027/mechanism_oom_20261027/`。后续单 worker 按 LoRA 8 GiB、full 12 GiB 启动前门槛等待，不无限重试、不 CPU 降级。
 - 统一注册表 450 格分为专用 MRL/m6A/rank8 lane 与 324 个 complementary 格，已断言无 micro-rank8 或 MRL/m6A LoRA/full 重复。调度器将显存压力视为等待，只有需求超过整卡才拒绝；外部释放显存后可继续派发。新批次通过 `RNAFT_ARTIFACT_ROOT` 将 result/checkpoint 直接写 `/teams`，registry 与 runner 共用同一路径，避免 `artifacts/artifacts` 错配。
+- E6 旧 launcher 已完成 s17 LoRA/full：ΔNLL=0.590438/0.764648（单种子，不作最终倍数结论），序列级 12 标签、masked-NLL、best-val、CUDA 和 checkpoint 均有效，无需因重复后缀重跑。旧 launcher 的后续种子保持运行；兼容 proof 待其结束后部署，避免修改运行中的脚本。
+- s17 LoRA 的 `data_evidence.protocol` 旧标签已仅做元数据修正为 bestval，原始 result/split/plateau/ledger 已备份至 `handoff_20261027/e6_metadata_label_s17_lora/`；完整 E6 proof 复验通过，指标未改。下游导出显式排除 `s0-heldout`，E6 不混入任务性能 CSV。
 - 全量 SSP 13,401 条 dot-bracket 与原始 npy 配对矩阵一致，无需因此重跑。旧 modification-E6 的 29 条记录已确认 invalid，旧 fixed-epoch modification 入口现拒绝执行，新 RID 强制 `_seqmlfix`。
 
 ## 2026-10-27 · 过拟合分支切换 best-val 与任务语义复核
