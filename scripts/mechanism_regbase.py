@@ -253,7 +253,14 @@ def source_data_evidence(source_result, reconstructed=None):
     if source_result is None:
         return {"source_data_evidence_present": None,
                 "source_data_evidence_note": "not_applicable_pre_reference"}
+    is_ssi_random = (source_result.get("task") == "ssi"
+                     and source_result.get("split") == "random")
+    if is_ssi_random and reconstructed is None:
+        raise ValueError("SSI random source requires reconstructed split evidence")
     if "data_evidence" not in source_result:
+        if is_ssi_random:
+            raise ValueError(
+                "SSI random source is missing required sequence-grouped data_evidence")
         return {
             "source_data_evidence_present": False,
             "source_data_evidence_note": (
@@ -653,6 +660,15 @@ def validate_state_proof(strategy, diagnostic, task, split, seed):
     expected_rid = source_run_id(task, strategy, split, seed)
     if diagnostic.get("source_run_id") != expected_rid:
         raise ValueError("post diagnostic source RID is not task isolated")
+    if task == "ssi" and split == "random":
+        if (diagnostic.get("source_data_evidence_present") is not True
+                or diagnostic.get("source_data_evidence_note") !=
+                "matched_reconstructed_sequence_grouped_split"):
+            raise ValueError("SSI random post lacks matched sequence-grouped data evidence")
+        if (diagnostic.get("n_full_test_records") != diagnostic.get("n_test")
+                or diagnostic.get("record_identity_scope") !=
+                "sequence_hash_occurrence_within_official_test"):
+            raise ValueError("SSI random post lacks record-level identity proof")
 
 
 def load_aligned_states(task, split, seed, suffix="_ckpt_v1", artifact_root=None):

@@ -201,6 +201,30 @@ def test_ssi_source_data_evidence_must_match_reconstruction():
     result["data_evidence"]["input_same_sequence_rows"] = {"train": 0, "test": 0}
     with pytest.raises(ValueError, match="input_same_sequence_rows"):
         mech.source_data_evidence(result, evidence)
+    with pytest.raises(ValueError, match="missing required sequence-grouped"):
+        mech.source_data_evidence({"task": "ssi", "split": "random"}, evidence)
+
+
+def test_ssi_random_post_requires_matched_evidence_and_record_identity():
+    diagnostic = {
+        "model": mech.MODEL, "task": "ssi", "split": "random", "seed": 17,
+        "strategy": "lora", "full_test_metric_match": True,
+        "checkpoint": {"restored_tensor_match": True, "checkpoint_proof": "ok"},
+        "source_proof": {"state": "complete"},
+        "source_run_id": mech.source_run_id("ssi", "lora", "random", 17),
+        "n_test": 2, "n_full_test_records": 2,
+        "record_identity_scope": "sequence_hash_occurrence_within_official_test",
+        "source_data_evidence_present": True,
+        "source_data_evidence_note": "matched_reconstructed_sequence_grouped_split",
+    }
+    mech.validate_state_proof("lora", diagnostic, "ssi", "random", 17)
+    diagnostic["source_data_evidence_note"] = "present_in_source_result"
+    with pytest.raises(ValueError, match="matched sequence-grouped"):
+        mech.validate_state_proof("lora", diagnostic, "ssi", "random", 17)
+    diagnostic["source_data_evidence_note"] = "matched_reconstructed_sequence_grouped_split"
+    diagnostic["n_full_test_records"] = 1
+    with pytest.raises(ValueError, match="record-level identity"):
+        mech.validate_state_proof("lora", diagnostic, "ssi", "random", 17)
 
 
 @pytest.mark.parametrize("task", mech.TASKS)
