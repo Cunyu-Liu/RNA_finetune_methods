@@ -595,3 +595,11 @@ def test_clf_converged_ledger_update_has_no_duplicate_metric():
     source = open(finetune_clf.__file__).read()
     assert 'ledger.update(rid, "done", **vp.result_ledger_fields(result))' in source
     assert 'extra_fields=result, **ledger_fields' not in source
+
+
+def test_perbase_converged_ledger_updates_have_no_duplicate_value_or_metric():
+    for runner in (finetune_spl, finetune_regbase):
+        source = open(runner.__file__).read()
+        assert 'ledger.update(rid, "done", **vp.result_ledger_fields(result))' in source
+        assert 'extra_fields=result, **ledger_fields' not in source
+        assert 'ledger_fields.update(vp.result_ledger_fields(result))' not in source
