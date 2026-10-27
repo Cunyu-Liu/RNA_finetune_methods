@@ -183,7 +183,11 @@ def load_task_parts(task, split, seed=17, n_train=N_TRAIN, data_root=DATA_ROOT):
         raw_train, test, ignored, family_path = _read_random_source(task, data_root)
     input_rows = {"train": len(raw_train), "test": len(test),
                   "validation_ignored": ignored}
-    train, val = split_train_validation(raw_train, seed=DATA_SPLIT_SEED)
+    if task == "ssi" and split == "random":
+        train, val = ssi_task.split_train_validation_by_sequence(
+            raw_train, seed=DATA_SPLIT_SEED)
+    else:
+        train, val = split_train_validation(raw_train, seed=DATA_SPLIT_SEED)
     rows_before_sampling = len(train)
     train = seeded_sample(train, n_train, seed)
     parts = {"train": train, "val": val, "test": test}
@@ -191,6 +195,15 @@ def load_task_parts(task, split, seed=17, n_train=N_TRAIN, data_root=DATA_ROOT):
         parts, task, split, seed=seed, n_train=n_train, input_rows=input_rows,
         rows_before_sampling=rows_before_sampling, ignored_validation=ignored,
         family_path=family_path)
+    if task == "ssi" and split == "random":
+        evidence.update({
+            "validation_grouping": ssi_task.RANDOM_GROUPING,
+            "same_sequence_records_preserved": True,
+            "requested_n_train": int(n_train),
+            "input_same_sequence_rows": {
+                "train": ssi_task.same_sequence_record_counts(raw_train),
+                "test": ssi_task.same_sequence_record_counts(test)},
+        })
     return parts, evidence
 
 
@@ -236,7 +249,7 @@ def load_source(task, strategy, split, seed, parts):
     return source_dir, source_result, source_row
 
 
-def source_data_evidence(source_result):
+def source_data_evidence(source_result, reconstructed=None):
     if source_result is None:
         return {"source_data_evidence_present": None,
                 "source_data_evidence_note": "not_applicable_pre_reference"}
@@ -247,8 +260,30 @@ def source_data_evidence(source_result):
                 "missing_in_source_result_reconstructed_evidence_is_not_claimed_"
                 "as_source_evidence"),
         }
+    source = source_result["data_evidence"]
+    if not isinstance(source, dict):
+        raise ValueError("source data_evidence must be an object")
+    note = "present_in_source_result"
+    if (reconstructed is not None and source_result.get("task") == "ssi"
+            and source_result.get("split") == "random"):
+        keys = (
+            "protocol", "task", "split", "seed", "holdout_seed",
+            "validation_source", "validation_grouping",
+            "same_sequence_records_preserved", "ignored_source_validation_rows",
+            "input_rows", "input_same_sequence_rows", "canonical_n_train",
+            "requested_n_train", "max_len", "train_sampling", "n_train",
+            "n_val", "n_test", "output_rows", "status",
+        )
+        mismatches = {
+            key: {"source": source.get(key), "reconstructed": reconstructed.get(key)}
+            for key in keys if source.get(key) != reconstructed.get(key)
+        }
+        if mismatches:
+            raise ValueError("source/reconstructed SSI data evidence differs: %s"
+                             % json.dumps(mismatches, sort_keys=True))
+        note = "matched_reconstructed_sequence_grouped_split"
     return {"source_data_evidence_present": True,
-            "source_data_evidence_note": "present_in_source_result"}
+            "source_data_evidence_note": note}
 
 
 def regression_metrics(y_true, prediction, sequence_ids):
@@ -327,6 +362,22 @@ def manifest_digest(manifest):
     return hashlib.sha256(encoded).hexdigest()
 
 
+def ordered_record_ids(rows, task, split):
+    ordered = sorted(rows, key=lambda row: common.sequence_hash(row["seq"]))
+    if not (task == "ssi" and split == "random"):
+        return ordered, [common.sequence_hash(row["seq"]) for row in ordered]
+    occurrences = {}
+    record_ids = []
+    for row in ordered:
+        sequence_hash = common.sequence_hash(row["seq"])
+        occurrence = occurrences.get(sequence_hash, 0)
+        occurrences[sequence_hash] = occurrence + 1
+        record_ids.append("%s:%04d" % (sequence_hash, occurrence))
+    if len(record_ids) != len(set(record_ids)):
+        raise ValueError("record-level SSI identities are not unique")
+    return ordered, record_ids
+
+
 def make_token_manifest(tokenizer, rows, task, split, seed, token_cap,
                         split_evidence, max_len=MAX_LEN, batch_size=32):
     _validate_task_split(task, split)
@@ -334,9 +385,9 @@ def make_token_manifest(tokenizer, rows, task, split, seed, token_cap,
         raise ValueError("token_cap must be a positive integer")
     if batch_size <= 0:
         raise ValueError("batch_size must be positive")
-    ordered = sorted(rows, key=lambda row: common.sequence_hash(row["seq"]))
-    sequence_ids = [common.sequence_hash(row["seq"]) for row in ordered]
-    if len(sequence_ids) != len(set(sequence_ids)):
+    ordered, sequence_ids = ordered_record_ids(rows, task, split)
+    if not (task == "ssi" and split == "random") \
+            and len(sequence_ids) != len(set(sequence_ids)):
         raise ValueError("test contains duplicate sequence hashes")
     records = []
     for start in range(0, len(ordered), batch_size):
@@ -393,6 +444,14 @@ def make_token_manifest(tokenizer, rows, task, split, seed, token_cap,
         "split_evidence": split_evidence,
         "metric_scope": "full_test_global_pcc_and_sequence_equal_weight_mcrmse",
     }
+    if task == "ssi" and split == "random":
+        manifest.update({
+            "record_ids": sequence_ids,
+            "n_full_records": len(ordered),
+            "n_unique_sequences": len({common.sequence_hash(row["seq"]) for row in ordered}),
+            "record_identity_scope": "sequence_hash_occurrence_within_official_test",
+            "metric_scope": "full_test_global_pcc_and_record_equal_weight_mcrmse",
+        })
     manifest["manifest_sha256"] = manifest_digest(manifest)
     return ordered, manifest, selected
 
@@ -410,6 +469,12 @@ def extract(backbone, head, tokenizer, rows, device, task, manifest, selected,
         raise ValueError("extraction task/max_len differs from manifest")
     if len(rows) != manifest["n_full_sequences"]:
         raise ValueError("extraction rows differ from manifest")
+    if task == "ssi" and manifest["split"] == "random":
+        record_ids = manifest["record_ids"]
+    else:
+        record_ids = [common.sequence_hash(row["seq"]) for row in rows]
+    if len(record_ids) != len(rows):
+        raise ValueError("record identities differ from extraction rows")
     backbone.eval()
     head.eval()
     selected_by_sequence = {}
@@ -434,7 +499,7 @@ def extract(backbone, head, tokenizer, rows, device, task, manifest, selected,
             prediction = head(hidden, pad).squeeze(-1)
             for offset, row in enumerate(batch):
                 seq_index = start + offset
-                sequence_id = common.sequence_hash(row["seq"])
+                sequence_id = record_ids[seq_index]
                 valid_token_positions = mask[offset].nonzero().flatten()
                 hidden_valid = hidden[offset][mask[offset]]
                 prediction_valid = prediction[offset][mask[offset]]
@@ -483,9 +548,8 @@ def extract(backbone, head, tokenizer, rows, device, task, manifest, selected,
         for key in ("y_true", "prediction", "residual"):
             _finite_array(name + " " + key, arrays[key])
     _finite_array("sample token_embedding", sample["token_embedding"])
-    sequence_ids = [common.sequence_hash(row["seq"]) for row in rows]
     full_hash = compute_full_test_hash(
-        task, max_len, sequence_ids, full["token_ids"], full["sequence_ids"],
+        task, max_len, record_ids, full["token_ids"], full["sequence_ids"],
         full["base_positions"], full["token_positions"], full["y_true"])
     if full_hash != manifest["full_test_sha256"]:
         raise ValueError("full-test hash changed during prediction")
@@ -807,7 +871,7 @@ def run(args):
         sample.update(metadata)
         save_npz(out_dir / "predictions.npz", **full)
         save_npz(out_dir / "embeddings.npz", **sample)
-        source_evidence = source_data_evidence(source_result)
+        source_evidence = source_data_evidence(source_result, split_evidence)
         diagnostic = {
             "artifact_type": "regbase_diagnostic",
             "status": "diagnostic",
@@ -828,7 +892,9 @@ def run(args):
             "metrics_full": metrics,
             "metric_definition": {
                 "pcc": "global_corrcoef_over_concatenated_valid_tokens",
-                "mcrmse": "sqrt_mean_of_per_sequence_mse_equal_sequence_weight",
+                "mcrmse": ("sqrt_mean_of_per_record_mse_equal_record_weight"
+                           if args.task == "ssi" and args.split == "random" else
+                           "sqrt_mean_of_per_sequence_mse_equal_sequence_weight"),
             },
             "source_run_id": None if source_result is None else source_result["run_id"],
             "source_metrics": None if source_result is None else {
@@ -849,6 +915,13 @@ def run(args):
             "reference_head_seed": PRE_HEAD_SEED if args.strategy == "pre" else None,
             "interpretation": "descriptive_only_no_mechanism_conclusion",
         }
+        if args.task == "ssi" and args.split == "random":
+            diagnostic.update({
+                "n_full_test_records": len(ordered),
+                "n_unique_test_sequences": len({
+                    common.sequence_hash(row["seq"]) for row in ordered}),
+                "record_identity_scope": manifest["record_identity_scope"],
+            })
         diagnostic.update(source_evidence)
         ready = load_aligned_states(args.task, args.split, args.seed)
         source_reference = PRE_SOURCE if source_result is None else source_result["run_id"]

@@ -157,14 +157,44 @@ def main() -> int:
             test = sp["test"]
 
     val = None
-    if args.converge:
+    split_evidence = None
+    if args.converge and args.task == "ssi" and args.split == "random":
+        raw_train, raw_test = train, test
+        ignored_validation = len(sp["validation"])
+        train, val = ssi_task.split_train_validation_by_sequence(train, seed=17)
+    elif args.converge:
         train, val = split_train_validation(train, seed=17)
+    rows_before_sampling = len(train)
     train = seeded_sample(train, args.n_train, args.seed)
+    rows_after_sampling = len(train)
     if args.smoke:
         train = train[:60]
         test = test[:60]
         if val is not None:
             val = val[:60]
+    if args.converge and args.task == "ssi" and args.split == "random":
+        split_evidence = {
+            "protocol": (vp.BESTVAL_PROTOCOL if args.convergence_mode == "bestval"
+                         else vp.PROTOCOL),
+            "task": args.task, "split": args.split, "seed": args.seed,
+            "holdout_seed": 17, "validation_source": "train_holdout",
+            "validation_grouping": ssi_task.RANDOM_GROUPING,
+            "same_sequence_records_preserved": True,
+            "ignored_source_validation_rows": ignored_validation,
+            "input_rows": {"train": len(raw_train), "test": len(raw_test),
+                           "validation_ignored": ignored_validation},
+            "input_same_sequence_rows": {
+                "train": ssi_task.same_sequence_record_counts(raw_train),
+                "test": ssi_task.same_sequence_record_counts(raw_test)},
+            "canonical_n_train": 0, "requested_n_train": args.n_train,
+            "max_len": args.max_len,
+            "train_sampling": {"method": "seeded_sample", "n_train": args.n_train,
+                               "seed": args.seed, "rows_before": rows_before_sampling,
+                               "rows_after": rows_after_sampling},
+            "n_train": len(train), "n_val": len(val), "n_test": len(test),
+            "output_rows": {"train": len(train), "val": len(val), "test": len(test)},
+            "status": "OK",
+        }
     if args.converge:
         assert_no_overlap(train, val + test, unit="seq")
         assert_no_overlap(val, test, unit="seq")
@@ -314,6 +344,8 @@ def main() -> int:
         result.update(tracker.result_fields())
         result.update(n_val=len(val), runtime=runtime,
                       acceptance_eligible=not args.smoke)
+        if split_evidence is not None:
+            result["data_evidence"] = split_evidence
     result_path = os.path.join(out_dir, "result.json")
     tmp_path = result_path + ".tmp"
     with open(tmp_path, "w") as f:
