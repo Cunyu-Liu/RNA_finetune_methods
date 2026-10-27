@@ -129,6 +129,67 @@ def test_max_len_uses_deterministic_right_truncation_before_alignment():
     assert mask.tolist() == [[False, True, True, True, False]]
 
 
+def test_ssp_pair_targets_and_scores_follow_aligned_base_tokens():
+    rec = {"seq": "ACGU", "L": 4, "pairs": [(0, 2), (1, 3)]}
+    tok = _HFTok()
+    enc = tok([rec["seq"]], padding=True, truncation=True,
+              max_length=6, return_tensors="pt")
+    positions = finetune_ssp.aligned_base_positions(tok, enc, [rec], 6)[0]
+    assert positions.tolist() == [1, 2, 3, 4]
+    target, mask = finetune_ssp.pair_target_and_mask(
+        rec, positions, width=6, device=torch.device("cpu"))
+    assert target[1, 3] == 1 and target[3, 1] == 1
+    assert target[2, 4] == 1 and target[4, 2] == 1
+    assert int(mask.sum()) == 6
+    assert not mask[0].any() and not mask[:, 0].any()
+    assert not mask[5].any() and not mask[:, 5].any()
+    scores = torch.arange(36).reshape(6, 6)
+    aligned = finetune_ssp.aligned_pair_scores(scores, positions)
+    assert aligned.tolist() == [[7, 8, 9, 10], [13, 14, 15, 16],
+                                [19, 20, 21, 22], [25, 26, 27, 28]]
+
+
+def test_ssp_pair_alignment_uses_right_truncated_effective_pairs():
+    rec = {"seq": "ACGUAC", "L": 6, "pairs": [(0, 5), (1, 2)]}
+    tok = _HFTok()
+    enc = tok([rec["seq"]], padding=True, truncation=True,
+              max_length=5, return_tensors="pt")
+    positions = finetune_ssp.aligned_base_positions(tok, enc, [rec], 5)[0]
+    assert positions.tolist() == [1, 2, 3]
+    assert finetune_ssp.effective_pairs(rec, len(positions)) == [(1, 2)]
+    target, mask = finetune_ssp.pair_target_and_mask(
+        rec, positions, width=5, device=torch.device("cpu"))
+    assert target[2, 3] == 1 and target[3, 2] == 1
+    assert int(target.sum()) == 2
+    assert int(mask.sum()) == 3
+
+
+def test_ssp_pair_alignment_supports_rnasc_and_rejects_kmer():
+    rec = {"seq": "ACGU", "L": 4, "pairs": [(0, 2)]}
+    tok = _RnaScTok()
+    enc = tok([rec["seq"]], padding=True, truncation=True,
+              max_length=4, return_tensors="pt")
+    positions = finetune_ssp.aligned_base_positions(tok, enc, [rec], 4)[0]
+    assert positions.tolist() == [0, 1, 2, 3]
+    with pytest.raises(ValueError, match="B20 token/base mismatch"):
+        kmer = _ThreeMerTok()
+        bad = dict(rec, seq="ACGUAC", L=6)
+        enc = kmer([bad["seq"]], padding=True, truncation=True,
+                   max_length=8, return_tensors="pt")
+        finetune_ssp.aligned_base_positions(kmer, enc, [bad], 8)
+
+
+def test_ssp_pairalign_rid_separates_fixed_and_legacy_runs():
+    base = SimpleNamespace(lr=3e-4, rank=8, n_train=2000, n_test=400,
+                           smoke=False, converge=False)
+    assert finetune_ssp._run_extra(base) == "_pairalign"
+    bestval = SimpleNamespace(**{**vars(base), "converge": True,
+                                 "convergence_mode": "bestval"})
+    assert finetune_ssp._run_extra(bestval) == "_pairalign_bestval_v1"
+    smoke = SimpleNamespace(**{**vars(base), "smoke": True})
+    assert finetune_ssp._run_extra(smoke) == "_smoke_pairalign"
+
+
 def test_run_id_extra_marks_b20fix_and_separates_nondefaults():
     for runner, default_epochs in ((finetune_spl, 10),
                                    (finetune_regbase, 3),
@@ -299,9 +360,9 @@ def test_claim_blocked_module_exit_uses_rc75_and_keyword_device(
     (finetune_one, dict(n_train=0), ""),
     (finetune_base, dict(n_train=20000), ""),
     (finetune_mrl, dict(n_train=20000), ""),
-    (finetune_ssp, dict(n_train=2000, n_test=400), ""),
+    (finetune_ssp, dict(n_train=2000, n_test=400), "_pairalign"),
 ])
-def test_old_runners_converge_rid_isolated_and_legacy_unchanged(
+def test_old_runners_converge_rid_isolated_and_nonconverge_extra_registered(
         runner, defaults, legacy_extra):
     base = SimpleNamespace(lr=3e-4, rank=8, epochs=3, smoke=False,
                            random_init=False, converge=False,

@@ -28,6 +28,7 @@ import torch
 import torch.nn as nn
 
 from . import ledger, valplateau as vp
+from .base_alignment import align_base_labels
 from .splits import prepare_convergence_splits
 from .tasks import ssp as ssp_task
 
@@ -71,14 +72,37 @@ def batchify(recs, bs):
         yield recs[i:i + bs]
 
 
-def make_target(rec, device) -> torch.Tensor:
-    """(L, L) float target from dot-bracket pairs (i<j)."""
-    L = rec["L"]
-    y = torch.zeros(L, L, device=device)
-    for i, j in rec.get("pairs", []):
-        y[i, j] = 1.0
-        y[j, i] = 1.0          # symmetric target; loss on upper triangle
-    return y
+def aligned_base_positions(tok, enc, rows, max_len):
+    """Map each retained base to its token position, excluding special/PAD."""
+    probe_rows = [dict(row, labels=np.zeros(row["L"], dtype=np.float32))
+                  for row in rows]
+    _labels, base_mask = align_base_labels(tok, enc, probe_rows, max_len)
+    return [row_mask.nonzero(as_tuple=False).flatten()
+            for row_mask in base_mask]
+
+
+def effective_pairs(rec, n_bases):
+    return [(i, j) for i, j in rec.get("pairs", [])
+            if 0 <= i < j < n_bases]
+
+
+def pair_target_and_mask(rec, positions, width, device):
+    """Place base-indexed pairs at their aligned token positions."""
+    n_bases = len(positions)
+    target = torch.zeros(width, width, device=device)
+    mask = torch.zeros(width, width, device=device, dtype=torch.bool)
+    base_i, base_j = torch.triu_indices(
+        n_bases, n_bases, offset=1, device=device)
+    token_i, token_j = positions[base_i], positions[base_j]
+    mask[token_i, token_j] = True
+    for i, j in effective_pairs(rec, n_bases):
+        target[positions[i], positions[j]] = 1.0
+        target[positions[j], positions[i]] = 1.0
+    return target, mask
+
+
+def aligned_pair_scores(scores, positions):
+    return scores.index_select(0, positions).index_select(1, positions)
 
 
 def encode_one(tok, seqs, device, max_len):
@@ -103,7 +127,7 @@ def pair_f1(all_pred: list[set], all_gold: list[set]) -> dict:
 def _run_extra(args):
     lr_tag = "" if abs(args.lr - 3e-4) < 1e-12 else "_lr%g" % args.lr
     rank_tag = "" if args.rank == 8 else "_r%d" % args.rank
-    legacy = ("_smoke" if args.smoke else "") + lr_tag + rank_tag
+    legacy = ("_smoke" if args.smoke else "") + lr_tag + rank_tag + "_pairalign"
     if not getattr(args, "converge", False):
         return legacy
     n_tag = "" if args.n_train == 2000 else "_e3%d" % args.n_train
@@ -219,14 +243,15 @@ def main() -> int:
     from .strategies import apply_strategy
     spec, tok, backbone = load_model(args.model, device)
 
-    # class balance: candidate pairs >> real pairs (pos_rate ~1%) ->
-    # pos_weight so positives actually drive gradients (root cause of
-    # all-negative collapse at threshold 0.5)
+    # Balance the same aligned upper-triangle pairs used by the loss.
     pos = tot = 0
-    for r in train:
-        Lb = r["L"]
-        pos += len(r.get("pairs", []))
-        tot += Lb * (Lb - 1) // 2
+    for batch in batchify(train, args.batch_size * 2):
+        enc = encode_one(tok, [r["seq"] for r in batch], device, args.max_len)
+        positions = aligned_base_positions(tok, enc, batch, args.max_len)
+        for rec, base_pos in zip(batch, positions):
+            n_bases = len(base_pos)
+            pos += len(effective_pairs(rec, n_bases))
+            tot += n_bases * (n_bases - 1) // 2
     pw = float(min(200.0, max(1.0, (tot - pos) / max(1, pos))))
     print("pos_weight %.1f (pos %d / cand %d)" % (pw, pos, tot), flush=True)
 
@@ -249,33 +274,24 @@ def main() -> int:
 
     def run_batch(b, train_mode: bool):
         enc = encode_one(tok, [r["seq"] for r in b], device, args.max_len)
-        L = enc["input_ids"].shape[1]
+        width = enc["input_ids"].shape[1]
+        base_positions = aligned_base_positions(tok, enc, b, args.max_len)
         no_grad = train_mode and args.strategy in ("frozen", "head-only")
         ctx = torch.no_grad() if no_grad else contextlib.nullcontext()
         with ctx:
             h = backbone(**enc).last_hidden_state
         pad = enc["attention_mask"] == 0
         S = head(h, pad)                     # (B, T, T)
-        # loss over non-pad upper triangle
-        total, n = 0.0, 0
         loss = torch.tensor(0.0, device=device)
         tri_masks = []
-        for bi, r in enumerate(b):
-            Lb = min(r["L"], L)
-            m = torch.zeros(L, L, device=device, dtype=torch.bool)
-            m[:Lb, :Lb] = torch.triu(
-                torch.ones(Lb, Lb, device=device, dtype=torch.bool), 1)
-            tri_masks.append(m)
-            y = torch.zeros(L, L, device=device)
-            for i, j in r.get("pairs", []):
-                if i < L and j < L:
-                    y[i, j] = 1.0
-                    y[j, i] = 1.0
+        for bi, (rec, positions) in enumerate(zip(b, base_positions)):
+            target, mask = pair_target_and_mask(rec, positions, width, device)
+            tri_masks.append(mask)
             loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(
-                S[bi], y, reduction="none",
-                pos_weight=pw_t)[m].mean()
+                S[bi], target, reduction="none",
+                pos_weight=pw_t)[mask].mean()
         loss = loss / len(b)
-        return enc, S, tri_masks, loss
+        return enc, S, tri_masks, loss, base_positions
 
     for ep in vp.training_epochs(args):
         backbone.train(args.strategy in ("lora", "full"))
@@ -288,7 +304,7 @@ def main() -> int:
             rng.shuffle(order)
         for i in range(0, len(order), args.batch_size):
             b = [train[k] for k in order[i:i + args.batch_size]]
-            enc, S, tm, loss = run_batch(b, True)
+            enc, S, tm, loss, _positions = run_batch(b, True)
             opt.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(params, 1.0)
@@ -303,7 +319,7 @@ def main() -> int:
             val_tot, val_nb = 0.0, 0
             with torch.no_grad():
                 for b in batchify(val, args.batch_size * 2):
-                    _enc, _S, _tm, val_loss = run_batch(b, False)
+                    _enc, _S, _tm, val_loss, _positions = run_batch(b, False)
                     val_tot += float(val_loss.item())
                     val_nb += 1
             val_epoch_loss = val_tot / max(val_nb, 1)
@@ -326,13 +342,13 @@ def main() -> int:
         with torch.no_grad():
             for i in range(0, len(recs), args.batch_size * 2):
                 b = recs[i:i + args.batch_size * 2]
-                enc, S, tm, _ = run_batch(b, False)
+                enc, S, tm, _, base_positions = run_batch(b, False)
                 Ssm = torch.sigmoid(S)
-                for bi, r in enumerate(b):
-                    Lb = r["L"]
-                    s = Ssm[bi, :Lb, :Lb].cpu().numpy()
+                for bi, (rec, positions) in enumerate(zip(b, base_positions)):
+                    n_bases = len(positions)
+                    s = aligned_pair_scores(Ssm[bi], positions).cpu().numpy()
                     scores.append(s)
-                    golds.append(set(map(tuple, r.get("pairs", []))))
+                    golds.append(set(effective_pairs(rec, n_bases)))
                     preds.append(None)  # filled after threshold chosen
         return scores, golds
 
@@ -378,6 +394,7 @@ def main() -> int:
         "wall_sec": round(wall, 1), "peak_mem_mb": round(peak, 1),
         "backbone_trainable": n_trainable, "lr": args.lr,
         "epochs": args.epochs, "max_len": args.max_len,
+        "pair_alignment": "b20_single_base_token_positions_v1",
         "smoke": args.smoke,
     }
     if args.converge:
