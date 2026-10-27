@@ -16,8 +16,9 @@ from scipy.special import softmax
 
 STATES = ("pre", "lora", "full")
 TITLES = {"pre": "Pre-finetuning", "lora": "Post-LoRA", "full": "Post-full finetuning"}
-CLASS_NAMES = {0: "negative", 1: "donor", 2: "acceptor"}
+CLASS_NAMES = {0: "negative", 1: "acceptor", 2: "donor"}
 COLORS = {0: "#6F6F6F", 1: "#3775BA", 2: "#B64342"}
+ROC_AUC_ROLE = "auxiliary_full_test_only_not_source_reconciliation"
 plt.rcParams.update({
     "font.family": ["Microsoft YaHei", "Arial", "DejaVu Sans"],
     "font.size": 10,
@@ -38,19 +39,26 @@ def scalar(data, name, default):
 
 def load_projection(path):
     with np.load(path, allow_pickle=False) as data:
-        required = {"tsne", "token_ids", "sequence_ids", "positions", "state",
-                    "labels", "probabilities", "logits", "full_macro_f1",
-                    "full_roc_auc", "source_run_ids", "color_mode", "sampling",
-                    "test_manifest_sha256", "tsne_perplexity", "tsne_random_state"}
+        required = {"tsne", "token_ids", "sequence_ids", "base_positions",
+                    "token_positions", "state", "labels", "probabilities", "logits",
+                    "full_macro_f1", "full_micro_f1", "full_roc_auc", "roc_auc_role",
+                    "metric_scope", "source_run_ids", "color_mode", "sampling",
+                    "full_test_sha256", "test_manifest_sha256", "tsne_perplexity",
+                    "tsne_random_state"}
         missing = required - set(data.files)
         if missing:
             raise ValueError("aligned SpliceAI 数据缺失: " + ",".join(sorted(missing)))
         if str(scalar(data, "color_mode", "")) != "spliceai_token_class":
             raise ValueError("只能使用 SpliceAI token class")
+        if str(scalar(data, "roc_auc_role", "")) != ROC_AUC_ROLE:
+            raise ValueError("ROC-AUC 只能作为 full-test auxiliary 诊断")
         states = data["state"].astype(str)
         if list(dict.fromkeys(states)) != list(STATES):
             raise ValueError("投影必须按 pre/lora/full 排列")
         token_ids = data["token_ids"].astype(str)
+        sequence_ids = data["sequence_ids"].astype(str)
+        base_positions = data["base_positions"].astype(int)
+        token_positions = data["token_positions"].astype(int)
         labels = data["labels"].astype(int)
         probabilities = data["probabilities"].astype(np.float32)
         logits = data["logits"].astype(np.float32)
@@ -62,29 +70,40 @@ def load_projection(path):
             raise ValueError("logits/probabilities 非有限值")
         if not np.allclose(softmax(logits, axis=-1), probabilities, rtol=1e-4, atol=1e-5):
             raise ValueError("probabilities 不是三分类 softmax")
+        expected_ids = [f"{sequence_id}:{base:04d}" for sequence_id, base in zip(
+            sequence_ids, base_positions)]
+        if token_ids.tolist() != expected_ids:
+            raise ValueError("token_id 与 sequence_id/base_position 不一致")
         counts = [int(np.sum(states == state)) for state in STATES]
         if not counts[0] or len(set(counts)) != 1:
             raise ValueError("三状态样本数必须相同且非零")
+        alignment = {"token_ids": token_ids, "sequence_ids": sequence_ids,
+                     "base_positions": base_positions, "token_positions": token_positions,
+                     "labels": labels}
         for state in STATES[1:]:
-            if not np.array_equal(token_ids[states == state], token_ids[states == STATES[0]]):
-                raise ValueError("三状态 token_id 顺序不一致")
-            if not np.array_equal(labels[states == state], labels[states == STATES[0]]):
-                raise ValueError("三状态 token 标签不一致")
+            for key, values in alignment.items():
+                if not np.array_equal(values[states == state], values[states == STATES[0]]):
+                    raise ValueError("三状态对齐不一致: " + key)
         coordinates = data["tsne"].astype(np.float64)
         if coordinates.shape != (len(states), 2) or not np.isfinite(coordinates).all():
             raise ValueError("联合坐标无效")
+        metrics = {key: data[key].astype(np.float64) for key in
+                   ("full_macro_f1", "full_micro_f1", "full_roc_auc")}
+        if any(values.shape != (3,) or not np.isfinite(values).all()
+               for values in metrics.values()):
+            raise ValueError("full-test macro/micro/ROC-AUC 数组无效")
         return {
-            "coordinates": coordinates, "states": states, "token_ids": token_ids,
-            "sequence_ids": data["sequence_ids"].astype(str),
-            "positions": data["positions"].astype(int),
-            "labels": labels, "probabilities": probabilities, "logits": logits,
+            "coordinates": coordinates, "states": states, **alignment,
+            "probabilities": probabilities, "logits": logits,
             "n": counts[0], "split": str(scalar(data, "split", "unknown")),
             "seed": int(scalar(data, "seed", -1)),
             "perplexity": int(data["tsne_perplexity"]),
             "random_state": int(data["tsne_random_state"]),
             "manifest": str(data["test_manifest_sha256"].item()),
-            "full_macro_f1": data["full_macro_f1"].astype(np.float64),
-            "full_roc_auc": data["full_roc_auc"].astype(np.float64),
+            "full_test_sha256": str(data["full_test_sha256"].item()),
+            **metrics,
+            "roc_auc_role": ROC_AUC_ROLE,
+            "metric_scope": str(scalar(data, "metric_scope", "")),
             "source_run_ids": data["source_run_ids"].astype(str),
             "sampling": str(scalar(data, "sampling", "unknown")),
         }
@@ -106,7 +125,8 @@ def plot_projection(projection, output):
                          label=CLASS_NAMES[label])
         title = TITLES[state]
         if state != "pre":
-            title += "\nfull-test macro-F1=%.3f" % projection["full_macro_f1"][index]
+            title += "\nfull-test macro-F1=%.3f | micro-F1=%.3f" % (
+                projection["full_macro_f1"][index], projection["full_micro_f1"][index])
         axis.set_title(title, fontsize=11, pad=9)
         axis.set_xticks([])
         axis.set_yticks([])
@@ -119,7 +139,7 @@ def plot_projection(projection, output):
     fig.suptitle("RiNALMo-micro | per-base token | %s split | n=%d/state | seed=%d" % (
         projection["split"], projection["n"], projection["seed"]), fontsize=13, y=0.99)
     fig.text(0.5, 0.015,
-             "Balanced token view | metrics only on full test | not CLS or sampled prevalence",
+             "Balanced token view | macro/micro: full-test source metrics | ROC-AUC: auxiliary only",
              ha="center", fontsize=8.5, color="#4D4D4D")
     fig.subplots_adjust(left=0.055, right=0.86, bottom=0.16, top=0.80, wspace=0.18)
     fig.savefig(str(output) + ".png", bbox_inches="tight")
@@ -131,25 +151,28 @@ def plot_projection(projection, output):
         writer = csv.writer(handle)
         writer.writerow([
             "representation", "split", "seed", "state", "token_id", "sequence_id",
-            "position", "label", "class_name", "logits_json", "probabilities_json",
-            "tsne_1", "tsne_2", "full_macro_f1", "full_roc_auc", "source_run_id",
-            "sampling", "perplexity", "random_state", "test_manifest_sha256"])
+            "base_position", "token_position", "label", "class_name", "logits_json",
+            "probabilities_json", "tsne_1", "tsne_2", "full_macro_f1", "full_micro_f1",
+            "full_roc_auc", "roc_auc_role", "source_run_id", "sampling", "perplexity",
+            "random_state", "full_test_sha256", "test_manifest_sha256"])
         for index, state in enumerate(STATES):
             for row_index in np.where(states == state)[0]:
                 label = int(labels[row_index])
                 writer.writerow([
                     "per_base_token", projection["split"], projection["seed"], state,
                     projection["token_ids"][row_index], projection["sequence_ids"][row_index],
-                    int(projection["positions"][row_index]), label, CLASS_NAMES[label],
+                    int(projection["base_positions"][row_index]),
+                    int(projection["token_positions"][row_index]), label, CLASS_NAMES[label],
                     json.dumps(projection["logits"][row_index].tolist(), separators=(",", ":")),
                     json.dumps(projection["probabilities"][row_index].tolist(), separators=(",", ":")),
                     "%.10g" % coordinates[row_index, 0],
                     "%.10g" % coordinates[row_index, 1],
                     "%.10g" % projection["full_macro_f1"][index],
-                    "%.10g" % projection["full_roc_auc"][index],
+                    "%.10g" % projection["full_micro_f1"][index],
+                    "%.10g" % projection["full_roc_auc"][index], ROC_AUC_ROLE,
                     projection["source_run_ids"][index], projection["sampling"],
                     projection["perplexity"], projection["random_state"],
-                    projection["manifest"]])
+                    projection["full_test_sha256"], projection["manifest"]])
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(coordinate_path + ".tmp", coordinate_path)
@@ -165,16 +188,21 @@ def plot_projection(projection, output):
         "color_mode": "spliceai_token_class",
         "sampling": projection["sampling"],
         "class_balanced_visualization": True,
-        "metric_scope": "macro_F1_and_ROC_AUC_only_on_full_test",
+        "class_names": {str(label): CLASS_NAMES[label] for label in range(3)},
+        "metric_scope": projection["metric_scope"],
+        "source_reconciliation_metrics": ["macro_f1", "micro_f1"],
+        "roc_auc_role": ROC_AUC_ROLE,
         "classification_silhouette": None,
         "label_support": {
             state: {CLASS_NAMES[label]: int(np.sum(labels[states == state] == label))
                     for label in range(3)} for state in STATES
         },
         "full_macro_f1": dict(zip(STATES, projection["full_macro_f1"].tolist())),
+        "full_micro_f1": dict(zip(STATES, projection["full_micro_f1"].tolist())),
         "full_roc_auc": dict(zip(STATES, projection["full_roc_auc"].tolist())),
         "source_run_ids": dict(zip(STATES, projection["source_run_ids"].tolist())),
         "pre_prediction_head": "fresh_reference_head_seed_201_not_zero_shot",
+        "full_test_sha256": projection["full_test_sha256"],
         "test_manifest_sha256": projection["manifest"],
         "coordinate_csv": coordinate_path,
         "interpretation": "descriptive_balanced_tokens_full_test_metrics_only",
