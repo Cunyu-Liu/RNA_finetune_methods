@@ -697,3 +697,35 @@ def test_cuda_memory_gate_waits_without_cpu_fallback(monkeypatch):
     monkeypatch.setattr(mech.torch.cuda, "mem_get_info", lambda index: (31 * gi, 32 * gi))
     with pytest.raises(RuntimeError, match="exceeds total"):
         mech.wait_for_cuda_memory("cuda:0", 33)
+
+
+def test_failed_cleanup_removes_current_outputs_and_protects_success(tmp_path):
+    out_dir = tmp_path / "current"
+    out_dir.mkdir()
+    (out_dir / "job.json").write_text(json.dumps({"status": "running"}))
+    (out_dir / "test_manifest.json").write_text("{}")
+    other_state = tmp_path / "other" / "embeddings.npz"
+    other_state.parent.mkdir()
+    other_state.write_bytes(b"other-success")
+    aligned = tmp_path / "aligned.npz"
+    targets = [out_dir / "diagnostic.json", out_dir / "predictions.npz",
+               out_dir / "embeddings.npz", aligned]
+    for path in targets:
+        path.write_bytes(b"unfinished")
+        if path.suffix == ".npz":
+            path.with_name(path.name + ".tmp.npz").write_bytes(b"temporary")
+    mech.cleanup_failed_diagnostic(out_dir, aligned)
+    for path in targets:
+        assert not path.exists()
+        if path.suffix == ".npz":
+            assert not path.with_name(path.name + ".tmp.npz").exists()
+    assert (out_dir / "job.json").is_file()
+    assert (out_dir / "test_manifest.json").is_file()
+    assert other_state.read_bytes() == b"other-success"
+
+    (out_dir / "job.json").write_text(json.dumps({"status": "diagnostic"}))
+    for path in targets:
+        path.write_bytes(b"successful")
+    with pytest.raises(RuntimeError, match="refusing to delete successful"):
+        mech.cleanup_failed_diagnostic(out_dir, aligned)
+    assert all(path.read_bytes() == b"successful" for path in targets)

@@ -38,6 +38,7 @@ ARTIFACT_ROOT = Path(os.environ.get(
     "RNAFT_MECHANISM_ROOT", str(TEAMS_ROOT / "artifacts" / "mechanism")))
 DATA_ROOT = Path(os.environ.get("RNAFT_DATA_ROOT", str(TEAMS_ROOT / "data")))
 LOCAL_DATA_ROOT = Path("/root/rna-ft-eval/data")
+PERBASE_SOURCE_REGISTRY = TEAMS_ROOT / "status" / "mechanism_source_perbase_jobs.json"
 MAX_LEN = 512
 N_CLASSES = 13
 
@@ -101,6 +102,50 @@ def write_json(path, payload):
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def cleanup_failed_diagnostic(out_dir, aligned_path=None):
+    """Remove only outputs owned by a running/failed diagnostic attempt."""
+    out_dir = Path(out_dir)
+    job_path = out_dir / "job.json"
+    if not job_path.is_file():
+        raise RuntimeError("refusing diagnostic cleanup without job.json: %s" % out_dir)
+    job = json.loads(job_path.read_text())
+    if job.get("status") not in ("running", "failed"):
+        raise RuntimeError("refusing to delete successful diagnostic outputs: %s" % out_dir)
+    paths = [out_dir / name for name in
+             ("diagnostic.json", "predictions.npz", "embeddings.npz")]
+    if aligned_path is not None:
+        paths.append(Path(aligned_path))
+    for path in paths:
+        path.unlink(missing_ok=True)
+        if path.suffix == ".npz":
+            path.with_name(path.name + ".tmp.npz").unlink(missing_ok=True)
+
+
+def require_complete_source(source_rid, ledger_row, registry_path=None):
+    """Require the exact registry cell and ledger directory to share one proof."""
+    import expansion_queue
+
+    registry = Path(registry_path or PERBASE_SOURCE_REGISTRY)
+    jobs = [job for job in expansion_queue.load_jobs(registry) if job.rid == source_rid]
+    if len(jobs) != 1:
+        raise ValueError("source RID must occur exactly once in the per-base registry")
+    job = jobs[0]
+    if ledger_row is None or not ledger_row.get("out_dir"):
+        raise ValueError("source ledger row/out_dir is required for proof")
+    if os.path.realpath(ledger_row["out_dir"]) != os.path.realpath(job.result_dir):
+        raise ValueError("registry result_dir and ledger out_dir differ")
+    state, reason = expansion_queue.proof_state(job)
+    if state != "complete":
+        raise ValueError("source cell proof is not complete: %s %s" % (state, reason))
+    return {
+        "state": state,
+        "registry": str(registry),
+        "registry_sha256": sha256_file(registry),
+        "job_key": job.job_key,
+        "result_dir": str(job.result_dir),
+    }
 
 
 def sequence_hash(sequence):
