@@ -324,8 +324,9 @@ def main() -> int:
         "n_train": len(train), "n_test": len(test),
     }
     if args.converge:
-        ledger_fields.update(vp.result_ledger_fields(result))
-    ledger.update(rid, "done", value=pcc, metric="PCC", **ledger_fields)
+        ledger.update(rid, "done", **vp.result_ledger_fields(result))
+    else:
+        ledger.update(rid, "done", value=pcc, metric="PCC", **ledger_fields)
     print(json.dumps(result, default=str)[:400], flush=True)
     return 0
 
