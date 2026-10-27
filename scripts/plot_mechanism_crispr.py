@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.special import softmax
 
 STATES = ("pre", "lora", "full")
 TITLES = {"pre": "Pre-finetuning", "lora": "Post-LoRA", "full": "Post-full finetuning"}
@@ -62,7 +63,7 @@ def load_projection(path, representation):
             raise ValueError("CRISPR logits/probabilities 必须为 [N,2]")
         if not np.isfinite(logits).all() or not np.isfinite(probabilities).all():
             raise ValueError("logits/probabilities 非有限值")
-        if not np.allclose(1 / (1 + np.exp(-logits)), probabilities, rtol=1e-4, atol=1e-5):
+        if not np.allclose(softmax(logits, axis=-1), probabilities, rtol=1e-4, atol=1e-5):
             raise ValueError("probabilities 不是二分类 softmax")
         counts = [int(np.sum(states == state)) for state in STATES]
         if not counts[0] or len(set(counts)) != 1:
