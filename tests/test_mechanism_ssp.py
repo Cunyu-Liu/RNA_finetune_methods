@@ -160,7 +160,7 @@ def test_manifest_is_deterministic_and_cap_does_not_change_full_metrics():
     assert mech.validate_pair_arrays(sample2, second)
 
 
-def fake_states(manifest="same"):
+def fake_states(manifest="a" * 64):
     states = []
     pair_ids = np.asarray(["a:0000:0001", "a:0000:0002",
                            "a:0001:0002", "b:0000:0001"])
@@ -178,11 +178,21 @@ def fake_states(manifest="same"):
             "logits": logits,
             "probabilities": probabilities,
             "head_input": np.full((4, 4), index + 1, dtype=np.float32),
+            "task": np.asarray(mech.TASK),
             "split": np.asarray("random"), "seed": np.asarray(17),
+            "max_len": np.asarray(mech.MAX_LEN),
+            "pair_alignment": np.asarray(mech.PAIR_ALIGNMENT),
+            "full_test_sha256": np.asarray("b" * 64),
+            "sampling": np.asarray(
+                "pair_id_lexicographic_per_class_cap_2_before_prediction"),
+            "metric_scope": np.asarray(mech.METRIC_SCOPE),
+            "full_class_support": np.asarray('{"0":20,"1":4}'),
         }
         metrics = {"f1": 0.5 + index / 10, "precision": 0.6,
                    "recall": 0.4, "threshold": 0.3, "val_f1": 0.55}
-        states.append((strategy, arrays, manifest, "source_" + strategy, metrics))
+        source = (mech.PRE_SOURCE if strategy == "pre" else
+                  mech.source_run_id(strategy, "random", 17))
+        states.append((strategy, arrays, manifest, source, metrics))
     return states
 
 
@@ -207,7 +217,17 @@ def test_three_states_share_pairs_and_joint_tsne_uses_sigmoid(tmp_path, monkeypa
         assert data["head_input"].shape == (12, 4)
         assert data["state"].tolist() == ["pre"] * 4 + ["lora"] * 4 + ["full"] * 4
         assert data["pair_ids"].tolist() == fake_states()[0][1]["pair_ids"].tolist() * 3
-        assert data["source_run_ids"].tolist() == ["source_pre", "source_lora", "source_full"]
+        assert data["source_run_ids"].tolist() == [
+            mech.PRE_SOURCE, mech.source_run_id("lora", "random", 17),
+            mech.source_run_id("full", "random", 17)]
+        assert data["task"].item() == mech.TASK
+        assert data["max_len"].item() == mech.MAX_LEN
+        assert data["pair_alignment"].item() == mech.PAIR_ALIGNMENT
+        assert data["full_test_sha256"].item() == "b" * 64
+        assert data["metric_scope"].item() == mech.METRIC_SCOPE
+        assert json.loads(data["full_class_support"].item()) == {"0": 20, "1": 4}
+        assert data["sampling"].item().endswith("cap_2_before_prediction")
+        assert data["test_manifest_sha256"].item() == "a" * 64
         assert np.allclose(data["probabilities"],
                            torch.sigmoid(torch.tensor(data["logits"])).numpy(),
                            rtol=1e-5, atol=1e-6)
@@ -226,6 +246,19 @@ def test_three_states_share_pairs_and_joint_tsne_uses_sigmoid(tmp_path, monkeypa
     bad_probability[0] = (bad_probability[0][0], arrays, *bad_probability[0][2:])
     with pytest.raises(ValueError, match="sigmoid"):
         mech.aligned_ssp(bad_probability, tmp_path / "bad_probability.npz")
+
+
+def test_aligned_requires_matching_self_contained_metadata_and_source(tmp_path):
+    bad_seed = fake_states()
+    arrays = dict(bad_seed[0][1])
+    arrays["seed"] = np.asarray(29)
+    bad_seed[0] = (bad_seed[0][0], arrays, *bad_seed[0][2:])
+    with pytest.raises(ValueError, match="metadata.*seed"):
+        mech.aligned_ssp(bad_seed, tmp_path / "bad_seed.npz")
+    bad_source = fake_states()
+    bad_source[2] = (*bad_source[2][:3], "invalid-source", bad_source[2][4])
+    with pytest.raises(ValueError, match="source RID"):
+        mech.aligned_ssp(bad_source, tmp_path / "bad_source.npz")
 
 
 def test_source_rids_use_ssp_job_rules_and_cli_records_default_cap():
@@ -375,7 +408,11 @@ def test_failure_after_npz_and_aligned_cleans_current_outputs(tmp_path, monkeypa
     monkeypatch.setattr(mech, "load_source_parts", lambda *args: (parts, evidence))
     manifest = {"split_evidence": evidence, "n_full_pairs": 3,
                 "n_full_positive_pairs": 1, "n_full_sequences": 1,
-                "full_test_sha256": "full-hash", "manifest_sha256": "manifest-hash"}
+                "full_test_sha256": "full-hash", "manifest_sha256": "manifest-hash",
+                "pair_alignment": mech.PAIR_ALIGNMENT,
+                "selection": "pair_id_lexicographic_per_class_cap_1_before_prediction",
+                "metric_scope": mech.METRIC_SCOPE,
+                "full_class_support": {"0": 2, "1": 1}}
     monkeypatch.setattr(mech, "make_pair_manifest",
                         lambda *args, **kwargs: (parts["test"], manifest, []))
     spec = SimpleNamespace(repo="multimolecule/rinalmo-micro")
