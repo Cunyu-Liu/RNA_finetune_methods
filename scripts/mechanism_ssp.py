@@ -35,6 +35,9 @@ MAX_LEN = 192
 N_TRAIN = 2000
 N_TEST = 400
 THRESHOLDS = (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+PRE_SOURCE = "pre_official_rinalmomicro"
+PAIR_ALIGNMENT = "b20_single_base_token_positions_v1"
+METRIC_SCOPE = "pooled_pair_F1_precision_recall_only_on_full_test"
 DATA_ROOT = Path(os.environ.get("RNAFT_DATA_ROOT", "/root/rna-ft-eval/data"))
 FAMILY_PARQUET = Path(os.environ.get(
     "RNAFT_SSP_FAMILY_PARQUET",
@@ -101,7 +104,7 @@ def validate_source_result(result, parts, evidence, strategy, split, seed, sourc
         "run_id": source_rid, "model": MODEL, "task": TASK,
         "strategy": strategy, "split": split, "seed": seed,
         "metric": "F1", "max_len": MAX_LEN,
-        "pair_alignment": "b20_single_base_token_positions_v1",
+        "pair_alignment": PAIR_ALIGNMENT,
     }
     for key, expected in expected_identity.items():
         if result.get(key) != expected:
@@ -119,6 +122,12 @@ def validate_source_result(result, parts, evidence, strategy, split, seed, sourc
 
 def _pair_id(sequence_id, base_i, base_j):
     return "%s:%04d:%04d" % (sequence_id, base_i, base_j)
+
+
+def _scalar(arrays, key):
+    if key not in arrays:
+        raise ValueError("pair metadata 缺失: " + key)
+    return arrays[key].item()
 
 
 def _manifest_digest(manifest):
@@ -210,7 +219,7 @@ def make_pair_manifest(rows, tokenizer, split, seed, pair_cap=512,
         "artifact_type": "ssp_pair_test_manifest",
         "model": MODEL, "task": TASK, "split": split, "seed": seed,
         "max_len": max_len,
-        "pair_alignment": "b20_single_base_token_positions_v1",
+        "pair_alignment": PAIR_ALIGNMENT,
         "selection": "pair_id_lexicographic_per_class_cap_%d_before_prediction" % pair_cap,
         "pair_cap": pair_cap, "class_balanced_visualization": True,
         "n_full_sequences": len(ordered), "n_full_pairs": n_full_pairs,
@@ -231,7 +240,7 @@ def make_pair_manifest(rows, tokenizer, split, seed, pair_cap=512,
             "negative_pairs": len(selected_by_class[0]),
         },
         "split_evidence": evidence,
-        "metric_scope": "pooled_pair_F1_precision_recall_only_on_full_test",
+        "metric_scope": METRIC_SCOPE,
     }
     manifest["manifest_sha256"] = _manifest_digest(manifest)
     return ordered, manifest, selected
@@ -495,7 +504,7 @@ def load_aligned_states(split, seed, suffix="_ckpt_v1"):
         with np.load(embedding_path, allow_pickle=False) as data:
             arrays = {key: data[key] for key in data.files}
         validate_pair_arrays(arrays, manifest)
-        source_reference = diagnostic["source_run_id"] or "pre_official_rinalmomicro"
+        source_reference = diagnostic["source_run_id"] or PRE_SOURCE
         ready.append((strategy, arrays, manifest["manifest_sha256"],
                       source_reference, diagnostic["metrics_full"]))
     return ready
@@ -508,11 +517,32 @@ def aligned_ssp(states, output_path, perplexity=30, random_state=17):
     if len({item[2] for item in states}) != 1:
         raise ValueError("三状态 test manifest 不一致")
     reference = states[0][1]
-    validate_pair_arrays(reference)
+    metadata_keys = (
+        "task", "split", "seed", "max_len", "pair_alignment",
+        "full_test_sha256", "sampling", "metric_scope", "full_class_support")
+    reference_metadata = {key: _scalar(reference, key) for key in metadata_keys}
+    if (reference_metadata["task"] != TASK
+            or reference_metadata["max_len"] != MAX_LEN
+            or reference_metadata["pair_alignment"] != PAIR_ALIGNMENT
+            or reference_metadata["metric_scope"] != METRIC_SCOPE):
+        raise ValueError("SSP aligned 自包含 metadata 身份不一致")
     alignment_keys = ("pair_ids", "sequence_ids", "base_i", "base_j",
                       "token_i", "token_j", "labels")
-    for _strategy, arrays, _manifest, _source, _metrics in states[1:]:
+    for strategy, arrays, _manifest, source, metrics in states:
         validate_pair_arrays(arrays)
+        for key, value in reference_metadata.items():
+            if _scalar(arrays, key) != value:
+                raise ValueError("三状态 metadata 不一致: " + key)
+        expected_source = PRE_SOURCE if strategy == "pre" else source_run_id(
+            strategy, reference_metadata["split"], reference_metadata["seed"])
+        if source != expected_source:
+            raise ValueError("三状态 source RID 身份不一致: " + strategy)
+        if any(not isinstance(metrics.get(key), (int, float))
+               or isinstance(metrics.get(key), bool)
+               or not math.isfinite(metrics[key])
+               for key in ("f1", "precision", "recall", "threshold", "val_f1")):
+            raise FloatingPointError("full-test pair metrics 缺失或非有限值")
+    for _strategy, arrays, _manifest, _source, _metrics in states[1:]:
         for key in alignment_keys:
             if not np.array_equal(reference[key], arrays[key]):
                 raise ValueError("三状态 pair 对齐不一致: " + key)
@@ -535,8 +565,14 @@ def aligned_ssp(states, output_path, perplexity=30, random_state=17):
         state=np.concatenate([np.full(n, item[0]) for item in states]),
         logits=np.concatenate([item[1]["logits"] for item in states]),
         probabilities=np.concatenate([item[1]["probabilities"] for item in states]),
-        split=np.asarray(reference.get("split", "unknown")),
-        seed=np.asarray(reference.get("seed", -1)),
+        task=np.asarray(reference_metadata["task"]),
+        split=np.asarray(reference_metadata["split"]),
+        seed=np.asarray(reference_metadata["seed"], dtype=np.int64),
+        max_len=np.asarray(reference_metadata["max_len"], dtype=np.int64),
+        pair_alignment=np.asarray(reference_metadata["pair_alignment"]),
+        full_test_sha256=np.asarray(reference_metadata["full_test_sha256"]),
+        metric_scope=np.asarray(reference_metadata["metric_scope"]),
+        full_class_support=np.asarray(reference_metadata["full_class_support"]),
         source_run_ids=np.asarray([item[3] for item in states]),
         full_f1=np.asarray([item[4]["f1"] for item in states], dtype=np.float64),
         full_precision=np.asarray([
@@ -549,7 +585,7 @@ def aligned_ssp(states, output_path, perplexity=30, random_state=17):
         tsne_perplexity=np.asarray(effective_perplexity),
         tsne_random_state=np.asarray(random_state),
         color_mode=np.asarray("ssp_pair_gold_label"),
-        sampling=np.asarray("pair_id_lexicographic_per_class_cap_before_prediction"),
+        sampling=np.asarray(reference_metadata["sampling"]),
         interpretation=np.asarray("descriptive_balanced_pairs_full_test_metrics_only"),
     )
     return {
@@ -648,8 +684,16 @@ def run(args):
             full["probabilities"] > threshold).astype(np.int64)
         sample["predictions"] = (
             sample["probabilities"] > threshold).astype(np.int64)
+        sample["task"] = np.asarray(TASK)
         sample["split"] = np.asarray(args.split)
         sample["seed"] = np.asarray(args.seed)
+        sample["max_len"] = np.asarray(MAX_LEN)
+        sample["pair_alignment"] = np.asarray(manifest["pair_alignment"])
+        sample["full_test_sha256"] = np.asarray(manifest["full_test_sha256"])
+        sample["sampling"] = np.asarray(manifest["selection"])
+        sample["metric_scope"] = np.asarray(manifest["metric_scope"])
+        sample["full_class_support"] = np.asarray(json.dumps(
+            manifest["full_class_support"], sort_keys=True, separators=(",", ":")))
         save_npz(out_dir / "predictions.npz", **full)
         save_npz(out_dir / "embeddings.npz", **sample)
         diagnostic = {
@@ -663,7 +707,7 @@ def run(args):
             "n_full_test_positive_pairs": int(full["labels"].sum()),
             "n_sample": len(sample["pair_ids"]), "pair_cap": args.pair_cap,
             "metrics_full": metrics,
-            "metric_scope": "pooled_pair_F1_precision_recall_only_on_full_test",
+            "metric_scope": METRIC_SCOPE,
             "threshold_evidence": {
                 "grid": list(THRESHOLDS), "source": "validation_only",
                 "comparison": "strict_greater", "tie_rule": "keep_first",
@@ -698,7 +742,7 @@ def run(args):
             "interpretation": "descriptive_balanced_pairs_full_test_metrics_only",
         }
         ready = load_aligned_states(args.split, args.seed)
-        source_reference = ("pre_official_rinalmomicro" if source_result is None
+        source_reference = (PRE_SOURCE if source_result is None
                             else source_result["run_id"])
         ready.append((args.strategy, sample, manifest["manifest_sha256"],
                       source_reference, metrics))
