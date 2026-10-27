@@ -13,8 +13,11 @@ import os
 import numpy as np
 import pyarrow.parquet as pq
 
+from rnafteval.splits import seq_hash, split_train_validation
+
 BEACON_RAW = "/root/rna-ft-eval/data/beacon_raw"
 TARGET_COL = "struct_true"
+RANDOM_GROUPING = "sequence_hash_keep_same_sequence_records_together"
 
 
 def load_ssi(data_dir: str | None = None,
@@ -53,6 +56,16 @@ def load_official_split(data_dir: str | None = None,
              "subset": split}
             for s, l in zip(dd["sequence"], dd[target])]
     return out
+
+
+def split_train_validation_by_sequence(rows: list[dict], seed: int = 17):
+    """Keep same-sequence records with distinct labels on one validation side."""
+    grouped = [dict(row, cluster=seq_hash(row["seq"])) for row in rows]
+    return split_train_validation(grouped, seed=seed)
+
+
+def same_sequence_record_counts(rows: list[dict]) -> int:
+    return len(rows) - len({seq_hash(row["seq"]) for row in rows})
 
 
 if __name__ == "__main__":

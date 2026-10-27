@@ -104,7 +104,10 @@ def test_random_reconstruction_ignores_official_validation_and_orders_steps(
         return rows[:2]
 
     monkeypatch.setattr(loader, "load_official_split", load)
-    monkeypatch.setattr(mech, "split_train_validation", holdout)
+    if task == "ssi":
+        monkeypatch.setattr(loader, "split_train_validation_by_sequence", holdout)
+    else:
+        monkeypatch.setattr(mech, "split_train_validation", holdout)
     monkeypatch.setattr(mech, "seeded_sample", sample)
     parts, evidence = mech.load_task_parts(
         task, "random", seed=17, n_train=2, data_root=tmp_path)
@@ -122,6 +125,82 @@ def test_random_reconstruction_ignores_official_validation_and_orders_steps(
         "rows_before": 4, "rows_after": 2}
     assert (evidence["n_train"], evidence["n_val"], evidence["n_test"]) == (2, 2, 2)
     assert evidence["canonical_n_train"] == 0 and evidence["max_len"] == 192
+    if task == "degradation":
+        assert "requested_n_train" not in evidence
+    if task == "ssi":
+        assert evidence["requested_n_train"] == 2
+        assert evidence["validation_grouping"] == mech.ssi_task.RANDOM_GROUPING
+        assert evidence["same_sequence_records_preserved"] is True
+        assert evidence["input_same_sequence_rows"] == {"train": 0, "test": 0}
+
+
+def test_ssi_sequence_grouped_holdout_preserves_conflicting_same_sequence_labels():
+    rows = [{"seq": "A", "labels": np.asarray([0.0], dtype=np.float32)},
+            {"seq": "A", "labels": np.asarray([1.0], dtype=np.float32)}]
+    rows += [{"seq": chr(66 + index), "labels": np.asarray([float(index)], dtype=np.float32)}
+             for index in range(8)]
+    train, val = mech.ssi_task.split_train_validation_by_sequence(rows, seed=17)
+    assert len(train) + len(val) == len(rows)
+    mech.assert_no_overlap(train, val, unit="seq")
+    a_rows = [row for row in train + val if row["seq"] == "A"]
+    assert len(a_rows) == 2
+    assert len({row["cluster"] for row in a_rows}) == 1
+    assert ({row["cluster"] for row in a_rows} <= {row["cluster"] for row in train}
+            or {row["cluster"] for row in a_rows} <= {row["cluster"] for row in val})
+    assert sorted(float(row["labels"][0]) for row in a_rows) == [0.0, 1.0]
+    assert all(row["cluster"] == mech.ssi_task.seq_hash(row["seq"])
+               for row in train + val)
+    assert mech.ssi_task.same_sequence_record_counts(rows) == 1
+
+
+def test_ssi_duplicate_test_records_keep_unique_ids_and_record_weighted_mcrmse():
+    rows = [{"seq": "AC", "labels": np.asarray([0.0, 0.0], dtype=np.float32)},
+            {"seq": "AC", "labels": np.asarray([1.0, 1.0], dtype=np.float32)}]
+    ordered, manifest, selected = manifest_for(rows, task="ssi", cap=20)
+    assert len(ordered) == manifest["n_full_records"] == 2
+    assert manifest["n_unique_sequences"] == 1
+    assert len(set(manifest["record_ids"])) == 2
+    assert len(set(manifest["token_ids"])) == len(manifest["token_ids"])
+    full, sample = mech.extract(
+        DummyBackbone(), make_head(), DummyTokenizer(), ordered, "cpu", "ssi", manifest,
+        selected, batch_size=2, max_len=192)
+    assert len(set(full["token_ids"])) == len(full["token_ids"])
+    assert len(set(full["sequence_ids"])) == 2
+    assert sample["token_ids"].tolist() == manifest["token_ids"]
+    metrics = mech.regression_metrics(
+        full["y_true"], full["prediction"], full["sequence_ids"])
+    per_record = []
+    for record_id in manifest["record_ids"]:
+        keep = full["sequence_ids"] == record_id
+        per_record.append(float(np.mean(
+            (full["prediction"][keep] - full["y_true"][keep]) ** 2)))
+    assert np.isclose(metrics["mcrmse"], np.sqrt(np.mean(per_record)))
+    sequence_hash = mech.common.sequence_hash("AC")
+    assert sequence_hash + ":0000" in manifest["record_ids"]
+    assert sequence_hash + ":0001" in manifest["record_ids"]
+
+
+def test_ssi_source_data_evidence_must_match_reconstruction():
+    evidence = {
+        "protocol": "bestval_v1", "task": "ssi", "split": "random", "seed": 17,
+        "holdout_seed": 17, "validation_source": "train_holdout",
+        "validation_grouping": mech.ssi_task.RANDOM_GROUPING,
+        "same_sequence_records_preserved": True, "ignored_source_validation_rows": 1,
+        "input_rows": {"train": 6, "test": 2, "validation_ignored": 1},
+        "input_same_sequence_rows": {"train": 1, "test": 0},
+        "canonical_n_train": 0, "requested_n_train": 0, "max_len": 192,
+        "train_sampling": {"method": "seeded_sample", "n_train": 0, "seed": 17,
+                           "rows_before": 4, "rows_after": 4},
+        "n_train": 4, "n_val": 2, "n_test": 2,
+        "output_rows": {"train": 4, "val": 2, "test": 2}, "status": "OK",
+    }
+    result = {"task": "ssi", "split": "random", "data_evidence": dict(evidence)}
+    checked = mech.source_data_evidence(result, evidence)
+    assert checked["source_data_evidence_present"] is True
+    assert checked["source_data_evidence_note"] == "matched_reconstructed_sequence_grouped_split"
+    result["data_evidence"]["input_same_sequence_rows"] = {"train": 0, "test": 0}
+    with pytest.raises(ValueError, match="input_same_sequence_rows"):
+        mech.source_data_evidence(result, evidence)
 
 
 @pytest.mark.parametrize("task", mech.TASKS)
