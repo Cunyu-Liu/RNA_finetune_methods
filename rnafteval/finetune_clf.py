@@ -43,7 +43,7 @@ def _run_extra(args):
         else "_ep%d" % args.epochs
     protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") + n_tag + lr_tag + rank_tag +
-            epoch_tag + protocol_tag)
+            epoch_tag + protocol_tag + getattr(args, "out_suffix", ""))
 
 
 def main():
@@ -66,6 +66,10 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--random-init", action="store_true")
     vp.add_convergence_args(ap)
+    ap.add_argument("--out-suffix", default="",
+                    help="optional protocol label appended to the run_id")
+    ap.add_argument("--no-epoch-shuffle", action="store_true",
+                    help="diagnostic control: disable per-epoch shuffling")
     args = ap.parse_args()
     vp.validate_convergence_args(args)
 
@@ -279,7 +283,8 @@ def main():
     for ep in vp.training_epochs(args):
         _sh = random.Random(args.seed * 1000 + ep)
         _rows = list(parts["train"])
-        _sh.shuffle(_rows)
+        if not args.no_epoch_shuffle:
+            _sh.shuffle(_rows)
         backbone.train(args.strategy in ("lora", "full", "dora", "ia3"))
         head.train()
         tot, nb = 0.0, 0
@@ -384,6 +389,7 @@ def main():
         "n_classes": len(labels), "wall_sec": round(wall, 1),
         "peak_mem_mb": round(peak, 1), "backbone_trainable": n_trainable,
         "lr": args.lr, "epochs": args.epochs, "smoke": args.smoke,
+        "epoch_shuffle": not args.no_epoch_shuffle,
     }
     if args.converge:
         result.update(tracker.result_fields())
