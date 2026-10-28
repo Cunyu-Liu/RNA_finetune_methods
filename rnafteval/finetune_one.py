@@ -78,6 +78,8 @@ def main() -> int:
     vp.add_convergence_args(ap)
     ap.add_argument("--out-suffix", default="",
                     help="optional protocol label appended to the run_id")
+    ap.add_argument("--no-epoch-shuffle", action="store_true",
+                    help="diagnostic control: disable per-epoch shuffling")
     args = ap.parse_args()
     vp.validate_convergence_args(args)
     if args.dense_clusters and (args.split != "family" or args.n_train <= 0):
@@ -221,7 +223,8 @@ def main() -> int:
         import random as _rd
         _epshuf = _rd.Random(args.seed * 1000 + ep)
         _rows = list(parts["train"])
-        _epshuf.shuffle(_rows)
+        if not args.no_epoch_shuffle:
+            _epshuf.shuffle(_rows)
         is_training_backbone = args.strategy in (
             "lora", "full", "dora", "ia3", "prefix")
         backbone.train(is_training_backbone)
@@ -305,6 +308,7 @@ def main() -> int:
         "epochs": args.epochs, "smoke": args.smoke,
         "dense_clusters": args.dense_clusters,
         "requested_n_train": args.n_train,
+        "epoch_shuffle": not args.no_epoch_shuffle,
     }
     if args.converge:
         result.update(tracker.result_fields())
