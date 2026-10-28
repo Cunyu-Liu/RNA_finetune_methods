@@ -307,45 +307,47 @@ def extension_fourbar():
 
 
 def e4_delta_two_tasks():
-    df = pd.read_csv(HAND / 'archive_20261028/绘图数据/figures_v2_20261025/status/status_tables_figs/c4_table.csv')
+    df = pd.read_csv(WORK.parent / 'legacy_inputs/c4_table.csv')
+    df = df[df.task == 'mrl'].copy()
     models = ['RiNALMo-micro', 'RiNALMo-mega', 'RiNALMo-650M', 'ERNIE-RNA', 'RNA-FM',
               'RNA-Sc-10M', 'RNA-Sc-30M', 'RNA-Sc-100M', 'NucleicBERT', 'AIDO.RNA-1.6B']
     short = ['RiNALMo\n33M', 'RiNALMo\n148M', 'RiNALMo\n650M', 'ERNIE\n86M', 'RNA-FM\n99M',
              'RNA-Sc\n10M', 'RNA-Sc\n30M', 'RNA-Sc\n100M', 'NucleicBERT\n404M', 'AIDO\n1.6B']
-    tasks = [('noncoding-rna-family', 'ncRNA ACC'), ('mrl', 'MRL Pearson r')]
-    fig, axes = plt.subplots(1, 2, figsize=(11.8, 4.1), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(12.4, 4.3), constrained_layout=True)
     out_rows = []
-    for ax, (task, label) in zip(axes, tasks):
-        x = np.arange(len(models))
-        width = 0.25
-        for j, strategy in enumerate(['frozen', 'lora', 'full']):
-            vals = []
-            for model in models:
-                q = df[(df.model == model) & (df.task == task) & (df.strategy == strategy)]
-                v = float(q.iloc[0].delta) if len(q) else np.nan
-                vals.append(v)
-                out_rows.append({'task': task, 'model': model, 'strategy': strategy, 'delta_random_minus_family': v})
-            ax.bar(x + (j - 1) * width, vals, width=width * 0.92,
-                   color=['#6BAED6', '#FD8D3C', '#D94801'][j], label=strategy)
-        ax.axhline(0, color='#555555', lw=0.8)
-        ax.set_title(label, fontsize=12, fontweight='bold', color='#1F3A5F')
-        ax.set_xticks(x)
-        ax.set_xticklabels(short, fontsize=8, rotation=35, ha='right', rotation_mode='anchor')
-        ax.set_ylabel('Δ = random − family')
-        ax.grid(axis='y', color='#ECECEC', lw=0.6)
-        ax.set_axisbelow(True)
-    axes[0].legend(ncol=3, loc='upper left', fontsize=9)
-    fig.suptitle('Random−family difference | valid ncRNA and MRL legacy panels only',
+    x = np.arange(len(models))
+    width = 0.25
+    for j, strategy in enumerate(['frozen', 'lora', 'full']):
+        vals = []
+        for model in models:
+            q = df[(df.model == model) & (df.strategy == strategy)]
+            v = float(q.iloc[0].delta) if len(q) else np.nan
+            vals.append(v)
+            out_rows.append({'task': 'mrl', 'model': model, 'strategy': strategy,
+                             'delta_random_minus_family': v})
+        ax.bar(x + (j - 1) * width, vals, width=width * 0.92,
+               color=['#6BAED6', '#FD8D3C', '#D94801'][j], label=strategy)
+    ax.axhline(0, color='#555555', lw=0.8)
+    ax.set_title('MRL Pearson r | random − family | legacy descriptive comparison',
                  fontsize=13.5, fontweight='bold', color='#1F3A5F')
-    pd.DataFrame(out_rows).to_csv(OUT / 'e4_delta_two_tasks_data.csv', index=False)
-    save_fig(fig, 'e4_delta_two_tasks')
+    ax.set_xticks(x)
+    ax.set_xticklabels(short, fontsize=8, rotation=35, ha='right', rotation_mode='anchor')
+    ax.set_ylabel('Δ = random − family')
+    ax.grid(axis='y', color='#ECECEC', lw=0.6)
+    ax.set_axisbelow(True)
+    ax.legend(ncol=3, loc='upper left', fontsize=9)
+    fig.text(0.5, -0.03, 'ncRNA legacy panels are quarantined; eight-task corrected Δ matrix remains pending',
+             ha='center', fontsize=9, color='#B64342')
+    pd.DataFrame(out_rows).to_csv(OUT / 'e4_delta_mrl_only_data.csv', index=False)
+    save_fig(fig, 'e4_delta_mrl_only')
 
 
 def equiv_high_ncrna_mrl():
-    pairs = pd.read_csv(WORK / 'equiv_high_pairs_legacy_20261028.csv')
-    curves = pd.read_csv(WORK / 'equiv_high_curves_legacy_20261028.csv')
-    tasks = [('noncoding-rna-family', 'ncRNA ACC'), ('mrl', 'MRL Pearson r')]
-    fig, axes = plt.subplots(2, 2, figsize=(11.8, 6.2), constrained_layout=True)
+    pairs = pd.read_csv(WORK.parent / 'legacy_inputs/equiv_high_pairs_legacy_20261028.csv')
+    curves = pd.read_csv(WORK.parent / 'legacy_inputs/equiv_high_curves_legacy_20261028.csv')
+    tasks = [('mrl', 'MRL Pearson r')]
+    fig, axes = plt.subplots(2, 1, figsize=(12.4, 6.2), constrained_layout=True)
+    axes = axes.reshape(2, 1)
     for col, (task, metric) in enumerate(tasks):
         pair = pairs[pairs.task == task].iloc[0]
         ax = axes[0, col]
@@ -363,7 +365,7 @@ def equiv_high_ncrna_mrl():
         ax.set_xticks(xs)
         ax.set_xticklabels([f'full-FT\nn={int(pair.full_n_train)}', f'LoRA\nn={int(pair.lora_n_train)}'], fontsize=10)
         ax.set_ylabel(metric)
-        ax.set_title(f'{metric}: full@{int(pair.full_n_train)} vs LoRA@{int(pair.lora_n_train)}',
+        ax.set_title(f'{metric}: full@{int(pair.full_n_train)} vs LoRA@{int(pair.lora_n_train)} | Δ={abs(pair.full_mean-pair.lora_mean):.3f}',
                      fontsize=12, fontweight='bold', color='#1F3A5F')
         ax.grid(axis='y', color='#E8E8E8', lw=0.7)
         ax.set_axisbelow(True)
@@ -390,17 +392,20 @@ def equiv_high_ncrna_mrl():
         ax.grid(color='#ECECEC', lw=0.6)
         ax.set_axisbelow(True)
         ax.legend(loc='best', fontsize=8.5)
-    fig.suptitle('Local data-budget equivalence | RiNALMo-micro | family split | legacy exploration',
+    fig.suptitle('MRL local data-budget comparison | RiNALMo-micro | family split | legacy exploration',
                  fontsize=14, fontweight='bold', color='#1F3A5F')
-    fig.text(0.5, -0.025, 'Valid ncRNA and MRL panels only; full = grid-best, LoRA = 3e-4; MRL is not a 3n rule; 8-task controlled equivalence remains pending',
-             ha='center', va='top', fontsize=9, color='#666666')
-    save_fig(fig, 'e3_equiv_high_ncrna_mrl_only')
+    fig.text(0.5, -0.025, 'ncRNA legacy inputs are quarantined; this MRL case is not a universal 3n rule; eight-task corrected equivalence remains pending',
+             ha='center', va='top', fontsize=9, color='#B64342')
+    save_fig(fig, 'e3_equiv_high_mrl_only')
 
 
 def equiv_low_two_cases():
-    pairs = pd.read_csv(WORK / 'equiv_low_pairs_legacy_20261028.csv')
-    curves = pd.read_csv(WORK / 'equiv_low_curves_legacy_20261028.csv')
-    fig, axes = plt.subplots(2, 2, figsize=(11.8, 6.2), constrained_layout=True)
+    pairs = pd.read_csv(WORK.parent / 'legacy_inputs/equiv_low_pairs_legacy_20261028.csv')
+    curves = pd.read_csv(WORK.parent / 'legacy_inputs/equiv_low_curves_legacy_20261028.csv')
+    pairs = pairs[pairs.task == 'mrl'].copy()
+    assert len(pairs) == 1
+    fig, axes = plt.subplots(2, 1, figsize=(12.4, 6.2), constrained_layout=True)
+    axes = axes.reshape(2, 1)
     for col, (_, pair) in enumerate(pairs.iterrows()):
         task_label = 'MRL Pearson r' if pair.task == 'mrl' else 'ncRNA ACC'
         model_label = 'RiNALMo-micro' if pair.model == 'RiNALMo-micro' else 'RNA-Sc-10M'
@@ -442,15 +447,175 @@ def equiv_low_two_cases():
         ax.grid(color='#ECECEC', lw=0.6)
         ax.set_axisbelow(True)
         ax.legend(loc='best', fontsize=8.5)
-    fig.suptitle('Low-budget local comparisons | family split | legacy exploration',
+    fig.suptitle('MRL low-budget local comparison | family split | legacy exploration',
                  fontsize=14, fontweight='bold', color='#1F3A5F')
-    fig.text(0.5, -0.025, 'Two valid historical cases only; full = grid-best, LoRA = 3e-4; no universal 3n or threshold rule; 8-task controlled equivalence remains pending',
-             ha='center', va='top', fontsize=9, color='#666666')
-    save_fig(fig, 'e3_equiv_low_two_cases')
+    fig.text(0.5, -0.025, 'ncRNA legacy inputs are quarantined; no universal 3n or threshold rule; eight-task corrected equivalence remains pending',
+             ha='center', va='top', fontsize=9, color='#B64342')
+    save_fig(fig, 'e3_equiv_low_mrl_only')
+
+
+def ncrna_shuffle_audit():
+    import json
+
+    src = WORK / 'ncrna_shuffle_audit'
+    shuffled = json.loads((src / 'shuffled_one_result.json').read_text())
+    no_shuffle = json.loads((src / 'noshuffle_one_result.json').read_text())
+    assert no_shuffle['run_id'].endswith('noshuffle_one_diag')
+    assert no_shuffle['epoch_shuffle'] is False
+    assert shuffled['run_id'].endswith('bestval_v1_fixedsplit')
+    for key in ('model', 'task', 'strategy', 'seed', 'split', 'n_train', 'n_test', 'lr'):
+        assert shuffled[key] == no_shuffle[key], key
+    order = pd.read_csv(src / 'label_order_first512.csv')
+    summary = json.loads((src / 'label_order_summary.json').read_text())
+    rows = []
+    curves = []
+    for arm, result, runner, max_len in [
+            ('shuffled', shuffled, 'finetune_one', 512),
+            ('no_shuffle', no_shuffle, 'finetune_one', 512)]:
+        rows.append({'arm': arm, 'run_id': result['run_id'], 'runner': runner,
+                     'max_len': max_len, 'batch_size': 32, 'rank': 8,
+                     'test_acc': result['value'], 'best_epoch': result['best_epoch'],
+                     'epochs_trained': result['epochs_trained'],
+                     'best_val_loss': result['best_val'],
+                     'wall_sec': result['wall_sec'],
+                     'peak_mem_mb': result['peak_mem_mb'],
+                     'protocol': result['protocol']})
+        for epoch, (train_loss, val_loss) in enumerate(zip(
+                result['epoch_train_losses'], result['epoch_val_losses'])):
+            curves.append({'arm': arm, 'epoch': epoch, 'train_loss': train_loss,
+                           'val_loss': val_loss, 'run_id': result['run_id']})
+    pd.DataFrame(rows).to_csv(OUT / 'ncrna_shuffle_audit_summary.csv', index=False)
+    pd.DataFrame(curves).to_csv(OUT / 'ncrna_shuffle_audit_curves.csv', index=False)
+
+    navy, blue, red, gray = '#1F3A5F', '#3775BA', '#B64342', '#666666'
+    fig = plt.figure(figsize=(13.2, 4.5), constrained_layout=True)
+    grid = fig.add_gridspec(1, 3, width_ratios=[1.15, 1.25, 0.8])
+    ax = fig.add_subplot(grid[0, 0])
+    image = np.vstack([order.original_label.to_numpy()[:320],
+                       order.shuffled_label_epoch0.to_numpy()[:320]])
+    ax.imshow(image, aspect='auto', cmap='tab20', vmin=0, vmax=12,
+              interpolation='nearest')
+    ax.set_yticks([0, 1], ['Original', 'Shuffled'])
+    ax.set_xticks([])
+    ax.set_title(f"A | Training order\n{summary['label_runs']} label runs; longest = {summary['longest_label_run']}",
+                 fontsize=11.5, fontweight='bold', color=navy)
+    for spine in ax.spines.values():
+        spine.set_visible(True)
+
+    ax = fig.add_subplot(grid[0, 1])
+    for arm, color, label in [('shuffled', blue, 'Per-epoch shuffle'),
+                              ('no_shuffle', red, 'No shuffle')]:
+        result = shuffled if arm == 'shuffled' else no_shuffle
+        vals = result['epoch_val_losses']
+        ax.plot(range(len(vals)), vals, marker='o', ms=4.5, lw=2.2,
+                color=color, label=label)
+        best = result['best_epoch']
+        ax.scatter(best, vals[best], s=110, facecolor='white', edgecolor=color,
+                   linewidth=2.2, zorder=4)
+    ax.set_xlabel('Epoch')
+    ax.set_ylabel('Validation loss')
+    ax.set_title('B | Best checkpoint selection\n circles = restored best epoch',
+                 fontsize=11.5, fontweight='bold', color=navy)
+    ax.grid(color='#E9E9E9', lw=0.7)
+    ax.set_axisbelow(True)
+    ax.legend(loc='upper right', fontsize=9)
+
+    ax = fig.add_subplot(grid[0, 2])
+    vals = [shuffled['value'], no_shuffle['value']]
+    bars = ax.bar([0, 1], vals, width=0.62, color=[blue, red], edgecolor='white')
+    for bar, val in zip(bars, vals):
+        ax.text(bar.get_x() + bar.get_width() / 2, val + 0.025, f'{val:.3f}',
+                ha='center', va='bottom', fontsize=11, fontweight='bold', color=navy)
+    ax.axhline(1 / 13, color=gray, lw=1, ls='--')
+    ax.text(1.42, 1 / 13 + 0.018, '1/13', ha='right', fontsize=8.5, color=gray)
+    ax.set_xticks([0, 1], ['Shuffled', 'No shuffle'])
+    ax.set_ylim(0, 1.04)
+    ax.set_ylabel('Family-test ACC')
+    ax.set_title('C | Strict A/B\nonly shuffle differs', fontsize=11.5,
+                 fontweight='bold', color=navy)
+    ax.grid(axis='y', color='#E9E9E9', lw=0.7)
+    ax.set_axisbelow(True)
+    fig.suptitle('ncRNA family near-random performance is reproduced by disabling shuffle',
+                 fontsize=14, fontweight='bold', color=navy)
+    fig.text(0.5, -0.035,
+             'RiNALMo-micro | LoRA rank8 | seed17 | family split | max_len=512 | batch=32 | best-val; diagnostic seed not included in formal means',
+             ha='center', va='top', fontsize=8.8, color=gray)
+    save_fig(fig, 'ncrna_shuffle_audit')
+
+
+def equivalence_protocol_status():
+    from matplotlib import patches
+    fig, ax = plt.subplots(figsize=(12.4, 4.5), constrained_layout=True)
+    ax.set_xlim(0, 12.4)
+    ax.set_ylim(0, 4.5)
+    ax.axis('off')
+    navy, blue, orange, gray = '#1F3A5F', '#DCEAF7', '#FDE3CF', '#666666'
+    boxes = [
+        (0.35, 1.25, 2.5, 1.55, blue, 'Controlled inputs', 'same task + split + protocol'),
+        (3.45, 2.35, 2.65, 1.25, blue, 'Small model', 'full-FT at labels n'),
+        (3.45, 0.55, 2.65, 1.25, orange, 'Large model', 'LoRA at labels m'),
+        (7.0, 1.25, 2.35, 1.55, '#E7F3E8', 'Closest match', 'per seed + 95% CI'),
+        (10.0, 1.25, 2.05, 1.55, '#F2F2F2', 'Report', 'full@n ≈ LoRA@m\nor not observed'),
+    ]
+    for x, y, w, h, color, title, subtitle in boxes:
+        ax.add_patch(patches.FancyBboxPatch((x, y), w, h,
+                     boxstyle='round,pad=0.03,rounding_size=0.08',
+                     facecolor=color, edgecolor='#B7C4D2', linewidth=1.1))
+        ax.text(x + w / 2, y + h * 0.64, title, ha='center', va='center',
+                fontsize=12, fontweight='bold', color=navy)
+        ax.text(x + w / 2, y + h * 0.31, subtitle, ha='center', va='center',
+                fontsize=9.5, color=gray)
+    for x1, y1, x2, y2 in [(2.85, 2.02, 3.45, 2.95), (2.85, 2.02, 3.45, 1.18),
+                           (6.1, 2.95, 7.0, 2.25), (6.1, 1.18, 7.0, 1.8),
+                           (9.35, 2.02, 10.0, 2.02)]:
+        ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
+                    arrowprops=dict(arrowstyle='->', lw=1.5, color=navy))
+    ax.set_title('Data-budget equivalence | required comparison design',
+                 fontsize=14, fontweight='bold', color=navy, pad=10)
+    ax.text(6.2, 0.12,
+            'Legacy ncRNA curves are quarantined. Corrected eight-task curves must be completed before reporting numerical equivalence.',
+            ha='center', va='bottom', fontsize=9.5, color='#B64342')
+    save_fig(fig, 'equivalence_protocol_status')
+
+
+def ncrna_legacy_quarantine():
+    fig, ax = plt.subplots(figsize=(12.4, 4.6), constrained_layout=True)
+    ax.axis('off')
+    navy, gray = '#1F3A5F', '#666666'
+    columns = ['Evidence stream', 'Current status', 'Required action']
+    rows = [
+        ['micro strict shuffle A/B', 'COMPLETE', 'Use diagnostic only; keep out of formal means'],
+        ['legacy mega / 650M E3 points', 'QUARANTINED', 'Re-test with corrected protocol'],
+        ['1500 / 2000 / 2500 dense budgets', 'REGISTERED', 'Run after main-matrix acceptance'],
+        ['eight-task large-model lanes', 'INCOMPLETE', 'Show NA; never fill from legacy'],
+    ]
+    table = ax.table(cellText=rows, colLabels=columns, cellLoc='left', loc='center',
+                     colWidths=[0.31, 0.18, 0.51])
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1, 1.75)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor('#D8DEE6')
+        if r == 0:
+            cell.set_facecolor(navy)
+            cell.get_text().set_color('white')
+            cell.get_text().set_fontweight('bold')
+        else:
+            cell.set_facecolor('#F7F9FC' if r % 2 else 'white')
+            if c == 1:
+                status = cell.get_text().get_text()
+                cell.get_text().set_color('#3775BA' if status == 'COMPLETE' else '#B64342' if status == 'QUARANTINED' else gray)
+                cell.get_text().set_fontweight('bold')
+    ax.set_title('⑤d evidence audit | old points are not interchangeable with missing points',
+                 fontsize=14, fontweight='bold', color=navy, pad=14)
+    ax.text(0.5, 0.04,
+            'No interpolation, zero filling, or legacy substitution. Every future point must map to a corrected RID and complete proof.',
+            transform=ax.transAxes, ha='center', fontsize=9.5, color=gray)
+    save_fig(fig, 'ncrna_legacy_quarantine')
 
 
 def memory_ncrna():
-    df = pd.read_csv(HAND / 'archive_20261028/绘图数据/figures_v2_20261025/status/status_tables_figs/resources_costbenefit.csv')
+    df = pd.read_csv(WORK.parent / 'legacy_inputs/resources_costbenefit.csv')
     models = ['SpliceBERT', 'RiNALMo-micro', 'ERNIE-RNA', 'RNA-FM', 'RiNALMo-mega', 'NucleicBERT', 'RiNALMo-650M']
     labels = ['SpliceBERT 19M', 'RiNALMo 33M', 'ERNIE 86M', 'RNA-FM 99M', 'RiNALMo 148M', 'NucleicBERT 404M', 'RiNALMo 650M']
     strategies = [('frozen', '#6BAED6'), ('lora', '#FD8D3C'), ('full', '#B64342')]
@@ -498,29 +663,30 @@ def center(draw, xy, text, fnt, fill):
 
 
 def crop_valid_panels():
-    # Only crop and re-layout previously validated panels. No values are read from pixels.
-    navy = '#1F3A5F'
-    gray = '#666666'
-
-    def scaler(src, base):
-        sx, sy = src.width / base[0], src.height / base[1]
-        def box(values):
-            return tuple(round(v * (sx if i % 2 == 0 else sy)) for i, v in enumerate(values))
-        def pt(x, y):
-            return round(x * sx), round(y * sy)
-        return box, pt, lambda size: font(max(8, round(size * sx)))
-
-    # E3: retain ncRNA, MRL and 100M re-test, remove invalid modification and its summary.
-    src = Image.open(PPT / 'fig_ppt_e3_3tasks.png').convert('RGB')
-    box, pt, fs = scaler(src, (1022, 518))
-    out = Image.new('RGB', src.size, 'white')
-    d = ImageDraw.Draw(out)
-    center(d, pt(511, 17), 'E3 data-size effect | ncRNA and MRL valid legacy panels; no universal immunity claim', fs(16), navy)
-    out.paste(src.crop(box((0, 35, 1022, 250))), pt(0, 35))
-    out.paste(src.crop(box((0, 250, 256, 492))), pt(220, 252))
-    out.paste(src.crop(box((766, 250, 1022, 492))), pt(548, 252))
-    center(d, pt(511, 507), '旧 per-base m6A 面板与相关总结已移除；其余 8 任务数据量曲线按 best-val 补测', fs(10), gray)
-    out.save(OUT / 'e3_ncrna_mrl_only.png')
+    curves = pd.read_csv(WORK.parent / 'legacy_inputs/equiv_low_curves_legacy_20261028.csv')
+    q = curves[(curves.task == 'mrl') & (curves.model == 'RiNALMo-micro')].copy()
+    assert len(q) >= 4
+    q.to_csv(OUT / 'e3_mrl_legacy_data.csv', index=False)
+    fig, ax = plt.subplots(figsize=(12.4, 4.5), constrained_layout=True)
+    x = np.arange(len(q))
+    for strategy, color, label in [('frozen', '#6BAED6', 'frozen'),
+                                   ('full', '#1F3A5F', 'full-FT'),
+                                   ('lora', '#D94801', 'LoRA')]:
+        vals = pd.to_numeric(q[f'{strategy}_mean'], errors='coerce')
+        ax.plot(x, vals, marker='o', ms=5, lw=2, color=color, label=label)
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(int(n)) for n in q.n])
+    ax.set_xlabel('Labeled sequences (equal-spaced)')
+    ax.set_ylabel('MRL Pearson r')
+    ax.set_title('E3 data-size effect | MRL | RiNALMo-micro | family split | legacy',
+                 fontsize=14, fontweight='bold', color='#1F3A5F')
+    ax.grid(color='#ECECEC', lw=0.6)
+    ax.set_axisbelow(True)
+    ax.legend(loc='best', fontsize=9)
+    fig.text(0.5, -0.035,
+             'ncRNA and old per-base modification panels are quarantined; eight-task corrected learning curves remain pending',
+             ha='center', va='top', fontsize=9.2, color='#B64342')
+    save_fig(fig, 'e3_mrl_legacy')
 
 
 
@@ -539,6 +705,9 @@ def main():
     extension_fourbar()
     e4_delta_two_tasks()
     crop_valid_panels()
+    ncrna_shuffle_audit()
+    equivalence_protocol_status()
+    ncrna_legacy_quarantine()
     equiv_high_ncrna_mrl()
     equiv_low_two_cases()
     memory_ncrna()
