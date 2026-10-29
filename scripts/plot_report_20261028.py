@@ -770,6 +770,63 @@ def crop_valid_panels():
     save_fig(fig, 'e3_mrl_legacy')
 
 
+def c5c_ncrna_lora_scale():
+    budgets = [1000, 1500, 2000, 2500, 3000]
+    specs = [
+        ('RiNALMo-micro', 'RiNALMo 33M', '#3775BA',
+         'c5c_ncrna_micro_lora_random_1000_3000_summary_20261029.csv'),
+        ('RiNALMo-mega', 'RiNALMo 148M', '#D94801',
+         'c5c_ncrna_mega_lora_random_summary_20261029.csv'),
+    ]
+    x = np.arange(len(budgets))
+    fig, ax = plt.subplots(figsize=(12.4, 4.6), constrained_layout=True)
+    exported = []
+    for model, label, color, filename in specs:
+        df = pd.read_csv(WORK / filename)
+        q = df[(df.model == model) & (df.task == 'noncoding-rna-family') &
+               (df.strategy == 'lora') & (df.split == 'random') &
+               (df.metric == 'ACC')].copy()
+        q['n_train'] = pd.to_numeric(q.n_train, errors='raise').astype(int)
+        q = q.set_index('n_train').loc[budgets].reset_index()
+        assert len(q) == len(budgets) and q.n_seeds.eq(3).all()
+        assert q[['mean', 'sd', 'ci95_halfwidth']].notna().all().all()
+        rids = [rid for cell in q.rids for rid in cell.split(';')]
+        assert len(rids) == len(set(rids)) == 15
+        for row in q.itertuples():
+            assert len(row.rids.split(';')) == 3
+            assert len(row.best_epochs.split(';')) == 3
+        exported.append(q)
+        mean = q['mean'].to_numpy(float)
+        ci = q.ci95_halfwidth.to_numpy(float)
+        ax.errorbar(x, mean, yerr=ci, color=color, marker='o', ms=5.5,
+                    lw=2.2, capsize=3, elinewidth=1.1, label=label)
+        for xi, yi in zip(x, mean):
+            ax.text(xi, yi + 0.009, f'{yi:.3f}', ha='center', va='bottom',
+                    fontsize=8.3, color=color)
+    all_rids = [rid for q in exported for cell in q.rids for rid in cell.split(';')]
+    assert len(all_rids) == len(set(all_rids)) == 30
+    output_columns = ['model', 'task', 'strategy', 'split', 'n_train', 'metric',
+                      'n_seeds', 'mean', 'sd', 'ci95_halfwidth', 'best_epochs', 'rids']
+    pd.concat(exported, ignore_index=True)[output_columns].to_csv(
+        OUT / 'c5c_ncrna_lora_micro_mega_data.csv', index=False)
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(n) for n in budgets], fontsize=10)
+    ax.set_xlabel('Labeled sequences (equal-spaced measured budgets)', fontsize=11)
+    ax.set_ylabel('ncRNA ACC', fontsize=11)
+    all_means = pd.concat(exported)['mean'].to_numpy(float)
+    all_ci = pd.concat(exported).ci95_halfwidth.to_numpy(float)
+    ax.set_ylim(max(0.0, float((all_means - all_ci).min()) - 0.025),
+                min(1.0, float((all_means + all_ci).max()) + 0.025))
+    ax.grid(axis='y', color='#E8E8E8', lw=0.7)
+    ax.set_axisbelow(True)
+    ax.legend(loc='lower right', ncol=2, fontsize=10)
+    ax.set_title('⑤c data-size effect | ncRNA | random split | LoRA rank8\n'
+                 'corrected best-val | 3-seed mean ± 95% CI',
+                 fontsize=13.5, fontweight='bold', color='#1F3A5F', pad=11)
+    fig.text(0.5, -0.035,
+             'Complete proof only; lines connect measured budgets. 650M and all other C5c arms remain pending; no legacy or imputed points.',
+             ha='center', va='top', fontsize=9, color='#666666')
+    save_fig(fig, 'c5c_ncrna_lora_micro_mega')
 
 
 def main():
@@ -789,6 +846,7 @@ def main():
     ncrna_shuffle_audit()
     equivalence_protocol_status()
     ncrna_legacy_quarantine()
+    c5c_ncrna_lora_scale()
     equiv_high_ncrna_mrl()
     equiv_low_two_cases()
     memory_ncrna()
