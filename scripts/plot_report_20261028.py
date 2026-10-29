@@ -318,12 +318,12 @@ def resource_mrl(df):
     save_fig(fig, 'mrl_resource_time_performance')
 
 
-def extension_fourbar():
+def extension_sixbar():
     df = pd.read_csv(WORK / 'b20fix_8task_table.csv')
     models = ['rinalmomicro', 'rinalmomega', 'rinalmo650m', 'ernierna', 'rnafm', 'nucleicbert']
     short = {
         'rinalmomicro': 'RiNALMo\n33M', 'rinalmomega': 'RiNALMo\n148M',
-        'rinalmo650m': 'RiNALMo\n650M', 'ernierna': 'ERNIE\n86M',
+        'rinalmo650m': 'RiNALMo\n650M', 'ernierna': 'ERNIE-RNA\n86M',
         'rnafm': 'RNA-FM\n99M', 'nucleicbert': 'NucleicBERT\n404M',
     }
     tasks = [('spliceai', 'SpliceAI macro-F1'), ('degradation', 'mRNA degradation PCC'), ('ssi', 'SSI PCC')]
@@ -333,17 +333,11 @@ def extension_fourbar():
         rows = []
         for model in models:
             q = df[(df.task == task) & (df.model == model)]
-            arms = []
-            for arm in ['lora', 'full']:
-                n = int(q[q.strategy == arm].n_seeds.sum())
-                if n:
-                    arms.append((arm, n))
-            arm = 'lora' if any(a == 'lora' for a, _ in arms) else (arms[0][0] if arms else 'lora')
-            row = {'task': task, 'model': model, 'finetune_arm': arm}
-            for key, strategy, split in [
-                ('frozen_random', 'frozen', 'random'), ('frozen_family', 'frozen', 'family'),
-                ('finetune_random', arm, 'random'), ('finetune_family', arm, 'family')]:
+            row = {'task': task, 'model': model}
+            for key in SIX_COLORS:
+                strategy, split = key.split('_', 1)
                 z = q[(q.strategy == strategy) & (q.split == split)]
+                assert len(z) <= 1, (task, model, key, 'duplicate aggregate row')
                 if len(z):
                     row[key] = float(z.iloc[0]['mean'])
                     row[f'{key}_n'] = int(z.iloc[0].n_seeds)
@@ -353,38 +347,39 @@ def extension_fourbar():
             rows.append(row)
             all_rows.append(row)
         x = np.arange(len(models))
-        width = 0.19
-        for j, key in enumerate(COLORS):
+        width = 0.135
+        for j, key in enumerate(SIX_COLORS):
             for i, row in enumerate(rows):
                 v, n = row[key], row[f'{key}_n']
-                pos = x[i] + (j - 1.5) * width
+                pos = x[i] + (j - 2.5) * width
                 if not n or not np.isfinite(v):
-                    ax.text(pos, 0.025, 'NA', ha='center', va='bottom', fontsize=7,
+                    ax.text(pos, 0.025, 'NA', ha='center', va='bottom', fontsize=6.5,
                             color='#8A8A8A', rotation=90)
                     continue
-                ax.bar(pos, v, width=width * 0.94, color=COLORS[key],
+                ax.bar(pos, v, width=width * 0.94, color=SIX_COLORS[key],
                        hatch='///' if n < 3 else None, edgecolor='white', linewidth=0.4)
-                ax.text(pos, v + 0.015, f'{v:.2f}', ha='center', va='bottom', fontsize=6.8)
+                ax.text(pos, v + 0.015, f'{v:.2f}', ha='center', va='bottom', fontsize=6.5,
+                        rotation=90)
                 if n < 3:
-                    ax.text(pos, max(0.035, v * 0.45), f'n{n}', ha='center', va='center',
-                            fontsize=6.5, rotation=90, color='#333333')
+                    ax.text(pos, max(0.035, v * 0.45), f'n={n}', ha='center', va='center',
+                            fontsize=6.2, rotation=90, color='#333333')
         ax.set_title(metric, fontsize=11.5, fontweight='bold', color='#1F3A5F')
+        ax.set_ylabel(metric, fontsize=9.5)
         ax.set_xticks(x)
-        ax.set_xticklabels([short[m] for m in models], fontsize=7.4, rotation=25,
-                           ha='right', rotation_mode='anchor')
+        ax.set_xticklabels([short[m] for m in models], fontsize=7.2)
         ax.set_ylim(0, 0.82)
         ax.grid(axis='y', color='#E8E8E8', lw=0.7)
         ax.set_axisbelow(True)
-    handles = [plt.Rectangle((0, 0), 1, 1, color=COLORS[k]) for k in COLORS]
-    fig.subplots_adjust(left=0.05, right=0.995, top=0.76, bottom=0.17, wspace=0.14)
-    fig.suptitle('Three-task extension | B20-corrected stage results',
+    handles = [plt.Rectangle((0, 0), 1, 1, color=SIX_COLORS[k]) for k in SIX_COLORS]
+    fig.subplots_adjust(left=0.05, right=0.995, top=0.75, bottom=0.15, wspace=0.22)
+    fig.suptitle('Three-task extension | frozen / LoRA / full-FT by split',
                  fontsize=13, fontweight='bold', color='#1F3A5F', y=0.98)
-    fig.text(0.5, 0.915, 'Fine-tuned = LoRA when available, otherwise full FT; hatched = n<3; NA = not complete',
+    fig.text(0.5, 0.91, 'B20-corrected stage means; hatched = n<3; NA = not complete',
              ha='center', va='center', fontsize=10, color='#1F3A5F')
-    fig.legend(handles, [LABELS[k] for k in COLORS], ncol=4, loc='upper center',
-               bbox_to_anchor=(0.5, 0.875), fontsize=9)
-    pd.DataFrame(all_rows).to_csv(OUT / 'extension_three_task_fourbar_data.csv', index=False)
-    save_fig(fig, 'extension_three_task_fourbar')
+    fig.legend(handles, [SIX_LABELS[k] for k in SIX_COLORS], ncol=6, loc='upper center',
+               bbox_to_anchor=(0.5, 0.865), fontsize=8.5)
+    pd.DataFrame(all_rows).to_csv(OUT / 'extension_three_task_sixbar_data.csv', index=False)
+    save_fig(fig, 'extension_three_task_sixbar')
 
 
 def e4_delta_two_tasks():
@@ -624,6 +619,134 @@ def ncrna_shuffle_audit():
     save_fig(fig, 'ncrna_shuffle_audit')
 
 
+def c5c_equivalence_microfull_megalora():
+    """Draw ncRNA equivalence only after both five-budget arms are complete."""
+    from collections import Counter
+    import hashlib
+    import json
+
+    budgets = [1000, 1500, 2000, 2500, 3000]
+    seeds = [17, 29, 43]
+    source = WORK / 'bestval_ledger_export_20261029.csv'
+    df = pd.read_csv(source)
+    df['n_train'] = pd.to_numeric(df.n_train, errors='coerce')
+    df['seed'] = pd.to_numeric(df.seed, errors='coerce')
+    arms = {}
+    for key, model, strategy in [
+        ('small', 'RiNALMo-micro', 'full'),
+        ('large', 'RiNALMo-mega', 'lora'),
+    ]:
+        q = df[(df.model == model) & (df.task == 'noncoding-rna-family') &
+               (df.strategy == strategy) & (df.split == 'random') &
+               (df.protocol == 'bestval_v1') & (df.metric == 'ACC') &
+               (df.n_train.isin(budgets)) & (df.seed.isin(seeds))].copy()
+        assert not q.duplicated(['n_train', 'seed']).any(), (key, 'duplicate cell')
+        counts = q.groupby('n_train').seed.nunique().to_dict()
+        if len(q) != 15 or set(counts) != set(budgets) or set(counts.values()) != {3}:
+            raise ValueError(f'{key} arm incomplete: rows={len(q)}, seed_counts={counts}')
+        assert q.run_id.nunique() == 15 and q.value.notna().all()
+        assert q.cuda_device.astype(str).str.startswith('cuda').all()
+        arms[key] = q
+
+    nearest = []
+    for seed in seeds:
+        small = arms['small'][arms['small'].seed == seed].set_index('n_train').loc[budgets]
+        large = arms['large'][arms['large'].seed == seed].set_index('n_train').loc[budgets]
+        differences = np.abs(small.value.to_numpy(float)[:, None] -
+                             large.value.to_numpy(float)[None, :])
+        minimum = float(differences.min())
+        tied = np.argwhere(np.isclose(differences, minimum, rtol=0, atol=1e-12))
+        for i, j in tied:
+            nearest.append({
+                'seed': seed, 'small_full_n': int(budgets[i]),
+                'large_lora_m': int(budgets[j]),
+                'small_full_acc': float(small.value.iloc[i]),
+                'large_lora_acc': float(large.value.iloc[j]),
+                'delta_small_minus_large': float(small.value.iloc[i] - large.value.iloc[j]),
+                'abs_delta': minimum, 'tied_nearest': len(tied) > 1,
+            })
+    nearest_df = pd.DataFrame(nearest)
+    pair_counts = Counter(zip(nearest_df.small_full_n, nearest_df.large_lora_m))
+    unique_pair = next(iter(pair_counts)) if len(pair_counts) == 1 and len(nearest_df) == 3 else None
+
+    def curve(q):
+        grouped = q.groupby('n_train').value
+        mean = grouped.mean().loc[budgets].to_numpy(float)
+        sd = grouped.std(ddof=1).loc[budgets].to_numpy(float)
+        return mean, 4.3026537299 * sd / np.sqrt(3)
+
+    small_mean, small_ci = curve(arms['small'])
+    large_mean, large_ci = curve(arms['large'])
+    mean_abs_delta = np.zeros((len(budgets), len(budgets)))
+    for i, n in enumerate(budgets):
+        for j, m in enumerate(budgets):
+            deltas = []
+            for seed in seeds:
+                sv = arms['small'].query('n_train == @n and seed == @seed').value.iloc[0]
+                lv = arms['large'].query('n_train == @m and seed == @seed').value.iloc[0]
+                deltas.append(abs(float(sv - lv)))
+            mean_abs_delta[i, j] = np.mean(deltas)
+
+    fig, (ax, axmap) = plt.subplots(1, 2, figsize=(13.4, 4.9),
+                                    gridspec_kw={'width_ratios': [1.2, 1.0]},
+                                    constrained_layout=True)
+    x = np.arange(len(budgets))
+    ax.errorbar(x, small_mean, yerr=small_ci, color='#3B3B3B', marker='o',
+                lw=2.1, capsize=3, label='RiNALMo 33M full-FT')
+    ax.errorbar(x, large_mean, yerr=large_ci, color='#D94801', marker='o',
+                lw=2.1, capsize=3, label='RiNALMo 148M LoRA')
+    if unique_pair is not None:
+        n, m = unique_pair
+        i, j = budgets.index(n), budgets.index(m)
+        ax.annotate('', xy=(j, large_mean[j]), xytext=(i, small_mean[i]),
+                    arrowprops=dict(arrowstyle='<->', color='#B03A2E', lw=1.8))
+        conclusion = f'33M full@{n} ≈ 148M LoRA@{m} | nearest in all 3 seeds'
+    else:
+        candidates = '; '.join(f'full@{n}≈LoRA@{m} ({count}/3)'
+                               for (n, m), count in sorted(pair_counts.items()))
+        conclusion = 'No unique point | ' + candidates
+    ax.set_xticks(x, [str(n) for n in budgets])
+    ax.set_xlabel('Labeled sequences (measured budgets)')
+    ax.set_ylabel('ncRNA ACC | mean ± 95% CI')
+    ax.grid(axis='y', color='#E8E8E8', lw=0.7)
+    ax.set_axisbelow(True)
+    ax.legend(loc='lower right', fontsize=9)
+    ax.set_title(conclusion, fontsize=11.5, fontweight='bold', color='#1F3A5F')
+
+    image = axmap.imshow(mean_abs_delta, cmap='Blues_r', aspect='auto', origin='lower')
+    for i, n in enumerate(budgets):
+        for j, m in enumerate(budgets):
+            count = pair_counts.get((n, m), 0)
+            label = f'{mean_abs_delta[i, j]:.3f}' + (f'\n{count} seed' + ('s' if count != 1 else '') if count else '')
+            axmap.text(j, i, label, ha='center', va='center', fontsize=7.5,
+                       color='white' if mean_abs_delta[i, j] < np.nanmedian(mean_abs_delta) else '#1F3A5F')
+    axmap.set_xticks(x, [str(n) for n in budgets])
+    axmap.set_yticks(x, [str(n) for n in budgets])
+    axmap.set_xlabel('148M LoRA budget m')
+    axmap.set_ylabel('33M full-FT budget n')
+    axmap.set_title('Mean |ACC difference|; labels mark per-seed nearest pairs',
+                    fontsize=10.5, color='#1F3A5F')
+    fig.colorbar(image, ax=axmap, shrink=0.8, label='Mean |ACC difference|')
+    fig.suptitle('Data-budget equivalence | ncRNA random split | corrected best-val',
+                 fontsize=13.5, fontweight='bold', color='#1F3A5F')
+    fig.text(0.5, -0.025, 'Observed points only; no interpolation. Each arm: 5 budgets × 3 formal seeds with complete proof.',
+             ha='center', va='top', fontsize=9, color='#666666')
+
+    nearest_df.to_csv(OUT / 'equivalence_ncrna_microfull_megalora_pairs.csv', index=False)
+    pd.concat(arms, ignore_index=True).to_csv(OUT / 'equivalence_ncrna_microfull_megalora_data.csv', index=False)
+    metadata = {
+        'source': source.name,
+        'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+        'budgets': budgets, 'seeds': seeds, 'interpolation': False,
+        'unique_pair': list(unique_pair) if unique_pair is not None else None,
+        'pair_counts': {f'{n}:{m}': count for (n, m), count in sorted(pair_counts.items())},
+        'nearest_rows': len(nearest_df),
+    }
+    (OUT / 'equivalence_ncrna_microfull_megalora.meta.json').write_text(
+        json.dumps(metadata, indent=2) + '\n')
+    save_fig(fig, 'equivalence_ncrna_microfull_megalora')
+
+
 def equivalence_protocol_status():
     from matplotlib import patches
     fig, ax = plt.subplots(figsize=(12.4, 4.5), constrained_layout=True)
@@ -667,8 +790,8 @@ def ncrna_legacy_quarantine():
     rows = [
         ['micro strict shuffle A/B', 'COMPLETE', 'Use diagnostic only; keep out of formal means'],
         ['legacy mega / 650M E3 points', 'QUARANTINED', 'Re-test with corrected protocol'],
-        ['1500 / 2000 / 2500 dense budgets', 'REGISTERED', 'Run after main-matrix acceptance'],
-        ['eight-task large-model lanes', 'INCOMPLETE', 'Show NA; never fill from legacy'],
+        ['33M / 148M LoRA random, five budgets', 'COMPLETE', 'Corrected 1000–3000 curves on previous page'],
+        ['650M + full/family + other tasks', 'INCOMPLETE', 'Show NA; never fill from legacy'],
     ]
     table = ax.table(cellText=rows, colLabels=columns, cellLoc='left', loc='center',
                      colWidths=[0.31, 0.18, 0.51])
@@ -840,13 +963,13 @@ def main():
            'Modification | corrected sequence-level 12-label task; m6A index 7', ymax=1.08, chance=0.5)
     resource_mrl(df)
     lr_ncrna_mrl()
-    extension_fourbar()
+    extension_sixbar()
     e4_delta_two_tasks()
     crop_valid_panels()
     ncrna_shuffle_audit()
-    equivalence_protocol_status()
     ncrna_legacy_quarantine()
     c5c_ncrna_lora_scale()
+    c5c_equivalence_microfull_megalora()
     equiv_high_ncrna_mrl()
     equiv_low_two_cases()
     memory_ncrna()
