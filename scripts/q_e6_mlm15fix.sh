@@ -89,6 +89,10 @@ run_cell() {
   fi
   local NEED=9500
   if [ "$strat" = "lora" ]; then NEED=8000; fi
+  if [ "$model" = "RiNALMo-650M" ]; then
+    # Measured 650M LoRA peak is 17.27 GiB; retain >1 GiB safety margin.
+    if [ "$strat" = "lora" ]; then NEED=18500; else NEED=26000; fi
+  fi
   wait_for_vram $NEED || return 1
   echo "[mlm15fix] RUN $model $strat s$seed lr$lr bs$bs $(date +%H:%M)" >> $LOG
   $PY -m rnafteval.e6_forget --model "$model" --strategy "$strat" \
