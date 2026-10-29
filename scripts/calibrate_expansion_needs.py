@@ -30,26 +30,28 @@ def calibrate_jobs(jobs, rows, allow_fallback=False):
             continue
         if not math.isfinite(peak) or peak <= 0:
             continue
-        exact[(row.get("model"), row.get("task"), row.get("strategy"))].append(peak)
-        fallback[(row.get("model"), row.get("strategy"))].append((row.get("task"), peak))
+        protocol = row.get("protocol")
+        exact[(row.get("model"), row.get("task"), row.get("strategy"), protocol)].append(peak)
+        fallback[(row.get("model"), row.get("strategy"), protocol)].append((row.get("task"), peak))
 
     changes = []
     calibrated = []
     for original in jobs:
         job = dict(original)
         model, task, strategy = job["model"], job["task"], job["strategy"]
-        exact_peaks = exact.get((model, task, strategy), [])
+        protocol = job.get("protocol")
+        exact_peaks = exact.get((model, task, strategy, protocol), [])
         scope = None
         evidence_tasks = [task]
         if exact_peaks:
             peaks = exact_peaks
-            scope = "exact_model_task_strategy"
+            scope = "exact_model_task_strategy_protocol"
         elif allow_fallback:
-            evidence = fallback.get((model, strategy), [])
+            evidence = fallback.get((model, strategy, protocol), [])
             evidence_tasks = sorted({item[0] for item in evidence if item[0]})
             if len(evidence) >= 3 and len(evidence_tasks) >= 2:
                 peaks = [item[1] for item in evidence]
-                scope = "model_strategy_cross_task_max"
+                scope = "model_strategy_protocol_cross_task_max"
         if scope is None:
             calibrated.append(job)
             continue
@@ -68,7 +70,7 @@ def calibrate_jobs(jobs, rows, allow_fallback=False):
         "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "formula": "max(3, ceil(max_peak_MB * 1.3 / 1000) + 1)",
         "fallback_allowed": allow_fallback,
-        "fallback_rule": "same model+strategy, >=3 done runs across >=2 tasks; use maximum peak",
+        "fallback_rule": "same model+strategy+protocol, >=3 done runs across >=2 tasks; use maximum peak",
         "jobs": len(jobs), "changed": sum(
             change["old_need_gb"] != change["new_need_gb"] for change in changes),
         "evidence_counts": dict(counts), "changes": changes,
