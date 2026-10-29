@@ -651,3 +651,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. **事故与根因**：`RiNALMo-650M lora s43` 在并行负载下真实 CUDA OOM，进程实需约17.27GiB；旧 `q_e6_mlm15fix.sh` 对所有 LoRA 仅设8GiB 等待门槛，导致监控在显存不足时重复启动。失败日志保留，未发生CPU降级，未完成格不得进入E6结论。
 2. **修复合同**：650M LoRA 的 `WAIT_VRAM` 门槛改为18500MiB，650M full 改为26000MiB；其他模型原门槛不变。等待而非强行启动，proof 不完整仍不得标 DONE，恢复时同 RID 不得双开。
 3. **实证验收**：修复部署后 monitor 于01:30记录 `WAIT_VRAM need=18500MB free=17696MB`，未再次启动训练或OOM。`bash -n` 与385 tests通过；`/home` 提交 `d909ff0`，GitHub `rnaft-expansion-20261027` 提交 `1f5acf3`。
+
+### 10.29 八任务 default/tuned LR 验证选择流程（2026-10-30）
+
+1. **实验矩阵**：`lr_tuning_jobs_20261030.json` 包含8任务×5官方模型×双split×4个LR{3e-4,1e-4,3e-5,1e-5}×seed101，共320格；`lr_default_jobs_20261030.json` 包含同任务/模型/split 的 default=3e-4 ×17/29/43，共240格。两表合计560个唯一RID/result_dir，均只注册未启动。
+2. **选择门禁**：80个 task×model×split 组必须各自四档 proof=complete，才可按 held-out `best_val` 选择LR；test 指标不参与选择，完全并列时取较低LR。任一格缺失即拒绝生成 selection 和 tuned 正式任务，不能用 test 最值或旧 grid-best 代替。
+3. **当前状态与后续**：实时选择审计为 incomplete=320，未生成 tuned 输出。tuning 完成后冻结80组选择，再生成240个 tuned 正式格；default/tuned 均完成后才绘制8任务配对图。GitHub `rnaft-expansion-20261027` 提交 `8674ab4`，`/home` 提交 `8be70d0`，本地及远端385 tests、注册表唯一性与缺格拒绝均通过。

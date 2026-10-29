@@ -1320,3 +1320,6 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] rank8 路径疑点已澄清：既有六格为 `_fixedsplit`，新表无后缀 rank8 为主矩阵协议，并非同 RID 或结果丢失；两协议不得混均值。未重跑、未覆盖既有 `_fixedsplit` 结果。
 - [!] E6 `RiNALMo-650M lora s43` 在并行负载下于01:20真实 CUDA OOM：进程需约17.27GiB，其他两个训练进程与队列同时占卡，最后仅10.31MiB空闲；`q_e6_mlm15fix` 报 `INCOMPLETE cells=3/6`。已保留 `q_e6_mlm15fix.log` 证据，未使用CPU降级，pre NLL只作运行诊断不作最终结论。
 - [x] E6 重复 OOM 根因已修复：旧脚本对所有 LoRA 仅设8GiB 门槛，现按实测将650M LoRA/full 分别改为18500/26000MiB。无需修改 active whitelist；部署后01:30日志确认 `WAIT_VRAM need=18500MB free=17696MB`，未再次启动或OOM。`bash -n` 与385 tests通过，`/home` commit=`d909ff0`，GitHub commit=`1f5acf3`。
+- [x] 结论②已注册 `lr_tuning_jobs_20261030.json` 320格与 `lr_default_jobs_20261030.json` 240格，合计560个唯一RID/result_dir；tuning覆盖80个 task×model×split 组×4 LR×seed101，default覆盖正式三种子。两表仅注册未启动。
+- [x] 新增 `select_lr_validation.py`：仅在80组四档均 proof=complete 后按 held-out best_val 选LR，test不参与；缺格实测为 incomplete=320，未生成 selection/tuned jobs。tuned 结构测试可生成240个唯一正式格。GitHub commit=`8674ab4`，本地及远端385 tests通过；`/home` commit=`8be70d0`。
+- [~] 两个长时 SpliceAI 训练仍在推进：mega full s43 random 的 train/val 两轮为0.003104→0.000899/0.001168→0.000902，650M LoRA s17 random 为0.001945→0.000926/0.000868→0.000841。plateau 位于 root artifacts，teams无同名目录不是缺格证据；当前无result.json，不终止、不迁移、不写成完成。
