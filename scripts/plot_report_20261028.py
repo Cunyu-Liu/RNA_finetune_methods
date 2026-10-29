@@ -318,12 +318,12 @@ def resource_mrl(df):
     save_fig(fig, 'mrl_resource_time_performance')
 
 
-def extension_fourbar():
+def extension_sixbar():
     df = pd.read_csv(WORK / 'b20fix_8task_table.csv')
     models = ['rinalmomicro', 'rinalmomega', 'rinalmo650m', 'ernierna', 'rnafm', 'nucleicbert']
     short = {
         'rinalmomicro': 'RiNALMo\n33M', 'rinalmomega': 'RiNALMo\n148M',
-        'rinalmo650m': 'RiNALMo\n650M', 'ernierna': 'ERNIE\n86M',
+        'rinalmo650m': 'RiNALMo\n650M', 'ernierna': 'ERNIE-RNA\n86M',
         'rnafm': 'RNA-FM\n99M', 'nucleicbert': 'NucleicBERT\n404M',
     }
     tasks = [('spliceai', 'SpliceAI macro-F1'), ('degradation', 'mRNA degradation PCC'), ('ssi', 'SSI PCC')]
@@ -333,17 +333,11 @@ def extension_fourbar():
         rows = []
         for model in models:
             q = df[(df.task == task) & (df.model == model)]
-            arms = []
-            for arm in ['lora', 'full']:
-                n = int(q[q.strategy == arm].n_seeds.sum())
-                if n:
-                    arms.append((arm, n))
-            arm = 'lora' if any(a == 'lora' for a, _ in arms) else (arms[0][0] if arms else 'lora')
-            row = {'task': task, 'model': model, 'finetune_arm': arm}
-            for key, strategy, split in [
-                ('frozen_random', 'frozen', 'random'), ('frozen_family', 'frozen', 'family'),
-                ('finetune_random', arm, 'random'), ('finetune_family', arm, 'family')]:
+            row = {'task': task, 'model': model}
+            for key in SIX_COLORS:
+                strategy, split = key.split('_', 1)
                 z = q[(q.strategy == strategy) & (q.split == split)]
+                assert len(z) <= 1, (task, model, key, 'duplicate aggregate row')
                 if len(z):
                     row[key] = float(z.iloc[0]['mean'])
                     row[f'{key}_n'] = int(z.iloc[0].n_seeds)
@@ -353,38 +347,39 @@ def extension_fourbar():
             rows.append(row)
             all_rows.append(row)
         x = np.arange(len(models))
-        width = 0.19
-        for j, key in enumerate(COLORS):
+        width = 0.135
+        for j, key in enumerate(SIX_COLORS):
             for i, row in enumerate(rows):
                 v, n = row[key], row[f'{key}_n']
-                pos = x[i] + (j - 1.5) * width
+                pos = x[i] + (j - 2.5) * width
                 if not n or not np.isfinite(v):
-                    ax.text(pos, 0.025, 'NA', ha='center', va='bottom', fontsize=7,
+                    ax.text(pos, 0.025, 'NA', ha='center', va='bottom', fontsize=6.5,
                             color='#8A8A8A', rotation=90)
                     continue
-                ax.bar(pos, v, width=width * 0.94, color=COLORS[key],
+                ax.bar(pos, v, width=width * 0.94, color=SIX_COLORS[key],
                        hatch='///' if n < 3 else None, edgecolor='white', linewidth=0.4)
-                ax.text(pos, v + 0.015, f'{v:.2f}', ha='center', va='bottom', fontsize=6.8)
+                ax.text(pos, v + 0.015, f'{v:.2f}', ha='center', va='bottom', fontsize=6.5,
+                        rotation=90)
                 if n < 3:
-                    ax.text(pos, max(0.035, v * 0.45), f'n{n}', ha='center', va='center',
-                            fontsize=6.5, rotation=90, color='#333333')
+                    ax.text(pos, max(0.035, v * 0.45), f'n={n}', ha='center', va='center',
+                            fontsize=6.2, rotation=90, color='#333333')
         ax.set_title(metric, fontsize=11.5, fontweight='bold', color='#1F3A5F')
+        ax.set_ylabel(metric, fontsize=9.5)
         ax.set_xticks(x)
-        ax.set_xticklabels([short[m] for m in models], fontsize=7.4, rotation=25,
-                           ha='right', rotation_mode='anchor')
+        ax.set_xticklabels([short[m] for m in models], fontsize=7.2)
         ax.set_ylim(0, 0.82)
         ax.grid(axis='y', color='#E8E8E8', lw=0.7)
         ax.set_axisbelow(True)
-    handles = [plt.Rectangle((0, 0), 1, 1, color=COLORS[k]) for k in COLORS]
-    fig.subplots_adjust(left=0.05, right=0.995, top=0.76, bottom=0.17, wspace=0.14)
-    fig.suptitle('Three-task extension | B20-corrected stage results',
+    handles = [plt.Rectangle((0, 0), 1, 1, color=SIX_COLORS[k]) for k in SIX_COLORS]
+    fig.subplots_adjust(left=0.05, right=0.995, top=0.75, bottom=0.15, wspace=0.22)
+    fig.suptitle('Three-task extension | frozen / LoRA / full-FT by split',
                  fontsize=13, fontweight='bold', color='#1F3A5F', y=0.98)
-    fig.text(0.5, 0.915, 'Fine-tuned = LoRA when available, otherwise full FT; hatched = n<3; NA = not complete',
+    fig.text(0.5, 0.91, 'B20-corrected stage means; hatched = n<3; NA = not complete',
              ha='center', va='center', fontsize=10, color='#1F3A5F')
-    fig.legend(handles, [LABELS[k] for k in COLORS], ncol=4, loc='upper center',
-               bbox_to_anchor=(0.5, 0.875), fontsize=9)
-    pd.DataFrame(all_rows).to_csv(OUT / 'extension_three_task_fourbar_data.csv', index=False)
-    save_fig(fig, 'extension_three_task_fourbar')
+    fig.legend(handles, [SIX_LABELS[k] for k in SIX_COLORS], ncol=6, loc='upper center',
+               bbox_to_anchor=(0.5, 0.865), fontsize=8.5)
+    pd.DataFrame(all_rows).to_csv(OUT / 'extension_three_task_sixbar_data.csv', index=False)
+    save_fig(fig, 'extension_three_task_sixbar')
 
 
 def e4_delta_two_tasks():
@@ -667,8 +662,8 @@ def ncrna_legacy_quarantine():
     rows = [
         ['micro strict shuffle A/B', 'COMPLETE', 'Use diagnostic only; keep out of formal means'],
         ['legacy mega / 650M E3 points', 'QUARANTINED', 'Re-test with corrected protocol'],
-        ['1500 / 2000 / 2500 dense budgets', 'REGISTERED', 'Run after main-matrix acceptance'],
-        ['eight-task large-model lanes', 'INCOMPLETE', 'Show NA; never fill from legacy'],
+        ['33M / 148M LoRA random, five budgets', 'COMPLETE', 'Corrected 1000–3000 curves on previous page'],
+        ['650M + full/family + other tasks', 'INCOMPLETE', 'Show NA; never fill from legacy'],
     ]
     table = ax.table(cellText=rows, colLabels=columns, cellLoc='left', loc='center',
                      colWidths=[0.31, 0.18, 0.51])
@@ -840,7 +835,7 @@ def main():
            'Modification | corrected sequence-level 12-label task; m6A index 7', ymax=1.08, chance=0.5)
     resource_mrl(df)
     lr_ncrna_mrl()
-    extension_fourbar()
+    extension_sixbar()
     e4_delta_two_tasks()
     crop_valid_panels()
     ncrna_shuffle_audit()
