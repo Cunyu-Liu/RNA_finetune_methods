@@ -153,6 +153,89 @@ def c5c_all_jobs():
     return c5c_ncrna_jobs() + c5c_other_task_jobs()
 
 
+def lr_tuning_jobs():
+    """Register seed-101 validation-only LR selection runs for full FT."""
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    jobs = []
+    for task in ("noncoding-rna-family", "crispr-off-target", "mrl",
+                 "modification", "secondary-structure", "spliceai",
+                 "degradation", "ssi"):
+        for model in MODELS:
+            for split in ("random", "family"):
+                for lr in ("3e-4", "1e-4", "3e-5", "1e-5"):
+                    base = DEFAULTS[task]["batch"]
+                    if model == "RiNALMo-650M":
+                        batch_size = 1 if task == "secondary-structure" else min(base, 4)
+                    elif model == "RiNALMo-mega":
+                        batch_size = 2 if task == "secondary-structure" else min(base, 8)
+                    else:
+                        batch_size = base
+                    jobs.append(job_for(
+                        task, model, "full", split, 101, lr=lr,
+                        module=runners[task], batch_size=batch_size,
+                        need_gb=8 if model == "RiNALMo-micro" else
+                        16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
+    return jobs
+
+
+def lr_default_jobs():
+    """Register formal full-FT controls using the default LR=3e-4."""
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    jobs = []
+    for task in ("noncoding-rna-family", "crispr-off-target", "mrl",
+                 "modification", "secondary-structure", "spliceai",
+                 "degradation", "ssi"):
+        for model in MODELS:
+            for split in ("random", "family"):
+                for seed in (17, 29, 43):
+                    base = DEFAULTS[task]["batch"]
+                    if model == "RiNALMo-650M":
+                        batch_size = 1 if task == "secondary-structure" else min(base, 4)
+                    elif model == "RiNALMo-mega":
+                        batch_size = 2 if task == "secondary-structure" else min(base, 8)
+                    else:
+                        batch_size = base
+                    jobs.append(job_for(
+                        task, model, "full", split, seed, lr="3e-4",
+                        module=runners[task], batch_size=batch_size,
+                        need_gb=8 if model == "RiNALMo-micro" else
+                        16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
+    return jobs
+
+
+def lr_tuned_jobs(selection):
+    """Build formal full-FT jobs from frozen validation-LR selections."""
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    expected = {(task, model, split)
+                for task in runners for model in MODELS for split in ("random", "family")}
+    selected = {(row["task"], row["model"], row["split"]): row["selected_lr"]
+                for row in selection}
+    if set(selected) != expected or len(selection) != 80:
+        raise ValueError("LR selection must cover exactly 80 task/model/split groups")
+    if set(selected.values()) - {"3e-4", "1e-4", "3e-5", "1e-5"}:
+        raise ValueError("selected LR is outside the registered grid")
+    jobs = []
+    for task, model, split in sorted(expected):
+        for seed in (17, 29, 43):
+            base = DEFAULTS[task]["batch"]
+            if model == "RiNALMo-650M":
+                batch_size = 1 if task == "secondary-structure" else min(base, 4)
+            elif model == "RiNALMo-mega":
+                batch_size = 2 if task == "secondary-structure" else min(base, 8)
+            else:
+                batch_size = base
+            jobs.append(job_for(
+                task, model, "full", split, seed,
+                lr=selected[(task, model, split)], module=runners[task],
+                batch_size=batch_size,
+                need_gb=8 if model == "RiNALMo-micro" else
+                16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
+    return jobs
+
+
 def peft_rank_jobs():
     """Register the complete LoRA-rank/DoRA wave without launching it."""
     runners = dict(TASK_MODULES, spliceai=finetune_spl,
@@ -188,8 +271,10 @@ def main(argv=None):
     parser.add_argument("--lane", choices=("complementary", "all"),
                         default="complementary",
                         help="exclude cells owned by specialized MRL/m6A/rank8 lanes")
-    parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all", "peft-rank"),
+    parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all",
+                                           "peft-rank", "lr-tuning", "lr-default", "lr-tuned"),
                         default="complementary")
+    parser.add_argument("--lr-selection", help="validation-LR selection JSON for --wave lr-tuned")
     args = parser.parse_args(argv)
     if args.wave == "c5c-ncrna":
         jobs = c5c_ncrna_jobs()
@@ -197,6 +282,15 @@ def main(argv=None):
         jobs = c5c_all_jobs()
     elif args.wave == "peft-rank":
         jobs = peft_rank_jobs()
+    elif args.wave == "lr-tuning":
+        jobs = lr_tuning_jobs()
+    elif args.wave == "lr-default":
+        jobs = lr_default_jobs()
+    elif args.wave == "lr-tuned":
+        if not args.lr_selection:
+            parser.error("--wave lr-tuned requires --lr-selection")
+        selection_doc = json.loads(Path(args.lr_selection).read_text())
+        jobs = lr_tuned_jobs(selection_doc["rows"])
     else:
         jobs = []
         for model in args.models.split(","):
