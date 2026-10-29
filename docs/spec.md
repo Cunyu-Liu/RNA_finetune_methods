@@ -10,6 +10,16 @@
 > **进度注记 2026-09-26 下午（交接文档全量同步 + 后续交接工作启动）**：本 session 完成「交接文档 ↔ 服务器真实态」全量对账并同步回填（spec v2.0 / tasks v3.12 / checklist v1.9 / 新增 STATUS_SNAPSHOT_20260926.md；此前 tasks.md 多处未勾选但实际已完成）。**服务器事实核验**（以 ledger + git + status 产物为准）：HEAD bb37a29；ledger **1149 行**（done 1145 / cancelled 2 / pending 2）；已实现任务 **4 个**（noncoding-rna-family / mrl / modification(m6A) / secondary-structure）；已接入模型 **11 个**（RiNALMo micro/mega/650M + RNA-FM/ERNIE-RNA/SpliceBERT + 受控 RNA-Sc 1M/10M/30M/100M/650M）；GPU 实测 **8 卡**（0-5 为常规 A100-40GB，torch 视图 39.49GiB；6/7 为 MIG 1g.5gb，torch 视图仅 4.75GiB——`total<20GiB` 过滤为物理正确，非策略 gate）；**当前 rna-ft-eval 无在跑任务、显存空闲**。据此启动后续交接工作四条线（详 §10.6）。
 > **进度注记 2026-09-19**：Day 5 收官——per-base 矩阵 26 组 0 崩溃全量（冻结口径不变）；E2 四面板；预印本 v0.5-core。执行状态详 §10 + STATUS_SNAPSHOT_20260919.md。本文件冻结口径（定位/切分单元表/统计计划）自 v1.4 起未变更。
 
+> 版本：2.17（2026-10-29 修订二十七【C5c micro/mega 五档与29页阶段交付】：新增 §10.24。固定 ncRNA random×LoRA 的33M/148M五档已完成范围、当前29页PPT基底、385行best-val源包和后续 micro full-FT/650M/等价线交接；不得把该局部闭合误写为八任务或完整C5c完成。）
+> 版本：2.16（2026-10-28 修订二十六【ncRNA 训练顺序伪影隔离】：新增 §10.23。旧 ncRNA family 结果所用 pre-shuffle runner 与标签成块输入形成高风险管理缺陷；在严格同 runner/max_len A/B 验收期间，旧 family 坍缩、E3 崩溃带、规模/等价线及其派生结论全部暂停科学判读，保留法证但不得进入 PPT 或预印本结论。）
+> 版本：2.15（2026-10-28 修订二十五【八任务逐结论全覆盖复核】：新增 §10.22。将用户本轮要求逐条映射到结论①a/②/③/④/⑤/⑤b/⑤c/⑤d，明确八任务覆盖、官方模型优先、真实缺口、图文匹配、原数据归档与代码同步门禁；已完成任务地图、八任务 seed17 机制图和 micro rank8 六格只复用不重复。）
+> 版本：2.14（2026-10-28 修订二十四【导师汇报续接与防返工总账】：新增 §10.21。以 28 页阶段修订版为当前 PPT 基底；任务地图、8 任务 seed17 机制图和 micro rank8 六格不得重复执行。补测按主矩阵→LR/rank→C5c/C5d→同源等价线推进，所有图只接受三轮对账后的正式结果。）
+> 版本：2.13（2026-10-28 修订二十三【MRL LoRA/full artifact 迁移与复用】：新增 §10.20.19。以双 registry 区分物理路径冲突与真实缺口；完成 41 格哈希迁移、12 格既有链接和 1 格 teams 原生结果的三轮审计，54 格 complete 可复用，只有 6 个 650M full 格仍 runnable。）
+> 版本：2.12（2026-10-28 修订二十二【best-val 异常种子与早停敏感性边界】：新增 §10.20.18。异常性能先对账 plateau/best checkpoint/test，再判断评测错误；不得事后修改 bestval_v1 停止规则或混用额外诊断臂。）
+> 版本：2.11（2026-10-27 修订二十一【通用单格辅助队列】：新增 §10.20.17，将单格辅助 lane 的 RID 唯一性、主 busy child、显存预算和 proof 防重规则扩展到 complementary 官方模型矩阵；不改变任何任务协议或指标。）
+> 版本：2.10（2026-10-27 修订二十【SSI 同序列记录与记录级诊断身份】：冻结 random SSI 的 sequence-hash 分组 holdout、同序列不同标签保留、official test 记录级 token ID 与逐记录 MCRMSE；不得去重或折叠不同标签。）
+> 版本：2.9（2026-10-27 修订十九【per-base 并行源格与诊断接力】：在主单 worker 队列外增加单格辅助 lane 的唯一 RID、父进程占用、显存余量和 proof 防重合同；科学指标与验收口径不变。）
+> 版本：2.7（2026-10-26 修订十七【导师汇报扩展与证据修复】：新增 §10.15，冻结 8 任务真实粒度分类、validation 收敛门禁、结论①-⑤与机制图的补测矩阵及 PPT 证据边界。用户已确认按最终注册表执行，不强行凑成每类两个。）
 > 版本：2.6（2026-10-24 修订十六【科学完整性复审 + B20/E6 纠正协议】：新增 §10.14——实测确认三类新 per-base 任务 special-token 标签错位、official E6 未掩码标签泄漏及调度/旧入口风险；冻结受影响旧结论，规定 `_b20fix`/`_mlm15fix` 隔离重跑、8 任务唯一指标注册表、validation 平台验收和恢复门禁。§1-§9 冻结科学问题不变，纠正属实现错误修复与执行协议澄清，不作事后结果包装。）
 > 版本：2.5（2026-10-23 修订十五【新集群 RTX5090 迁移 + 8 任务扩展登记】：新增 §10.13（硬件换档复现基准 / 8 任务矩阵执行扩展 / 工程修复链 / 执行状态 / GitHub·teams 双通道 / SSH 端口纪律第九条 / HydraRNA 待传）。执行状态同步，§1-§9 冻结口径未变——8 任务扩展属 §10.6 P 线执行扩展（用户 10-18 拍板），非 §1-§9 设计变更。）
 > 版本：2.4（2026-10-07 修订十四【P4 v1.0 完成 + 假完成第三层 + E6 导出器根因】：新增 §10.9（预印本 v1.0 六幕重写交付 / 第 3 遍对账 12+ 处修正 / q_fill smoke 假 skip 根治 / E6 导出器 m6A-start 混写根因修复 / M5 第 2 轮无触发 / 纪律第四条）。前一版本 2.3（2026-10-06 修订十三【假完成根治 + 审计纠错 + 反思成文】：新增顶部进度注记 1006；§10.5 执行期发现登记保持；**新增 §10.8 项目反思与叙事链改进登记**（叙事主线六幕重构方案 / 证据强度审计 / 系统性问题 P1-P8 / 流程防再错三条新纪律：need 标定同 bs 语境、审计器口径字段级对齐、PPT 数字程序化）。工程修复链：rc=75 协议（1006b）/ grid_audit 覆盖规则（1006d）/ NB bs8 协议对齐（1006e-f）/ final_close_monitor 收口自动化（1006c）。执行状态同步，§1-§9 冻结口径未变。）
@@ -489,29 +499,149 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 **⑩ AIDO 协作式独占窗口**：`exclusive_aido` 以原子标志协调 corrected/E6/CRISPR 在新 cell 前等待，当前 child 自然结束后执行 AIDO MRL s43，finally 清标志并恢复队列。排空判据允许等待 parent 的小型 CUDA context，但要求实际训练进程清空且总显存≤512MiB。完成必须 `finetune_mrl` 的 PEARSON_R 双证 + `audit_1016=0`；未达前仍为在途，不得写完成。
 
-### 10.15 导师汇报八任务扩展与验收计划（2026-10-27）
+### 10.15 导师汇报扩展与证据修复计划（2026-10-26，非冻结执行登记）
 
-- 统一 random/family、17/29/43、frozen/LoRA/full，官方模型优先；结论①–⑤、同源 small-full(n) vs large-LoRA(m)、三状态 t-SNE、C5b/C5c/C5d 均须逐格 result+ledger 回源。C5c 固定补 {1500,2000,2500} 与 RiNALMo micro/mega/giga。
-- 先修协议再跑图：validation 不参与 test，早停不用 test；历史 fixed-epoch、smoke、cancelled/invalid 不与新正式臂混均值。PPT 原第3页后插任务地图，结论①a后插同构任务扩展图；未验收数值只标在测。
+> 依据：用户本轮逐页批注及实验扩展要求。先修实现、冻结矩阵、恢复真实 GPU 执行，再刷新图和 PPT。历史 fixed-epoch 或 legacy 数值只作背景对照，不能当作本轮完成证明。用户确认：8 任务介绍采用本节最终注册表的真实粒度，不为了形式上的“每类两个”改变任务定义。
 
-### 10.16 BEACON modification 官方任务语义
+**① 8 任务最终分类与统一比较轴**：序列级分类 = ncRNA 家族分类（ACC）+ CRISPR 脱靶二分类（PR-AUC）；序列级回归 = MRL（Pearson r）；碱基级分类 = m6A（AUC）+ SpliceAI 三分类（macro-F1）+ 二级结构（F1）；碱基级回归 = mRNA 降解（PCC，MCRMSE 辅助）+ 结构得分插补 SSI（PCC，MCRMSE 辅助）。§10.13 中“4 类×2”和“CRISPR 备选连续”是历史未定稿，均由 §10.14 及本节取代。所有扩展统一 random/family 两种切分、17/29/43 正式种子、frozen/LoRA/full 三策略，并优先官方模型；RNA-Sc 自训系列只用于同源受控等价线和后续补充对照。
 
-- `modification` 是 101nt 序列级 12 标签 BCE，m6A=index 7，m6A AUC 主指标、12 类 mean AUC 辅助；不是 per-base 位点预测。真实 8 任务为序列级分类3、序列级回归1、碱基级分类2、碱基级回归2。
-- 527 条旧 modification 结果与 29 条旧 modification-E6 记录保持 invalid；新结果强制 `_seqmlfix`。不得恢复“逐碱基免疫”或 granularity 因果结论。真正 per-base m6A 须另找数据源并独立注册。
+**② P0：真实 validation 收敛与八任务验收器**：当前代码 `valplateau.py` 读取 `epoch_train_losses`，与 §10.14 的 validation-loss 合同不符；在远程新批次启动前必须改为独立 held-out validation 子集、每 epoch 持久化 `epoch_val_losses`、source=validation，并把该证据与 ledger done、result.json、tokenizer/CUDA smoke 一起纳入验收。SpliceAI、degradation、SSI 的官方 train/test 数据必须先从 train 中确定性划分 validation，不能拿 test 调参、选 checkpoint 或判断停止。新协议 RID 加 `_valplateau_v2`；已有 fixed-epoch 和 train-loss plateau 均不能冒充 v2。验收器覆盖全部 8 任务及 CRISPR，不得以 342 格三任务子验收替代全项目验收。
 
-### 10.17 `valplateau_v2` 与 `bestval_v1`
+**③ 八任务结论图与任务扩展**：结论①a 后增加与前三张同构的四柱图（frozen random/family、微调 random/family），按任务分别给出主指标，禁止跨指标共用一个未经说明的纵轴。结论②给出 8 任务 default-LR 与 tuned-LR 的配对差值及真实 LR；先在 seed101 验证集选 LR，再以三种子正式臂检验，禁止全量网格代替正式复测。结论③扩展 LoRA/DoRA/full/rank 对照至 8 任务，并优先复测 RiNALMo-micro rank8 的同协议值，检查 metric、split、checkpoint、LR、数据代际和测评实现，而不是因“太低”定向追求高分。
 
-- 旧 val2 诊断出现过拟合的格标 cancelled，保留曲线，不强训到末轮。`bestval_v1` 固定 patience=3、min_delta=.02、abs_floor=.008；实质改善时保存 backbone+head，停止后恢复最佳 checkpoint 再评估。
-- best-val 与 plateau 使用不同 RID/目录/报告口径；`--convergence-mode bestval` 必须搭配 `--converge`，fixed epoch 不得隐式走 best-val。split evidence 的 protocol 与实际选择协议一致。
+**④ 同源数据量等价线**：只用 RNA-Sc 同配方规模谱与 RiNALMo 官方 micro/mega/giga 两个家族分面；每任务每家族绘制 small-full(n) 与 large-LoRA(m) 两条学习曲线，横轴为标注量、纵轴为同任务主指标，closest 等价点和误差带以逐种子配对结果计算。必须直接回答“小模型 full 在 n 条数据时达到大模型 LoRA 在 m 条数据的表现”；不在曲线覆盖区插值时标“未观测到等价点”，不得强行制造交点。训练/评估预算一致，结论限于被检验模型、任务、split 与 LR 协议。旧 33M/30M 名称不混用。
 
-### 10.18 调度证明与机制诊断
+**⑤ 结论⑤、机制与异常复核**：
 
-- 调度器按唯一 job key/RID/result_dir、显存预算与 model/cell 锁派发；best.ckpt 须真实 tensor state，result/plateau/ledger 的曲线、best 元组、checkpoint、runtime 一致。rc=75 是跳过，rc=0 无完整证明仍失败；jobs registry 不是完成清单。
-- ncRNA 同一 test manifest 比较 pre/Post-LoRA/Post-full，保存 CLS、head.pool、logits、熵、margin、混淆矩阵与 length/GC/family。post 恢复 best-val 后逐 tensor 核验；pre 参考头 seed=201，其 ACC 不作 zero-shot。联合 t-SNE 一次拟合，silhouette 用原始高维表示，不作因果证明。
-- 当前只完成工程验收与专用 lane 启动；8 任务、C2–C5 和最终图仍按实际 result 完成，不能用 smoke 或计划数替代。
+| 工作包 | 预注册问题与最小范围 | 通过条件 |
+|---|---|---|
+| C5 任务效应 | 8 任务补同协议学习曲线；MRL/m6A 扩展其他可接入官方模型，检查“未见同类坍缩”是否跨模型成立 | 模型×任务×策略×split×种子完整，主指标/数据代际一致 |
+| ncRNA 坍缩归因 | 核查类别/家族映射、训练/测试标签覆盖、随机与家族 split 的基线、预测熵/混淆矩阵、head 与 backbone 更新、序列长度/GC 混杂；random-init 与 frozen 为对照 | 先排除实现/评测问题，再区分表征、分类头和数据结构解释；不预先接受“分类头坍缩” |
+| 机制 t-SNE | 8 任务×random/family×pre/Post-LoRA/Post-full；同一样本同一坐标拟合，点按真实类别/家族着色，标集合/样本数/模型/随机种子；RiNALMo 以 CLS 表征为参照，同时保留预测头前 embedding，必要时追加 head 后 logit 图 | 表征抽取与 GPU 证据齐全，统一 perplexity/random_state；t-SNE 仅作可视化，轮廓系数和 ACC 另列，不把投影距离当因果证明 |
+| C5d 大模型 | 逐 run 核查 mega/650M 缺点的 ledger、result、失败原因和 RIDs；补缺失档，不能通过删点或连线掩盖 | 每个显示点均可回溯源 result，pending 单独标记 |
+| C5c 标注预算 | 在 1000–3000 之间固定 {1500, 2000, 2500} 三个补充档，8 任务补齐；RiNALMo micro、mega（官方约148M，用户所称180M档）、giga（约650M）分别复测 | 各档同 split 同采样协议，逐种子结果+95% CI，不把固定 epoch 当收敛 |
+| C5b 资源 | ERNIE-RNA 的 LoRA/full 复测并扩展到 8 任务；时间×性能图按任务分面，统一模型、split、n、batch、GPU 和停止协议 | wall/peak/checkpoint 三证，实测值直接关联 run_id，不用跨协议倍数概括 |
 
-### 10.19 C5c dense 数据档与全任务波次
+**⑥ 执行顺序与门禁**：远程 CUDA、代码、数据与当前队列盘点 → 修复 validation/导出/验收并跑 focused tests → 隔离冲突协议且保留证据 → 官方模型的小模型高价值缺口（micro rank8、MRL/m6A、ncRNA 诊断、表征抽取）与 corrected 任务并行 → mega/giga 和数据量加密 → 自训同源等价线 → 三轮 ledger/result 对账 → 刷新 8 任务图和 PPT。单卡以共享卡锁和按 batch 实测 need 的多 worker 填充显存，禁止无锁重复启动；只在一个连接内执行远程检查，避免高频 SSH。所有新训练均保存配置、命令、git SHA、CUDA/GPU、随机种子、逐 epoch train/val、停止原因、资源与结果路径。每批次代码验收后及时提交 GitHub；代码留 `/home/cunyuliu/rna-ft-eval`，大型数据/权重/artifacts 留 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`。
 
-- `prepare_e3_dense.py` 已生成 28 个 {10,100,1000,1500,2000,2500,3000}×4 seeds 的 ncRNA family 子集；同 seed 簇顺序固定、整簇累加、档位嵌套，旧 E3 文件不改。dense 文件/RID 独立，训练后不做第二次行级抽样，result 保留请求档位与实际行数。
-- C5c 注册总数为 **2016 格**：8 任务×3 个 RiNALMo 档×LoRA/full×双 split×7 数据档×3 seeds；ncRNA family dense 126 格，其余任务按各自采样协议，全量点复用主矩阵。
-- 子集和 dry-run 唯一性已通过并备份 `/teams`；当前仍是待执行矩阵。调度器必须显式传 CRISPR/degradation/SSI 的 `--task`，MRL/SSP evidence protocol 与 best-val 一致。
+**⑦ PPT 边界**：在原第 3 页后插入任务地图；结论①a 后插入任务扩展页，其他既有页面不重排、不改用户手调样式。删除已执行的批注框，修正与图不匹配或证据过强的文字，图注说明样本、模型、策略、split、指标及前后页关系。PPT 正文统一 Microsoft YaHei、1.5 倍行距，表格遵循既定紧凑排版。未经上述门禁的 8 任务数值不得进入最终结论页；阶段性交付可包含“待复核/在测”的明确标记，不冒充全量完成。
+
+### 10.16 BEACON modification 任务语义纠错（2026-10-27，覆盖相关旧口径）
+
+> 直接证据：官方 BEACON 论文 Modification Prediction 与 `terry-r123/RNABenchmark/downstream/train_modification.py`；远程 parquet 逐条核查为 101nt sequence + 12 维 label。官方实现为 sequence-level multi-label，12 维 BCE，逐修饰类型 AUC；m6A 对应标签索引 7，另有 mean AUC。
+
+**① 正确的任务分类**：本项目的 `modification` 是**序列级多标签分类**，不是 per-base 任务，也不是单独的 m6A 位点预测。8 任务因此按实际输出粒度为：序列级分类 3（ncRNA、CRISPR、modification）、序列级回归 1（MRL）、碱基级分类 2（SpliceAI、SSP）、碱基级回归 2（degradation、SSI）。此前的 2+1+3+2 注册表和“m6A per-base 免疫”均不是官方任务语义，予以废止。后续若需要真正 per-base m6A，必须另找数据源、独立注册任务与 RID，不能拿本文件替代。
+
+**② 实现与隔离**：旧 `finetune_base` 将 12 维标签误填到 101 个碱基位置，属于任务实现错误，不是 tokenizer 单纯偏移。527 条历史 modification done 行已标 invalid 并保留 quarantine manifest；历史 m6A 数值不得支撑“免疫”“家族切分稳定”“PEFT/rank 稳定”“E3 数据量不敏感”“E6-v2 per-base 起点差异”等结论。传统 per-base baseline 与相应 E6 m6A-start 也须按新任务语义重审，不能借 controlled 结果掩盖该问题。
+
+**③ 新实现与验收**：`finetune_base` 已改为序列级 12 维多标签 head + BCE；m6A AUC 用索引 7，mean AUC 为辅助；validation 使用真实 held-out 集，训练/验证/测试三方无重叠，runtime 与 convergence 证据保留。新正式结果使用 `_seqmlfix` 独立 RID；`_b20fix` smoke 仅作工程验证，不作为科学结果。序列级多标签允许单碱基/3-mer 模型时，仍需 tokenizer 无 [UNK] 和输入语义审查，不再用 per-base token 对齐当作通过条件。
+
+**④ 科学影响**：m6A 不再用于证明“逐碱基任务不崩/免疫”。所有相关 PPT、preprint、图集、决策树、统计检验与旧结论须冻结，待 `_seqmlfix` 的 3 seeds × 双 split × 三策略 × 官方模型复测后重新判读。当前只确认实现与 smoke 验证通过，不宣称 m6A 已复测完成或已恢复旧结论。MRL、SpliceAI、SSP、degradation 与 controlled causal E6 的证据不因此自动失效，但各自仍按对应验收协议执行。
+
+### 10.17 过拟合分支与 best-val 协议（2026-10-27，执行登记）
+
+1. rank8/部分 MRL 的 val2 长训中观察到 train loss 持续下降、validation 早期最低后回升，不能把“训练到末轮”当作泛化最优，也不能把未达 plateau 的结果强行标为正式完成。诊断批次均保留曲线，不作为正式均值。
+2. 对这类格新增独立 `bestval_v1` 分支：validation 实质改善时保存最佳 backbone+head；连续 `patience=3` 个 epoch 改善不超过 `max(best×0.02,0.008)` 时 early-stop，恢复最佳 checkpoint 后只在 test 评估一次。best-val 是训练选择协议，不是 plateau 收敛的替代包装；结果须带 best_epoch、stale_epochs、stop_reason、曲线、best checkpoint 路径与 runtime。
+3. `bestval_v1` 与 `valplateau_v2` 使用不同 RID、结果目录和报告口径，不与 legacy/fixed-epoch 混均值。需要比较时须同模型、任务、split、seed、训练预算和采样协议成套复跑；旧 cancelled/failed 格不可复用为完成。early-stop 条件满足可标该协议收敛，未满足不得标完成。
+4. 对长时间无改善的旧 val2 格可停止并保留 RUNNING/诊断证据，切换 bestval 独立分支；不为了显存占用而无限延长已明确过拟合的格。所有新 bestval 也须真实 CUDA、tokenizer/split 证据和 result+ledger+checkpoint 验收，不允许只记录“best epoch 数字”而没有恢复 checkpoint。
+
+### 10.18 best-val、统一调度与机制诊断验收（2026-10-27）
+
+1. **checkpoint 证明**：`best.ckpt` 必须以 `weights_only=True` 可读，包含非空 backbone/head tensor state；`epoch/best_epoch/best_val` 与 result 一致。result、plateau、ledger 的曲线、停止原因、best 元组和 checkpoint 引用必须一致，CUDA/tokenizer、`acceptance_eligible` 与 split evidence 不可缺失。
+2. **执行边界**：统一调度器只接受显式 jobs registry，按唯一 job key/RID/result_dir、显存预算、model/cell 生命周期锁执行；rc=75 跳过而非完成，rc=0 但证明不全仍失败。registry 只描述待执行矩阵，不能充当科学完成清单。
+3. **modification-E6**：旧 per-base 训练入口禁用；新臂为序列级 12 标签 BCE，强制 `_seqmlfix` 与独立 validation。遗忘评价继续使用固定 15% masked-position NLL，任务收敛协议与 `forgetting_protocol` 分列。29 条旧记录保持 invalid。
+4. **ncRNA 诊断**：同一 test manifest 比较 pre/Post-LoRA/Post-full；post 恢复 best-val 后导出 CLS、head.pool、logits、预测熵、margin、混淆矩阵及 length/GC/family。pre 的随机参考头 seed=201，仅用于参考，其 ACC 不是 zero-shot 能力。联合 t-SNE 只拟合一次，silhouette 用原始高维 embedding；图只作描述性诊断。
+5. **当前验收事实**：远程 151 项 focused tests、本地 196 项全仓 tests 通过；ncRNA LoRA、modification LoRA、MRL full 和 modification-E6 LoRA 的真实 CUDA smoke 通过，均 `acceptance_eligible=false`。rank8 random 已有 2 个、MRL random LoRA 已有 3 个正式 best-val 结果通过三证，但仍不是完整矩阵；正式结果与图表须逐格核验。
+
+### 10.19 C5c dense 数据档与全任务波次（2026-10-27）
+
+1. **整簇嵌套采样**：ncRNA family 使用 `prepare_e3_dense.py` 生成 {10,100,1000,1500,2000,2500,3000} × seeds 17/29/43/101 的 28 个子集。每个 seed 只排列一次簇顺序，逐档整簇累加；不截断簇内行，较小档是较大档的子集。旧 E3 文件保持不变。
+2. **训练与证据**：dense 子集文件名和 RID 均带 `_dense`；`finetune_one --dense-clusters` 仅用于 family 且要求 n_train>0，读取子集后不再做第二次行级 sampling。result 同时保存 `requested_n_train` 与实际 `n_train`，绘图不得把整簇 overshoot 隐去。
+3. **波次范围**：C5c 共 **2016 格 = 8 任务 × 3 个 RiNALMo 档 × LoRA/full × random/family × 7 数据档 × 3 正式 seeds**。ncRNA family 的 126 格使用 dense，其余任务使用各自既定 seed 采样。全量点复用主矩阵，不重复训练；giga full/SSP 等按任务限制 batch 和显存预算。
+4. **执行门禁**：28 个子集已逐档验证并备份 `/teams/data/e3_subsets_dense/`；2016 格 dry-run 唯一性通过，但尚未形成结果。主矩阵和资源窗口优先，C5c 队列不得与专用 lane 重格。调度器必须显式传 `--task`，MRL/SSP 的 split-evidence protocol 与 best-val 一致。
+
+### 10.20 七任务机制诊断范式与 SSP pair 对齐门禁（2026-10-27）
+
+1. **诊断必须服从真实输出语义**：CRISPR 使用序列级二分类概率与 PR-AUC；MRL 保存连续预测、残差和 Pearson r，不能对连续标签直接套分类 silhouette；modification 保存独立 `[N,12]` logits/sigmoid/标签，m6A 为索引 7，不能把 12 标签当 softmax 单分类。SpliceAI 使用监督 mask 内的 per-base hidden 与 TokenHead 隐层；degradation/SSI 使用同一 per-base 表示并保存逐位置预测与残差。
+2. **SSP 是 pair-level 实现**：当前正式 runner 使用 `PairHead` 和上三角 `(i,j)` 碱基对分数，主指标为 pair-level precision/recall/F1。任务注册表和主指标不变，但机制诊断必须使用 `(sequence_id,i,j)` 的 pair features、gold、score、pair distance 与各状态独立 validation threshold；不得套用 SpliceAI 的 per-base 三分类 head 或混淆矩阵。
+3. **SSP token/pair 对齐修复**：2026-10-27 代码核查发现旧 `finetune_ssp` 将原始碱基下标直接用于 tokenizer 输出；对自动加入 CLS/EOS 的官方 tokenizer，这会把 pair target 与 hidden 错位。新实现必须验证全长单碱基映射、排除 special/PAD、保证确定性右截断，并将每个碱基对 `(i,j)` 映射为 `(base_token_pos[i],base_token_pos[j])` 后再计算 loss 和提取分数。不得只修评估而保留训练错位。
+4. **隔离与恢复**：新 SSP 运行统一使用 `_pairalign` RID，旧 RID 不覆盖、不混均值。互补 registry 中 90 个 SSP 格在修复验收前不得进入正式训练或图表；已完成旧格按 tokenizer 和 artifact 逐项盘点、备份后隔离，不能只凭模型名批量删除。RNA-Sc 无特殊 token 的历史结果也须保留对齐证据后再判断可否作为 legacy 对照。修复须通过 unit tests、真实 tokenizer 对齐和真实 CUDA best-val smoke；smoke `acceptance_eligible=false`，通过后才恢复 3 seeds 正式格。
+5. **机制工程边界**：采用共享 manifest/best-val/联合投影核心，加 sequence/token/pair 三类 adapter，避免七份训练循环漂移。三状态必须在同一 state-independent manifest 上提取；full-test 指标与 t-SNE 采样指标分列。SSP 仅保存抽样 pair features，禁止落盘完整 `L×L×D`。CRISPR family 是 pair-sequence cluster，不是 guide-disjoint；modification 是 window cluster proxy；SpliceAI 不是 gene/chromosome split；degradation family test 不是 leaderboard blind test。
+6. **绘图与推断**：`plot_mechanism` 需支持 sequence/token/pair representation、离散或连续着色和可选 silhouette。连续回归不计算分类 silhouette；multi-label 不伪造单标签；token/pair 坐标必须保留 base/pair ID。pre 的 backbone 是真实预训练表示，但 pre 预测来自 seed=201 的随机参考头，不得写成 zero-shot 任务性能。
+7. **优先复用 checkpoint**：其余任务机制诊断优先读取已通过 proof 的 best-val checkpoint，不重复训练。post 必须在完整 test 上复算主指标并与源 result 对账，再从同一测试集按与预测无关的确定性规则抽样做三状态联合投影；full-test 指标和 sampled-manifest 指标分列。MRL 先实施该路径，保存 y_true/y_pred/residual，连续标签不计算分类 silhouette。若源格缺失或 full-test 对账失败，不得用重训或抽样指标掩盖。
+8. **modification 多标签对账**：保存完整 `[N,12]` labels/logits/sigmoid probabilities，m6A 固定为索引 7。逐标签同时保存 ROC-AUC、positive/negative support 和 valid mask；无双边支持的标签 AUC 记为 null，不伪造 0.5 为真实测量。为复现源 result，另计算 source-compatible 数组（无效标签以 0.5 补齐）及其 mean AUC；同时单列 valid-only mean AUC，二者不得混写。t-SNE 仅以 m6A 标签视图着色，不把 12 标签转成单任务分类。
+9. **CRISPR 不平衡诊断**：主指标为 PR-AUC，ROC-AUC 为辅；0.5 阈值 confusion 仅作辅助。post 必须在完整 test 上复算并与源 result 对账。t-SNE 样本在看任何状态预测前，按 sequence hash 选择至多 256 个正例，再以负例 hash 顺序补足 1024；若正例不足则全部纳入。该抽样用于可视化，属于正例富集，不得据此计算或展示 sampled PR-AUC/患病率代替 full-test。family 仅称 pair-sequence cluster split，不宣称 guide-disjoint。
+10. **per-base split 证据边界**：SpliceAI、degradation、SSI 的当前 runner 均从 train 内重新 holdout validation，不能写成 official validation；部分 best-val result 没有 `data_evidence` 字段。机制诊断必须独立重建 test 和 split，记录实际 generator、source hash、序列/cluster 零重叠和缺失源证据，不得伪造 `data_evidence` 一致性。SpliceAI family 是 100nt window sequence cluster，不是 gene/chromosome split；degradation family test 仍不是 leaderboard blind test。post 仍以源 checkpoint 的 full-test macro-F1/PCC 对账。
+11. **per-base best-val 源格波次**：SpliceAI、SSP、degradation、SSI 各建立 RiNALMo-micro、seed17、LoRA/full、random/family 共 16 格，使用 `bestval_v1` 和当前 B20/SSP pairalign 代码。独立 state-dir=`mechanism_source_perbase`，单 worker、每格预算 8GiB；其他既有队列继续运行，显存不足等待，不双开同 RID。旧 valplateau_v2、legacy 和 smoke 均不算源格。16/16 result/plateau/checkpoint/runtime 验收后才进入对应机制图；C5c 2016 格仍未启动。
+12. **SpliceAI token 诊断**：主图使用 B20 监督 mask 内有效碱基位置的 per-base hidden，不把 CLS 当作剪接位点表示。类别语义固定为 `0=negative、1=acceptor、2=donor`。源 result 的主对账指标为 `MACRO_F1/value` 与 `MICRO_F1/value2`；ROC-AUC 仅作 full-test 辅助诊断，不与 `value2` 对账，也不得写成源 AUC。完整 test 同时保存 base_position、token_position、label、三分类 logits/probabilities；full-test 哈希绑定 task、max_len、B20 版本、sequence/base/token/label，不用 sampled 指标代替 full-test。可视化在预测前按 token_id 对 negative/acceptor/donor 各类确定性选择至多 512 个位置，三状态共享相同 token_id；类别均衡仅用于显示，不计算 sampled macro-F1、ROC-AUC 或患病率。
+13. **per-base manifest 与源格准入**：SpliceAI、SSP、degradation/SSI 的 post 必须先从 16 格 registry 唯一定位 RID，要求 `proof_state=complete`，且 registry `result_dir` 与 ledger `out_dir` 的 realpath 一致，再恢复 checkpoint。三状态须共享 manifest hash、样本 ID、base/token（或 pair）位置和标签；缺失或篡改 manifest、source proof、full-test 对账任一失败即中止。失败后的未完成 diagnostic/predictions/embeddings/aligned 可清理重试；已有成功产物禁止覆盖或删除。
+14. **源格执行修复**：SpliceAI/Regbase 在 test result 已写出后曾因 `metric/value` 重复关键字导致 ledger 未完成，修复 runner 后只允许凭原 result、plateau、best.ckpt 和 runtime 补写 ledger，不重训。SSP registry 不得向 `finetune_ssp` 传不支持的 `--out-suffix _pairalign`；`_pairalign` 已由 runner 的 `_run_extra` 固定写入 RID。修改 registry 必须归档原文件，并在旧 parent 安全退出或切换后再进入 SSP，禁止带着旧内存参数继续执行。
+15. **单格辅助 lane 并行门禁**：主 `mechanism_source_perbase` 仍保持单 worker。仅在主 parent 已被非目标活动子进程占用时，才可从原 16 格 registry 原样抽取尚未完成的目标格，建立单格辅助 registry 和独立 state-dir。启动前必须同时确认：目标 `proof_state=runnable`、目标及同名 lane 无活动进程、主 parent/子进程真实存活、单格 dry-run 唯一、按每格 8GiB 预算后仍保留至少 1GiB 安全余量。其他模型的非同 RID 任务不算冲突，但必须计入实时显存。主 parent 恢复派发后须凭 ledger running/done 与完整 proof 跳过辅助 lane 格，禁止双开或覆盖结果。辅助 lane 只改变并行调度，不改变数据、RID、训练参数、收敛协议或验收标准。
+16. **SSI random 同序列记录合同**：official SSI train=14,049、test=3,095；train/test 内分别有 15/2 条同序列额外记录，24 个重复序列组均存在不同标签，禁止 dedup 或只保留首条。train holdout 必须以 canonical sequence hash 为 cluster 整组切分，使同序列不同标签记录永不跨 train/val；official test 全量保留。当前 seed17 重建为 train/val/test=12,645/1,404/3,095，train+val=14,049，test 唯一序列 3,093，三侧 sequence-hash 零重叠。诊断以 `sequence_hash:occurrence` 作为记录级 ID，token ID 必须唯一，MCRMSE 按记录等权，PCC 仍拼接全部有效 token。source 与 reconstructed `data_evidence` 必须逐字段一致；post 还必须满足 `source_data_evidence_present=true`、`source_data_evidence_note=matched_reconstructed_sequence_grouped_split` 和记录级 identity proof，缺任何一项均拒绝三状态对齐，不能仅凭 full-test 指标相同复用旧 checkpoint。degradation 和 SSI family 的既有 manifest/hash 不得因此改变。首次 lane6/7 的 overlap 失败发生在训练前且不得写成结果；修复提交为 `5862cd7`，强制证据门禁补充提交为 `362a0f3`。
+17. **通用单格辅助 lane**：辅助启动器可从 complementary 或其他正式 registry 原样抽取一个 runnable 格，但不得修改命令、RID、训练参数或验收标准。仅当主 busy child 真实存在且非僵尸时启动，目标 `proof_state=runnable`，不存在同目标或同 lane 的 `expansion_queue.py` 进程，单格 dry-run 唯一，并保证实时可用显存大于该格 `need_gb+1GiB`。辅助 registry/state-dir 必须独立且保留原始记录；主队列恢复后凭 ledger/proof 跳过，不得以辅助 lane 启动数充当完成数。通用 launcher 的自身命令行不得被误判为同 lane 进程，进程匹配必须限定真实 runner/queue。
+18. **best-val 异常种子与早停敏感性**：同一模型/任务/split 的正式种子出现明显性能差异时，先逐格核对 `plateau.json`、`best.ckpt`、best_val/best_epoch、validation/train 曲线、test 样本数和主指标，不得直接归因于模型坍缩或评测错误。`bestval_v1` 的 `min_delta=0.02`、`abs_floor=0.008`、`patience=3` 是该批结果的既定合同：即使后续 epoch 出现低于阈值的 validation 改善，也必须保留原 best_epoch 和停止原因，不得事后重选 checkpoint 或修改结果。正式三种子补齐前，不用单种子高低点写跨模型结论。若需检验早停敏感性，必须另设明确标记的诊断协议和 RID，预先冻结停止规则，与原 bestval_v1 分表展示，绝不混入正式均值或冒充同协议复测。
+19. **MRL LoRA/full artifact 物理迁移与复用**：`/root/rnaft/artifacts` 与 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts` 是不同物理位置；teams registry 下的 `ledger done but result_dir missing` 必须先与 root registry 对照，不能直接判为科学结果缺失或重训。2026-10-28 对 60 格 MRL LoRA/full 矩阵完成双 registry 审计：54 格 complete（LoRA 30、full 24），6 格 runnable，且六个缺口仅为 RiNALMo-650M full 的双 split 三种子。54 个 complete 中，41 格由 root 逐文件复制到 teams，12 格原已是 root→teams symlink，1 格为 teams 原生完成；实际迁移 31,252,133,777 bytes。复制后先重算逐文件 SHA256 并要求 teams `proof_state=complete`，通过后才移除 root 实体目录并建立绝对 symlink；运行格和 runnable 格不得进入复制或删除流程。独立三轮审计分别验证 60 格唯一对账、53 个 root symlink 与 82 项 result/checkpoint 哈希、teams 54 complete+6 runnable 及全部 CUDA/acceptance proof。迁移 manifest 与 audit 保存于 `/teams/.../status/migrations/mrl_lora_full_root_to_teams_20261028.json` 及同名 `.audit.json`；这些证明只确认结果可复用，不把尚缺的 650M full 写成完成，也不自动生成跨模型科学结论。
+
+### 10.21 2026-10-28 导师汇报续接与防返工执行总账
+
+1. **现行 PPT 基底**：用户指定的 20 页本地文件早于 10 月 27 日阶段交付。当前续接采用已验收的 28 页导师讨论修订版（SHA256=`26a6fdd7b030bd3789ffa83952ec20a8df59d4f7e08e18665186f7f1fd5878e2`），原 20 页文件保留不覆盖。28 页版第 4 页已含任务地图，第 9–16 页已含 8 任务机制图；不得重复插入。
+2. **已完成且不得重跑**：8 任务 random/family × pre/Post-LoRA/Post-full 机制图已在 RiNALMo-micro、seed17 范围完成，源 checkpoint 与 full-test 对账齐全；micro ncRNA rank8 已完成双 split × 3 seeds 六格正式 best-val 验收。机制图不替代三种子主矩阵，rank8 旧低值未复现也不自动证明旧测评错误。
+3. **当前可复用结果**：MRL/modification 的 micro/mega/ERNIE-RNA/RNA-FM frozen 双 split 三种子共 48 格已验收；MRL LoRA/full 60 格中 54 complete、6 runnable，真实缺口仅为 RiNALMo-650M full 双 split 三种子。其余任务、模型、策略必须以实时 registry+ledger+result proof 重新计数，不能用 registry 大小或启动进程数充当完成数。
+4. **实验顺序**：P0 先核 CUDA、git、数据、registry 与活跃 RID，保留在训格并去重；P1 闭合 8 任务官方模型主矩阵及 MRL/modification 跨模型矩阵，650M 大格只在满足实测显存门后启动；P2 闭合结论② default/tuned LR 和结论③ LoRA/DoRA/full/rank；P3 在主矩阵与同协议资源记录稳定后执行 C5c 2016 格、C5d 缺点与 C5b 八任务时间×性能；P4 最后完成 RNA-Sc 与 RiNALMo 同家族 small-full(n) vs large-LoRA(m) 等价线。全量点复用主矩阵，严禁与专用 lane 重格。
+5. **并行与停止规则**：单卡多 worker 共享唯一调度与生命周期锁，按同 batch 实测 need 填充空闲显存并保留 1GiB 余量；不得为“占满显存”绕过门禁、启动冲突格或无限延长已过拟合任务。CUDA 不可用、发生 CPU 静默降级或证据链失败即停并保留日志；best-val 按既定 early-stop 合同结束并恢复最佳 checkpoint，valplateau 任务须达到 validation 平台。
+6. **图表与页面映射**：任务地图解释后续所有结果页的任务与指标；结论①a 使用每任务独立主指标的同构四柱图；结论②使用 seed101 validation 选 LR、17/29/43 正式复测的 default/tuned 配对；结论③分列 best-val 与 legacy rank；结论④只呈现同家族数据量等价点及 CI；结论⑤、⑤b、⑤c、⑤d 仅画可追溯 run_id 的点。未观测等价点、pending、n<3 与协议差异必须显式标注。
+7. **记录、归档与同步**：每批保存命令、git SHA、GPU/CUDA、seed、数据 manifest、逐 epoch train/val、best/stop、wall/peak/checkpoint、result/RID 与结论；图同时保留 CSV/JSON、脚本、metadata、PNG/PDF。旧文档和废弃数据先核引用再归档，不删除隔离证据。确认后的代码留 `/home/cunyuliu/rna-ft-eval` 并及时提交 GitHub，大文件与权威 artifacts 留 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`。
+
+### 10.22 2026-10-28 八任务逐结论全覆盖复核
+
+> 本节将用户本轮逐页意见转成不可遗漏的执行矩阵。八任务固定为 3+1+2+2：ncRNA、CRISPR、modification；MRL；SpliceAI、SSP；degradation、SSI。official RiNALMo 档为 micro 33M、mega 148M（用户所称“180M 档”）、giga 650M。已完成资产只复用，不重跑；本登记不表示任何开放矩阵已完成。
+
+| 页面/结论 | 必须覆盖的实验与证据 | 图与验收边界 |
+|---|---|---|
+| 任务地图 | 介绍上述四类八任务、输出粒度和主指标 | 28 页版第 4 页已存在，只核语义和排版，不重复插入 |
+| 结论①a | 八任务 frozen/LoRA/full × random/family × 17/29/43，优先官方模型 | 与既有三张四柱图统一风格；每任务独立主指标，放在结论①a 后 |
+| 机制可视化 | 复用八任务双 split × pre/Post-LoRA/Post-full 的 RiNALMo-micro、seed17 表征、坐标与 full-test 对账 | 参照 RiNALMo 的 CLS、真实标签、独立测试集和标注方式；可重排视觉但不重复已验收抽取，不作因果证明 |
+| 结论② | 八任务 seed101 validation 选 LR，17/29/43 default/tuned 正式配对 | 真实 LR、split、rank、n_train、协议入表；tuning seed 不进正式均值 |
+| 结论③ | 八任务 LoRA/DoRA/full 与 rank4/8/16 | micro ncRNA rank8 六格复用；best-val 与 legacy 分列，旧低值只作协议归因 |
+| 结论④ | RNA-Sc 与 RiNALMo 两家族 × 八任务 small-full(n) 与 large-LoRA(m) | 横轴为标注量；逐 seed closest 等价点与 CI，直接回答“小 full@n ≈ 大 LoRA@m”；无交点写未观测到 |
+| 结论⑤ | 八任务同协议学习曲线；MRL/modification 增测其他官方模型；ncRNA 归因 | 先排除标签、家族映射、测评与 checkpoint 问题，再判断真实坍缩；不以单模型外推任务免疫 |
+| 结论⑤d | 对 mega/giga 每个显示点回查 RID/result，分类未跑、失败、未导出、路径缺失、协议隔离 | 真实缺点优先补；pending/NA 不补零、不用插线掩盖 |
+| 结论⑤c | 八任务 × micro/mega/giga × LoRA/full × 双 split × {10,100,1000,1500,2000,2500,3000} × 3 seeds | 加密 1000–3000；逐 seed+95% CI，全量点复用主矩阵；沿用 C5c 2016 格唯一账目 |
+| 结论⑤b | 八任务时间×性能，补 ERNIE-RNA LoRA/full | 同模型、split、n、batch、GPU、停止协议；wall/peak/checkpoint 三证直接关联 RID |
+
+**执行与交付门禁**：先完成实时 registry+ledger+result+checkpoint+runtime 对账，再按主矩阵与异常归因 → LR/rank → C5d/C5c/C5b → 同源等价线推进。单卡多 worker 必须服从唯一调度、生命周期锁和同 batch 实测 need+1GiB；complete 不重训、running 不双开，CUDA 不可用或 CPU 静默降级立即停止并留证。不得以占用率为由绕过 proof 或无限延长已过拟合格。每批记录训练命令、git SHA、数据 manifest、逐 epoch train/val、best/stop、资源与结论边界；通过三轮对账后才更新图和 PPT。PPT 只改目标页并另存，保留用户手调内容、Microsoft YaHei 和正文 1.5 倍行距；交接文档与绘图原数据按 current/archive 整理，废弃项先核引用再归档，隔离证据不删除；确认代码提交 `/home` 并推送 GitHub，大文件留在 `/teams`。
+
+### 10.23 ncRNA family 训练顺序伪影隔离与重测合同
+
+1. **事故证据**：当前与 orico 的 family parquet SHA256 完全相同，排除换数据；train 标签仅 134 个 run/6859 行、最长同类连续段 375，旧 runner 无逐 epoch shuffle。旧 micro LoRA-family seed17=0.084112，现行 shuffled best-val 三种子为 0.894860/0.905374/0.900701。严格 `finetune_one/max_len512` A/B 已完成且 proof=complete：仅关闭 shuffle 即得 ACC=0.095794，而 shuffled=0.894860；`finetune_clf/max_len128` 的 0.059579 仅作跨 runner 支持证据。
+2. **即时隔离范围**：所有由 pre-shuffle runner 产生的 ncRNA family 性能，及其派生的“家族坍缩/崩溃带”、random−family Δ、模型规模谱、E3 数据量曲线、small-full(n)↔large-LoRA(m) 等价点和总结措辞，暂停科学判读。受影响 PPT 至少包括第 2、5、17、20–24、27–28 页及对应源图；第 25 页仅显存测量可保留，任何性能解释仍需 corrected RID。旧文件移入 quarantine/archive 索引，不删除原始 ledger/result/checkpoint。
+3. **可保留证据**：现行 `bestval_v1` 且有独立 validation、best checkpoint、runtime、序列/cluster 零重叠和明确 runner 参数的格；micro rank8 六格及其 corrected 机制图不因旧事故失效。`finetune_clf` 与 `finetune_one` 诊断必须分别标注 max_len、batch、runner、epoch_shuffle，禁止把不同 runner 的差值写成单变量因果效应。
+4. **重测顺序**：优先完成官方 micro/mega/ERNIE-RNA/RNA-FM 的 corrected ncRNA 主矩阵，再补 650M；自训 RNA-Sc 后续复测。旧 E3、⑤c/⑤d 与同源等价线只有在对应 corrected 曲线闭合后重绘，缺格保留 NA，不用 legacy 点回填。
+5. **表述门禁**：严格 A/B 已验收，可写“该受控设置下，未 shuffle 足以复现近随机表现”；不得外推为所有模型/任务的唯一机制，也不得把 corrected 高值直接推广为所有模型均不存在跨家族泛化问题。t-SNE 继续只作描述性诊断，旧“分类头坍缩”不得恢复。
+
+### 10.24 C5c micro/mega 五档闭合与29页阶段交付（2026-10-29）
+
+1. **已闭合范围**：ncRNA random split × LoRA rank8 × corrected `bestval_v1`，RiNALMo-micro 33M 与 RiNALMo-mega 148M 的 {1000,1500,2000,2500,3000} 五档均已三种子闭合，合计30个唯一RID。micro 五档 mean=0.780885781/0.818570319/0.842657343/0.834498834/0.871406371，mega=0.836052836/0.856254856/0.875679876/0.884615385/0.904428904。148M 在五档均高于33M，33M在2500档回落，mega当前五档均值递增；上述只描述该任务、split、策略与协议，不能外推650M、full-FT、family或其他任务。
+2. **图和PPT唯一续接基底**：`c5c_ncrna_lora_micro_mega.png/.pdf` 与 `_data.csv` 已登记，合并图源共10行30个唯一RID。当前阶段PPT为29页 `RNA_LM微调策略评测-导师讨论修订版_20261029_C5c五档更新.pptx`，新页位于演示顺序第22页（结论⑤后、⑤d前）；原有28页slide XML/rels不变，后续不得重复插入该页。微软雅黑、1.5倍行距、markitdown、layout Issues=0、独立字体渲染和29页PDF已验收。
+3. **源数据与代码**：当前 `bestval_ledger_export_20261029.csv` 为385个唯一RID，旧379行逐字段保留，新增仅为mega 2500/3000档6格；4个拒绝项仍均为smoke test。源包 revision=`20261029_bestval_ledger_385_v10`，101个登记文件的本地及teams副本哈希一致。绘图 `/home` 提交为 `621ea49`，GitHub `rnaft-expansion-20261027` 为 `e186390`，全仓385 tests通过。旧快照和远端独立重绘证据均已归档，不得用旧pre-shuffle或中间态点回填。
+4. **后续顺序**：先补齐 micro full-FT 五档三种子，再在650M真实满足28+1GiB门禁时补同协议LoRA；只有 small-full(n) 与 large-LoRA(m) 对应曲线均闭合后，才能按逐seed最近性能与95% CI计算等价点，未覆盖区间写“未观测到等价点”。650M、其余任务/split/strategy、八任务结论②③④⑤及⑤b/⑤d仍未完成；当前29页版仅为已闭合组的阶段更新，不是全目标完成声明。
+
+### 10.25 六柱任务扩展与⑤d状态校正（2026-10-29）
+
+1. **扩展图口径**：SpliceAI、degradation、SSI 的 B20-corrected 阶段表改为 frozen/LoRA/full × random/family 六柱，取消“LoRA 优先、缺失时 full”的混合微调柱。原表只有聚合 mean 与 n_seeds，因此不绘制未记录的 SD；n<3 用斜线、NA 表示未闭合，不能将本页解释为8任务终版。
+2. **PPT 当前续接版**：`RNA_LM微调策略评测-导师讨论修订版_20261029_六柱扩展与状态校正.pptx` 共29页，仅修改演示页2、8、23：进度页登记33M/148M ncRNA random×LoRA 五档闭合；第8页换六柱图；第23页图内状态与页脚同步区分已闭合五档和650M/full/family/其他任务缺口。其他页 XML/rels 语义无差异。PPT SHA256=`acbb01c5ba4b501eb492ee885ca6e2b20367cefb781238f655221c0e98be6157`，PDF SHA256=`0c2afab83ba9331ff836e599dff5d3f9be9e137b98207f46e5e30b0a0b4651ea`。
+3. **复现与待办边界**：源包 revision=`20261029_extension_sixbar_status_v11`，101个登记文件全部哈希通过；旧三任务四柱图与源表移入 `archive_20261028/绘图数据/obsolete_fourbar_20261029/`。绘图代码经108/108单元对账和385项测试后推送 GitHub `7a24117f064a2493ff8ae1d1a269ec33abe6c595`。v11 尚未同步 teams。连接恢复后已按 registry+result+checkpoint proof 确认 micro full-FT 五档15格全部 complete，正在刷新完整 best-val 导出；实时 GPU 与后续矩阵仍须按 proof 复核，不以进程数代替完成。
+
+### 10.26 ncRNA 五档 full-FT 闭合与逐 seed 等价候选（2026-10-29）
+
+1. **400 行正式导出**：micro full-FT 的1000/1500/2000/2500/3000五档15格全部 proof=complete，mean 分别为0.790986791/0.812742813/0.836052836/0.856254856/0.879953380。新 best-val 导出为400个唯一RID、4个smoke-only拒绝项；旧385行逐字段不变，新15行仅为上述 micro-full，全部具有 CUDA 证据。
+2. **等价判读边界**：同任务 ncRNA random、同 `bestval_v1` 协议下，逐 seed 最近实测对为 s17 full@2500↔LoRA@1500（Δ=0.006993）、s29 full@2000↔LoRA@1000（Δ=0）、s43 full@2500↔LoRA@1500（Δ=-0.004662）。因此 full@2500≈LoRA@1500 为2/3 seeds候选，full@2000≈LoRA@1000 为1/3 seeds候选；不得写成唯一等价点或跨任务定律。图只连接实测预算，不插值，保留30个源RID、逐seed配对与25组预算对差值。
+3. **当前 PPT 与源包**：第20页改为 `equivalence_ncrna_microfull_megalora`，当前文件 `RNA_LM微调策略评测-导师讨论修订版_20261029_等价线更新.pptx`，SHA256=`3a7d737706fbaae9fe36cd746b1d18675af7ce1b2be656c8716b315cbd784d18`；PDF SHA256=`1f3789308f5d13e10773bc21f9bb6fd6b0f4826cb1693812b4e1694c81b6415a`。源包 revision=`20261029_bestval_ledger_400_equivalence_v12`，104个登记文件，manifest SHA256=`628b95bbd68ecdadb29210c358e0a02d0c50015de6db7903d46fb7edf6a7b938`；旧协议示意图归档，两个 teams 副本与本地哈希一致。
+4. **代码与后续顺序**：`/home` 提交 `f870f8cc4a31af420938848745050e387009c935`，GitHub `rnaft-expansion-20261027` 提交 `9aee3d4a6edfab5535c4cc7134a51ca3414002d4`，385 tests通过，teams独立重算的 data/pairs/meta 哈希一致。后续继续8任务主矩阵与结论②③，再补650M及其他 C5c 臂；650M仍需28+1GiB真实窗口，不能用 micro-full 的完成替代其他任务、split或模型规模。
+
+### 10.27 八任务 PEFT/rank 注册表与协议去重（2026-10-30）
+
+1. **注册范围**：`peft_rank_jobs_20261030.json` 覆盖8任务×5官方模型×{LoRA rank4/8/16 + DoRA rank8}×random/family×17/29/43，共960格；每任务120格，LoRA 720、DoRA 240。注册表仅是执行清单，不代表启动或许可完成。
+2. **实时 proof**：960格 RID/result_dir 均唯一，102 complete、858 runnable、0 conflict；complete 全部为 LoRA，DoRA 尚未形成正式完成格。后续只复用 complete，主矩阵仍在运行的同 RID 不得双开，PEFT/rank 波次须待主矩阵门禁后启动。
+3. **rank8 协议边界**：既有 micro ncRNA rank8 六格使用 `_fixedsplit` RID；新注册表的无后缀 rank8 属于主矩阵 `bestval_v1` 协议，二者不是同一实验，不能覆盖、混均值或误标重复。legacy rank、fixedsplit 与主矩阵 rank sweep 在图和统计中分列。
+4. **代码与验收**：`scripts/expansion_jobs.py --wave peft-rank` 在本地和 teams 均生成960个唯一任务，385 tests通过；`/home` 提交 `a700ed6`，GitHub `rnaft-expansion-20261027` 提交 `b57abfc`。完整 proof 摘要保存为 `peft_rank_jobs_20261030.audit.json`。
