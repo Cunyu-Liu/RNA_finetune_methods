@@ -619,6 +619,134 @@ def ncrna_shuffle_audit():
     save_fig(fig, 'ncrna_shuffle_audit')
 
 
+def c5c_equivalence_microfull_megalora():
+    """Draw ncRNA equivalence only after both five-budget arms are complete."""
+    from collections import Counter
+    import hashlib
+    import json
+
+    budgets = [1000, 1500, 2000, 2500, 3000]
+    seeds = [17, 29, 43]
+    source = WORK / 'bestval_ledger_export_20261029.csv'
+    df = pd.read_csv(source)
+    df['n_train'] = pd.to_numeric(df.n_train, errors='coerce')
+    df['seed'] = pd.to_numeric(df.seed, errors='coerce')
+    arms = {}
+    for key, model, strategy in [
+        ('small', 'RiNALMo-micro', 'full'),
+        ('large', 'RiNALMo-mega', 'lora'),
+    ]:
+        q = df[(df.model == model) & (df.task == 'noncoding-rna-family') &
+               (df.strategy == strategy) & (df.split == 'random') &
+               (df.protocol == 'bestval_v1') & (df.metric == 'ACC') &
+               (df.n_train.isin(budgets)) & (df.seed.isin(seeds))].copy()
+        assert not q.duplicated(['n_train', 'seed']).any(), (key, 'duplicate cell')
+        counts = q.groupby('n_train').seed.nunique().to_dict()
+        if len(q) != 15 or set(counts) != set(budgets) or set(counts.values()) != {3}:
+            raise ValueError(f'{key} arm incomplete: rows={len(q)}, seed_counts={counts}')
+        assert q.run_id.nunique() == 15 and q.value.notna().all()
+        assert q.cuda_device.astype(str).str.startswith('cuda').all()
+        arms[key] = q
+
+    nearest = []
+    for seed in seeds:
+        small = arms['small'][arms['small'].seed == seed].set_index('n_train').loc[budgets]
+        large = arms['large'][arms['large'].seed == seed].set_index('n_train').loc[budgets]
+        differences = np.abs(small.value.to_numpy(float)[:, None] -
+                             large.value.to_numpy(float)[None, :])
+        minimum = float(differences.min())
+        tied = np.argwhere(np.isclose(differences, minimum, rtol=0, atol=1e-12))
+        for i, j in tied:
+            nearest.append({
+                'seed': seed, 'small_full_n': int(budgets[i]),
+                'large_lora_m': int(budgets[j]),
+                'small_full_acc': float(small.value.iloc[i]),
+                'large_lora_acc': float(large.value.iloc[j]),
+                'delta_small_minus_large': float(small.value.iloc[i] - large.value.iloc[j]),
+                'abs_delta': minimum, 'tied_nearest': len(tied) > 1,
+            })
+    nearest_df = pd.DataFrame(nearest)
+    pair_counts = Counter(zip(nearest_df.small_full_n, nearest_df.large_lora_m))
+    unique_pair = next(iter(pair_counts)) if len(pair_counts) == 1 and len(nearest_df) == 3 else None
+
+    def curve(q):
+        grouped = q.groupby('n_train').value
+        mean = grouped.mean().loc[budgets].to_numpy(float)
+        sd = grouped.std(ddof=1).loc[budgets].to_numpy(float)
+        return mean, 4.3026537299 * sd / np.sqrt(3)
+
+    small_mean, small_ci = curve(arms['small'])
+    large_mean, large_ci = curve(arms['large'])
+    mean_abs_delta = np.zeros((len(budgets), len(budgets)))
+    for i, n in enumerate(budgets):
+        for j, m in enumerate(budgets):
+            deltas = []
+            for seed in seeds:
+                sv = arms['small'].query('n_train == @n and seed == @seed').value.iloc[0]
+                lv = arms['large'].query('n_train == @m and seed == @seed').value.iloc[0]
+                deltas.append(abs(float(sv - lv)))
+            mean_abs_delta[i, j] = np.mean(deltas)
+
+    fig, (ax, axmap) = plt.subplots(1, 2, figsize=(13.4, 4.9),
+                                    gridspec_kw={'width_ratios': [1.2, 1.0]},
+                                    constrained_layout=True)
+    x = np.arange(len(budgets))
+    ax.errorbar(x, small_mean, yerr=small_ci, color='#3B3B3B', marker='o',
+                lw=2.1, capsize=3, label='RiNALMo 33M full-FT')
+    ax.errorbar(x, large_mean, yerr=large_ci, color='#D94801', marker='o',
+                lw=2.1, capsize=3, label='RiNALMo 148M LoRA')
+    if unique_pair is not None:
+        n, m = unique_pair
+        i, j = budgets.index(n), budgets.index(m)
+        ax.annotate('', xy=(j, large_mean[j]), xytext=(i, small_mean[i]),
+                    arrowprops=dict(arrowstyle='<->', color='#B03A2E', lw=1.8))
+        conclusion = f'33M full@{n} ≈ 148M LoRA@{m} | nearest in all 3 seeds'
+    else:
+        candidates = '; '.join(f'full@{n}≈LoRA@{m} ({count}/3)'
+                               for (n, m), count in sorted(pair_counts.items()))
+        conclusion = 'No unique point | ' + candidates
+    ax.set_xticks(x, [str(n) for n in budgets])
+    ax.set_xlabel('Labeled sequences (measured budgets)')
+    ax.set_ylabel('ncRNA ACC | mean ± 95% CI')
+    ax.grid(axis='y', color='#E8E8E8', lw=0.7)
+    ax.set_axisbelow(True)
+    ax.legend(loc='lower right', fontsize=9)
+    ax.set_title(conclusion, fontsize=11.5, fontweight='bold', color='#1F3A5F')
+
+    image = axmap.imshow(mean_abs_delta, cmap='Blues_r', aspect='auto', origin='lower')
+    for i, n in enumerate(budgets):
+        for j, m in enumerate(budgets):
+            count = pair_counts.get((n, m), 0)
+            label = f'{mean_abs_delta[i, j]:.3f}' + (f'\n{count} seed' + ('s' if count != 1 else '') if count else '')
+            axmap.text(j, i, label, ha='center', va='center', fontsize=7.5,
+                       color='white' if mean_abs_delta[i, j] < np.nanmedian(mean_abs_delta) else '#1F3A5F')
+    axmap.set_xticks(x, [str(n) for n in budgets])
+    axmap.set_yticks(x, [str(n) for n in budgets])
+    axmap.set_xlabel('148M LoRA budget m')
+    axmap.set_ylabel('33M full-FT budget n')
+    axmap.set_title('Mean |ACC difference|; labels mark per-seed nearest pairs',
+                    fontsize=10.5, color='#1F3A5F')
+    fig.colorbar(image, ax=axmap, shrink=0.8, label='Mean |ACC difference|')
+    fig.suptitle('Data-budget equivalence | ncRNA random split | corrected best-val',
+                 fontsize=13.5, fontweight='bold', color='#1F3A5F')
+    fig.text(0.5, -0.025, 'Observed points only; no interpolation. Each arm: 5 budgets × 3 formal seeds with complete proof.',
+             ha='center', va='top', fontsize=9, color='#666666')
+
+    nearest_df.to_csv(OUT / 'equivalence_ncrna_microfull_megalora_pairs.csv', index=False)
+    pd.concat(arms, ignore_index=True).to_csv(OUT / 'equivalence_ncrna_microfull_megalora_data.csv', index=False)
+    metadata = {
+        'source': source.name,
+        'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+        'budgets': budgets, 'seeds': seeds, 'interpolation': False,
+        'unique_pair': list(unique_pair) if unique_pair is not None else None,
+        'pair_counts': {f'{n}:{m}': count for (n, m), count in sorted(pair_counts.items())},
+        'nearest_rows': len(nearest_df),
+    }
+    (OUT / 'equivalence_ncrna_microfull_megalora.meta.json').write_text(
+        json.dumps(metadata, indent=2) + '\n')
+    save_fig(fig, 'equivalence_ncrna_microfull_megalora')
+
+
 def equivalence_protocol_status():
     from matplotlib import patches
     fig, ax = plt.subplots(figsize=(12.4, 4.5), constrained_layout=True)
@@ -839,9 +967,9 @@ def main():
     e4_delta_two_tasks()
     crop_valid_panels()
     ncrna_shuffle_audit()
-    equivalence_protocol_status()
     ncrna_legacy_quarantine()
     c5c_ncrna_lora_scale()
+    c5c_equivalence_microfull_megalora()
     equiv_high_ncrna_mrl()
     equiv_low_two_cases()
     memory_ncrna()
