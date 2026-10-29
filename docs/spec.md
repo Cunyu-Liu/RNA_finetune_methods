@@ -645,3 +645,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. **实时 proof**：960格 RID/result_dir 均唯一，102 complete、858 runnable、0 conflict；complete 全部为 LoRA，DoRA 尚未形成正式完成格。后续只复用 complete，主矩阵仍在运行的同 RID 不得双开，PEFT/rank 波次须待主矩阵门禁后启动。
 3. **rank8 协议边界**：既有 micro ncRNA rank8 六格使用 `_fixedsplit` RID；新注册表的无后缀 rank8 属于主矩阵 `bestval_v1` 协议，二者不是同一实验，不能覆盖、混均值或误标重复。legacy rank、fixedsplit 与主矩阵 rank sweep 在图和统计中分列。
 4. **代码与验收**：`scripts/expansion_jobs.py --wave peft-rank` 在本地和 teams 均生成960个唯一任务，385 tests通过；`/home` 提交 `a700ed6`，GitHub `rnaft-expansion-20261027` 提交 `b57abfc`。完整 proof 摘要保存为 `peft_rank_jobs_20261030.audit.json`。
+
+### 10.28 E6 大模型显存门槛修复（2026-10-30）
+
+1. **事故与根因**：`RiNALMo-650M lora s43` 在并行负载下真实 CUDA OOM，进程实需约17.27GiB；旧 `q_e6_mlm15fix.sh` 对所有 LoRA 仅设8GiB 等待门槛，导致监控在显存不足时重复启动。失败日志保留，未发生CPU降级，未完成格不得进入E6结论。
+2. **修复合同**：650M LoRA 的 `WAIT_VRAM` 门槛改为18500MiB，650M full 改为26000MiB；其他模型原门槛不变。等待而非强行启动，proof 不完整仍不得标 DONE，恢复时同 RID 不得双开。
+3. **实证验收**：修复部署后 monitor 于01:30记录 `WAIT_VRAM need=18500MB free=17696MB`，未再次启动训练或OOM。`bash -n` 与385 tests通过；`/home` 提交 `d909ff0`，GitHub `rnaft-expansion-20261027` 提交 `1f5acf3`。

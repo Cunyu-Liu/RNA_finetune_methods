@@ -1318,3 +1318,5 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] 结论③已建立完整 PEFT/rank 注册表 `peft_rank_jobs_20261030.json`：8任务×5官方模型×{LoRA r4/8/16+DoRA r8}×双split×3 seeds，共960个唯一RID/result_dir；本地与teams生成计数一致，385 tests通过。`/home` commit=`a700ed6`，GitHub commit=`b57abfc`。
 - [x] 960格完整 proof 审计为102 complete、858 runnable、0 conflict，DoRA 0 complete；结果写入 `peft_rank_jobs_20261030.audit.json`。该波次仅注册未启动，待主矩阵门禁后按proof执行。
 - [x] rank8 路径疑点已澄清：既有六格为 `_fixedsplit`，新表无后缀 rank8 为主矩阵协议，并非同 RID 或结果丢失；两协议不得混均值。未重跑、未覆盖既有 `_fixedsplit` 结果。
+- [!] E6 `RiNALMo-650M lora s43` 在并行负载下于01:20真实 CUDA OOM：进程需约17.27GiB，其他两个训练进程与队列同时占卡，最后仅10.31MiB空闲；`q_e6_mlm15fix` 报 `INCOMPLETE cells=3/6`。已保留 `q_e6_mlm15fix.log` 证据，未使用CPU降级，pre NLL只作运行诊断不作最终结论。
+- [x] E6 重复 OOM 根因已修复：旧脚本对所有 LoRA 仅设8GiB 门槛，现按实测将650M LoRA/full 分别改为18500/26000MiB。无需修改 active whitelist；部署后01:30日志确认 `WAIT_VRAM need=18500MB free=17696MB`，未再次启动或OOM。`bash -n` 与385 tests通过，`/home` commit=`d909ff0`，GitHub commit=`1f5acf3`。
