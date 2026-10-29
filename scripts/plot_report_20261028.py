@@ -54,6 +54,22 @@ LABELS = {
     'finetune_random': 'Fine-tuned (random)',
     'finetune_family': 'Fine-tuned (family)',
 }
+SIX_COLORS = {
+    'frozen_random': '#6BAED6',
+    'frozen_family': '#C6DBEF',
+    'lora_random': '#FD8D3C',
+    'lora_family': '#D94801',
+    'full_random': '#3B3B3B',
+    'full_family': '#A6A6A6',
+}
+SIX_LABELS = {
+    'frozen_random': 'Frozen (R)',
+    'frozen_family': 'Frozen (F)',
+    'lora_random': 'LoRA (R)',
+    'lora_family': 'LoRA (F)',
+    'full_random': 'Full-FT (R)',
+    'full_family': 'Full-FT (F)',
+}
 MODELS = ['RiNALMo-micro', 'RiNALMo-mega', 'RiNALMo-650M', 'ERNIE-RNA', 'RNA-FM']
 MODEL_SHORT = {
     'RiNALMo-micro': 'RiNALMo\n33M',
@@ -134,6 +150,71 @@ def fourbar(df, task, metric, stem, title, ymax=1.05, chance=None):
     handles = [plt.Rectangle((0, 0), 1, 1, color=COLORS[k]) for k in keys]
     ax.legend(handles, [LABELS[k] for k in keys], ncol=4,
               loc='upper center', bbox_to_anchor=(0.5, 1.02), fontsize=9)
+    ax.text(0.995, -0.19, 'bestval_v1 | official models | formal seeds 17/29/43 | complete proof only',
+            transform=ax.transAxes, ha='right', va='top', fontsize=8.5, color='#777777')
+    save_fig(fig, stem)
+
+
+def sixbar_summary(df, task):
+    rows = []
+    for model in MODELS:
+        row = {'model': model}
+        for key in SIX_COLORS:
+            strategy, split = key.split('_', 1)
+            q = df[(df.task == task) & (df.model == model) &
+                   (df.strategy == strategy) & (df.split == split) &
+                   (df.proof_state == 'complete')]
+            assert q.seed.nunique() == len(q), (task, model, key, 'duplicate seed')
+            vals = pd.to_numeric(q.value, errors='coerce').dropna().to_numpy(float)
+            row[f'{key}_n'] = len(vals)
+            row[key] = float(vals.mean()) if len(vals) else np.nan
+            row[f'{key}_sd'] = float(vals.std(ddof=1)) if len(vals) > 1 else 0.0
+            row[f'{key}_rids'] = ';'.join(q.rid.astype(str))
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def sixbar(df, task, metric, stem, title, ymax=1.05, chance=None):
+    summary = sixbar_summary(df, task)
+    summary.to_csv(OUT / f'{stem}_data.csv', index=False)
+    fig, ax = plt.subplots(figsize=(12.4, 4.6), constrained_layout=True)
+    keys = list(SIX_COLORS)
+    x = np.arange(len(summary))
+    width = 0.135
+    for j, key in enumerate(keys):
+        vals = summary[key].to_numpy(float)
+        ns = summary[f'{key}_n'].to_numpy(int)
+        sds = summary[f'{key}_sd'].to_numpy(float)
+        pos = x + (j - 2.5) * width
+        for i, (v, n, sd) in enumerate(zip(vals, ns, sds)):
+            if n == 0 or not np.isfinite(v):
+                ax.text(pos[i], 0.025, 'NA', ha='center', va='bottom', fontsize=7.5,
+                        color='#8A8A8A', rotation=90)
+                continue
+            ax.bar(pos[i], v, width=width * 0.94, color=SIX_COLORS[key],
+                   edgecolor='white', linewidth=0.5,
+                   yerr=sd if n > 1 else None, capsize=2,
+                   hatch='///' if n < 3 else None)
+            ax.text(pos[i], min(v + 0.018, ymax - 0.02), f'{v:.2f}',
+                    ha='center', va='bottom', fontsize=7.2, color='#333333')
+            if n < 3:
+                ax.text(pos[i], max(0.03, v * 0.48), f'n={n}', ha='center', va='center',
+                        fontsize=6.8, color='#333333', rotation=90)
+    if chance is not None:
+        ax.axhline(chance, color='#B03A2E', lw=0.9, ls='--', alpha=0.65)
+        ax.text(len(summary) - 0.45, chance + 0.012, 'chance', color='#B03A2E',
+                fontsize=8, ha='right')
+    ax.set_title(title + '\nbars = mean ± SD; hatched = n<3; NA = not complete',
+                 fontsize=13, fontweight='bold', color='#1F3A5F', pad=12)
+    ax.set_ylabel(metric, fontsize=11)
+    ax.set_xticks(x)
+    ax.set_xticklabels([MODEL_SHORT[m] for m in summary.model], fontsize=9.5)
+    ax.set_ylim(0, ymax)
+    ax.grid(axis='y', color='#E8E8E8', lw=0.7)
+    ax.set_axisbelow(True)
+    handles = [plt.Rectangle((0, 0), 1, 1, color=SIX_COLORS[k]) for k in keys]
+    ax.legend(handles, [SIX_LABELS[k] for k in keys], ncol=6,
+              loc='upper center', bbox_to_anchor=(0.5, 1.02), fontsize=8.2)
     ax.text(0.995, -0.19, 'bestval_v1 | official models | formal seeds 17/29/43 | complete proof only',
             transform=ax.transAxes, ha='right', va='top', fontsize=8.5, color='#777777')
     save_fig(fig, stem)
@@ -696,10 +777,10 @@ def main():
     df = pd.read_csv(WORK / 'mrl_mod_bestval_results_20261028.csv')
     assert len(df) == 180
     assert df.rid.nunique() == 180
-    fourbar(df, 'mrl', 'MRL Pearson r (3-seed mean)', 'mrl_bestval_official_fourbar',
-            'MRL | official-model best-val comparison', ymax=0.92)
-    fourbar(df, 'modification', 'm6A AUC (sequence-level multi-label)', 'modification_bestval_official_fourbar',
-            'Modification | corrected sequence-level 12-label task; m6A index 7', ymax=1.08, chance=0.5)
+    sixbar(df, 'mrl', 'MRL Pearson r (3-seed mean)', 'mrl_bestval_official_sixbar',
+           'MRL | official-model best-val comparison', ymax=0.92)
+    sixbar(df, 'modification', 'm6A AUC (sequence-level multi-label)', 'modification_bestval_official_sixbar',
+           'Modification | corrected sequence-level 12-label task; m6A index 7', ymax=1.08, chance=0.5)
     resource_mrl(df)
     lr_ncrna_mrl()
     extension_fourbar()
