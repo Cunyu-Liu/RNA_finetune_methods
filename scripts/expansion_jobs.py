@@ -153,6 +153,30 @@ def c5c_all_jobs():
     return c5c_ncrna_jobs() + c5c_other_task_jobs()
 
 
+def peft_rank_jobs():
+    """Register the complete LoRA-rank/DoRA wave without launching it."""
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    jobs = []
+    for task in ("noncoding-rna-family", "crispr-off-target", "mrl",
+                 "modification", "secondary-structure", "spliceai",
+                 "degradation", "ssi"):
+        for model in MODELS:
+            for strategy, ranks in (("lora", (4, 8, 16)), ("dora", (8,))):
+                for rank in ranks:
+                    for split in ("random", "family"):
+                        for seed in (17, 29, 43):
+                            base = DEFAULTS[task]["batch"]
+                            batch_size = (1 if task == "secondary-structure"
+                                          else min(base, 8)) if model == "RiNALMo-650M" else base
+                            jobs.append(job_for(
+                                task, model, strategy, split, seed, rank=rank,
+                                module=runners[task], batch_size=batch_size,
+                                need_gb=8 if model == "RiNALMo-micro" else
+                                16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
+    return jobs
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True)
@@ -164,13 +188,15 @@ def main(argv=None):
     parser.add_argument("--lane", choices=("complementary", "all"),
                         default="complementary",
                         help="exclude cells owned by specialized MRL/m6A/rank8 lanes")
-    parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all"),
+    parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all", "peft-rank"),
                         default="complementary")
     args = parser.parse_args(argv)
     if args.wave == "c5c-ncrna":
         jobs = c5c_ncrna_jobs()
     elif args.wave == "c5c-all":
         jobs = c5c_all_jobs()
+    elif args.wave == "peft-rank":
+        jobs = peft_rank_jobs()
     else:
         jobs = []
         for model in args.models.split(","):
