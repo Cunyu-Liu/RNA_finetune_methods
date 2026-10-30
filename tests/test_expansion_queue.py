@@ -509,6 +509,27 @@ def test_complementary_registry_supports_perbase_bestval_main_matrix(tmp_path):
     }
 
 
+def test_equivalence_rnasc_registry_uses_controlled_pair_and_lr(tmp_path):
+    import expansion_jobs as registry
+    output = tmp_path / "equivalence-rnasc-jobs.json"
+    assert registry.main(["--output", str(output), "--wave", "equivalence-rnasc"]) == 0
+    jobs = json.loads(output.read_text())
+    assert len(jobs) == 672
+    assert len({j["rid"] for j in jobs}) == len(jobs)
+    assert len({j["result_dir"] for j in jobs}) == len(jobs)
+    assert {j["model"] for j in jobs} == {"RNA-Sc-30M", "RNA-Sc-650M"}
+    assert {j["task"] for j in jobs} == set(registry.METRICS)
+    assert all(j["strategy"] == "full" and j["lr"] == "3e-5"
+               for j in jobs if j["model"] == "RNA-Sc-30M")
+    assert all(j["strategy"] == "lora" and j["lr"] == "3e-4"
+               for j in jobs if j["model"] == "RNA-Sc-650M")
+    assert all(j["dense_clusters"] ==
+               (j["task"] == "noncoding-rna-family" and j["split"] == "family")
+               for j in jobs)
+    assert all(j["module"] == "rnafteval.finetune_one"
+               for j in jobs if j["task"] == "noncoding-rna-family")
+
+
 def test_external_memory_release_is_wait_not_permanent_failure(proof_env, monkeypatch):
     readings = iter([(4 * q.GI, 32 * q.GI), (4 * q.GI, 32 * q.GI),
                      (20 * q.GI, 32 * q.GI), (20 * q.GI, 32 * q.GI)])
