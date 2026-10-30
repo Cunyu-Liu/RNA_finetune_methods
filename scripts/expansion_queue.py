@@ -610,33 +610,36 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                     budget_gb = max(budget_gb, free_now / GI)
                 except Exception:
                     pass
-            job = pending[0]
+            job = next((candidate for candidate in pending
+                        if candidate.need_gb <= budget_gb
+                        and all(item["job"].model != candidate.model
+                                for item in running.values())), None)
+            if job is None:
+                # Memory pressure or a same-model in-flight job is a wait state.
+                # Keep every pending cell for a later pass instead of blocking
+                # unrelated models behind the registry's first cell.
+                break
             record = records[job.job_key]
             state, reason = proof_state(job)
             if state == "complete":
                 outcomes.append(_finish(store, record, "skipped", "complete proof"))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             if state == "running":
                 outcomes.append(_finish(store, record, "skipped", reason))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             if state == "conflict":
                 outcomes.append(_finish(store, record, "failed", reason))
-                pending.pop(0)
+                pending.remove(job)
                 continue
-            if job.need_gb > budget_gb:
-                # Memory pressure is a wait state, not a failed scientific run.
-                break
-            if any(item["job"].model == job.model for item in running.values()):
-                break
             model_lock = store.model_lock(job.model)
             lock = None
             try:
                 model_lock.__enter__()
             except ModelBusy as exc:
                 outcomes.append(_finish(store, record, "skipped", str(exc)))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             try:
                 lock = store.run_locks(job)
@@ -644,7 +647,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
             except AlreadyRunning as exc:
                 model_lock.__exit__(None, None, None)
                 outcomes.append(_finish(store, record, "skipped", str(exc)))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             try:
                 free_bytes, _total = torch.cuda.mem_get_info(device)
@@ -653,7 +656,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                 model_lock.__exit__(None, None, None)
                 outcomes.append(_finish(store, record, "failed",
                                         "CUDA memory check failed: %s" % exc))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             if free_bytes < job.need_gb * GI:
                 lock.__exit__(None, None, None)
@@ -672,7 +675,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                 model_lock.__exit__(None, None, None)
                 outcomes.append(_finish(store, record, "failed",
                                         "subprocess launch failed: %s" % exc))
-                pending.pop(0)
+                pending.remove(job)
                 continue
             record["pid"] = process.pid
             store.write(record)
@@ -685,7 +688,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                 "need_gb": job.need_gb, "lock": lock,
                 "model_lock": model_lock, "log": log_handle,
             }
-            pending.pop(0)
+            pending.remove(job)
         if pending or running:
             time.sleep(poll_s)
     return _report(jobs, outcomes)
