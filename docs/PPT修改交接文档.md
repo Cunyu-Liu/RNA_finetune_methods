@@ -378,3 +378,14 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 4. **过滤口径固化**：`build_8task_sixbar.py`、`build_time_perf_coverage.py` 新增 `keep_row()`：排除 `_noshuffle/_smoke/_diag`、`_r4_/_r16_`、seed∉{17,29,43}、`_e3\d+_`（C5c 档）、以及 23:11–00:05 错 artifact 根写出的格；改为自动选择最新 `bestval_ledger_export_*.csv`，图内来源标签随文件名动态生成。
 5. **交付**：PPT SHA256=`8a3ea9af835fba5a9d2647a9e9e1483bef08f0f0d0b0647fa6d033acbb5328ff`，30 页；PDF SHA256=`152c046bdaa7f874d526c7209f5e67df5c296bb0f5ecec18f0f04552a61aa21d`。验收：CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、独立 fontconfig 渲染正常。
 6. **源包**：`figure_source_data_20261030_eight_task_v14/` 升 revision=`20261031_refresh_v15b_fullproof`，19 文件，manifest SHA256=`885ab306f432cf331f3ff62bca46898da99fbba88aeee8e0eaf0270103598992`。
+
+## 22. 2026-10-31 01:xx 三条补测车道、② 页受控 LR 证据与 PDF 字体修复
+
+1. **A 线（ncRNA 全参坍缩归因，8 格）**：`ft_rinalmomicro_noncodingrnafamily_full_s101_{random,family}` × lr{3e-4,1e-4,3e-5,1e-5}。这 8 格原有 ledger 行 `done` 但产物缺失（§10.38-⑩ 错根事故），队列判 `conflict` 永不派发；把旧行改 `stale_missing_artifacts` 后重跑。已回：random 3e-4=0.0956（≈1/13，best_epoch=0，val loss 单调升）、random 1e-4=0.8706、family 1e-5=0.8703。**结论：ncRNA 全参坍缩是学习率造成的真坍缩，不是测评口径问题（同数据同 split 只改 LR 即恢复）。**
+2. **② 页文案**：副标题改为「受控新增：ncRNA 33M full 同数据同 split 只改 LR——random 3e-4→0.096、1e-4→0.871；family 1e-5→0.870。坍缩源于 LR 而非测评。」；读图句补「ncRNA 33M full 8 格 LR 网格再补 random 3e-5/1e-5 与 family 3e-4/1e-4」。图本身未动。
+3. **B 线（结论④ 等价线分层，420 格）**：其余 7 任务 × micro full@1e-5 / mega LoRA@3e-4 × {1000,1500,2000,2500,3000} × 双 split × 3 seeds，4 worker；SSP n=2000 与其全量同格，12 个重复按 `complete proof` 自动 skip。④ 页读图句补「其余 7 任务 420 格分层已起跑，逐任务闭合再出面板」。
+4. **C 线（SpliceAI 修复）**：2 格在 15:50 UTC 被 SIGTERM（rc=-15，plateau 仍 RUNNING），重跑时发现 23:06 起的 orphan 仍在跑 → 出现同 RID 三开并发写同一 `best.ckpt/plateau.json`；kill 较晚两份、保留 orphan。**教训：manifest 的 `failed` 只代表「新父的子进程被杀」，不能作为「格已死」判据，必须 `/proc` 实测。**
+5. **台账与图**：delta 导出 496+27=**523 accepted**（0 rejected）；四图按新台账重绘（CRISPR 24→25/30、SSP 18→19/30）。
+6. **PDF 中文空白修复**：`fc-match "Microsoft YaHei"` 解析到 `PingFang.ttc`，LibreOffice 无法嵌入 `.ttc` → CJK 全空白；在 `ppt/work/fc/fonts.conf` 加 `<rejectfont><glob>*/*.ttc</glob></rejectfont>`，改走 `msyh_regular.ttf`（cmap 29898/CJK 20992），PDF 中文恢复。pptx 内字体名仍是 Microsoft YaHei。
+7. **交付**：30 页；PPT SHA256=`c833ceef9c425d9a85e1…`，PDF SHA256=`762e3d5f13f672cfc1df…`；验收 CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 第 18 页中文可提取（64 字）。
+8. **源包**：revision=`20261031_refresh_v16_lanes`，24 文件，manifest SHA256=`dbacbc26e7a0639ae01ca8b63729ac222628d0c05c8007c10240e1e17ecb1900`。
