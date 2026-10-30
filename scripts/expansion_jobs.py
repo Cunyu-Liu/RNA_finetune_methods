@@ -153,6 +153,34 @@ def c5c_all_jobs():
     return c5c_ncrna_jobs() + c5c_other_task_jobs()
 
 
+def equivalence_rnasc_jobs():
+    """Register the controlled 30M-full versus 650M-LoRA budget curves."""
+    runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                   degradation=finetune_regbase, ssi=finetune_regbase)
+    jobs = []
+    for task in ("noncoding-rna-family", "crispr-off-target", "mrl",
+                 "modification", "secondary-structure", "spliceai",
+                 "degradation", "ssi"):
+        for split in ("random", "family"):
+            for level in DENSE_LEVELS:
+                for seed in (17, 29, 43):
+                    for model, strategy in (("RNA-Sc-30M", "full"),
+                                            ("RNA-Sc-650M", "lora")):
+                        base = DEFAULTS[task]["batch"]
+                        small = model == "RNA-Sc-30M"
+                        batch_size = (32 if task == "noncoding-rna-family" else base) if small else (
+                            1 if task == "secondary-structure" else
+                            8 if task == "noncoding-rna-family" else min(base, 8))
+                        jobs.append(job_for(
+                            task, model, strategy, split, seed,
+                            n_train=level,
+                            module=finetune_one if task == "noncoding-rna-family" else runners[task],
+                            lr="3e-5" if small else "3e-4",
+                            dense_clusters=(task == "noncoding-rna-family" and split == "family"),
+                            batch_size=batch_size, need_gb=8 if small else 28))
+    return jobs
+
+
 def lr_tuning_jobs():
     """Register seed-101 validation-only LR selection runs for full FT."""
     runners = dict(TASK_MODULES, spliceai=finetune_spl,
@@ -272,7 +300,8 @@ def main(argv=None):
                         default="complementary",
                         help="exclude cells owned by specialized MRL/m6A/rank8 lanes")
     parser.add_argument("--wave", choices=("complementary", "c5c-ncrna", "c5c-all",
-                                           "peft-rank", "lr-tuning", "lr-default", "lr-tuned"),
+                                           "equivalence-rnasc", "peft-rank", "lr-tuning",
+                                           "lr-default", "lr-tuned"),
                         default="complementary")
     parser.add_argument("--lr-selection", help="validation-LR selection JSON for --wave lr-tuned")
     args = parser.parse_args(argv)
@@ -280,6 +309,8 @@ def main(argv=None):
         jobs = c5c_ncrna_jobs()
     elif args.wave == "c5c-all":
         jobs = c5c_all_jobs()
+    elif args.wave == "equivalence-rnasc":
+        jobs = equivalence_rnasc_jobs()
     elif args.wave == "peft-rank":
         jobs = peft_rank_jobs()
     elif args.wave == "lr-tuning":
