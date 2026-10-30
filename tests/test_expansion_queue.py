@@ -461,6 +461,24 @@ def test_complementary_registry_excludes_specialized_lane_cells(tmp_path):
     assert all("_bestval_v1" in j["rid"] for j in jobs)
 
 
+def test_complementary_registry_supports_perbase_bestval_main_matrix(tmp_path):
+    import expansion_jobs as registry
+    output = tmp_path / "perbase-jobs.json"
+    assert registry.main(["--output", str(output), "--lane", "all",
+                          "--tasks", "spliceai,degradation,ssi"]) == 0
+    jobs = json.loads(output.read_text())
+    assert len(jobs) == 270
+    assert len({j["rid"] for j in jobs}) == len(jobs)
+    assert len({j["result_dir"] for j in jobs}) == len(jobs)
+    assert all(j["protocol"] == "bestval_v1" for j in jobs)
+    modules = {j["task"]: j["module"] for j in jobs}
+    assert modules == {
+        "spliceai": "rnafteval.finetune_spl",
+        "degradation": "rnafteval.finetune_regbase",
+        "ssi": "rnafteval.finetune_regbase",
+    }
+
+
 def test_external_memory_release_is_wait_not_permanent_failure(proof_env, monkeypatch):
     readings = iter([(4 * q.GI, 32 * q.GI), (4 * q.GI, 32 * q.GI),
                      (20 * q.GI, 32 * q.GI), (20 * q.GI, 32 * q.GI)])

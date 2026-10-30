@@ -293,6 +293,8 @@ def main(argv=None):
         jobs = lr_tuned_jobs(selection_doc["rows"])
     else:
         jobs = []
+        runners = dict(TASK_MODULES, spliceai=finetune_spl,
+                       degradation=finetune_regbase, ssi=finetune_regbase)
         for model in args.models.split(","):
             for task in args.tasks.split(","):
                 for strategy in args.strategies.split(","):
@@ -305,7 +307,8 @@ def main(argv=None):
                     for split in ("random", "family"):
                         for seed in (17, 29, 43):
                             jobs.append(job_for(task, model, strategy, split, seed,
-                                                protocol=args.protocol))
+                                                protocol=args.protocol,
+                                                module=runners[task]))
     path = Path(args.output)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
