@@ -9,17 +9,18 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from PIL import Image, ImageDraw, ImageFont
 
-WORK = OUT = PPT = HAND = FONT = YAHEI = None
+WORK = OUT = PPT = HAND = FONT = YAHEI = MAIN_MATRIX_RESULTS = None
 
 
 def configure():
-    global WORK, OUT, PPT, HAND, FONT, YAHEI
+    global WORK, OUT, PPT, HAND, FONT, YAHEI, MAIN_MATRIX_RESULTS
     parser = argparse.ArgumentParser(description='重绘 2026-10-28 导师讨论版图表，所有路径显式传入。')
     parser.add_argument('--work-dir', type=Path, required=True, help='当前结果 CSV 所在目录')
     parser.add_argument('--handoff-dir', type=Path, required=True, help='交接文档根目录')
     parser.add_argument('--ppt-dir', type=Path, required=True, help='历史 PPT 图所在目录')
     parser.add_argument('--output-dir', type=Path, required=True, help='新图与图源数据输出目录')
     parser.add_argument('--font', type=Path, help='可选微软雅黑字体文件')
+    parser.add_argument('--main-matrix-results', type=Path, help='可选八任务主矩阵 proof CSV')
     args = parser.parse_args()
     WORK = args.work_dir.resolve()
     OUT = args.output_dir.resolve()
@@ -27,6 +28,7 @@ def configure():
     PPT = args.ppt_dir.resolve()
     HAND = args.handoff_dir.resolve()
     FONT = str(args.font) if args.font else None
+    MAIN_MATRIX_RESULTS = args.main_matrix_results.resolve() if args.main_matrix_results else None
     if FONT:
         font_manager.fontManager.addfont(FONT)
         YAHEI = font_manager.FontProperties(fname=FONT).get_name()
@@ -389,6 +391,72 @@ def extension_sixbar():
                bbox_to_anchor=(0.5, 0.865), fontsize=8.5)
     pd.DataFrame(all_rows).to_csv(OUT / 'extension_three_task_sixbar_data.csv', index=False)
     save_fig(fig, 'extension_three_task_sixbar')
+
+
+def main_matrix_panels():
+    if MAIN_MATRIX_RESULTS is None:
+        return
+    df = pd.read_csv(MAIN_MATRIX_RESULTS).rename(columns={'run_id': 'rid'})
+    df = df[(df.proof_state == 'complete') & df.seed.isin([17, 29, 43])].copy()
+    groups = [
+        ([('crispr-off-target', 'CRISPR PR-AUC'),
+          ('secondary-structure', 'SSP pair-F1')],
+         'crispr_ssp_bestval_sixbar', 'CRISPR and SSP | official-model best-val comparison'),
+        ([('spliceai', 'SpliceAI macro-F1'),
+          ('degradation', 'mRNA degradation PCC'), ('ssi', 'SSI PCC')],
+         'extension_three_task_bestval_sixbar', 'Three-task extension | official-model best-val comparison'),
+    ]
+    for tasks, stem, title in groups:
+        all_rows = []
+        fig, axes = plt.subplots(1, len(tasks), figsize=(14.2, 4.8))
+        axes = np.atleast_1d(axes)
+        for ax, (task, metric) in zip(axes, tasks):
+            summary = sixbar_summary(df, task)
+            summary['task'] = task
+            all_rows.append(summary)
+            x = np.arange(len(summary))
+            width = 0.135
+            observed = []
+            for j, key in enumerate(SIX_COLORS):
+                vals = summary[key].to_numpy(float)
+                ns = summary[f'{key}_n'].to_numpy(int)
+                sds = summary[f'{key}_sd'].to_numpy(float)
+                observed.extend((np.abs(vals) + np.abs(sds))[np.isfinite(vals)].tolist())
+                pos = x + (j - 2.5) * width
+                for i, (v, n, sd) in enumerate(zip(vals, ns, sds)):
+                    if n == 0 or not np.isfinite(v):
+                        ax.text(pos[i], 0.025, 'NA', ha='center', va='bottom', fontsize=6.5,
+                                color='#8A8A8A', rotation=90)
+                        continue
+                    ax.bar(pos[i], v, width=width * 0.94, color=SIX_COLORS[key],
+                           edgecolor='white', linewidth=0.4,
+                           yerr=sd if n > 1 else None, capsize=1.5,
+                           hatch='///' if n < 3 else None)
+                    ax.text(pos[i], v + 0.015, f'{v:.2f}', ha='center', va='bottom',
+                            fontsize=6.5, rotation=90)
+                    if n < 3:
+                        ax.text(pos[i], max(0.035, v * 0.45), f'n={n}', ha='center',
+                                va='center', fontsize=6.2, rotation=90, color='#333333')
+            ymax = max(0.2, min(1.1, math.ceil((max(observed, default=0.8) + 0.08) * 10) / 10))
+            ax.set_ylim(0, ymax)
+            ax.set_title(metric, fontsize=11.5, fontweight='bold', color='#1F3A5F')
+            ax.set_ylabel(metric, fontsize=9.5)
+            ax.set_xticks(x)
+            ax.set_xticklabels([MODEL_SHORT[m] for m in summary.model], fontsize=7.2)
+            ax.grid(axis='y', color='#E8E8E8', lw=0.7)
+            ax.set_axisbelow(True)
+        handles = [plt.Rectangle((0, 0), 1, 1, color=SIX_COLORS[k]) for k in SIX_COLORS]
+        fig.subplots_adjust(left=0.05, right=0.995, top=0.75, bottom=0.15,
+                            wspace=0.22)
+        fig.suptitle(title, fontsize=13, fontweight='bold', color='#1F3A5F', y=0.98)
+        fig.text(0.5, 0.91, 'bars = mean ± SD; hatched = n<3; NA = not complete',
+                 ha='center', va='center', fontsize=10, color='#1F3A5F')
+        fig.legend(handles, [SIX_LABELS[k] for k in SIX_COLORS], ncol=6,
+                   loc='upper center', bbox_to_anchor=(0.5, 0.865), fontsize=8.5)
+        fig.text(0.5, 0.035, 'bestval_v1 | official models | formal seeds 17/29/43 | complete proof only',
+                 ha='center', fontsize=8.5, color='#777777')
+        pd.concat(all_rows, ignore_index=True).to_csv(OUT / f'{stem}_data.csv', index=False)
+        save_fig(fig, stem)
 
 
 def e4_delta_two_tasks():
@@ -977,6 +1045,7 @@ def main():
     resource_mrl(df)
     lr_ncrna_mrl()
     extension_sixbar()
+    main_matrix_panels()
     e4_delta_two_tasks()
     crop_valid_panels()
     ncrna_shuffle_audit()
