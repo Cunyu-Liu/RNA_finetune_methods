@@ -42,6 +42,15 @@ def configure():
         'pdf.fonttype': 42,
         'svg.fonttype': 'none',
     })
+
+
+def latest_work_input(pattern):
+    files = sorted(WORK.glob(pattern))
+    if not files:
+        raise FileNotFoundError(f'No input matches {pattern} in {WORK}')
+    return files[-1]
+
+
 COLORS = {
     'frozen_random': '#6BAED6',
     'frozen_family': '#C6DBEF',
@@ -627,7 +636,7 @@ def c5c_equivalence_microfull_megalora():
 
     budgets = [1000, 1500, 2000, 2500, 3000]
     seeds = [17, 29, 43]
-    source = WORK / 'bestval_ledger_export_20261029.csv'
+    source = latest_work_input('bestval_ledger_export_*.csv')
     df = pd.read_csv(source)
     df['n_train'] = pd.to_numeric(df.n_train, errors='coerce')
     df['seed'] = pd.to_numeric(df.seed, errors='coerce')
@@ -954,10 +963,14 @@ def c5c_ncrna_lora_scale():
 
 def main():
     configure()
-    df = pd.read_csv(WORK / 'mrl_mod_bestval_results_20261028.csv')
+    source = latest_work_input('mrl_mod_bestval_results_*.csv')
+    date_tag = source.stem.removeprefix('mrl_mod_bestval_results_')
+    mrl_stem = ('mrl_bestval_official_sixbar' if date_tag == '20261028'
+                else f'mrl_bestval_official_sixbar_{date_tag}')
+    df = pd.read_csv(source)
     assert len(df) == 180
     assert df.rid.nunique() == 180
-    sixbar(df, 'mrl', 'MRL Pearson r (3-seed mean)', 'mrl_bestval_official_sixbar',
+    sixbar(df, 'mrl', 'MRL Pearson r (3-seed mean)', mrl_stem,
            'MRL | official-model best-val comparison', ymax=0.92)
     sixbar(df, 'modification', 'm6A AUC (sequence-level multi-label)', 'modification_bestval_official_sixbar',
            'Modification | corrected sequence-level 12-label task; m6A index 7', ymax=1.08, chance=0.5)
