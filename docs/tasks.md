@@ -1,5 +1,10 @@
 # RNA-LM 微调策略评测：任务分解（TASKS）
 
+> 版本：3.57（2026-10-30 修订五十八【408格台账与MRL阶段图更新】：N13登记新增8格、MRL/modification 152 complete+28 runnable、650M frozen random n=2六柱图、PPT第7页定向更新及v13源包/teams验收；不把n=2写成闭合组。）
+> 版本：3.56（2026-10-30 修订五十七【跨模型并行调度与无中断接管】：N13登记队首阻塞修复、387 tests、GitHub逐文件核验和两个父调度的无中断重启；5个真实CUDA任务并行、GPU util=96%，不以进程数替代完成。）
+> 版本：3.55（2026-10-30 修订五十六【per-base best-val主矩阵与监控退役闭环】：N13登记270格注册表、12 complete+258 runnable、显存校准和3-worker队列；旧q_corrected已从监控白名单移除。生成器与whitelist提交均通过GitHub逐文件核验，386 tests通过。）
+> 版本：3.54（2026-10-30 修订五十五【旧valplateau失控队列退役】：N13登记degradation 547 epoch无实质改善的法证、异常格与旧父队列停止、证据路径和bestval_v1替代合同；未把中断格或进程数记为完成，未误停正在收尾的SpliceAI。）
+> 版本：3.53（2026-10-30 修订五十四【八任务后续交接与实时续接】：新增N13。以29页等价线更新版为基底，先实时proof接管现有任务，再按主矩阵→LR/rank→C5d/C5c/C5b→同源等价线→PPT/归档推进；完成任务地图、8任务机制图、rank8和已闭合五档只复用，所有完成判断以科学proof为准。）
 > 版本：3.52（2026-10-28 修订五十三【导师汇报续接与实验顺序冻结】：新增文末 N 节。采用 28 页阶段修订版，防止重复新增任务地图、重跑 8 任务 seed17 机制图和 micro rank8；后续按真实 proof 缺口推进主矩阵、LR/rank、C5c/C5d、同源等价线，并同步整理 PPT 与绘图原数据。）
 > 版本：3.51（2026-10-28 修订五十二【MRL LoRA/full 迁移闭环与 modification 正式格接续】：更新文末 M 节。41 格安全迁移、12 格既有链接及 1 格 teams 原生结果通过三轮审计；MRL LoRA/full 现 54 complete、6 runnable。mega full seed17 random 已验收；两个 modification micro LoRA 正式格已真实 CUDA 启动，尚待 complete proof。）
 > 版本：3.50（2026-10-28 修订五十一【非 650M 官方模型 frozen 双任务双 split 闭合】：更新文末 M 节。RNA-FM MRL family 三种子均值 0.607078958、样本 SD 0.002309400；micro/mega/ERNIE-RNA/RNA-FM 的 MRL 与 modification 双 split frozen 三种子均闭合，原始表 48 个唯一 RID。650M 当前 free=23.356 GiB，未达到 28+1 GiB，未强行启动。）
@@ -1323,3 +1328,69 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] 结论②已注册 `lr_tuning_jobs_20261030.json` 320格与 `lr_default_jobs_20261030.json` 240格，合计560个唯一RID/result_dir；tuning覆盖80个 task×model×split 组×4 LR×seed101，default覆盖正式三种子。两表仅注册未启动。
 - [x] 新增 `select_lr_validation.py`：仅在80组四档均 proof=complete 后按 held-out best_val 选LR，test不参与；缺格实测为 incomplete=320，未生成 selection/tuned jobs。tuned 结构测试可生成240个唯一正式格。GitHub commit=`8674ab4`，本地及远端385 tests通过；`/home` commit=`8be70d0`。
 - [~] 两个长时 SpliceAI 训练仍在推进：mega full s43 random 的 train/val 两轮为0.003104→0.000899/0.001168→0.000902，650M LoRA s17 random 为0.001945→0.000926/0.000868→0.000841。plateau 位于 root artifacts，teams无同名目录不是缺格证据；当前无result.json，不终止、不迁移、不写成完成。
+- [x] 主矩阵 need 已按同协议实测峰值校准：初版混 legacy/E6 的37–41GiB异常被拦截未应用；最终276格调整，186 exact+90受控 fallback，最大28GiB。原表及逐格证据均已备份，GitHub commits=`3383381/1dfa8c8`，385 tests通过。
+- [x] `ft_ernierna_crisprofftarget_frozen_s17_random_bestval_v1` 的 need 经18个best-val run证据由16降为3GiB，已于 free=16.789GiB 时通过启动器并完成，proof=complete、PR-AUC=0.188679145。校准未改变任何科学协议；该值只进入单格记录，不提前作三种子结论。
+- [~] ERNIE CRISPR frozen 后续 random s29/s43 与 family s17 已在合并SSH中确认启动，lane PID分别3000029/3000243/3000479；family s29/s43 的另一次启动在SSH关闭时结果未知，仍不得视为已启动或完成。远端385 tests通过，校准 `/home` commit=`28b11c5`。
+- [~] 后续只根据 proof 接续：先汇总六格 complete/running/runnable，再提交仍缺的 family seed29/43；不得在未知状态下双开。拟在无自有子任务时仅重启 complementary 父队列以加载校准need，但第一次重启命令在SSH建立前失败，未执行、未影响任何进程。
+
+## N13. 2026-10-30 八任务后续交接执行清单
+
+> 本节为当前唯一直接执行入口；N0–N12保留为历史证据。任何状态先实时重算，不沿用本节计数作为完成证明。
+
+- [x] **计划先于训练**：已把八任务逐结论实验、阶段顺序、模型优先级、CUDA/best-val/三轮对账和PPT/归档门禁写入spec §10.31；未在更新计划前提交新训练。
+- [x] **现行PPT基底**：确认采用29页 `RNA_LM微调策略评测-导师讨论修订版_20261029_等价线更新.pptx`，不重复插入任务地图、C5c五档页或八任务机制页，不回滚用户20页批注版。
+- [x] **环境与代码初检**：`/home/cunyuliu/rna-ft-eval` HEAD=`28b11c5`、工作树干净、master ahead 62；RTX 5090、torch 2.11.0+cu128、CUDA可用。确认互补父队列和MRL/modification等待队列存活。
+- [!] **旧valplateau失控训练**：650M degradation LoRA random旧格在epoch3达到best_val=0.219229，至epoch550仍为0.390136，547 epoch未回到旧停止带，581个validation点无result。旧PlateauTracker在validation持续高于best+tolerance时不会按无改善停止。日志/plateau/命令证据已保存到teams `status/failures/20261030/`，随后停止异常格、旧q_corrected父队列及新启动的同协议SSI；正在收尾的mega SpliceAI PID 3176591保留。该中断格不作科学结果，后续仅补独立bestval_v1，不重命名或混用旧协议。
+- [x] **替代队列与注册表**：已补齐通用complementary生成器的per-base runner注入，生成270个唯一bestval_v1格（3任务×5官方模型×3策略×双split×3 seeds）。正式表全部使用teams artifacts；错误root草稿已归档。实时proof=12 complete+258 runnable+0 conflict，12格直接复用。234格按同协议实测峰值校准need，独立3-worker队列PID=3259415已启动；启动不记完成。
+- [x] **代码与监控闭环**：全仓386 tests通过。生成器 `/home` commit=`6dfed90`、GitHub=`76b096190f219d797320112f5652fde0350f5370`；旧q_corrected已从active_lanes.txt移除，`/home` commit=`0e2602c`、GitHub=`fd4eb811551402856812924a1a150554ee1438e9`。两批均逐文件SHA核验，其他监控lane不变。
+- [x] **跨模型并行调度**：修复pending队首同模型/大need格阻塞其他可运行格的问题，按预算与在训模型选择job并保留未处理pending；同模型串行、显存等待和proof不变。focused+全仓387 tests通过，`/home` commit=`72c498b`、GitHub=`923e29e681dc1f0cd016cedfaccae8cbf290ea32`，文件SHA一致。
+- [x] **无中断加载新调度**：仅重启per-base与complementary父调度，子进程和命令记录到restart_20261030.json；新父PID=3291142/3292709。复核时5个真实CUDA训练进程并行、GPU util=96%、显存12,219MiB，旧q_corrected与显式plateau进程为0；不将进程数记为完成。
+- [x] **408格台账与MRL阶段交付**：新best-val导出408 accepted+4 smoke rejected，旧400行逐字段不变。MRL/modification为152 complete+28 runnable，仅更新650M MRL frozen random seed29/43两格，mean=0.731394、n=2斜线。PPT第7页已换图和读图句，其他包条目不变；layout/lint/CRC/字体/1.5倍行距/渲染全部通过。v13源包104文件、旧数据归档和teams备份均验收，PPT SHA=`6ce9554a2f56daad356a471ba3a442741daeeede8af195b6e4ce27bdc7ae7724`。
+- [x] **E6实时proof**：30个corrected E6格为27 complete+3 incomplete；仅650M LoRA seeds17/29/43未闭合，其余micro/mega/650M full/ERNIE/RNA-FM均通过双证。E6当前仍在650M阶段，等待真实显存窗口，不提前更新最终遗忘结论。
+- [x] **P0实时proof总账**：complementary=188 complete+136 runnable；MRL/modification=152 complete+28 runnable；C5c=69 complete+1947 runnable；PEFT/rank=102 complete+858 runnable；LR tuning=320 runnable；E6=27 complete+3 incomplete，均无conflict。ERNIE CRISPR frozen已核4 complete+2 runnable，per-base已核12 complete+258 runnable；运行格按RID/命令/日志/CUDA接管，未双开。计数只作本时点审计，后续仍需实时重算。
+- [ ] **P1主矩阵与归因**：优先闭合八任务官方模型主矩阵及MRL/modification跨模型矩阵；ncRNA只使用corrected shuffled/best-val证据，旧pre-shuffle及派生结论保持隔离。每闭合任务×模型×策略×split×3 seeds单元即导出逐RID表、SD/95%CI与资源记录。
+- [ ] **P2结论②③**：主矩阵阶段验收后执行320个LR tuning格，80组四档齐全才按held-out best_val选LR；再生成并闭合default/tuned正式配对。随后执行PEFT/rank注册表真实缺口，复用既有rank8六格，不混fixedsplit/主矩阵/legacy协议。
+- [ ] **P3结论⑤系列**：逐点区分C5d未跑/失败/未导出/路径缺失/隔离；闭合八任务×micro/mega/giga×LoRA/full×双split×七档C5c曲线，1000–3000保留1500/2000/2500加密档；从正式runtime直接导出八任务C5b时间×性能，统一硬件、batch、n、split和停止协议。
+- [ ] **P4结论④等价线**：RiNALMo与RNA-Sc分家族、分任务计算small-full(n)↔large-LoRA(m)逐seed最近实测对和CI；无交点写未观测到，不插值、不跨家族拼接。ncRNA random现有两个候选仅作局部结果，不外推八任务。
+- [ ] **并行调度**：仅在真实runnable、非running且free≥同协议need+1GiB时填充任务；不为占满显存抢跑后续波次或绕过共享锁。CUDA/mem_get_info异常或CPU降级即停止新增并留证。
+- [ ] **图与PPT**：复用八任务机制源数据，仅做RiNALMo式标注与视觉复核；新图必须经RID/result、协议/统计、图内数值/图注三轮对账。只改目标页，保留用户手调内容、微软雅黑与1.5倍行距，另存独立修订版。
+- [ ] **归档与代码**：现行源包保存CSV/JSON、RID、协议、脚本、metadata、PNG/PDF和manifest；旧图/旧表/废弃文档核引用后归档，不删除隔离证据。每批确认代码在 `/home` 提交并推送GitHub，权威大文件同步 `/teams`。
+- [ ] **最终验收**：完成PPT ZIP/XML、markitdown、fix/layout、嵌图哈希、字体行距、LibreOffice渲染和未修改页diff；所有未闭合矩阵继续标NA/范围，不以阶段版冒充最终科学结论。
+
+## N14. 2026-10-30 续接执行与图源复现修复
+
+- [x] **三套交接同步**：本地、`/home/cunyuliu/rna-ft-eval/docs` 与 `/teams/.../handoff` 的 spec/tasks/checklist/PPT交接/绘图索引已统一；同步前版本保存至 `/teams/.../backups/handoff_pre_goal_continue_20261030/`，五份文件三地SHA256一致。
+- [x] **现行PPT独立复核**：29页MRL更新版的PPT/PDF SHA256与交接一致；29页PDF总览和分组图已检查，任务地图与8个机制页无需重做。layout Issues=0，171个非空段落全部为Microsoft YaHei与1.5倍行距。源包104个登记文件通过目录与tar两条独立哈希核验；AppleDouble和`__pycache__`仅作待清理元数据，不纳入科学源文件。
+- [x] **复现问题定位**：直接运行v13包内绘图脚本可复现FileNotFoundError，根因是输入文件名仍固定在20261028/20261029；没有把“104个文件哈希正确”误当成“入口可复现”。
+- [x] **绘图修复与验收**：`latest_work_input()`按日期选择当前输入并保留MRL日期标签；本地13/14共同PNG逐字节一致，唯一资源图差异由两条新增650M MRL frozen random解释，目标MRL图/CSV和等价线图/CSV一致。远端MRL数据、尺寸和视觉复核通过，全仓387 tests通过。`/home`提交=`49fe6e2`。
+- [x] **GitHub与下一源包**：远端直连GitHub超时后改用本机API中转，`rnaft-expansion-20261027` 新提交为 `2e8b55c536af9330c089ce8b3c2f286287af68f3`；分支HEAD、单文件变更和三地源码SHA256均通过。下一源包revision纳入修复脚本并排除缓存/AppleDouble，v13历史包不覆盖。
+- [x] **实时主矩阵增量proof**：互补220 complete+3 running+101 runnable，per-base 16 complete+254 runnable，MRL/modification 152 complete+28 runnable，均0 conflict。去重后8任务主矩阵714格为338 complete+3 ledger running+373 runnable；已导出338个唯一RID主矩阵CSV，best-val全台账另为443 accepted+4 rejected，两种计数不混用。
+- [x] **RNA-Sc等价线注册**：固定30M full@3e-5 vs 650M LoRA@3e-4，8任务×双split×七档×3 seeds×2臂=672格。初次草稿的ncRNA runner被dense门禁拒绝，未训练；改用 `finetune_one` 后通过唯一性、LR、batch、dense和388 tests。正式表672 runnable、0 conflict，仍在P4后启动。`/home` commit=`df8c65b`，GitHub=`f3267222f2bad12e97f10b010dec0c4c8d5a0f1c`。
+- [ ] **继续科学矩阵**：沿用N13实时proof和现有主矩阵队列，complete不重训、running不双开；只有主矩阵阶段门通过后才启动LR/PEFT-rank，不以绘图修复或注册表替代任何实验完成。
+
+## N15. 2026-10-30 夜间八任务扩展与 30 页交付执行清单
+
+> 用户当轮要求：①第 3 页后介绍 8 任务；②①a-4 任务扩展按 ①a 风格重绘（优先官方模型）；③机制 8 任务双 split 三状态（已完成，复核即可）；④②③④⑤⑤b⑤c⑤d 补齐 8 任务。本轮先冻结顺序再执行，禁止边跑边改协议。
+
+- [x] **P0 调度扩容**：per-base 父队列 3→6 worker、complementary 4→6 worker（SIGTERM 旧父进程、子进程保留），新增 LR tuning 3 worker 独立队列；复核 10 个真实 CUDA 进程并行、util 94→99%、显存 15.3 GiB/32.7 GiB，无同 RID 双开。
+- [x] **P0 图与页**：任务地图页改为「4 类 = 3+1+2+2」并说明不复制任务；①a-4 改为其余 5 任务 × 5 官方模型 × 六柱（标准 6 色、n<3 斜线、未闭合留白），与前 3 页合并覆盖 8 任务。
+- [x] **⑤b 拆分**：⑤b-1 时间×性能 8 任务散点（random split、中位 wall）；⑤b-2 显存 5 模型×3 策略（Frozen<LoRA<Full，650M full 未跑）。旧「LoRA≈frozen/650M full 超 24GB」措辞按实测弃用。
+- [x] **⑤d 换页**：审计表 → 148M/650M 覆盖热图（0=未闭合，不是 0 分），逐任务逐臂标已完成种子数。
+- [x] **②③⑤ 文案**：② 写明 320 LR 格已启动、tuned 240 格在其后；③ 写明 rank8 六格 0.918/0.900 与 960 格注册表；⑤ 写明 MRL/m6A 5 模型六柱无崩溃带、C5c 2016 格已注册。
+- [x] **验收**：30 页 ZIP CRC 正常；layout 越界 0；全部文本 run 为 Microsoft YaHei；非空段落 1.5 倍行距；独立 fontconfig 实际渲染中文正常；文本 diff 仅演示页 4/8/18/19/21/23/26 与新增 27、总结 29。
+- [x] **源包与归档**：`figure_source_data_20261030_eight_task_v14/`（17 文件，manifest SHA256=`5c9ee9aa3da92360aa7996d357181e42f874087444050b3ab5fbc579d6938827`）；旧图/旧表/历史文档移入 `archive_20261030/`，不删隔离证据。
+- [ ] **P0 剩余主矩阵**：per-base 251 格 + complementary 86 格（ncRNA/CRISPR/modification/MRL/SSP 缺口）；每闭合一批即重绘 ①a-4 与 ⑤d，禁止用 registry 大小冒充完成。
+- [ ] **P1 MRL/modification 28 格**：补齐 650M full/family 等；n=2 仍斜线，不写三种子。
+- [ ] **P2 LR 320 → tuned 240**：80 组 task×model×split 四档 proof 齐全后按 held-out best_val 选档（并列取较低 LR），再生成 tuned 正式格；test 指标不参与选档。
+- [ ] **P3 PEFT/rank 960**：rank4/8/16 + DoRA × 8 任务 × 5 官方模型 × 双 split × 3 seeds；与主矩阵同 RID 不双开。
+- [ ] **P4 C5c 2016**：8 任务 × micro/mega/giga × LoRA/full × 双 split × {10,100,1000,1500,2000,2500,3000} × 3 seeds；650M 仅在 28+1 GiB 窗口启动。
+- [ ] **P5 RNA-Sc 等价线 672**：30M full@3e-5 vs 650M LoRA@3e-4，逐任务 84 格；只有两臂曲线均闭合才计算逐 seed 等价点。
+- [ ] **P6 E6**：650M LoRA seeds17/29/43 三格；其余 27 格已 complete，不重训。
+- [x] **重复启动处置**：重启父队列后 `RiNALMo-micro frozen s43 family` 与 `ERNIE-RNA frozen s29 family` 出现同 RID 双开；按 `/proc` 清单保留先启动 PID（3389298/3393786）、终止后启动 PID（3398319/3398327），复核无其他重复格。教训写入 spec §10.38-⑨：父进程重启前必须用 `/proc` 实际 runner 清单与 ledger 对齐，禁止立即重放注册表。
+- [x] **artifact-root 回归修复**：重起队列时漏设 `RNAFT_ARTIFACT_ROOT`，导致新完成格写入 `/home/.../artifacts` 而注册表指向 `/teams/...`，proof 全部报 conflict。已按 spec §10.38-⑩ 终止错环境父/子进程并以 `env RNAFT_ARTIFACT_ROOT=/teams/...` 重起三个父队列；`/proc/<pid>/environ` 与 teams 新目录时间戳双重验证通过。错根期间的 9 格作废，不计数、不进均值。
+- [x] **P3 前置小批（rank4/16）**：`rank_micro_r4r16_20261031.json` 固定 RiNALMo-micro × LoRA × rank{4,16} × 8 任务 × 双 split × 3 seeds = 96 格，RID 带 `_r4/_r16_bestval_v1` 与主矩阵 rank8 不重；2-worker 队列已起（state=`status/rank_micro_r4r16`，`RNAFT_ARTIFACT_ROOT` 指向 teams），首个格 `ft_rinalmomicro_noncodingrnafamily_lora_s17_random_r4_bestval_v1` 已建目录。该批只服务结论③的 rank 轴，不替代 P2 的 LR 选择门。
+- [x] **20261031 台账刷新**：delta 导出 408+95=503 accepted（0 rejected）；四图按新台账重绘；148M 六臂闭合任务 4→5（新增 SSP）；过滤口径写入两个构图脚本并做 smoke/diag/rank/seed101/C5c/错根六类排除；PPT/PDF 与源包 v15 已重出并复验。
+- [x] **20261031 三条补测车道**：A 线 ncRNA 全参 8 格 LR 诊断（`stale_missing_artifacts` 复位后重跑，4 worker，`status/ncrna_lr_recover_20261031`）；B 线等价线 420 格 micro-full@1e-5 vs mega-LoRA@3e-4 × 7 任务 × 5 档 × 双 split × 3 seeds（4 worker，`status/equiv_tiers_20261031`，SSP n=2000 的 12 格按 complete 自动 skip）；C 线 SpliceAI family frozen 2 格 SIGTERM 重跑（2 worker，`status/repair_20261031`）。三线均独立 state-dir，不动 5 条主队列。
+- [ ] **A 线定稿**：8 格 LR 网格齐后写「同 split 仅改 LR」对照，判定 ncRNA 全参坍缩是 LR 过高（真坍缩）还是测评口径（伪坍缩）；当前 family@1e-5=0.8703、random@3e-4=0.0956 已回。
+- [ ] **B 线出图**：逐任务滚动产出结论④ 8 面板等价线；只有两臂同档均 ≥3 seeds 才计算等价点，否则留白。
+- [ ] **归档与同步**：本地/`/home` docs/`/teams` handoff 三地 SHA256 一致；新图源包与 PPT/PDF 同步 teams delivery；确认代码提交 `/home` 并推送 GitHub。

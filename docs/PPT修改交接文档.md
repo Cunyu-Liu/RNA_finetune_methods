@@ -339,3 +339,42 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页由比较协议示意改为 ncRNA random 的真实五档等价图：full@2500≈LoRA@1500 为2/3 seeds最近，full@2000≈LoRA@1000 为1/3 seeds最近；标题、图内候选和页脚均明确“非唯一”，不插值、不外推其他任务或split。
 3. 正式输入为400个accepted RID，旧385行不变，新15行为 micro-full 五档；30个等价源RID和逐seed配对独立复核通过。layout Issues=0、markitdown、29页Microsoft YaHei渲染、嵌图和源包104文件哈希通过；本地与teams重算的 data/pairs/meta 一致。
 4. 绘图代码 `/home` commit=`f870f8c`、GitHub commit=`9aee3d4`，385 tests通过。其余7任务、family split、650M和其他 C5c 臂仍待补，本页不是8任务等价线终版。
+
+## 18. 2026-10-30 续接与逐页复核
+
+1. 现行续接文件仍为§17的29页等价线更新版，本地重新下载后SHA256=`3a7d737706fbaae9fe36cd746b1d18675af7ce1b2be656c8716b315cbd784d18`，与记录一致。用户20页文件保持原样，不覆盖、不回滚；任务地图、C5c五档页和8个机制页不重复插入。
+2. 已对29页逐页核对标题、图、读图句、关键数值与前后文；任务地图与后续任务/指标对应，机制页顺序为ncRNA、MRL、modification、CRISPR、SSP、SpliceAI、degradation、SSI，结论④与⑤c的局部等价/非等价表述没有混写。未发现需立即修改的图文错配。
+3. 基线验收：markitdown全文提取通过；`validate_layout.py`全29页Issues=0；ZIP CRC正常，slide XML=29、media=25；使用独立fontconfig与Microsoft YaHei实际渲染PDF，中文正常，总览与分组高清图未见重叠、越界或裁切。
+4. 机制方法已直接对照RiNALMo论文Fig.2：classification token embeddings + t-SNE + 真实标签/家族。现有页面保留各任务相应预测头输入、双split三状态、联合投影、样本数和full-test指标，只作描述性诊断，不补写因果结论。
+5. 当前仍是阶段讨论版。结论②③④⑤及⑤b/⑤c/⑤d只在实时proof闭合后增量更新；其他用户手调内容不改。后续交付另存新文件并保留本版哈希，所有新图与源数据同步升revision。
+
+## 19. 2026-10-30 MRL第7页与v13源包更新
+
+1. 新交付为 `RNA_LM微调策略评测-导师讨论修订版_20261030_MRL更新.pptx`，共29页，SHA256=`6ce9554a2f56daad356a471ba3a442741daeeede8af195b6e4ce27bdc7ae7724`；同名PDF SHA256=`e86f2c6d4a48b7cc6599bf7febe422fb82d75df660b4237efbe8d74b5c166bb1`。仅改演示第7页，其他包条目逐字节/XML语义无差异。
+2. best-val导出从400增至408 accepted；新增650M MRL frozen random seeds29/43，当前mean=0.731394、n=2。第7页沿用六柱图，650M frozen random以斜线显示，其余未闭合项仍NA；读图句明确n=2，未写成三颗种子或全模型结论。
+3. 验收完成：fix_pptx、编辑页layout Issues=0、markitdown、项目pptx_lint PASS、ZIP CRC、嵌图SHA一致、29页独立fontconfig渲染与第7页高清视觉检查通过。全部文本run为Microsoft YaHei，非空段落1.5倍行距；包级diff仅slide6.xml和mrl_bestval_official_fourbar.png。
+4. 源包revision=`20261030_bestval_408_mrl_n2_v13`，104个文件哈希全通过，manifest SHA256=`2e8234ed90d59d19fd8cf02be8ced38c65e508468ce9610c47ad9af27a2c7078`。旧400行、旧MRL表和旧图已归档到 `archive_20261028/绘图数据/bestval_400_v12_20261030/`；新版PPT/PDF和源包已备份至 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/delivery/20261030/` 并逐文件验算。
+
+## 20. 2026-10-30 夜间八任务扩展版（30 页）
+
+1. **基底与交付**：以 §19 的 29 页 v13 版（SHA256=`6ce9554a2f56daad356a471ba3a442741daeeede8af195b6e4ce27bdc7ae7724`）为唯一基底增量修改，产出 `RNA_LM微调策略评测-导师讨论修订版_20261030_八任务扩展.pptx`，共 **30 页**，SHA256=`8a3ea9af835fba5a9d2647a9e9e1483bef08f0f0d0b0647fa6d033acbb5328ff`；同名 PDF SHA256=`152c046bdaa7f874d526c7209f5e67df5c296bb0f5ecec18f0f04552a61aa21d`。用户 20 页 `RNA_LM微调策略评测-结果版.pptx`（SHA256=`464171622dd75d3946f0d4aa0fea18c78c9531bfc362febd6110e752b3c1faf9`）保持原样，不覆盖、不回滚。
+2. **为什么不是直接改 20 页文件**：20 页版是 10-26 的旧线，缺少已验收的任务地图页与 8 个机制页；29 页版本身是在同一 20 页基底上增量累积而来（§12–§19），已保留用户手调样式。直接在 20 页上重做会重复插入任务地图/机制页并丢失已验收页，故本轮沿 29 页线继续。
+3. **修改范围（文本 diff 仅这些页）**：演示页 4（任务地图口径改为「4 类 = 3+1+2+2」并压缩首卡文案）、8（①a-4 换图换文）、18（②状态）、19（③状态）、21（⑤状态）、23（⑤d 换图）、26（⑤b-1 换图换文）；新增第 27 页（⑤b-2 显存）；原 27–29 顺延为 28–30，其中总结页（现第 29 页）证据范围一句同步更新。其余页面 XML 与图片未动。
+4. **新图 4 张**（全部重新生成，源数据见 `figure_source_data_20261030/`）：
+   - ①a-4 `eight_task_sixbar.png`：其余 5 任务（CRISPR/SpliceAI/SSP/degradation/SSI）× 5 官方模型 × 六柱；颜色/斜线/留白与 ①a-2/①a-3 一致，值标签仅在 n≥3 时显示。
+   - ⑤b-1 `eight_task_time_perf.png`：8 任务 random split，形状=模型、颜色=策略，横轴中位 wall、纵轴任务主指标。
+   - ⑤b-2 `peak_memory.png`：5 模型 × 3 策略跨 8 任务峰值中位 + min–max；24 GB 参考线。
+   - ⑤d `bigmodel_coverage.png`：148M/650M 逐任务逐臂已完成种子数热图，0 = 未闭合。
+5. **口径修正**：旧 ①a-4 三面板（B20 阶段表，含 NucleicBERT、NA 文本柱）与 §19 的「LoRA ≈ frozen 成本、650M full 超 24GB」表述按实测弃用；实测为 Frozen < LoRA < Full-FT（LoRA ≈ 2.4–3.3× Frozen、Full ≈ 1.5× LoRA），650M full 尚无 run。
+6. **验收**：30 页 ZIP CRC 正常、layout 越界 0、全部文本 run 为 Microsoft YaHei、非空段落 1.5 倍行距、表格 1.15；独立 fontconfig + 微软雅黑实际渲染 30 页中文正常；图片按原始宽高比嵌入（①a-4 3754×1396、⑤b-1 3754×1396 近似、⑤b-2、⑤d）。页码框统一右对齐并按文字长度定宽，`02a/03a2/degradation/SpliceAI` 不再折行。
+7. **源包**：`交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/`，revision=`20261030_eight_task_expansion_v14`，17 个文件，manifest SHA256=`5c9ee9aa3da92360aa7996d357181e42f874087444050b3ab5fbc579d6938827`；生成脚本 `build_8task_sixbar.py`、`build_time_perf_coverage.py` 均为参数无关的本地可复现脚本（字体 `~/Library/Fonts/msyh.ttc`）；已在 `/home/cunyuliu/rna-ft-eval` 提交 `ad4c637` 并推送 GitHub `Cunyu-Liu/RNA_finetune_methods` 分支 `rnaft-expansion-20261027`（`b14b1c3` / `e14aaed`）。
+8. **边界**：本版仍是阶段讨论版。①a-4 中 SpliceAI/degradation/SSI 的 LoRA/full 仅 seed17；②③⑤ 的 8 任务正式矩阵仍未闭合；⑤d 只陈述覆盖；不得把本版当作 8 任务全部完成的证明。
+
+## 21. 2026-10-31 数据刷新与 ⑤d 口径校正
+
+1. **台账**：`bestval_ledger_export_20261031.csv` 由 `scripts/export_bestval_delta.py` 生成（408 已验收基座 + 95 增量 = **503 accepted**，0 rejected）。增量导出只对新 done 行做 artifact 存在性与 metric 校验，不重复加载 408 个 checkpoint；全量 `export_bestval.py` 仍在后台跑，用于最终冻结。
+2. **图刷新**：①a-4 六柱、⑤d 覆盖热图、⑤b-1 时间×性能、⑤b-2 显存四张图全部按 **全量证明导出 496 accepted + 4 smoke rejected** 重绘（delta 503 版仅作快速路径，已被全量版取代）。CRISPR 由 13 格三种子升到 24/30，SSP 10→18/30；148M 六臂闭合任务由 4 个变为 **5 个**（新增 SSP）。
+3. **口径校正**：⑤d 标题与读图句由「148M 闭合 4 个任务」改为「5 个」，并明确 650M 仅有 LoRA 与 B20 阶段表 frozen；覆盖热图与 ①a-4 现在共用同一过滤口径（排除 smoke/diag/rank 变体/seed101/C5c 数据档/错根格），两页不再自相矛盾。
+4. **过滤口径固化**：`build_8task_sixbar.py`、`build_time_perf_coverage.py` 新增 `keep_row()`：排除 `_noshuffle/_smoke/_diag`、`_r4_/_r16_`、seed∉{17,29,43}、`_e3\d+_`（C5c 档）、以及 23:11–00:05 错 artifact 根写出的格；改为自动选择最新 `bestval_ledger_export_*.csv`，图内来源标签随文件名动态生成。
+5. **交付**：PPT SHA256=`8a3ea9af835fba5a9d2647a9e9e1483bef08f0f0d0b0647fa6d033acbb5328ff`，30 页；PDF SHA256=`152c046bdaa7f874d526c7209f5e67df5c296bb0f5ecec18f0f04552a61aa21d`。验收：CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、独立 fontconfig 渲染正常。
+6. **源包**：`figure_source_data_20261030_eight_task_v14/` 升 revision=`20261031_refresh_v15b_fullproof`，19 文件，manifest SHA256=`885ab306f432cf331f3ff62bca46898da99fbba88aeee8e0eaf0270103598992`。

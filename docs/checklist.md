@@ -1,5 +1,7 @@
 # RNA-LM 微调策略评测：验收清单（CHECKLIST）
 
+> 版本：1.15（2026-10-30 修订十五【per-base best-val替代链闭环】：B32补勾。旧q_corrected已从监控白名单移除；270格bestval主矩阵已注册，12个既有格复用，3-worker新队列只走bestval。生成器/监控代码均提交GitHub并通过386 tests。）
+> 版本：1.14（2026-10-30 修订十四【失控训练退役门禁】：追加 B32。旧plateau在validation持续高于best+tolerance时可无限运行，异常格及旧父队列必须留证停止；per-base正式补测只走独立bestval_v1，不以中断或旧协议结果替代验收。）
 > 版本：1.13（2026-10-28 修订十三【扩展任务现行门禁】：追加 B24–B28。冻结 8 任务官方语义、best-val/checkpoint/CUDA/split 证据、同 RID 防重与绘图三轮对账；历史完成记录不得越过 §10.14–§10.21 的隔离和复测要求。）
 > 版本：1.12（2026-10-03 修订十二【收口判定双证纪律】：新增 B23——「队列循环 DONE」≠「格落地」，任何收口判定必须 ledger done 行 + artifacts result.json 双证（教训：E6-v2 0927 单轮循环 3 格 OOM 失败，队列日志打 DONE 但格从未落地，快照误报「18/18」）；同步 1003 真态（E6 88 格收官 / AIDO LR 翻转 / tunedmissing 补臂在飞）。B11 随 HydraRNA 18/18 收口补勾（B20 门禁 + MHA-only 目标已执行）。）
 > 版本：1.11（2026-09-29 修订十一【执行架构加固 + 设计变更登记 + 队列纪律】：新增 B21（跨队列共享卡锁纪律——根因教训固化：独立锁目录 → 同卡叠加 OOM 竞卡）；新增 B22（大格 bs 下调协议标注纪律）；**B7 按 0928 用户决策重标**——full-FT ≤100M 门槛废除（全参数量解锁），待 T0.3.1 导师补签；A11/A12 进度按 0929 真态更新（AIDO ✅ 接入、NucleicBERT ✅ 54/54 收口）。同步 spec v2.1 / tasks v3.14。）
@@ -70,6 +72,7 @@
 - [ ] B29 **逐结论八任务覆盖**：结论①a/②/③/④/⑤/⑤b/⑤c/⑤d 均逐任务核对 ncRNA、CRISPR、modification、MRL、SpliceAI、SSP、degradation、SSI；缺任何任务必须标范围，不得以三任务扩展页或单任务资源图代替完整结论【本轮新增，见 tasks N9】
 - [ ] B30 **已完成资产防返工**：任务地图、8 任务 micro/seed17 双 split 三状态机制图、micro ncRNA rank8 六格及所有 complete 格只复用；启动或新增页面前必须核查远端最新文件、实时 proof 与哈希【本轮新增】
 - [ ] B31 **ncRNA 训练顺序事故门禁**：旧 pre-shuffle ncRNA family 结果及派生崩溃带、Δ、规模/数据量等价线不得进入当前图或结论；严格同 runner/max_len A/B 与 corrected best-val 矩阵未验收前只能写审计状态。隔离原文件只归档不删除，所有刷新图核查 RID/protocol/epoch_shuffle【见 spec §10.23 / tasks N10】
+- [x] B32 **失控训练退役门禁**：旧PlateauTracker在validation持续高于best+tolerance时可无限运行；异常degradation格和旧q_corrected父队列已留证停止，监控whitelist已移除该lane，不得直接重启。per-base正式补测只用独立bestval_v1、best checkpoint与无实质改善停止合同；中断格无result不计完成，新旧协议不混均值【✓ 2026-10-30：270格注册表12 complete+258 runnable，3-worker bestval队列与GitHub提交核验；见 spec §10.32–10.33 / tasks N13】
 
 ## C 组：arXiv 挂出前红队自查（对标被拒稿尸检教训）
 
@@ -123,3 +126,14 @@
 - **挂出**：C 组 24/24（含撞车检查）；任何未过项 → 回 tasks.md 对应任务修补后重验。
 
 **B 组现为 17 项（v1.8 扩充后）。**
+
+## E 组：2026-10-30 夜间 30 页版验收（本轮执行记录）
+
+- [x] E1 `deck_1030_night.pptx` → `RNA_LM微调策略评测-导师讨论修订版_20261030_八任务扩展.pptx`（30 页，SHA256=`8a3ea9af835fba5a9d2647a9e9e1483bef08f0f0d0b0647fa6d033acbb5328ff`）；ZIP CRC `testzip()`=None。
+- [x] E2 结构：out-of-bounds=0；非空段落 1.5 倍行距=100%；全部文本 run 字体=Microsoft YaHei=100%。
+- [x] E3 实际渲染：独立 fontconfig（`ppt/work/fc/fonts.conf`）+ 微软雅黑，30 页 PDF 中文无缺字；页码框 `02a/03a2/degradation/SpliceAI` 单行。
+- [x] E4 文本 diff：仅演示页 4/8/18/19/21/23/26 与新增 27、总结 29 变化；其余页文本未动。
+- [x] E5 图源：4 张新图逐格 n/mean 写入 CSV；`figure_source_data_20261030_eight_task_v14` manifest 17 文件 SHA256 全通过（`5c9ee9aa…`）。
+- [x] E6 图文匹配：①a-4 五面板指标与任务地图一一对应；⑤b-1 8 面板与 8 任务一致；⑤b-2 数值与 `peak_memory_data.csv` 一致；⑤d 热图与 `bigmodel_coverage_data.csv` 一致。
+- [ ] E7 待实验闭合后重绘：①a-4 的 SpliceAI/degradation/SSI 微调臂（当前 seed17）、⑤d 650M 各臂、②③⑤ 的 8 任务正式矩阵。
+
