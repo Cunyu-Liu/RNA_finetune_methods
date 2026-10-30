@@ -325,6 +325,36 @@ def test_same_model_jobs_wait_for_own_inflight_process(proof_env, monkeypatch):
     assert [row["status"] for row in rows].count("skipped") == 2
 
 
+def test_other_models_bypass_same_model_head_of_line_wait(proof_env, monkeypatch):
+    root = Path(proof_env.job.result_dir).parents[1]
+    second = make_job(root, seed=29, rid="ft_test_second",
+                      result_dir=str(root / "artifacts" / "second"))
+    third = make_job(root, model="ERNIE-RNA", rid="ft_test_third",
+                     result_dir=str(root / "artifacts" / "third"))
+    started = []
+
+    class BlockingProcess:
+        def __init__(self, pid):
+            self.pid = pid
+            self.polls = 0
+
+        def poll(self):
+            self.polls += 1
+            return 75 if len(started) >= 2 or self.polls >= 3 else None
+
+    def fake_popen(command, **kwargs):
+        started.append(command)
+        return BlockingProcess(5000 + len(started))
+
+    monkeypatch.setattr(q.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(q.time, "sleep", lambda seconds: None)
+    state_dir = root / "other-model-state"
+    assert q.dispatch([proof_env.job, second, third], workers=2,
+                      state_dir=state_dir, poll_s=0.01) == 0
+    models = [command[command.index("--model") + 1] for command in started]
+    assert models == ["RNA-FM", "ERNIE-RNA", "RNA-FM"]
+
+
 BESTVAL_LOSSES = [1.0, 0.8, 0.8, 0.8, 0.8]
 
 
