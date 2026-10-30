@@ -1391,6 +1391,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **P3 前置小批（rank4/16）**：`rank_micro_r4r16_20261031.json` 固定 RiNALMo-micro × LoRA × rank{4,16} × 8 任务 × 双 split × 3 seeds = 96 格，RID 带 `_r4/_r16_bestval_v1` 与主矩阵 rank8 不重；2-worker 队列已起（state=`status/rank_micro_r4r16`，`RNAFT_ARTIFACT_ROOT` 指向 teams），首个格 `ft_rinalmomicro_noncodingrnafamily_lora_s17_random_r4_bestval_v1` 已建目录。该批只服务结论③的 rank 轴，不替代 P2 的 LR 选择门。
 - [x] **20261031 台账刷新**：delta 导出 408+95=503 accepted（0 rejected）；四图按新台账重绘；148M 六臂闭合任务 4→5（新增 SSP）；过滤口径写入两个构图脚本并做 smoke/diag/rank/seed101/C5c/错根六类排除；PPT/PDF 与源包 v15 已重出并复验。
 - [x] **20261031 三条补测车道**：A 线 ncRNA 全参 8 格 LR 诊断（`stale_missing_artifacts` 复位后重跑，4 worker，`status/ncrna_lr_recover_20261031`）；B 线等价线 420 格 micro-full@1e-5 vs mega-LoRA@3e-4 × 7 任务 × 5 档 × 双 split × 3 seeds（4 worker，`status/equiv_tiers_20261031`，SSP n=2000 的 12 格按 complete 自动 skip）；C 线 SpliceAI family frozen 2 格 SIGTERM 重跑（2 worker，`status/repair_20261031`）。三线均独立 state-dir，不动 5 条主队列。
+- [x] **650M 取舍定稿**：用户决定「不做 650M」——LoRA 峰值 17 GB、full 25 GB，单卡 32.7 GiB 在与主队列并行时无法开跑；⑤c-0/⑤d/⑤b-2 三页显式写「显存受限，本轮不测」，已有 650M 格保留为覆盖陈述，不补零、不写规模律。
 - [ ] **A 线定稿**：8 格 LR 网格齐后写「同 split 仅改 LR」对照，判定 ncRNA 全参坍缩是 LR 过高（真坍缩）还是测评口径（伪坍缩）；当前 family@1e-5=0.8703、random@3e-4=0.0956 已回。
 - [ ] **B 线出图**：逐任务滚动产出结论④ 8 面板等价线；只有两臂同档均 ≥3 seeds 才计算等价点，否则留白。
 - [ ] **归档与同步**：本地/`/home` docs/`/teams` handoff 三地 SHA256 一致；新图源包与 PPT/PDF 同步 teams delivery；确认代码提交 `/home` 并推送 GitHub。

@@ -387,5 +387,5 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 4. **C 线（SpliceAI 修复）**：2 格在 15:50 UTC 被 SIGTERM（rc=-15，plateau 仍 RUNNING），重跑时发现 23:06 起的 orphan 仍在跑 → 出现同 RID 三开并发写同一 `best.ckpt/plateau.json`；kill 较晚两份、保留 orphan。**教训：manifest 的 `failed` 只代表「新父的子进程被杀」，不能作为「格已死」判据，必须 `/proc` 实测。**
 5. **台账与图**：delta 导出 496+27=**523 accepted**（0 rejected）；四图按新台账重绘（CRISPR 24→25/30、SSP 18→19/30）。
 6. **PDF 中文空白修复**：`fc-match "Microsoft YaHei"` 解析到 `PingFang.ttc`，LibreOffice 无法嵌入 `.ttc` → CJK 全空白；在 `ppt/work/fc/fonts.conf` 加 `<rejectfont><glob>*/*.ttc</glob></rejectfont>`，改走 `msyh_regular.ttf`（cmap 29898/CJK 20992），PDF 中文恢复。pptx 内字体名仍是 Microsoft YaHei。
-7. **交付**：30 页；PPT SHA256=`c833ceef9c425d9a85e1…`，PDF SHA256=`762e3d5f13f672cfc1df…`；验收 CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 第 18 页中文可提取（64 字）。
+7. **交付**：30 页；PPT SHA256=`031fd8ea2c2c9aaa…`，PDF SHA256=`268e99d5dac6d70a…`（第 2 页进度表同步为 2026-10-31 夜间版，⑤c-0/⑤d/⑤b-2 按用户决定写明 650M 显存受限本轮不测）；验收 CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 第 18 页中文可提取（64 字）。
 8. **源包**：revision=`20261031_refresh_v16_lanes`，24 文件，manifest SHA256=`dbacbc26e7a0639ae01ca8b63729ac222628d0c05c8007c10240e1e17ecb1900`。

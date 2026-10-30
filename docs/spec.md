@@ -756,4 +756,6 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 **⑭ PDF 预览中文整体变空白的定位与修复（2026-10-31 01:2x）**：重出 PDF 后发现全部中文在渲染图里消失（拉丁字符正常、中文位置留空），先用基线 `deck_29p_20261030.pptx` 复现 → 证明与本次改字无关，是渲染链问题。`fc-match "Microsoft YaHei"` 解析到 `PingFang.ttc`，而 LibreOffice 的 PDF 导出无法嵌入 `.ttc` 集合字体，CJK 字形被导成空白；`~/Library/Fonts/msyh_regular.ttf` 是完整单文件字体（cmap 29898 / CJK 20992），可用。修复：`ppt/work/fc/fonts.conf` 增加 `<selectfont><rejectfont><glob>*/*.ttc</glob></rejectfont></selectfont>`，使 YaHei 解析到 `msyh_regular.ttf`，重出后 `pdftotext` 第 18 页中文字符数 64、渲染正常。**该修复只影响本地 PDF 预览/交付 PDF，pptx 内字体名仍为 Microsoft YaHei。**
 
+**⑮ 650M 车道取舍（2026-10-31 用户决定）**：RiNALMo-650M 的 LoRA 实测峰值 ~17 GB、full ~25 GB，而单卡 32.7 GiB 在 13 个训练进程并行时已占 22.7 GiB，**无法在不牺牲在途任务的前提下开跑**。用户决定「不做 650M，PPT 写明显存受限」。据此：①⑤c-0（第 22 页）副标题与读图句改为「650M 需 40 GB 卡，本轮不测」；⑤d（第 23 页）读图句与数据句写明「LoRA 17 GB / full 25 GB，32.7 GiB 单卡无法与主队列并行，按决定本轮不测，不写规模律」；⑤b-2（第 27 页）副标题改为「650M full 峰值 25 GB，本轮不测」。②650M 已有格（ncRNA/CRISPR/MRL 的少量 LoRA 与阶段表 frozen）仍保留在图中作覆盖陈述，不删、不补零。③省下的算力全部给 8 任务六臂收口与 B 线等价线分层。
+
 **⑧ 归档与同步**：新图源包 `figure_source_data_20261030_eight_task_v14/`（revision=`20261030_eight_task_expansion_v14`，17 文件逐哈希）；旧图、旧表、历史交接文档核引用后移入 `archive_20261030/`，不删除隔离证据；本地、`/home` docs 与 `/teams` handoff 三地同步。
