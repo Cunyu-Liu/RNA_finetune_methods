@@ -1524,3 +1524,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v28 与源包**：1137 accepted、1 rejected；5 个 cap 行均为 requested=2000/actual=1552。源包 102 文件，manifest SHA256=`a989b8c9912e2ce7d536d43ace2e892502b9a1c83748b32694c40fb731548b88`。
 - [x] **PPT 验收**：30 页，④页更新候选和 cap，进度页同步④5/8、⑤4/8。PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`，PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`；lint/layout/CRC/实际渲染通过。
 - [ ] **后续**：补 33M-LoRA 第三档、148M-LoRA 后续档和 SSI；④/⑤继续分别验收，不提前完成 scaling 全矩阵。
+
+## N29. 2026-11-01 ④/⑤同达 5/8 与嵌图纠错
+
+- [x] **⑤新面板**：degradation 33M-LoRA 已有 1000/1500/2000 三档三种子，⑤由 4/8 升为 5/8；④保持 5/8。requested 2000/2500 均 actual=1552，不把重复上限点解释为新增数据收益。
+- [x] **图内 cap 与源包**：两张图直接标 `requested≥2000: actual n=1552`，metadata 保存 8 个 cap 行。v29 为 1140 accepted、1 rejected；源包 104 文件，manifest SHA256=`31e9f762bd34e08f583114efa01431bf6b0eeddf56c5d7c1143dc7bc31bca4ff`。
+- [x] **嵌图问题定位与修复**：首次渲染发现⑤文字为 5/8、图片仍为 v4，根因是修订脚本只改文字未替换 Picture 6。已补 `replace_picture()`，最终嵌图与源 PNG SHA=`fc4d4e5822de08ba403960ebc794ada5bc1f0264f00af7538e20a388eaee1e0c` 一致，④/⑤渲染均正确。
+- [x] **最终 v29 交付**：PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`，PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`；30 页 lint/layout/CRC/字体/行距/实际渲染通过。
+- [ ] **后续**：继续 148M-LoRA 第三档、SSI 和其他科学矩阵；5/8 不是全任务完成。

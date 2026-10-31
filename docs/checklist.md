@@ -172,3 +172,11 @@
 - [x] I4 交付：30 页 PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`；PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`；lint/layout/字体/行距/CRC/渲染通过。
 - [ ] I5 边界：④5/8、⑤4/8，其余分层、Frozen、SSI 和全量科学矩阵继续执行，不宣称最终完成。
 
+## J 组：v29 ④/⑤与嵌图一致性验收
+
+- [x] J1 数据：v29 共 1140 accepted、1 rejected；degradation 33M-full/LoRA 均三档，④/⑤均 5/8。
+- [x] J2 cap：requested 2000/2500 均 actual=1552，8 个 cap 行入 metadata，图内明确标注，不把重复上限解释为新增数据。
+- [x] J3 嵌图：首次发现⑤旧 v4 图片未替换后，已补 `replace_picture()`；最终嵌图与源 PNG SHA=`fc4d4e5822de08ba403960ebc794ada5bc1f0264f00af7538e20a388eaee1e0c` 一致。
+- [x] J4 交付：PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`；PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`；30 页 lint/layout/CRC/实际渲染通过。
+- [ ] J5 边界：其余任务、Frozen 和完整科学矩阵继续执行，④/⑤的 5/8 不是全实验完成。
+

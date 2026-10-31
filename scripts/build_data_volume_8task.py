@@ -114,6 +114,14 @@ def main():
                 continue
             ax.errorbar(g.requested_n_train, g["mean"], yerr=g["ci"], fmt=mk + "-",
                         color=col, lw=1.6, ms=4.5, capsize=2.5, label=cname)
+        task_caps = df[(df.task == task) &
+                       (df.requested_n_train != df.actual_n_train)]
+        if not task_caps.empty:
+            minimum = int(task_caps.requested_n_train.min())
+            actual = "/".join(str(int(x)) for x in sorted(task_caps.actual_n_train.unique()))
+            ax.text(0.98, 0.03, f"requested≥{minimum}: actual n={actual}",
+                    ha="right", va="bottom", fontsize=7.2, color="#A6543D",
+                    transform=ax.transAxes)
         ax.set_title("%s | %s" % (label, metric), fontsize=10)
         ax.grid(alpha=0.25, lw=0.6)
         ax.tick_params(labelsize=8)

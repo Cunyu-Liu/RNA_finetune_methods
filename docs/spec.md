@@ -836,3 +836,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v28 中 degradation random 的 33M-full 已有 1000/1500/2000 三档三种子，148M-LoRA 已有 1000/1500 两档三种子，满足结论④“两臂各至少两档”；33M-LoRA 只有 1000/1500 两档，结论⑤要求至少两臂各三档，故仍不新增。④=5/8、⑤=4/8，门槛不得混用。
 2. 独立逐 seed 复算：full1000↔LoRA1000 的 Δ=0.023764151、95% CI half-width=0.016858080，不满足 |Δ|≤0.02；full1500↔LoRA1000 的 Δ=0.000746199、CI=0.003635701，为等价候选；full2000(cap1552)↔LoRA1500 的 Δ=−0.000846226、CI=0.017896596，为等价候选。候选只限该任务、split、协议和实测范围，不插值、不外推。
 3. 当前 30 页 PPT 已把④更新为 5/8 并写明两个候选与 cap；⑤保持 4/8。v28 共 1137 accepted、1 rejected，5 个 cap 行均 requested=2000/actual=1552。PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`，PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`。
+
+### 10.46 ④/⑤同达 5/8 与嵌图一致性修复（2026-11-01）
+
+1. v29 中 degradation 33M-LoRA 已有 1000/1500/2000 三档三种子，故⑤也达到 5/8；④保持 5/8。requested 2000/2500 的 actual n_train 均为 1552，不能把相同训练上限的重复点解释为新增数据收益或自然平台。
+2. 两张图在 degradation 面板直接标 `requested≥2000: actual n=1552`，metadata 保留 8 个 cap 行。PPT 页脚明确 requested 与 actual 的区别，④继续显示两个等价候选，⑤只描述模型内三档曲线。
+3. 首次 v29 渲染发现⑤正文已是 5/8、嵌图却仍为旧 v4，根因是修订脚本只改文字未替换 Picture 6。已补 `replace_picture()` 并复核最终嵌图 SHA=`fc4d4e5822de08ba403960ebc794ada5bc1f0264f00af7538e20a388eaee1e0c` 与源 PNG 一致，④/⑤实际渲染均通过。最终 PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`，PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`。
