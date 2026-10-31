@@ -2,6 +2,7 @@
 from pathlib import Path
 import csv
 import json
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -10,7 +11,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import font_manager
 
-ROOT = Path(__file__).resolve().parents[3] / "交接文档"
+ROOT = Path(__file__).resolve().parents[4]
 WORK = ROOT / "绘图数据" / "current" / "figure_source_data_20261028"
 OUT = Path(__file__).resolve().parent
 
@@ -54,10 +55,32 @@ TABLE_MODEL = {"rinalmomicro": "RiNALMo-micro", "rinalmomega": "RiNALMo-mega",
                "rnafm": "RNA-FM", "nucleicbert": "NucleicBERT"}
 
 
+def latest_export():
+    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"))
+    assert cands, "no bestval export"
+    return cands[-1]
+
+
+def keep_row(r):
+    rid = r["run_id"]
+    if "_noshuffle" in rid or "_smoke" in rid or "_diag" in rid:
+        return False
+    if re.search(r"_r(?:4|16)_", rid):
+        return False
+    if int(r["seed"]) not in (17, 29, 43):
+        return False
+    if re.search(r"_e3\d+_", rid):
+        return False
+    # 23:11–00:05 错 artifact 根写出的格：作废，不得进入任何均值
+    for key in ("artifact_dir", "resolved_artifact_dir"):
+        if "/home/cunyuliu/rna-ft-eval/artifacts" in str(r.get(key, "")):
+            return False
+    return True
+
+
 def load_ledger():
-    rows = list(csv.DictReader(open(WORK / "current_results/bestval_ledger_export_20261030.csv")))
-    keep = [r for r in rows if "_noshuffle" not in r["run_id"]]
-    keep = [r for r in keep if not (r["task"] == "noncoding-rna-family" and int(r["n_train"]) < 5000)]
+    rows = list(csv.DictReader(open(latest_export())))
+    keep = [r for r in rows if keep_row(r)]
     df = pd.DataFrame(keep)
     df["value"] = pd.to_numeric(df["value"])
     df["wall_sec"] = pd.to_numeric(df["wall_sec"])
@@ -116,8 +139,9 @@ def draw_time_perf(df, path_png, path_pdf):
     handles += [plt.Line2D([], [], marker=MARKERS[m], ls="", color="#777777", markersize=6,
                            label=MODEL_SHORT[m]) for m in MODELS]
     fig.legend(handles=handles, ncol=8, loc="upper center", bbox_to_anchor=(0.5, 1.08), fontsize=7.4)
+    tag = latest_export().stem.replace("bestval_ledger_export_", "")
     fig.text(0.995, -0.04,
-             "source: bestval ledger export 20261030 · random split only · full-data cells (n_train = task full set) · "
+             ("source: bestval ledger export %s · random split only · full-data cells (n_train = task full set) · " % tag) +
              "median wall of completed seeds (shared GPU, so wall time is not a benchmark claim)\n"
              "marker = model, colour = strategy; missing points mean the cell is not closed, never plotted as 0",
              transform=fig.transFigure, ha="right", va="top", fontsize=6.4, color="#777777")
@@ -126,8 +150,23 @@ def draw_time_perf(df, path_png, path_pdf):
     return tp
 
 
+def stage_counts():
+    """B20 阶段表的逐格 n（只用于 spliceai/degradation/ssi 的 frozen 补充，不覆盖台账）。"""
+    path = WORK / "figures/extension_three_task_sixbar_data.csv"
+    rows = list(csv.DictReader(open(path)))
+    table = {}
+    for r in rows:
+        model = TABLE_MODEL.get(r["model"], r["model"])
+        for key in CELL_KEYS:
+            n = int(float(r.get(f"{key}_n") or 0))
+            if n:
+                table[(r["task"], model, key)] = n
+    return table
+
+
 def coverage_matrix(df):
     """8 任务 × 5 模型 × 6 臂：已闭合种子数（>=1 记为已有点，=3 记为三种子闭合）。"""
+    stage = stage_counts()
     out = []
     for task, _l, _m in TASKS:
         for model in MODELS:
@@ -136,7 +175,10 @@ def coverage_matrix(df):
                 strat, split = key.rsplit("_", 1)
                 q = df[(df.task == task) & (df.model == model) &
                        (df.strategy == strat) & (df.split == split)]
-                row[key] = int(q.seed.nunique())
+                n = int(q.seed.nunique())
+                if n == 0 and strat == "frozen":
+                    n = stage.get((task, model, key), 0)
+                row[key] = n
             out.append(row)
     return pd.DataFrame(out)
 
@@ -166,8 +208,10 @@ def draw_coverage(cov, path_png, path_pdf):
     cb = fig.colorbar(im, ax=axes, fraction=0.018, pad=0.012, ticks=[0, 1, 2, 3])
     cb.set_label("completed seeds (0 = no closed cell)", fontsize=7.2)
     cb.ax.tick_params(labelsize=7)
+    tag = latest_export().stem.replace("bestval_ledger_export_", "")
     fig.text(0.995, -0.06,
-             "source: bestval ledger export 20261030 + MRL/modification tables · cell value = number of completed formal seeds (17/29/43)\n"
+             ("source: bestval ledger export %s + MRL/modification tables + B20 stage table (frozen of SpliceAI/degradation/SSI) · " % tag) +
+             "cell value = number of completed formal seeds (17/29/43)\n"
              "0 = 该格未闭合（不是 0 分）；3 = 三种子齐；凡 <3 的格在 ①a-2/①a-3/①a-4 中一律斜线标注，不做插值或旧值回填",
              transform=fig.transFigure, ha="right", va="top", fontsize=6.6, color="#777777")
     fig.savefig(path_png, dpi=300, bbox_inches="tight", facecolor="white")

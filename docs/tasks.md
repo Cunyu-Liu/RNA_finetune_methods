@@ -1408,29 +1408,30 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **结论① LR 口径**：主矩阵明确为固定协议对照，不宣称逐任务最优 LR；结论②以 seed101 validation 选档、17/29/43 正式复测补充，不整批返工。
 - [x] **shuffle 图核查**：源 CSV 证实 no-shuffle 仅有 epoch0–3，best_epoch=0、patience=3、epochs_trained=4；属于完整早停曲线，补图注而非补造点。
 - [x] **modification/MRL 判读**：modification 改称序列级多标签、不得称逐碱基免疫；RiNALMo 三档 MRL 接近解释为当前任务的规模收益饱和，保留模型家族与协议边界。
-- [ ] **实时 proof 总账**：重算 complementary/per-base/MRL-modification/LR/PEFT-rank/C5c/B线/D线/E6 的 complete/running/runnable/conflict，核对活跃 RID；只补真实缺口。
+- [~] **实时 proof 总账**：全量逐 checkpoint 审计超时，未据此伪造完成数；改用已验收基座增量导出，best-val 台账 994→1032 accepted、1 rejected。现有队列与活跃 RID 已核，后续闭合各波次时再做定向完整 proof。
 - [x] **MRL 负值复核**：seed101 micro-full@3e-4 的 result/plateau/checkpoint/split evidence 一致；独立 CUDA 重评 7600 条 test，Pearson r 与 MSE 均逐值复现为 −0.1119459198/0.8315709233。预测 mean=−0.02949、SD=6.25×10⁻⁷，属输出近常数坍缩而非评测算错或有意义的反向预测；tuning 格不进正式均值。证据=`status/revalidation/mrl_negative_20261101/`，代码提交=`71d0983` 已推 GitHub。
-- [ ] **当前图源审计**：为第 28 页遗忘图补齐可执行的绘图脚本、逐 RID 数据、协议与 metadata；图轴写 `ΔNLL=post−pre`，均值连线和逐 seed 点同时保留，官方/controlled 不混协议。
+- [x] **当前图源审计**：遗忘图已保存 30 个唯一 RID、CSV/JSON/脚本/metadata/PNG/PDF；A 轴=`ΔNLL=post−pre`，正=遗忘、负=反向增益，散点为单 run、均值为连线，official fixed-mask 不混协议。30M worst-seed 比=7.7576×，代码提交=`4032b5f` 已推 GitHub。
 
 ### B. 主矩阵、机制与学习率/PEFT
 
 - [ ] **P1 八任务六臂**：接管现有主队列，补齐 SpliceAI/degradation/SSI 的 LoRA/full 三种子及其他真实缺口；complete 不重训，n<3 斜线、NA 不补零，刷新第 8 页。
-- [ ] **P2 SpliceAI 三种子机制**：seed29/43 的 LoRA/full 源格若 complete 则只复用 checkpoint，完成 pre/LoRA/full × random/family 的真实 CUDA 诊断、联合投影与 full-test 对账；形成三种子图，不重训源格。
-- [ ] **分类任务组合图**：ncRNA/modification/CRISPR/SSP/SpliceAI 各自将表示投影与同 seed、同 split 的 full-test 性能放在一张图；SpliceAI 性能最终为三种子均值±SD。回归 t-SNE 页面保留。
+- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成、LoRA 源格仍在主队列。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 待最后源格。
+- [~] **分类任务组合图**：ncRNA/modification/CRISPR/SSP 已嵌入组合图；SpliceAI random 三种子图已完成，family 页待最后源格。性能均用 full-test，投影只用于显示；回归 t-SNE 页面保留。
 - [ ] **P3 LR 与 PEFT/rank**：完成 320 个 LR tuning 格，80 组四档齐全后冻结 validation 选择，再闭合 default/tuned 正式配对；继续既有 rank/DoRA 真实缺口，不把 tuning seed 或 legacy 混入正式均值。
 
 ### C. 数据量 scaling、等价与成本/遗忘
 
 - [ ] **结论⑤ scaling**：补齐八任务 × Frozen/LoRA/Full × 七档 × 双 split × 三种子；第 21 页不再保留旧 MRL 曲线冒充最新结果，第 22 页使用同一批最新曲线回答模型内数据量效应。
+- [x] **Frozen 分层注册**：既有 C5c 仅 LoRA/full，已新增 `c5c_frozen_jobs_20261101.json`=1008 格（8 任务 × micro/mega/650M × 双 split × 七档 × 3 seeds），只登记未启动，待主矩阵阶段门后补跑。生成器支持 `--strategies frozen`，focused+全文件 50 tests 通过，提交=`a52f085` 已推 GitHub；此前误生成 LoRA/full 的草稿已隔离为 `invalid_strategy_draft`，不得使用。
 - [ ] **CRISPR 信号档**：1000–3000 档正例过少时不判趋势；先登记并执行 {6000,10000} 档，检查信号是否脱离 PR-AUC 基线，再决定是否可进入 scaling/等价图。
-- [ ] **结论④等价**：复用结论⑤同源曲线，以 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI 判读；满足 spec §10.39 的容差才写等价候选，其余写未观测到或最近但未等价。
-- [ ] **页面归属**：旧⑤c-1/⑤c-2 移入结论④并更新为同协议数据；旧⑤b-1/⑤b-2 改独立“结论⑥ 成本”；遗忘改“结论⑦”；⑤d 仅保留为⑤的大模型覆盖补充，取消混乱编号。
-- [ ] **成本与遗忘**：时间×性能/显存逐点关联 RID 和协议；E6 只补 corrected 真实余格，纵轴、逐 seed 点与均值线、latest proof 三者一致后刷新第 28 页。
+- [~] **结论④等价**：已实现 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI；仅 |Δ|≤0.02 且 CI 覆盖 0 才标候选，去掉 modification 重复别名。当前 ncRNA/MRL 有候选、SSP 无候选、modification 仅低预算有候选，4/8 面板可判；其余任务继续等同源曲线。
+- [x] **页面归属**：旧⑤c-1/⑤c-2 已移入④并标 legacy；时间×性能/显存独立为⑥，遗忘为⑦，⑤d 改为⑤覆盖补充；删除⑤的过时重复曲线页，当前 29 页，编号混乱已消除。
+- [~] **成本与遗忘**：时间×性能/显存已独立为⑥；E6 第 27 页已更新纵轴、逐 seed 点与均值线和最新 30 格 controlled 证据，650M LoRA 余格仍按 corrected 队列待补。
 
 ### D. PPT、归档与交付门禁
 
-- [ ] **逐页修订**：只改反馈涉及页与必要的前后文，删除已执行批注框，保留其他用户手调内容；全文 Microsoft YaHei、正文 1.5 倍行距，图题/读图句/前后页逻辑一致。
-- [ ] **三轮图实验收**：每图依次核 RID/result/ledger/checkpoint/CUDA，核 split/seed/策略/LR/n_train/统计，核图内数值/图注/PPT 渲染；原 CSV/JSON、脚本、metadata、PNG/PDF 同步保存。
+- [~] **逐页修订**：已完成目的、①、①a、分类组合图、②负值、④/⑤归属、⑥成本与⑦遗忘的定向修订；PPT 当前 29 页，lint/CRC/实际渲染通过，SpliceAI family 与未闭合矩阵仍待更新。
+- [~] **三轮图实验收**：本轮 shuffle、分类组合、等价与遗忘图均完成 RID/协议/渲染三轮核验并保存源包；后续新图继续执行同三门禁，原 CSV/JSON、脚本、metadata、PNG/PDF 同步保存。
 - [ ] **归档**：交接根目录只留当前入口与必要索引，废弃快照/临时脚本和旧绘图源先核引用后移动 archive；不删除隔离证据或用户原件。
 - [ ] **代码与备份**：每批确认代码在 `/home/cunyuliu/rna-ft-eval` 提交并推送 GitHub；大文件/权威 artifacts 在 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`，本地只保留核心交付与源数据索引。
 - [ ] **最终验收**：PPT ZIP/XML、markitdown、fix/layout、嵌图哈希、字体行距、LibreOffice 实际渲染和未修改页 diff 全通过；未闭合实验继续标范围，不以阶段版宣称所有科学矩阵完成。

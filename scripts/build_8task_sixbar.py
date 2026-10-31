@@ -13,6 +13,7 @@
 from pathlib import Path
 import csv
 import json
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -21,7 +22,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import font_manager
 
-ROOT = Path(__file__).resolve().parents[3] / "交接文档"  # 交接文档/
+ROOT = Path(__file__).resolve().parents[4]
 WORK = ROOT / "绘图数据" / "current" / "figure_source_data_20261028"
 OUT = Path(__file__).resolve().parent
 
@@ -75,17 +76,34 @@ TASKS = [
 CELL_KEYS = list(SIX_COLORS)
 
 
+def latest_export():
+    """按文件名日期选择当前 best-val 台账；旧文件保留可追溯。"""
+    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"))
+    assert cands, "no bestval export"
+    return cands[-1]
+
+
+def keep_row(r):
+    """主矩阵 6 臂口径：排除诊断、rank 变体、seed101 LR 选档与 C5c 数据档。"""
+    rid = r["run_id"]
+    if "_noshuffle" in rid or "_smoke" in rid or "_diag" in rid:
+        return False
+    if re.search(r"_r(?:4|16)_", rid):
+        return False
+    if int(r["seed"]) not in (17, 29, 43):
+        return False
+    if re.search(r"_e3\d+_", rid):
+        return False
+    # 23:11–00:05 错 artifact 根写出的格：作废，不得进入任何均值
+    for key in ("artifact_dir", "resolved_artifact_dir"):
+        if "/home/cunyuliu/rna-ft-eval/artifacts" in str(r.get(key, "")):
+            return False
+    return True
+
+
 def load_ledger():
-    rows = list(csv.DictReader(open(WORK / "current_results/bestval_ledger_export_20261030.csv")))
-    keep = []
-    for r in rows:
-        # 训练顺序 A/B 诊断不计入任何正式均值
-        if "_noshuffle" in r["run_id"]:
-            continue
-        # 排除 C5c 低数据档（ncRNA 1000–3000），其余任务的全量 n 即为本矩阵口径
-        if r["task"] == "noncoding-rna-family" and int(r["n_train"]) < 5000:
-            continue
-        keep.append(r)
+    rows = list(csv.DictReader(open(latest_export())))
+    keep = [r for r in rows if keep_row(r)]
     return pd.DataFrame(keep)
 
 
@@ -276,8 +294,9 @@ def main():
                  "纵轴按任务独立，不跨指标比较。",
                  transform=ax_note.transAxes, ha="left", va="top", fontsize=7.4, color="#333333",
                  linespacing=1.6)
+    tag = latest_export().stem.replace("bestval_ledger_export_", "")
     fig.text(0.995, -0.035,
-             "source: bestval ledger export 20261030 (main matrix) + B20 stage table for SpliceAI/degradation/SSI · "
+             "source: bestval ledger export %s (main matrix) + B20 stage table for SpliceAI/degradation/SSI · " % tag +
              "bars = mean, whisker = SD when n>1 · value labels shown when n>=3 · no cross-task score pooling",
              transform=fig.transFigure, ha="right", va="top", fontsize=6.4, color="#777777")
     fig.savefig(OUT / "eight_task_sixbar.png", dpi=300, bbox_inches="tight", facecolor="white")

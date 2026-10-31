@@ -414,3 +414,13 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. **本版新增/修正**：p2 进度表（5 任务分层闭合、650M 搁置）＋页脚「目的」一句；p18 读图句补「3e-4 是四个 runner 的 argparse 缺省（非搜参）；MRL 唯一负值 −0.112 来自 micro-full s101@3e-4 坍缩格，只用于选档」；p22 换 8 任务三臂图并写明「与 ④ 同一批数据、两种问法」；p26 图回缩到 11.4 in、读图框 6.80，避免压字。
 4. **验收**：30 页、ZIP CRC 正常、非批注越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 30 页且图片完整。
 5. **交付**：PPT SHA256=`971d8fbabb395b30…`、PDF SHA256=`275435d75023ac8a…`。
+
+## 26. 2026-11-01 导师逐页反馈修订与当前边界
+
+1. **基底**：用户最新保存的 30 页文件 SHA256=`f4277d59af9f1c2436c3e8e0b99feffffaf0af13443b18088fb3b7984c1d7025`，不覆盖原件。当前阶段修订文件为 `RNA_LM微调策略评测-导师讨论修订版_20261101_导师反馈修订.pptx`，29 页，阶段 SHA256=`f16088767bc1332a92ccbb5c2a1da7c8de1ea90fc11b7f1d9a9b35f478238214`。实验未闭合前不得视为最终科学版。
+2. **八任务与结论①**：页 2 明确八任务用于检验任务粒度、分类/回归、类别不平衡与 split 对策略结论的调节作用，不是堆数量。页 5 解释 shuffle 是逐 epoch 重排训练样本、不是改标签/split；no-shuffle 的 epoch0–3 是 best0+patience3 的完整早停曲线。页 6 改为“modification family 高 AUC 但非免疫”，页 7 改为“MRL 的 RiNALMo 规模收益饱和”。结论①主矩阵是固定 LR 对照，逐任务 validation 选 LR 归结论②。
+3. **结论②异常核查**：3e-4 明确为 runner argparse 工程缺省而非最优。MRL seed101 micro-full@3e-4 的 −0.112 已独立 CUDA 重评完全一致，预测 SD=6.25×10⁻⁷，属输出近常数坍缩，不是评测算错；证据在 `status/revalidation/mrl_negative_20261101/`，代码提交 `71d0983`。
+4. **分类组合图**：ncRNA/modification/CRISPR/SSP 已把三状态投影与同 seed17、同 split 的 full-test 性能放在同图。SpliceAI random 的 seed17/29/43 已完成，seed29-family 已完成，seed43-family 仅差 LoRA 源格；不删除 degradation/SSI/MRL 的回归机制页。源包=`figure_source_data_20261101_classification_composite/`，多 seed launcher 提交 `8df9f40`。
+5. **④/⑤/⑥/⑦结构**：④只比较同家族 small-full(n) vs large-LoRA(m)，⑤只比较模型内数据量 scaling；旧⑤c-1/⑤c-2 移入④并标 legacy，旧⑤的重复曲线页删除。时间×性能/显存独立为⑥，遗忘为⑦。等价候选必须逐 seed |Δ|≤0.02 且 95% CI 覆盖 0，不能再用“LoRA 均值≥Full”直接代替等价。Frozen 七档新增注册 1008 格，未启动；既有 C5c 只有 LoRA/full 的问题已修复并提交 `a52f085`。
+6. **遗忘图**：A 轴=`ΔNLL=post−pre`，正=遗忘、负=反向增益；散点为单 run、连线为均值。最新 controlled 30 格、每组 3 seeds，30M worst-seed 比=7.7576×；official fixed-mask 分协议不混入。图源=`figure_source_data_20261101_e6/`，代码提交 `4032b5f`。
+7. **当前验收**：29 页 ZIP CRC 正常、项目 `pptx_lint.py` PASS、LibreOffice 实际渲染中文正常、批注框已移除，目标页未出现标题换行或图注重叠。后续仍需替换 SpliceAI family 页，刷新未闭合主矩阵、LR/rank、Frozen scaling 与 650M 余格；最终交付前必须重跑全稿字体/行距、未修改页 diff、嵌图哈希和三轮数据对账。
