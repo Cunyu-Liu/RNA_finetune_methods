@@ -226,3 +226,9 @@
 - **远程状态**：用户提供入口 `px2-jcy.matpool.com:29375` 多次在认证前被关闭/重置，或密码认证失败。未启动、停止或修改任何远程队列，未访问实时 ledger，未新增 GPU 实验。恢复后先盘点真实 HEAD/GPU/队列，再做 tokenizer/CUDA smoke 和小格复算，之后按 spec §10.15/tasks v3.28 并行补齐，禁止无锁双开。
 - **PPT 与数据**：交付独立 21 页导师讨论修订版，不覆盖原件。新增 8 任务地图、MRL/m6A 四柱图和 RNA-Sc/RiNALMo 同源规模图；清理批注、旧文字层与跨家族混用。全页布局 Issues=0、pptx_lint PASS、CRC/嵌图 MD5/中文实际渲染通过。三任务扩展仍只作阶段性展示，8 任务完整补测、三策略 t-SNE、33M rank8、同源 n↔m 等价线、C5b/C5c/C5d 等均未宣称完成。
 - **交接**：历史快照/已合并增量/临时脚本移入 `archive_20261026/`，不删除实验证据；绘图 CSV、生成脚本、协议边界和远程待办见 `绘图数据索引_20261026.md`。代码批次通过复核后提交 GitHub，远程 artifacts 与大文件不得放进 `/home` 仓库。
+
+
+## 2026-11-01 MRL negative tuning-cell independent CUDA revalidation
+- RID `ft_rinalmomicro_mrl_full_s101_random_bestval_v1`: source result/plateau/best.ckpt/split_evidence consistent; best_epoch=0, train losses 0.956117/0.992135/0.992942/0.993054, validation 1.077904/1.077377/1.080336/1.090462, stopped after 4 epochs by bestval_v1 patience=3.
+- Independent CUDA evaluation on the same 7600 test rows reproduced Pearson r=-0.11194591982713607 and MSE=0.8315709233283997 exactly. Predictions are nearly constant (mean=-0.0294886492, SD=6.2545e-7), so the negative r is an output-collapse diagnostic, not an evaluation bug or meaningful inverse prediction. Tuning seed 101 remains excluded from formal means.
+- Evidence: `status/revalidation/mrl_negative_20261101/` (predictions NPZ, JSON summary, reconstructed split evidence). Code commit `71d0983` pushed to GitHub. Full suite at this checkpoint: 385 passed, 3 pre-existing E6-v2 queue-test failures; not recorded as all green.

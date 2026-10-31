@@ -10,6 +10,7 @@
 > **进度注记 2026-09-26 下午（交接文档全量同步 + 后续交接工作启动）**：本 session 完成「交接文档 ↔ 服务器真实态」全量对账并同步回填（spec v2.0 / tasks v3.12 / checklist v1.9 / 新增 STATUS_SNAPSHOT_20260926.md；此前 tasks.md 多处未勾选但实际已完成）。**服务器事实核验**（以 ledger + git + status 产物为准）：HEAD bb37a29；ledger **1149 行**（done 1145 / cancelled 2 / pending 2）；已实现任务 **4 个**（noncoding-rna-family / mrl / modification(m6A) / secondary-structure）；已接入模型 **11 个**（RiNALMo micro/mega/650M + RNA-FM/ERNIE-RNA/SpliceBERT + 受控 RNA-Sc 1M/10M/30M/100M/650M）；GPU 实测 **8 卡**（0-5 为常规 A100-40GB，torch 视图 39.49GiB；6/7 为 MIG 1g.5gb，torch 视图仅 4.75GiB——`total<20GiB` 过滤为物理正确，非策略 gate）；**当前 rna-ft-eval 无在跑任务、显存空闲**。据此启动后续交接工作四条线（详 §10.6）。
 > **进度注记 2026-09-19**：Day 5 收官——per-base 矩阵 26 组 0 崩溃全量（冻结口径不变）；E2 四面板；预印本 v0.5-core。执行状态详 §10 + STATUS_SNAPSHOT_20260919.md。本文件冻结口径（定位/切分单元表/统计计划）自 v1.4 起未变更。
 
+> 版本：2.23（2026-11-01 修订三十三【导师逐页反馈与结论④/⑤重构】：新增 §10.39。明确八任务用于检验结论边界、结论①固定LR与结论②选LR分工、SpliceAI三种子机制、MRL负值回源复核、分类组合图及共享曲线的scaling/等价分析。）
 > 版本：2.22（2026-10-30 修订三十二【408格台账与MRL阶段图更新】：新增 §10.35。新增8格与旧400格逐字段一致，MRL/modification为152 complete+28 runnable；650M MRL frozen random仅n=2斜线，PPT第7页及v13源包已三轮验收并备份teams。）
 > 版本：2.21（2026-10-30 修订三十一【跨模型并行调度与无中断接管】：新增 §10.34。修复队首同模型/大显存格阻塞其他可运行格的问题，pending改为按预算与在训模型选择且只移除实际处理格；387 tests后无中断重启per-base与complementary父调度，真实CUDA多任务并行。）
 > 版本：2.20（2026-10-30 修订三十【per-base best-val主矩阵与监控退役闭环】：新增 §10.33。补齐3个per-base任务×5官方模型×3策略×双split×3种子的270格注册表；12格complete复用、258格runnable，实测校准显存并启动3-worker队列。监控白名单移除旧q_corrected，代码经386 tests和GitHub逐文件核验。）
@@ -774,3 +775,28 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 **⑲ 2026-10-31 23:08 用户并发编辑与文件损坏处置（重要作业纪律）**：用户在 23:08 保存了同名 pptx，覆盖了 23:0x 的构建；保存过程中 24 个 `ppt/media/*.png` 全部 CRC 损坏（python-pptx 直接 BadZipFile、LibreOffice 渲染 p18/p22 图空白），所以用户「没看到 ppt 的更新」。处置：①先备份 `work/user_edit_20261031_2308.pptx`；②用「忽略 CRC 校验重打包」修复为 `work/user_edit_repaired_20261031_2312.pptx`，XML/文本/批注完好、图片字节仍坏；③以图片完好的 `work/deck_1030_night.pptx` 为主体，把用户 18 个批注框（文本框 4/7/8，多在页面外左侧）与 p26 手工版式（图上移放大、读图框下移）deepcopy 合并 → `deck_merged_20261031.pptx`；④再叠加 p2 目的句与表状态、p18 读图句（3e-4 出处/MRL 负值）、p22 三臂图与 ④ 口径桥接句；⑤p26 图 12.3→11.4 in、读图框 6.80（用户放大后图底 7.14 会压住读图句，属几何冲突必须回缩）。**教训：重建前必须先检查目标文件 mtime 是否晚于构建，且交付文件被用户打开时不得覆盖；图像损坏的保存不能靠改 CRC 修复，只能从完好构建合并文本。**
 
 **⑧ 归档与同步**：新图源包 `figure_source_data_20261030_eight_task_v14/`（revision=`20261030_eight_task_expansion_v14`，17 文件逐哈希）；旧图、旧表、历史交接文档核引用后移入 `archive_20261030/`，不删除隔离证据；本地、`/home` docs 与 `/teams` handoff 三地同步。
+
+### 10.39 2026-11-01 导师逐页反馈：八任务目的、结论④/⑤重构与补测合同
+
+> 本节是当前执行入口。以用户本地 30 页 PPT（SHA256=`f4277d59af9f1c2436c3e8e0b99feffffaf0af13443b18088fb3b7984c1d7025`）为唯一编辑基底，保留用户最新批注与手调内容；所有计数在派发前仍以实时 proof 重算，不沿用上一日快照。
+
+**① 为什么每个结论扩展到八任务**：八任务用于检验策略结论的任务条件与边界，而不是增加实验数量。序列/位点（或 pair）输出、分类/回归、类别不平衡和家族偏移是预先声明的任务异质性轴；只有跨任务比较才能区分“普遍策略规律”“仅在某任务成立的现象”和“需要按任务选择的配方”。每页须回答一个科学问题，不为形式上的八任务拼面板；未闭合任务标 NA，不能用任务数量替代证据强度。
+
+**② 结论①的学习率口径**：主矩阵是固定协议的策略对照，并非八任务逐任务最优 LR 评测。现行 corrected 主矩阵沿用注册表中的 frozen/LoRA 默认 LR=3e-4、RiNALMo full 常用 LR=1e-5，真实 LR 必须逐 RID 展示。结论②另行以 seed101 的 held-out validation 从 {3e-4,1e-4,3e-5,1e-5} 选档，再以 17/29/43 独立正式种子复测 default/tuned；test 不参与选择。不得把主矩阵写成“已选最优 LR”，也不因该表述问题重跑全部主矩阵。
+
+**③ ncRNA shuffle 页的科学解释**：shuffle 指每个 epoch 重新排列训练样本顺序，不是重新切分数据、打乱标签或改变序列。no-shuffle 保留源文件中同类标签成块的顺序。严格 A/B 仅改变这一开关，no-shuffle 足以复现旧近随机表现，因此旧 pre-shuffle family 崩溃及其派生结论不能区分家族分布偏移与训练顺序优化伪影，必须隔离。no-shuffle 曲线只有 epoch0–3 是 best_epoch=0、patience=3 后的完整停止曲线，不是图片漏画；新图须明示“4 epochs 后按合同停止”。该 A/B 不证明所有模型/任务的唯一机制。
+
+**④ modification 与 MRL 的表述边界**：modification 是 101nt 序列到 12 维标签的序列级多标签任务，不是逐碱基任务。当前结果支持“已测范围内 family 下仍保持较高 m6A AUC，split 效应随模型/策略变化”，不支持“对 random/family 免疫”；既有均值中 random−family 差值约 −0.211 到 +0.058，须保留方向差异。RiNALMo 三档 MRL 接近是合理的规模收益饱和现象，且三档同属一个模型家族；只写“当前 MRL 数据、指标与协议下规模增益有限”，不写模型无差异或所有任务无规模效应。
+
+**⑤ 结论④与结论⑤共享实验、分开回答**：
+- **结论⑤（数据量 scaling）**：同一模型内比较 Frozen、LoRA、Full 随标注量变化的性能曲线，回答“多给数据时三种策略各自怎样变化、何时平台或翻转”。使用 {10,100,1000,1500,2000,2500,3000} 七档、双 split、三种子和同协议 best-val；全量点复用主矩阵。CRISPR 在 1000–3000 档正例过少时不得判 scaling 或等价，先以独立注册的 {6000,10000} 信号补足档检验，不能拿近基线 PR-AUC 画等价点。
+- **结论④（跨规模数据量等价）**：从同一批曲线比较同家族 small-full(n) 与 large-LoRA(m)，回答“不同参数量模型各需多少数据，才能在 Full 与 LoRA 间达到相近下游性能”。逐 seed 计算最近实测对、配对差值与 95% CI；只有 |Δ|≤0.02 且配对 CI 覆盖 0 才称“等价候选”，其余写“最近但未等价”或“当前范围未观测到”，不插值、不跨家族拼接。结论④是结论⑤数据的另一种分析，不重复训练同一 RID。
+- 旧⑤c-1/⑤c-2 页归入结论④；旧⑤b-1/⑤b-2 独立为“结论⑥ 成本：时间—性能与显存”；原遗忘页顺延为“结论⑦”。取消 ⑤c0/⑤c1/⑤c2/⑤b1/⑤b2/⑤d 的混乱编号，⑤d 只作结论⑤的大模型覆盖与证据边界补充，不另立科学结论。
+
+**⑥ 机制可视化新增工作**：保留全部回归任务既有 t-SNE 页面，不删除。ncRNA、modification、CRISPR、SSP、SpliceAI 五个分类任务改为“同图左侧表示投影、右侧同 seed/同 split 下游性能”的组合图；性能指标只用 full-test，t-SNE 抽样只用于显示，不把二者混算。SpliceAI 增加 seed29/43 的 pre/LoRA/full × random/family 诊断；若主矩阵 checkpoint 已 complete 则只复用并做 GPU 推理/联合投影，不重训。最终用三种子 full-test 均值±SD 与逐 seed 投影，替代“仅 seed17”的页面表述。
+
+**⑦ 结论②两个核查**：3e-4 的来源是 runner 的 argparse 工程缺省，不是文献推荐或搜参最优，仅作受控 default 对照。MRL Pearson r 的合法范围为 [−1,1]；当前 −0.112 是 seed101、micro-full@3e-4 的 tuning 异常格，不是正式三子均值。派发后须回源 result/plateau/checkpoint，并用保存的逐样本预测或真实 CUDA 重评独立计算 Pearson r，确认负值来自预测反向/优化失败还是评测错误；未复核前不得只以“指标允许负数”结束调查。
+
+**⑧ 结论⑥成本与结论⑦遗忘**：时间×性能和显存作为独立成本结论，点须关联 RID、模型、策略、任务、split、n、batch、GPU 与 best-val 停止协议；共享卡 wall time 只作同任务相对比较。遗忘图纵轴明确为 `ΔNLL = post−pre`（controlled causal held-out NLL，正值=遗忘，负值=反向增益），逐 seed 散点叠加同规模均值连线；只使用 corrected controlled 与 official `_mlm15fix` 的各自协议，不混旧泄漏值。当前 650M LoRA 三格完成后再更新覆盖，不把待合格写成已完成。
+
+**⑨ 执行顺序与验收**：P0 实时 proof/异常核查与保留在训格 → P1 闭合八任务主矩阵及其余五任务三种子六臂 → P2 并行完成 SpliceAI 多种子机制抽取与分类组合图 → P3 完成 LR default/tuned 与 PEFT/rank → P4 补齐七档 scaling、CRISPR 信号档、同家族等价分析与资源曲线 → P5 完成 E6 余格并刷新遗忘图 → P6 逐页更新 PPT、归档与三地同步。现有合法队列不中断、complete 不重训、running 不双开；650M 大格在自然空出的独占显存窗口执行，不为占满显存制造 OOM。每批依次通过（1）RID/result/ledger/checkpoint/CUDA，（2）split/seed/策略/LR/n_train/统计，（3）图源数值/图注/PPT 实际渲染三轮独立检查。

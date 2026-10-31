@@ -1,5 +1,6 @@
 # RNA-LM 微调策略评测：任务分解（TASKS）
 
+> 版本：3.58（2026-11-01 修订五十九【导师逐页反馈与补测顺序】：新增N16。先核实时proof与MRL负值，再闭合主矩阵、SpliceAI三种子机制、LR/rank、七档scaling与同族等价；旧⑤c归④、时间/显存独立为⑥、遗忘为⑦。）
 > 版本：3.57（2026-10-30 修订五十八【408格台账与MRL阶段图更新】：N13登记新增8格、MRL/modification 152 complete+28 runnable、650M frozen random n=2六柱图、PPT第7页定向更新及v13源包/teams验收；不把n=2写成闭合组。）
 > 版本：3.56（2026-10-30 修订五十七【跨模型并行调度与无中断接管】：N13登记队首阻塞修复、387 tests、GitHub逐文件核验和两个父调度的无中断重启；5个真实CUDA任务并行、GPU util=96%，不以进程数替代完成。）
 > 版本：3.55（2026-10-30 修订五十六【per-base best-val主矩阵与监控退役闭环】：N13登记270格注册表、12 complete+258 runnable、显存校准和3-worker队列；旧q_corrected已从监控白名单移除。生成器与whitelist提交均通过GitHub逐文件核验，386 tests通过。）
@@ -1396,3 +1397,40 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **B 线首图**：`build_equivalence_8task.py` 已产出 3/8 可判面板（ncRNA/modification/MRL），CRISPR 标「正例过少（0.59%，需 ≥6000 档）」，其余待分层；图暂存 fig_20261030，不进正文。
 - [ ] **B 线补齐**：SpliceAI/SSP/降解/SSI 分层与 ncRNA family 档位落地后，≥6 面板再替换 ④ 页。
 - [ ] **归档与同步**：本地/`/home` docs/`/teams` handoff 三地 SHA256 一致；新图源包与 PPT/PDF 同步 teams delivery；确认代码提交 `/home` 并推送 GitHub。
+
+## N16. 2026-11-01 导师逐页反馈后的当前执行清单
+
+> 科学口径与页面映射见 spec §10.39。当前 PPT 基底为用户最新保存的 30 页文件，SHA256=`f4277d59af9f1c2436c3e8e0b99feffffaf0af13443b18088fb3b7984c1d7025`。N13–N15 的注册表继续有效，实时 proof 优先于历史计数；不因换页或改分析而重跑 complete 格。
+
+### A. 计划、目的与当前证据核查
+
+- [x] **八任务目的**：登记为检验任务粒度、分类/回归、类别不平衡和家族偏移对策略结论的调节作用，输出条件化配方；不是凑实验数量。
+- [x] **结论① LR 口径**：主矩阵明确为固定协议对照，不宣称逐任务最优 LR；结论②以 seed101 validation 选档、17/29/43 正式复测补充，不整批返工。
+- [x] **shuffle 图核查**：源 CSV 证实 no-shuffle 仅有 epoch0–3，best_epoch=0、patience=3、epochs_trained=4；属于完整早停曲线，补图注而非补造点。
+- [x] **modification/MRL 判读**：modification 改称序列级多标签、不得称逐碱基免疫；RiNALMo 三档 MRL 接近解释为当前任务的规模收益饱和，保留模型家族与协议边界。
+- [ ] **实时 proof 总账**：重算 complementary/per-base/MRL-modification/LR/PEFT-rank/C5c/B线/D线/E6 的 complete/running/runnable/conflict，核对活跃 RID；只补真实缺口。
+- [x] **MRL 负值复核**：seed101 micro-full@3e-4 的 result/plateau/checkpoint/split evidence 一致；独立 CUDA 重评 7600 条 test，Pearson r 与 MSE 均逐值复现为 −0.1119459198/0.8315709233。预测 mean=−0.02949、SD=6.25×10⁻⁷，属输出近常数坍缩而非评测算错或有意义的反向预测；tuning 格不进正式均值。证据=`status/revalidation/mrl_negative_20261101/`，代码提交=`71d0983` 已推 GitHub。
+- [ ] **当前图源审计**：为第 28 页遗忘图补齐可执行的绘图脚本、逐 RID 数据、协议与 metadata；图轴写 `ΔNLL=post−pre`，均值连线和逐 seed 点同时保留，官方/controlled 不混协议。
+
+### B. 主矩阵、机制与学习率/PEFT
+
+- [ ] **P1 八任务六臂**：接管现有主队列，补齐 SpliceAI/degradation/SSI 的 LoRA/full 三种子及其他真实缺口；complete 不重训，n<3 斜线、NA 不补零，刷新第 8 页。
+- [ ] **P2 SpliceAI 三种子机制**：seed29/43 的 LoRA/full 源格若 complete 则只复用 checkpoint，完成 pre/LoRA/full × random/family 的真实 CUDA 诊断、联合投影与 full-test 对账；形成三种子图，不重训源格。
+- [ ] **分类任务组合图**：ncRNA/modification/CRISPR/SSP/SpliceAI 各自将表示投影与同 seed、同 split 的 full-test 性能放在一张图；SpliceAI 性能最终为三种子均值±SD。回归 t-SNE 页面保留。
+- [ ] **P3 LR 与 PEFT/rank**：完成 320 个 LR tuning 格，80 组四档齐全后冻结 validation 选择，再闭合 default/tuned 正式配对；继续既有 rank/DoRA 真实缺口，不把 tuning seed 或 legacy 混入正式均值。
+
+### C. 数据量 scaling、等价与成本/遗忘
+
+- [ ] **结论⑤ scaling**：补齐八任务 × Frozen/LoRA/Full × 七档 × 双 split × 三种子；第 21 页不再保留旧 MRL 曲线冒充最新结果，第 22 页使用同一批最新曲线回答模型内数据量效应。
+- [ ] **CRISPR 信号档**：1000–3000 档正例过少时不判趋势；先登记并执行 {6000,10000} 档，检查信号是否脱离 PR-AUC 基线，再决定是否可进入 scaling/等价图。
+- [ ] **结论④等价**：复用结论⑤同源曲线，以 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI 判读；满足 spec §10.39 的容差才写等价候选，其余写未观测到或最近但未等价。
+- [ ] **页面归属**：旧⑤c-1/⑤c-2 移入结论④并更新为同协议数据；旧⑤b-1/⑤b-2 改独立“结论⑥ 成本”；遗忘改“结论⑦”；⑤d 仅保留为⑤的大模型覆盖补充，取消混乱编号。
+- [ ] **成本与遗忘**：时间×性能/显存逐点关联 RID 和协议；E6 只补 corrected 真实余格，纵轴、逐 seed 点与均值线、latest proof 三者一致后刷新第 28 页。
+
+### D. PPT、归档与交付门禁
+
+- [ ] **逐页修订**：只改反馈涉及页与必要的前后文，删除已执行批注框，保留其他用户手调内容；全文 Microsoft YaHei、正文 1.5 倍行距，图题/读图句/前后页逻辑一致。
+- [ ] **三轮图实验收**：每图依次核 RID/result/ledger/checkpoint/CUDA，核 split/seed/策略/LR/n_train/统计，核图内数值/图注/PPT 渲染；原 CSV/JSON、脚本、metadata、PNG/PDF 同步保存。
+- [ ] **归档**：交接根目录只留当前入口与必要索引，废弃快照/临时脚本和旧绘图源先核引用后移动 archive；不删除隔离证据或用户原件。
+- [ ] **代码与备份**：每批确认代码在 `/home/cunyuliu/rna-ft-eval` 提交并推送 GitHub；大文件/权威 artifacts 在 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`，本地只保留核心交付与源数据索引。
+- [ ] **最终验收**：PPT ZIP/XML、markitdown、fix/layout、嵌图哈希、字体行距、LibreOffice 实际渲染和未修改页 diff 全通过；未闭合实验继续标范围，不以阶段版宣称所有科学矩阵完成。

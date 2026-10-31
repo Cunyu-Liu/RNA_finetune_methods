@@ -1,5 +1,6 @@
 # RNA-LM 微调策略评测：验收清单（CHECKLIST）
 
+> 版本：1.16（2026-11-01 修订十六【结论归属与机制/异常复核】：B29改为④等价与⑤scaling分工、成本⑥遗忘⑦；新增B33分类组合图、SpliceAI三种子、MRL负值重评与shuffle停止曲线门禁。）
 > 版本：1.15（2026-10-30 修订十五【per-base best-val替代链闭环】：B32补勾。旧q_corrected已从监控白名单移除；270格bestval主矩阵已注册，12个既有格复用，3-worker新队列只走bestval。生成器/监控代码均提交GitHub并通过386 tests。）
 > 版本：1.14（2026-10-30 修订十四【失控训练退役门禁】：追加 B32。旧plateau在validation持续高于best+tolerance时可无限运行，异常格及旧父队列必须留证停止；per-base正式补测只走独立bestval_v1，不以中断或旧协议结果替代验收。）
 > 版本：1.13（2026-10-28 修订十三【扩展任务现行门禁】：追加 B24–B28。冻结 8 任务官方语义、best-val/checkpoint/CUDA/split 证据、同 RID 防重与绘图三轮对账；历史完成记录不得越过 §10.14–§10.21 的隔离和复测要求。）
@@ -69,7 +70,8 @@
 - [x] B26 **唯一 RID 与防返工**：启动前同时查 registry、ledger、result_dir、真实 runner 和 lifecycle lock；complete 不重训，running 不双开，物理路径缺失先做双 registry 对账。同 batch 实测 need+1GiB 才允许辅助 lane【✓ expansion_queue 与 MRL 迁移审计已执行】
 - [ ] B27 **扩展矩阵分阶段验收**：先闭合 8 任务主矩阵，再闭合 default/tuned LR 与 LoRA/DoRA/full/rank，再执行 C5c 2016 格和同源等价线；每阶段未达到合同不得用下一阶段局部结果替代【进行中，现行顺序见 spec §10.21–§10.22 / tasks N9】
 - [ ] B28 **绘图三轮对账**：第一轮逐 RID 对 result/ledger，第二轮对 split/seed/策略/协议与统计，第三轮对图内数值、pending/NA、图注和 PPT 文字；原始 CSV/JSON、脚本、metadata 与 PNG/PDF 同步保存【每批图执行】
-- [ ] B29 **逐结论八任务覆盖**：结论①a/②/③/④/⑤/⑤b/⑤c/⑤d 均逐任务核对 ncRNA、CRISPR、modification、MRL、SpliceAI、SSP、degradation、SSI；缺任何任务必须标范围，不得以三任务扩展页或单任务资源图代替完整结论【本轮新增，见 tasks N9】
+- [ ] B29 **逐结论八任务覆盖与归属**：结论①a/②/③/④/⑤及成本⑥、遗忘⑦均逐任务核对 ncRNA、CRISPR、modification、MRL、SpliceAI、SSP、degradation、SSI；④只做同族 small-full(n)↔large-LoRA(m) 等价，⑤只做模型内三策略 scaling，时间/显存独立为⑥；缺任何任务必须标范围，不得以三任务扩展页、单任务资源图或混乱的⑤c/⑤b子编号代替完整结论【2026-11-01 更新，见 spec §10.39 / tasks N16】
+- [ ] B33 **机制组合图与异常复核门禁**：分类任务的表示图必须与同 seed/split 的 full-test 性能同图呈现，SpliceAI 需 seed17/29/43；回归 t-SNE 保留且不算分类 silhouette。MRL 负 Pearson r 必须回源并用逐样本预测或 CUDA 重评复算，不得只用指标定义解释；shuffle 曲线须核对停止合同，不得把早停短曲线误判为漏画【见 spec §10.39 / tasks N16】
 - [ ] B30 **已完成资产防返工**：任务地图、8 任务 micro/seed17 双 split 三状态机制图、micro ncRNA rank8 六格及所有 complete 格只复用；启动或新增页面前必须核查远端最新文件、实时 proof 与哈希【本轮新增】
 - [ ] B31 **ncRNA 训练顺序事故门禁**：旧 pre-shuffle ncRNA family 结果及派生崩溃带、Δ、规模/数据量等价线不得进入当前图或结论；严格同 runner/max_len A/B 与 corrected best-val 矩阵未验收前只能写审计状态。隔离原文件只归档不删除，所有刷新图核查 RID/protocol/epoch_shuffle【见 spec §10.23 / tasks N10】
 - [x] B32 **失控训练退役门禁**：旧PlateauTracker在validation持续高于best+tolerance时可无限运行；异常degradation格和旧q_corrected父队列已留证停止，监控whitelist已移除该lane，不得直接重启。per-base正式补测只用独立bestval_v1、best checkpoint与无实质改善停止合同；中断格无result不计完成，新旧协议不混均值【✓ 2026-10-30：270格注册表12 complete+258 runnable，3-worker bestval队列与GitHub提交核验；见 spec §10.32–10.33 / tasks N13】
