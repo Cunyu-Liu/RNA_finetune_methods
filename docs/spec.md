@@ -800,3 +800,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 **⑧ 结论⑥成本与结论⑦遗忘**：时间×性能和显存作为独立成本结论，点须关联 RID、模型、策略、任务、split、n、batch、GPU 与 best-val 停止协议；共享卡 wall time 只作同任务相对比较。遗忘图纵轴明确为 `ΔNLL = post−pre`（controlled causal held-out NLL，正值=遗忘，负值=反向增益），逐 seed 散点叠加同规模均值连线；只使用 corrected controlled 与 official `_mlm15fix` 的各自协议，不混旧泄漏值。当前 650M LoRA 三格完成后再更新覆盖，不把待合格写成已完成。
 
 **⑨ 执行顺序与验收**：P0 实时 proof/异常核查与保留在训格 → P1 闭合八任务主矩阵及其余五任务三种子六臂 → P2 并行完成 SpliceAI 多种子机制抽取与分类组合图 → P3 完成 LR default/tuned 与 PEFT/rank → P4 补齐七档 scaling、CRISPR 信号档、同家族等价分析与资源曲线 → P5 完成 E6 余格并刷新遗忘图 → P6 逐页更新 PPT、归档与三地同步。现有合法队列不中断、complete 不重训、running 不双开；650M 大格在自然空出的独占显存窗口执行，不为占满显存制造 OOM。每批依次通过（1）RID/result/ledger/checkpoint/CUDA，（2）split/seed/策略/LR/n_train/统计，（3）图源数值/图注/PPT 实际渲染三轮独立检查。
+
+### 10.40 v16 阶段续接快照（2026-11-01）
+
+1. SpliceAI random/family 的三种子机制图已全部闭合，当前 PPT 为 30 页；最后 family-LoRA 源格以 best_epoch=0、4 epochs、patience=3 收敛，macro-F1=0.419940687。分类组合图不替代其余科学矩阵的完成证明。
+2. 当前阶段输入为 `bestval_ledger_export_20261101_v16.csv`：1092 accepted、1 rejected，v15 的 1086 行逐字段保留。④/⑤仍只有 4/8 面板可判；SpliceAI 两臂近 1/3 只判 low_signal。主图与分类图源包分别为 79/53 个登记文件，版本和哈希见 PPT 交接 §26 与 tasks N17。
+3. 下一阶段沿用现有合法队列，不重启、不抢跑、不重复 RID；主矩阵与 LR/rank 批次闭合后，按阶段门推进 Frozen 七档、CRISPR 信号档、RNA-Sc 等价线和 E6 余格。当前 PPT 是 v16 阶段讨论版，不是全实验终版。

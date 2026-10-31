@@ -2,6 +2,7 @@ import argparse
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 
 import matplotlib
 matplotlib.use("Agg")
@@ -12,7 +13,9 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[5]
 PACKAGE = ROOT / "交接文档/绘图数据/current/figure_source_data_20261101_classification_composite"
 COORDINATES = PACKAGE / "data/coordinates/mechanism_spliceai"
-LEDGER = ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/data/bestval_ledger_export_20261031_v4.csv"
+LEDGER_DIR = ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/data"
+LEDGER = max(LEDGER_DIR.glob("bestval_ledger_export_*.csv"),
+             key=lambda p: [int(x) for x in re.split(r"(\d+)", p.name) if x.isdigit()])
 STATES = ("pre", "lora", "full")
 STRATEGIES = ("frozen", "lora", "full")
 COLORS = {"frozen": "#77AADD", "lora": "#EE8866", "full": "#444444"}

@@ -139,3 +139,12 @@
 - [x] E6 图文匹配：①a-4 五面板指标与任务地图一一对应；⑤b-1 8 面板与 8 任务一致；⑤b-2 数值与 `peak_memory_data.csv` 一致；⑤d 热图与 `bigmodel_coverage_data.csv` 一致。
 - [ ] E7 待实验闭合后重绘：①a-4 的 SpliceAI/degradation/SSI 微调臂（当前 seed17）、⑤d 650M 各臂、②③⑤ 的 8 任务正式矩阵。
 
+## F 组：2026-11-01 v16 阶段验收
+
+- [x] F1 输入：v16 共 1092 accepted、1 rejected，RID 唯一，v15 的 1086 行逐字段保留；所有 accepted 行保留 RTX 5090/CUDA 证据。
+- [x] F2 SpliceAI：random/family × seed17/29/43 × pre/LoRA/full 组合图均完成，坐标与 full-test macro-F1 逐 seed 对账；两种子页连续呈现。
+- [x] F3 页面：当前 PPT 共 30 页，`pptx_lint.py` PASS；`validate_report_layout.py` 的越界、Microsoft YaHei、1.5 倍行距、字号和 ZIP CRC 全过；30 页 PDF 实际渲染复核。
+- [x] F4 哈希：PPT=`f4cbfd1bdb6302fd3e3280cf162291f7b78269c4d09465026352d7a5c30fb09b`，PDF=`38ee3c04023b6408c80d9c05948976b300ed99db0a2adab4be34563489e512d3`；主图/分类图 manifest 分别为 79/53 文件。
+- [ ] F5 科学边界：④/⑤仍 4/8 面板可判，主矩阵、LR/rank、Frozen scaling、CRISPR 信号档、RNA-Sc 等价线和 E6 大格未全闭合；不得据本阶段验收宣称全部实验完成。
+- [ ] F6 最终工作：完成剩余实验后再做全稿图文复核、旧文档/废弃绘图源归档与三地同步。
+

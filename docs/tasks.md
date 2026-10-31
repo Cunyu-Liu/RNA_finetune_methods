@@ -1415,8 +1415,8 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 ### B. 主矩阵、机制与学习率/PEFT
 
 - [ ] **P1 八任务六臂**：接管现有主队列，补齐 SpliceAI/degradation/SSI 的 LoRA/full 三种子及其他真实缺口；complete 不重训，n<3 斜线、NA 不补零，刷新第 8 页。
-- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成。其 LoRA 源格曾在 `set_device` 阶段 CUDA OOM（未训练、artifact 为空），日志已存 `status/failures/20261101/`，现以同 RID/参数建立单格修复队列，未双开；修复格已完成 epoch0–3，best_epoch=0，stale_epochs=3，macro-F1=0.419940687，已按 patience=3 收敛。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 的最后 LoRA 机制推理进行中。
-- [~] **分类任务组合图**：ncRNA/modification/CRISPR/SSP 已嵌入组合图；SpliceAI random 三种子图已完成，family 页待最后源格。性能均用 full-test，投影只用于显示；回归 t-SNE 页面保留。
+- [x] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成。其 LoRA 源格曾在 `set_device` 阶段 CUDA OOM（未训练、artifact 为空），日志已存 `status/failures/20261101/`，现以同 RID/参数建立单格修复队列，未双开；修复格已完成 epoch0–3，best_epoch=0，stale_epochs=3，macro-F1=0.419940687，已按 patience=3 收敛。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random/family 三种子组合图与 PPT 页面均完成。
+- [x] **分类任务组合图**：ncRNA/modification/CRISPR/SSP 已嵌入组合图；SpliceAI random/family 三种子组合页均完成。性能均用 full-test，投影只用于显示；回归 t-SNE 页面保留。
 - [ ] **P3 LR 与 PEFT/rank**：完成 320 个 LR tuning 格，80 组四档齐全后冻结 validation 选择，再闭合 default/tuned 正式配对；继续既有 rank/DoRA 真实缺口，不把 tuning seed 或 legacy 混入正式均值。
 
 ### C. 数据量 scaling、等价与成本/遗忘
@@ -1435,3 +1435,13 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [ ] **归档**：交接根目录只留当前入口与必要索引，废弃快照/临时脚本和旧绘图源先核引用后移动 archive；不删除隔离证据或用户原件。
 - [ ] **代码与备份**：每批确认代码在 `/home/cunyuliu/rna-ft-eval` 提交并推送 GitHub；大文件/权威 artifacts 在 `/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/`，本地只保留核心交付与源数据索引。
 - [ ] **最终验收**：PPT ZIP/XML、markitdown、fix/layout、嵌图哈希、字体行距、LibreOffice 实际渲染和未修改页 diff 全通过；未闭合实验继续标范围，不以阶段版宣称所有科学矩阵完成。
+
+## N17. 2026-11-01 v16 阶段交付与续接
+
+- [x] **SpliceAI 双 split 三种子组合图**：random/family 各 seed17/29/43 的 pre/LoRA/full 已全部完成；两页连续呈现，最后 family-LoRA 源格 macro-F1=0.419940687，best_epoch=0、epochs_trained=4，按 patience=3 收敛。坐标、full-test macro-F1、RID 和 v16 台账逐 seed 对账通过。
+- [x] **最新台账与图表**：`bestval_ledger_export_20261101_v16.csv` 为 1092 accepted、1 rejected；v15 的 1086 行逐字段不变，新增 6 格。①a-4、时间×性能、显存、scaling、等价与 SpliceAI 组合图均已重建；④/⑤仍为 4/8 面板可判，不将新增分层格写成任务闭合。
+- [x] **30 页阶段 PPT**：`ppt/RNA_LM微调策略评测-导师讨论修订版_20261101_导师反馈修订.pptx` SHA256=`f4cbfd1bdb6302fd3e3280cf162291f7b78269c4d09465026352d7a5c30fb09b`；PDF SHA256=`38ee3c04023b6408c80d9c05948976b300ed99db0a2adab4be34563489e512d3`。lint、layout、ZIP CRC、Microsoft YaHei、1.5 倍行距及 30 页实际渲染通过，原件未覆盖。
+- [x] **图源版本**：主图 revision=`20261101_refresh_v29_v16ledger`、79 文件、manifest SHA256=`ad152655ba0b574db010bbfdcc7c2bc405e795a6d06a8c146355d3740a102aa1`；分类组合 revision=`20261101_classification_composite_v2`、53 文件、manifest SHA256=`308c692ba2fdd1a143721c1933b43a5adffa80025c1f6154a59fbf8c8b5cee5d`。
+- [~] **远端执行快照**：现有 per-base、complementary、LR tuning、rank、数据量分层和 E6 队列继续运行；核查时有 8 个真实 CUDA 训练进程、显存约 20 GiB。进程状态不作为完成证明，不重启父队列、不重复提交运行中 RID，待完成批次后定向验收并导出下一版台账。
+- [ ] **续接顺序**：先完成主矩阵和当前 LR/rank 批次；LR 四档完整后按 validation 冻结选择并补 tuned；再按阶段门启动 Frozen 七档、CRISPR 信号档、RNA-Sc 等价线和 E6 大格。所有缺口仍以实时 proof 为准，不能以本节进程快照代替计数。
+- [ ] **同步与最终归档**：本阶段文件上传 `/home`、备份 `/teams` 并提交 GitHub；全科学矩阵闭合后统一完成 PPT 全文复核、废弃文档与旧绘图源归档。当前源数据均保留，不因版本刷新删除旧证据。
