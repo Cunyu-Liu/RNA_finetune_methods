@@ -1415,7 +1415,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 ### B. 主矩阵、机制与学习率/PEFT
 
 - [ ] **P1 八任务六臂**：接管现有主队列，补齐 SpliceAI/degradation/SSI 的 LoRA/full 三种子及其他真实缺口；complete 不重训，n<3 斜线、NA 不补零，刷新第 8 页。
-- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成、LoRA 源格仍在主队列。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 待最后源格。
+- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成。其 LoRA 源格曾在 `set_device` 阶段 CUDA OOM（未训练、artifact 为空），日志已存 `status/failures/20261101/`，现以同 RID/参数建立单格修复队列，未双开。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 待最后源格。
 - [~] **分类任务组合图**：ncRNA/modification/CRISPR/SSP 已嵌入组合图；SpliceAI random 三种子图已完成，family 页待最后源格。性能均用 full-test，投影只用于显示；回归 t-SNE 页面保留。
 - [ ] **P3 LR 与 PEFT/rank**：完成 320 个 LR tuning 格，80 组四档齐全后冻结 validation 选择，再闭合 default/tuned 正式配对；继续既有 rank/DoRA 真实缺口，不把 tuning seed 或 legacy 混入正式均值。
 
@@ -1423,7 +1423,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 
 - [ ] **结论⑤ scaling**：补齐八任务 × Frozen/LoRA/Full × 七档 × 双 split × 三种子；第 21 页不再保留旧 MRL 曲线冒充最新结果，第 22 页使用同一批最新曲线回答模型内数据量效应。
 - [x] **Frozen 分层注册**：既有 C5c 仅 LoRA/full，已新增 `c5c_frozen_jobs_20261101.json`=1008 格（8 任务 × micro/mega/650M × 双 split × 七档 × 3 seeds），只登记未启动，待主矩阵阶段门后补跑。生成器支持 `--strategies frozen`，focused+全文件 50 tests 通过，提交=`a52f085` 已推 GitHub；此前误生成 LoRA/full 的草稿已隔离为 `invalid_strategy_draft`，不得使用。
-- [ ] **CRISPR 信号档**：1000–3000 档正例过少时不判趋势；先登记并执行 {6000,10000} 档，检查信号是否脱离 PR-AUC 基线，再决定是否可进入 scaling/等价图。
+- [~] **CRISPR 信号档**：1000–3000 档正例过少，不判趋势或等价；已注册 `crispr_signal_jobs_20261101.json`=108 格（3 策略 × 3 RiNALMo 档 × 双 split × {6000,10000} × 3 seeds），只登记未启动，待阶段门后检查信号是否脱离 PR-AUC 基线再入图。
 - [~] **结论④等价**：已实现 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI；仅 |Δ|≤0.02 且 CI 覆盖 0 才标候选，去掉 modification 重复别名。当前 ncRNA/MRL 有候选、SSP 无候选、modification 仅低预算有候选，4/8 面板可判；其余任务继续等同源曲线。
 - [x] **页面归属**：旧⑤c-1/⑤c-2 已移入④并标 legacy；时间×性能/显存独立为⑥，遗忘为⑦，⑤d 改为⑤覆盖补充；删除⑤的过时重复曲线页，当前 29 页，编号混乱已消除。
 - [~] **成本与遗忘**：时间×性能/显存已独立为⑥；E6 第 27 页已更新纵轴、逐 seed 点与均值线和最新 30 格 controlled 证据，650M LoRA 余格仍按 corrected 队列待补。
