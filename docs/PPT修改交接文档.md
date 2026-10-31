@@ -417,7 +417,7 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 
 ## 26. 2026-11-01 导师逐页反馈修订与当前边界
 
-1. **基底**：用户最新保存的 30 页文件 SHA256=`f4277d59af9f1c2436c3e8e0b99feffffaf0af13443b18088fb3b7984c1d7025`，不覆盖原件。当前阶段修订文件为 `RNA_LM微调策略评测-导师讨论修订版_20261101_导师反馈修订.pptx`，29 页，v10 阶段 SHA256=`4aa61e3bc8d4e92ef48797377a4ce57436d640583652776252b19e10ccd61032`，与 `delivery/20261101/stage2` 一致。实验未闭合前不得视为最终科学版。
+1. **基底**：用户最新保存的 30 页文件 SHA256=`f4277d59af9f1c2436c3e8e0b99feffffaf0af13443b18088fb3b7984c1d7025`，不覆盖原件。当前阶段修订文件为 `RNA_LM微调策略评测-导师讨论修订版_20261101_导师反馈修订.pptx`，29 页，v11 阶段 SHA256=`0b934eff84ae0f02b92e208e6627e8ee483051a80c0e4530954764c9ca505d79`，与 `delivery/20261101/stage2` 一致。实验未闭合前不得视为最终科学版。
 2. **八任务与结论①**：页 2 明确八任务用于检验任务粒度、分类/回归、类别不平衡与 split 对策略结论的调节作用，不是堆数量。页 5 解释 shuffle 是逐 epoch 重排训练样本、不是改标签/split；no-shuffle 的 epoch0–3 是 best0+patience3 的完整早停曲线。页 6 改为“modification family 高 AUC 但非免疫”，页 7 改为“MRL 的 RiNALMo 规模收益饱和”。结论①主矩阵是固定 LR 对照，逐任务 validation 选 LR 归结论②。
 3. **结论②异常核查**：3e-4 明确为 runner argparse 工程缺省而非最优。MRL seed101 micro-full@3e-4 的 −0.112 已独立 CUDA 重评完全一致，预测 SD=6.25×10⁻⁷，属输出近常数坍缩，不是评测算错；证据在 `status/revalidation/mrl_negative_20261101/`，代码提交 `71d0983`。
 4. **分类组合图**：ncRNA/modification/CRISPR/SSP 已把三状态投影与同 seed17、同 split 的 full-test 性能放在同图。SpliceAI random 的 seed17/29/43 已完成，seed29-family 已完成，seed43-family 仅差 LoRA 源格；不删除 degradation/SSI/MRL 的回归机制页。源包=`figure_source_data_20261101_classification_composite/`，多 seed launcher 提交 `8df9f40`。
