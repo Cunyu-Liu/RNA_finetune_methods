@@ -42,7 +42,7 @@ COL_FULL = "#1f4e79"
 COL_LORA = "#e07b39"
 # CRISPR 正例率 0.59%：1000–3000 档只含 ~6–18 个正例，PR-AUC 停在基线附近，
 # 该档位不可用于等价线判断；低于阈值直接标“正例过少”，不画误导性曲线。
-MIN_SIGNAL = {"crispr-off-target": 0.05}
+MIN_SIGNAL = {"crispr-off-target": 0.2, "spliceai": 1 / 3 + 0.02}
 
 
 def latest_export():
@@ -119,12 +119,14 @@ def main():
             continue
         floor = MIN_SIGNAL.get(task)
         peak = max(full["mean"].max(), lora["mean"].max())
-        if floor is not None and peak < 4 * floor:
-            ax.text(0.5, 0.55, "正例过少", ha="center", va="center",
+        if floor is not None and peak < floor:
+            message = "正例过少" if task == "crispr-off-target" else "近随机基线"
+            detail = "1000–3000 档 PR-AUC≈基线\n需 ≥6000 档再判等价" \
+                if task == "crispr-off-target" else "近随机输出不算有效等价"
+            ax.text(0.5, 0.55, message, ha="center", va="center",
                     fontsize=14, color="#8a8a8a", transform=ax.transAxes)
-            ax.text(0.5, 0.28, "1000–3000 档 PR-AUC≈基线\n需 ≥6000 档再判等价",
-                    ha="center", va="center", fontsize=9, color="#8a8a8a",
-                    transform=ax.transAxes, linespacing=1.6)
+            ax.text(0.5, 0.28, detail, ha="center", va="center",
+                    fontsize=9, color="#8a8a8a", transform=ax.transAxes, linespacing=1.6)
             ax.set_title("%s | %s" % (label, metric), fontsize=10)
             ax.set_xticks([]), ax.set_yticks([])
             tiles.append({"task": task, "split": split, "status": "low_signal",

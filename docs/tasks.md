@@ -1424,7 +1424,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [ ] **结论⑤ scaling**：补齐八任务 × Frozen/LoRA/Full × 七档 × 双 split × 三种子；第 21 页不再保留旧 MRL 曲线冒充最新结果，第 22 页使用同一批最新曲线回答模型内数据量效应。
 - [x] **Frozen 分层注册**：既有 C5c 仅 LoRA/full，已新增 `c5c_frozen_jobs_20261101.json`=1008 格（8 任务 × micro/mega/650M × 双 split × 七档 × 3 seeds），只登记未启动，待主矩阵阶段门后补跑。生成器支持 `--strategies frozen`，focused+全文件 50 tests 通过，提交=`a52f085` 已推 GitHub；此前误生成 LoRA/full 的草稿已隔离为 `invalid_strategy_draft`，不得使用。
 - [~] **CRISPR 信号档**：1000–3000 档正例过少，不判趋势或等价；已注册 `crispr_signal_jobs_20261101.json`=108 格（3 策略 × 3 RiNALMo 档 × 双 split × {6000,10000} × 3 seeds），只登记未启动，待阶段门后检查信号是否脱离 PR-AUC 基线再入图。
-- [~] **结论④等价**：已实现 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI；仅 |Δ|≤0.02 且 CI 覆盖 0 才标候选，去掉 modification 重复别名。当前 ncRNA/MRL 有候选、SSP 无候选、modification 仅低预算有候选，4/8 面板可判；其余任务继续等同源曲线。
+- [~] **结论④等价**：已实现 small-full(n) vs large-LoRA(m) 逐 seed 最近对、配对差值和 95% CI；仅 |Δ|≤0.02 且 CI 覆盖 0 才标候选，去掉 modification 重复别名。SpliceAI 两臂虽曾出现 Δ=0，但均停留 macro-F1≈1/3 近随机输出，已判 low_signal，不算有效等价。当前 ncRNA/MRL 有候选、SSP 无候选、modification 仅低预算有候选，4/8 面板可判；其余任务继续等同源曲线。
 - [x] **页面归属**：旧⑤c-1/⑤c-2 已移入④并标 legacy；时间×性能/显存独立为⑥，遗忘为⑦，⑤d 改为⑤覆盖补充；删除⑤的过时重复曲线页，当前 29 页，编号混乱已消除。
 - [~] **成本与遗忘**：时间×性能/显存已独立为⑥；E6 第 27 页已更新纵轴、逐 seed 点与均值线和最新 30 格 controlled 证据，650M LoRA 余格仍按 corrected 队列待补。
 

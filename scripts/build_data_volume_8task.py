@@ -34,7 +34,7 @@ TASKS = [
     ("ssi", "SSI", "PCC"),
 ]
 BUDGETS = [1000, 1500, 2000, 2500, 3000]
-MIN_SIGNAL = {"crispr-off-target": 0.05}
+MIN_SIGNAL = {"crispr-off-target": 0.2, "spliceai": 1 / 3 + 0.02}
 ARMS = [
     ("RiNALMo-micro", "full", "33M full-FT", "#1f4e79", "o"),
     ("RiNALMo-micro", "lora", "33M LoRA", "#4c9f70", "^"),
@@ -81,12 +81,14 @@ def main():
         usable = sum(1 for _c, g in curves if len(g) >= 3)
         floor = MIN_SIGNAL.get(task)
         peak = max((g["mean"].max() for _c, g in curves if len(g)), default=0)
-        if floor is not None and peak < 4 * floor:
-            ax.text(0.5, 0.55, "正例过少", ha="center", va="center", fontsize=13,
+        if floor is not None and peak < floor:
+            message = "正例过少" if task == "crispr-off-target" else "近随机基线"
+            detail = "1000–3000 档 PR-AUC≈基线\n需 ≥6000 档" \
+                if task == "crispr-off-target" else "近随机输出不算有效趋势"
+            ax.text(0.5, 0.55, message, ha="center", va="center", fontsize=13,
                     color="#8a8a8a", transform=ax.transAxes)
-            ax.text(0.5, 0.25, "1000–3000 档 PR-AUC≈基线\n需 ≥6000 档", ha="center",
-                    va="center", fontsize=9, color="#8a8a8a", transform=ax.transAxes,
-                    linespacing=1.6)
+            ax.text(0.5, 0.25, detail, ha="center", va="center",
+                    fontsize=9, color="#8a8a8a", transform=ax.transAxes, linespacing=1.6)
             ax.set_title("%s | %s" % (label, metric), fontsize=10)
             ax.set_xticks([]), ax.set_yticks([])
             tiles.append({"task": task, "status": "low_signal", "peak": float(peak)})
