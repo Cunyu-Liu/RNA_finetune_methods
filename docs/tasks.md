@@ -1502,3 +1502,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **n1500 在训状态**：v25 新增 0，但 full seed43、148M-LoRA seed17、33M-LoRA seed29 均有真实 CUDA 进程和 RUNNING plateau。full seed43 至 epoch4 validation 仍改善，另外两格 stale=1/0，均未达到 patience=3，不能提前停止或记完成。
 - [x] **E6 余格性质**：650M-LoRA seed17/29/43 的 corrected `_mlm15fix_seedfix` 仍为 pending，旧 invalid 不混用。`q_e6_mlm15fix` 存活，日志明确 `WAIT_VRAM need=18500MB`；当前是显存等待而非失败，不强行启动、不改变协议。
 - [~] **后续**：n1500 三臂继续收敛，E6 等自然窗口；本核查无新增科学结果，v24 仍是当前本地台账，PPT 保持 v17。
+
+## N26. 2026-11-01 degradation full 两档曲线形成
+
+- [x] **33M-full random/n1500 三种子**：seed17/29/43 PCC=0.540614836/0.537690866/0.541896174，mean=0.540067292、SD=0.002155460、95% CI half-width=0.002439132；三格 proof=complete，best_epoch=3/3/4，epochs=7/7/8，patience=3 收敛。
+- [x] **full 两档描述**：n1000→1500 的均值由 0.517049340 增至 0.540067292，差值=0.023017952，仅限 degradation random 的 33M-full；其他两臂 n1500 未齐，不能比较策略或等价。
+- [x] **v26 与源包**：1126 accepted、1 rejected；33M-LoRA n1500 为 2/3，148M-LoRA n1500 为 1/3。源包 98 文件，manifest SHA256=`39fb1da2511110a067369b09333430d7cabadda47db2d160276e986c743de187`，PPT 保持 v17。
+- [ ] **后续**：继续补齐 n1500 两个 LoRA 臂，再推进 n2000；达到面板门槛后才重绘。
