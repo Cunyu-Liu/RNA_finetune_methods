@@ -1468,3 +1468,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **无覆盖迁移**：19 个文件复制到 teams，源目录保留，逐文件 SHA256 一致。迁移 manifest=`status/migrations/complementary_root_recovery_20261101.json`，SHA256=`54154aefbb2d7b6420d2c85d4e12821ed4b3f480252ebedaf07b383e7926a161`。
 - [x] **目标验收与台账**：4 格 teams 路径均 proof=complete，complementary 恢复为 280/324 complete。v19 为 1102 accepted；v20 仍 1102，仅将 4 行 artifact/result/checkpoint 路径改为 teams，其他字段不变。主图源包 88 文件（含迁移证明），manifest SHA256=`11f63bd6bb6e9be3044077d1aa7a32b75169676caeb518b8cd6a2033729133a2`。
 - [ ] **后续**：其余 44 格继续由原队列按 proof 补跑；本恢复不新增科学结果，当前 PPT 保持 v17，不重绘。
+
+## N21. 2026-11-01 degradation/SSI 分层定向提速
+
+- [x] **优先级诊断**：equiv tiers 为 271/420 accepted，SpliceAI 31/60，而 degradation/SSI 两臂 0；LoRA tiers 为 143/240，degradation/SSI 也为 0。先将两个未覆盖任务从现有车道抽出，不新增实验设计。
+- [x] **子注册表**：equiv 120 格、micro-LoRA 60 格，均排除 `_dense_`，RID/result_dir 唯一；启动前全部 runnable，need 分别 2.5/3.5 和 2.0 GiB。两个独立 state-dir 各 2 worker。
+- [x] **启动纠错**：首次 LoRA launcher 因 shell 变量作用域失败，改用全绝对路径后启动成功；未产生结果或重复格。equiv/lora 真实父 PID=3961023/3961844。
+- [x] **CUDA 证据**：degradation random/n1000/seed17 的 33M-full PID=3961055、148M-LoRA PID=3961056、33M-LoRA PID=3961990 均已训练；均 `--device 0` 且 teams artifact 环境正确，GPU 实占 1670/2686/1212 MiB，无 CPU 静默降级。
+- [~] **待验收**：启动不等于完成。待三种子和五档逐步闭合后更新④/⑤面板；未闭合前 PPT 保持 v17，不将子队列大小写成完成数。

@@ -818,3 +818,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. 全量审计为 276 complete、48 incomplete；其中 4 格是 ledger done 但 teams result_dir 缺失的 conflict，其余 44 格为 runnable/running。4 格分别为 ERNIE-SSP LoRA family seed29、RNA-FM CRISPR LoRA family seed43 和 full random seed17/29。
 2. `/root/rna-ft-eval/artifacts` 中 4 格均有 result/plateau/best.ckpt 且源路径 `proof_state=complete`。迁移前无 teams 目标目录、无同名活跃 runner；采用无覆盖复制，保留源目录，19 个文件逐哈希一致，manifest=`status/migrations/complementary_root_recovery_20261101.json`，SHA256=`54154aefbb2d7b6420d2c85d4e12821ed4b3f480252ebedaf07b383e7926a161`。
 3. 迁移后 4 格 teams 路径均 `proof_state=complete`，不得重跑。complementary 恢复为 280/324 complete、44 个其他未完成格。v20 只将这 4 条 accepted 的 artifact/result/checkpoint 路径改为 teams；其余字段和科学指标不变。路径迁移不冒充新实验，当前 PPT 不因该操作重绘。
+
+### 10.43 degradation/SSI 分层优先级调整（2026-11-01）
+
+1. v20 对账显示：equiv tiers 为 271/420 accepted，SpliceAI 已有 31/60，而 degradation/SSI 两臂为 0；LoRA tiers 为 143/240，degradation/SSI 也为 0。为避免低信号长任务继续阻塞两个未覆盖任务，从现有注册表抽取 canonical、非 `_dense_` 的 degradation/SSI 子队列，不新增科学矩阵。
+2. `equiv_degradation_ssi_jobs_20261101.json`=120 格（micro-full/mega-LoRA × 双 split × 五档 × 三种子 × 两任务），need=2.5/3.5 GiB；`lora_degradation_ssi_jobs_20261101.json`=60 格（micro-LoRA 同范围），need=2.0 GiB。启动前分别全部 runnable、RID/result_dir 唯一，无目标活跃 runner。
+3. 两个独立 state-dir 各 2 worker 启动，沿用 `RNAFT_ARTIFACT_ROOT=.../teams/.../artifacts` 和共享调度门禁。首次 LoRA launcher 因 shell 变量作用域错误未启动，改用全绝对路径后成功；未产生科学结果或重复格。已核实 33M-full、148M-LoRA、33M-LoRA 的 degradation random/n1000/seed17 三个 CUDA 进程，均 `--device 0`、teams 环境正确，GPU 实占分别为 1670/2686/1212 MiB。启动不记完成，后续仍按 result/plateau/checkpoint/CUDA 验收。
