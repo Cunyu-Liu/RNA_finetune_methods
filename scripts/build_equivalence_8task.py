@@ -11,13 +11,14 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3] / "交接文档"
+ROOT = Path(__file__).resolve().parents[4]
 WORK = ROOT / "绘图数据" / "current" / "figure_source_data_20261028"
 OUT = Path(__file__).resolve().parent
 
@@ -45,7 +46,8 @@ MIN_SIGNAL = {"crispr-off-target": 0.05}
 
 
 def latest_export():
-    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"))
+    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"),
+                   key=lambda p: [int(x) for x in re.split(r"(\d+)", p.name) if x.isdigit()])
     assert cands, "no bestval export"
     return cands[-1]
 

@@ -78,7 +78,8 @@ CELL_KEYS = list(SIX_COLORS)
 
 def latest_export():
     """按文件名日期选择当前 best-val 台账；旧文件保留可追溯。"""
-    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"))
+    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"),
+                   key=lambda p: [int(x) for x in re.split(r"(\d+)", p.name) if x.isdigit()])
     assert cands, "no bestval export"
     return cands[-1]
 

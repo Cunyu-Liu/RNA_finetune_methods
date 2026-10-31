@@ -56,7 +56,8 @@ TABLE_MODEL = {"rinalmomicro": "RiNALMo-micro", "rinalmomega": "RiNALMo-mega",
 
 
 def latest_export():
-    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"))
+    cands = sorted((OUT.parent / "data").glob("bestval_ledger_export_*.csv"),
+                   key=lambda p: [int(x) for x in re.split(r"(\d+)", p.name) if x.isdigit()])
     assert cands, "no bestval export"
     return cands[-1]
 
