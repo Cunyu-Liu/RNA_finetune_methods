@@ -824,3 +824,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v20 对账显示：equiv tiers 为 271/420 accepted，SpliceAI 已有 31/60，而 degradation/SSI 两臂为 0；LoRA tiers 为 143/240，degradation/SSI 也为 0。为避免低信号长任务继续阻塞两个未覆盖任务，从现有注册表抽取 canonical、非 `_dense_` 的 degradation/SSI 子队列，不新增科学矩阵。
 2. `equiv_degradation_ssi_jobs_20261101.json`=120 格（micro-full/mega-LoRA × 双 split × 五档 × 三种子 × 两任务），need=2.5/3.5 GiB；`lora_degradation_ssi_jobs_20261101.json`=60 格（micro-LoRA 同范围），need=2.0 GiB。启动前分别全部 runnable、RID/result_dir 唯一，无目标活跃 runner。
 3. 两个独立 state-dir 各 2 worker 启动，沿用 `RNAFT_ARTIFACT_ROOT=.../teams/.../artifacts` 和共享调度门禁。首次 LoRA launcher 因 shell 变量作用域错误未启动，改用全绝对路径后成功；未产生科学结果或重复格。已核实 33M-full、148M-LoRA、33M-LoRA 的 degradation random/n1000/seed17 三个 CUDA 进程，均 `--device 0`、teams 环境正确，GPU 实占分别为 1670/2686/1212 MiB。启动不记完成，后续仍按 result/plateau/checkpoint/CUDA 验收。
+
+### 10.44 requested budget 与 actual n_train 分轴（2026-11-01）
+
+1. degradation random 的专用 `_e32000_` 注册格 requested n_train=2000，但 result 实际 n_train=1552、n_val=172、n_test=431。原构图按实际 n_train∈{1000,1500,2000,2500,3000} 过滤，会错误丢弃该档；不得把 1552 静默写成 2000，也不得因此判实验失败。
+2. `build_data_volume_8task.py` 与 `build_equivalence_8task.py` 现从 RID 的 `_e3N_` 解析 requested_n_train，另存 actual_n_train；横轴和配对使用 requested 档，聚合保留 actual_min/max，metadata 的 `requested_vs_actual` 保存逐 RID cap 证据。非专用全量格按 actual n_train 判断，不能把 main full 的 1552 格混入专用 2000 档。
+3. 真实 v27 验收：requested=2000 的 cap 行恰 1 条、actual=1552；未标注的 1552 行进入图过滤后为 0。两图仍 4/8 面板，degradation 三臂档数=[2,2,1]，不借 cap 修复提前新增面板。后续 PPT 更新时必须在图注或页脚说明 requested 档与 capped actual n 的区别。

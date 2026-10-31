@@ -52,7 +52,10 @@ def latest_export():
 def load(path):
     df = pd.read_csv(path)
     df = df[df.protocol == "bestval_v1"]
-    df = df[df.n_train.isin(BUDGETS)]
+    requested = df.run_id.str.extract(r"_e3(\d+)_", expand=False)
+    df["requested_n_train"] = pd.to_numeric(requested).fillna(df.n_train).astype(int)
+    df["actual_n_train"] = df.n_train.astype(int)
+    df = df[df.requested_n_train.isin(BUDGETS)]
     df = df[df.seed.isin([17, 29, 43])]
     df = df[df.lr.isin([1e-5, 3e-4, 0.00001, 0.0003])]
     df = df[~df.run_id.str.contains("_smoke|_diag|_noshuffle|_r4_|_r16_|_dense")]
@@ -64,8 +67,11 @@ def load(path):
 def curve(df, task, split, model, strategy):
     sub = df[(df.task == task) & (df.split == split) & (df.model == model) &
              (df.strategy == strategy)]
-    g = sub.groupby("n_train").value.agg(["mean", "std", "count"]).reset_index()
-    g = g[g["count"] >= 3].sort_values("n_train")
+    g = sub.groupby("requested_n_train").agg(
+        mean=("value", "mean"), std=("value", "std"), count=("value", "count"),
+        actual_min=("actual_n_train", "min"), actual_max=("actual_n_train", "max"),
+    ).reset_index()
+    g = g[g["count"] >= 3].sort_values("requested_n_train")
     g["ci"] = 1.96 * g["std"] / g["count"].pow(0.5)
     return g
 
@@ -106,7 +112,7 @@ def main():
         for (model, strat, cname, col, mk), (c, g) in zip(ARMS, curves):
             if not len(g):
                 continue
-            ax.errorbar(g.n_train, g["mean"], yerr=g["ci"], fmt=mk + "-",
+            ax.errorbar(g.requested_n_train, g["mean"], yerr=g["ci"], fmt=mk + "-",
                         color=col, lw=1.6, ms=4.5, capsize=2.5, label=cname)
         ax.set_title("%s | %s" % (label, metric), fontsize=10)
         ax.grid(alpha=0.25, lw=0.6)
@@ -120,9 +126,14 @@ def main():
     fig.suptitle("Data-volume effect by task | official RiNALMo family | random split | "
                  "33M full@1e-5 / 33M LoRA@3e-4 / 148M LoRA@3e-4 | 3-seed mean ± 95% CI",
                  fontsize=10.5, y=1.02)
+    caps = df[df.requested_n_train != df.actual_n_train][[
+        "run_id", "task", "split", "model", "strategy",
+        "requested_n_train", "actual_n_train",
+    ]].to_dict("records")
     fig.text(0.01, 0.005,
-             "source: %s | only >=3 formal seeds per cell; tiers 1000/1500/2000/2500/3000; "
-             "empty tile = tiers pending; 650M excluded (32.7 GiB single-card limit)" % path.name,
+             "source: %s | only >=3 formal seeds per cell; requested tiers 1000/1500/2000/2500/3000; "
+             "empty tile = tiers pending; capped actual n is recorded in metadata; "
+             "650M excluded (32.7 GiB single-card limit)" % path.name,
              fontsize=7.4, color="#555555")
     fig.tight_layout(rect=(0, 0.02, 1, 0.94))
     fig.savefig(OUT / "data_volume_8task.png", bbox_inches="tight")
@@ -131,6 +142,7 @@ def main():
     (OUT / "data_volume_8task_meta.json").write_text(json.dumps({
         "figure": "data_volume_8task", "source": path.name,
         "panels_plotted": plotted, "panels_total": len(tiles), "tiles": tiles,
+        "requested_vs_actual": caps,
     }, ensure_ascii=False, indent=1))
     print("plotted", plotted, "/", len(tiles), "->", OUT / "data_volume_8task.png")
 

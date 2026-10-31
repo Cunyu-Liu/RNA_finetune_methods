@@ -55,7 +55,10 @@ def latest_export():
 def load(path):
     df = pd.read_csv(path)
     df = df[df.protocol == "bestval_v1"]
-    df = df[df.n_train.isin(BUDGETS)]
+    requested = df.run_id.str.extract(r"_e3(\d+)_", expand=False)
+    df["requested_n_train"] = pd.to_numeric(requested).fillna(df.n_train).astype(int)
+    df["actual_n_train"] = df.n_train.astype(int)
+    df = df[df.requested_n_train.isin(BUDGETS)]
     df = df[df.seed.isin([17, 29, 43])]
     df = df[df.lr.isin([1e-5, 3e-4, 0.00001, 0.0003])]
     df = df[~df.run_id.str.contains("_smoke|_diag|_noshuffle|_r4_|_r16_")]
@@ -67,17 +70,20 @@ def load(path):
 def arm(df, task, split, model, strategy):
     sub = df[(df.task == task) & (df.split == split) & (df.model == model) &
              (df.strategy == strategy)]
-    g = sub.groupby("n_train").value.agg(["mean", "std", "count"]).reset_index()
-    return g[g["count"] >= 3].sort_values("n_train")
+    g = sub.groupby("requested_n_train").agg(
+        mean=("value", "mean"), std=("value", "std"), count=("value", "count"),
+        actual_min=("actual_n_train", "min"), actual_max=("actual_n_train", "max"),
+    ).reset_index()
+    return g[g["count"] >= 3].sort_values("requested_n_train")
 
 
 def equivalence(full, lora):
     pairs = []
-    for n in sorted(full.n_train.unique()):
-        full_seed = full[full.n_train == n].set_index("seed").value
+    for n in sorted(full.requested_n_train.unique()):
+        full_seed = full[full.requested_n_train == n].set_index("seed").value
         candidates = []
-        for m in sorted(lora.n_train.unique()):
-            lora_seed = lora[lora.n_train == m].set_index("seed").value
+        for m in sorted(lora.requested_n_train.unique()):
+            lora_seed = lora[lora.requested_n_train == m].set_index("seed").value
             common = full_seed.index.intersection(lora_seed.index)
             if len(common) < 3:
                 continue
@@ -132,9 +138,9 @@ def main():
             tiles.append({"task": task, "split": split, "status": "low_signal",
                           "peak": float(peak), "floor": floor})
             continue
-        ax.plot(full.n_train, full["mean"], "o-", color=COL_FULL, lw=1.6,
+        ax.plot(full.requested_n_train, full["mean"], "o-", color=COL_FULL, lw=1.6,
                 ms=4.5, label="33M full-FT")
-        ax.plot(lora.n_train, lora["mean"], "s-", color=COL_LORA, lw=1.6,
+        ax.plot(lora.requested_n_train, lora["mean"], "s-", color=COL_LORA, lw=1.6,
                 ms=4.5, label="148M LoRA")
         raw_full = df[(df.task == task) & (df.split == split) &
                       (df.model == "RiNALMo-micro") & (df.strategy == "full")]
@@ -145,7 +151,7 @@ def main():
             if not pair["equivalent"]:
                 continue
             n, m = pair["full_n"], pair["lora_n"]
-            target = float(full[full.n_train == n]["mean"].iloc[0])
+            target = float(full[full.requested_n_train == n]["mean"].iloc[0])
             ax.plot([n, m], [target, target], ":", color="#6b6b6b", lw=1.1)
             ax.annotate("≈LoRA@%d" % m, (m, target), textcoords="offset points",
                         xytext=(2, 4), fontsize=7.5, color="#333333")
@@ -165,9 +171,14 @@ def main():
     fig.suptitle("Data-budget equivalence | official same-family models | "
                  "33M full-FT @1e-5 vs 148M LoRA @3e-4 | random split | "
                  "bars = 3-seed mean", fontsize=11, y=1.02)
+    caps = df[df.requested_n_train != df.actual_n_train][[
+        "run_id", "task", "split", "model", "strategy",
+        "requested_n_train", "actual_n_train",
+    ]].to_dict("records")
     fig.text(0.01, 0.005,
              "source: %s | dotted guide = |paired delta|<=0.02 and 95%% CI covers 0; "
-             "only 3 formal seeds per cell; no interpolation; empty tile = pending"
+             "only 3 formal seeds per cell; no interpolation; empty tile = pending; "
+             "x = requested budget; capped actual n is recorded in metadata"
              % path.name, fontsize=7.4, color="#555555")
     fig.tight_layout(rect=(0, 0.02, 1, 0.94))
     png = OUT / "equivalence_8task.png"
@@ -177,6 +188,7 @@ def main():
     (OUT / "equivalence_8task_meta.json").write_text(json.dumps({
         "figure": "equivalence_8task", "source": path.name,
         "panels_plotted": plotted, "panels_total": len(tiles), "tiles": tiles,
+        "requested_vs_actual": caps,
     }, ensure_ascii=False, indent=1))
     print("plotted panels", plotted, "/", len(tiles), "->", png)
 

@@ -1509,3 +1509,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **full 两档描述**：n1000→1500 的均值由 0.517049340 增至 0.540067292，差值=0.023017952，仅限 degradation random 的 33M-full；其他两臂 n1500 未齐，不能比较策略或等价。
 - [x] **v26 与源包**：1126 accepted、1 rejected；33M-LoRA n1500 为 2/3，148M-LoRA n1500 为 1/3。源包 98 文件，manifest SHA256=`39fb1da2511110a067369b09333430d7cabadda47db2d160276e986c743de187`，PPT 保持 v17。
 - [ ] **后续**：继续补齐 n1500 两个 LoRA 臂，再推进 n2000；达到面板门槛后才重绘。
+
+## N27. 2026-11-01 requested/actual 数据档制图修复
+
+- [x] **cap 证据**：degradation `_e32000_` 的注册 requested=2000，result actual n_train=1552、n_val=172、n_test=431；不是失败格。原图脚本按 actual 过滤会丢失该档。
+- [x] **脚本修复**：两张④/⑤图从 RID 解析 requested_n_train，另存 actual_n_train；横轴/配对用 requested，metadata 记录逐 RID cap，聚合保留 actual_min/max。非专用全量 1552 格不得混入专用 2000 档。
+- [x] **三轮验收**：真实 v27 重绘成功；cap 行恰 1 条且 requested/actual=2000/1552；未标注 1552 行进入过滤后=0；两图仍 4/8，degradation 三臂档数=[2,2,1]。py_compile 通过，未提前新增面板。
+- [x] **源包与台账**：v27 为 1130 accepted、1 rejected；33M-LoRA n1500 已三种子闭合，148M-LoRA n1500 为 2/3。源包 100 文件，manifest SHA256=`9c2f0f74eec2cf51c00475350c161e4a30b33e06f66efc7e4c3cb02e8f2b4f01`，PPT 保持 v17。
