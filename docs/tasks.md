@@ -1475,4 +1475,4 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **子注册表**：equiv 120 格、micro-LoRA 60 格，均排除 `_dense_`，RID/result_dir 唯一；启动前全部 runnable，need 分别 2.5/3.5 和 2.0 GiB。两个独立 state-dir 各 2 worker。
 - [x] **启动纠错**：首次 LoRA launcher 因 shell 变量作用域失败，改用全绝对路径后启动成功；未产生结果或重复格。equiv/lora 真实父 PID=3961023/3961844。
 - [x] **CUDA 证据**：degradation random/n1000/seed17 的 33M-full PID=3961055、148M-LoRA PID=3961056、33M-LoRA PID=3961990 均已训练；均 `--device 0` 且 teams artifact 环境正确，GPU 实占 1670/2686/1212 MiB，无 CPU 静默降级。
-- [~] **待验收**：启动不等于完成。待三种子和五档逐步闭合后更新④/⑤面板；未闭合前 PPT 保持 v17，不将子队列大小写成完成数。
+- [~] **首批结果与待验收**：v21 为 1109 accepted、1 rejected。degradation random/n1000/seed17 的 33M-full=0.526726859、33M-LoRA=0.521700426，均 best_epoch=4、8 epochs、patience=3 收敛；148M-LoRA 尚不在 accepted。其余 5 个新增格为 SpliceAI 分层/rank/主矩阵结果。当前只是单 seed 单档，不能形成④/⑤面板；源包 90 文件，manifest SHA256=`6246a8a0cd134d63fd0e6310a0b656fbd32f9af6a98d0247bb814d9b282f2d57`，PPT 保持 v17。
