@@ -1476,3 +1476,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **启动纠错**：首次 LoRA launcher 因 shell 变量作用域失败，改用全绝对路径后启动成功；未产生结果或重复格。equiv/lora 真实父 PID=3961023/3961844。
 - [x] **CUDA 证据**：degradation random/n1000/seed17 的 33M-full PID=3961055、148M-LoRA PID=3961056、33M-LoRA PID=3961990 均已训练；均 `--device 0` 且 teams artifact 环境正确，GPU 实占 1670/2686/1212 MiB，无 CPU 静默降级。
 - [~] **首批结果与待验收**：v21 为 1109 accepted、1 rejected。degradation random/n1000/seed17 的 33M-full=0.526726859、33M-LoRA=0.521700426，两格均 proof=complete，best_epoch=4、8 epochs、patience=3 收敛；148M-LoRA 尚不在 accepted。其余 5 个新增格为 SpliceAI 分层/rank/主矩阵结果。当前只是单 seed 单档，不能形成④/⑤面板；源包 90 文件，manifest SHA256=`6246a8a0cd134d63fd0e6310a0b656fbd32f9af6a98d0247bb814d9b282f2d57`，PPT 保持 v17。
+
+## N22. 2026-11-01 degradation 首个三种子分层单元
+
+- [x] **33M-full random/n1000 闭合**：seed17/29/43 PCC=0.526726859/0.498542541/0.525878620，mean=0.517049340、样本 SD=0.016032969、95% CI half-width=0.018143012；best_epoch=4/1/3，epochs=8/5/7，均 proof=complete、patience=3 收敛、RTX 5090。
+- [x] **v22 台账**：1114 accepted、1 rejected；新增 5 格，其中 4 格属于 degradation，1 格为 SpliceAI 低信号分层。33M-LoRA random/n1000 当前 2/3，148M-LoRA 当前 1/3，不能比较三臂或计算等价点。
+- [x] **源包**：92 文件，revision=`20261101_staging_v34_v22ledger`，manifest SHA256=`762fe3485d8b0d9ac8e98da0fc0b352a6a4fd813e8d6ce9d055a86f1530c24a2`。
+- [ ] **后续**：继续补齐 micro/mega LoRA 三种子及其他四档和 SSI；至少两臂各≥3档才更新④，至少两臂各≥3档才更新⑤，当前 PPT 保持 v17。
