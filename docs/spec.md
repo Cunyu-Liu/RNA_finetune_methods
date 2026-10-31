@@ -830,3 +830,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. degradation random 的专用 `_e32000_` 注册格 requested n_train=2000，但 result 实际 n_train=1552、n_val=172、n_test=431。原构图按实际 n_train∈{1000,1500,2000,2500,3000} 过滤，会错误丢弃该档；不得把 1552 静默写成 2000，也不得因此判实验失败。
 2. `build_data_volume_8task.py` 与 `build_equivalence_8task.py` 现从 RID 的 `_e3N_` 解析 requested_n_train，另存 actual_n_train；横轴和配对使用 requested 档，聚合保留 actual_min/max，metadata 的 `requested_vs_actual` 保存逐 RID cap 证据。非专用全量格按 actual n_train 判断，不能把 main full 的 1552 格混入专用 2000 档。
 3. 真实 v27 验收：requested=2000 的 cap 行恰 1 条、actual=1552；未标注的 1552 行进入图过滤后为 0。两图仍 4/8 面板，degradation 三臂档数=[2,2,1]，不借 cap 修复提前新增面板。后续 PPT 更新时必须在图注或页脚说明 requested 档与 capped actual n 的区别。
+
+### 10.45 degradation 等价候选与④/⑤分门槛更新（2026-11-01）
+
+1. v28 中 degradation random 的 33M-full 已有 1000/1500/2000 三档三种子，148M-LoRA 已有 1000/1500 两档三种子，满足结论④“两臂各至少两档”；33M-LoRA 只有 1000/1500 两档，结论⑤要求至少两臂各三档，故仍不新增。④=5/8、⑤=4/8，门槛不得混用。
+2. 独立逐 seed 复算：full1000↔LoRA1000 的 Δ=0.023764151、95% CI half-width=0.016858080，不满足 |Δ|≤0.02；full1500↔LoRA1000 的 Δ=0.000746199、CI=0.003635701，为等价候选；full2000(cap1552)↔LoRA1500 的 Δ=−0.000846226、CI=0.017896596，为等价候选。候选只限该任务、split、协议和实测范围，不插值、不外推。
+3. 当前 30 页 PPT 已把④更新为 5/8 并写明两个候选与 cap；⑤保持 4/8。v28 共 1137 accepted、1 rejected，5 个 cap 行均 requested=2000/actual=1552。PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`，PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`。

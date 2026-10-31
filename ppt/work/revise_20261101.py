@@ -79,8 +79,8 @@ def main():
     table = next(shape.table for shape in prs.slides[1].shapes if shape.has_table)
     updates = {
         (0, 2): "关键实测结果（2026-11-01 · 导师反馈修订）",
-        (3, 1): "4/8 任务可判；新分层已注册",
-        (3, 2): "ncRNA/MRL/modification/SSP 的三臂五档可判；Frozen 七档 1008 格与 CRISPR 信号档 108 格已注册待阶段门；650M 大格在自然独占窗口补测",
+        (3, 1): "④ 5/8；⑤ 4/8 可判",
+        (3, 2): "degradation 新增④面板：full1500≈LoRA1000、full2000(cap1552)≈LoRA1500；⑤的33M-LoRA仍两档，Frozen七档等待阶段门",
         (5, 2): "时间×性能与显存独立为结论⑥；使用最新 8 任务 runtime；650M full 25GB 实测保留，待自然窗口",
         (6, 2): "controlled 30 格已重绘均值线与逐 seed 点；official 27/30 complete，650M LoRA 3 格按 corrected 队列补测",
         (8, 1): "5 个分类组合任务；SpliceAI 双 split 三种子",
@@ -173,9 +173,9 @@ def main():
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")
     set_text(slide, "TextBox 3",
-             "同家族 33M-full@1e-5 vs 148M-LoRA@3e-4；虚线=|Δ|≤0.02 且 95% CI 覆盖 0。4/8 任务可判，其余标待补或低信号。")
+             "同家族 33M-full@1e-5 vs 148M-LoRA@3e-4；5/8 任务可判。degradation 新增两个等价候选；requested 2000 的实际 n=1552，cap 单列。")
     set_text(slide, "TextBox 5",
-             "读图：ncRNA 与 MRL 有等价候选；SSP 当前未观测到，modification 仅低预算有候选。与⑤共用曲线：⑤看模型内数据量效应，④看跨规模预算匹配；不插值、不跨家族。")
+             "读图：degradation full1500≈LoRA1000、full2000≈LoRA1500；full1000↔LoRA1000 未等价。ncRNA/MRL 有候选，SSP 无候选，modification 仅低预算。横轴为 requested 档，cap 见注；与⑤共用曲线，不插值、不跨家族。")
     picture = shape_by_name(slide, "Picture 6")
     picture.left, picture.top, picture.width = Inches(1.75), Inches(1.52), Inches(9.8)
     replace_picture(slide, "Picture 6",

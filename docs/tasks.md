@@ -1516,3 +1516,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **脚本修复**：两张④/⑤图从 RID 解析 requested_n_train，另存 actual_n_train；横轴/配对用 requested，metadata 记录逐 RID cap，聚合保留 actual_min/max。非专用全量 1552 格不得混入专用 2000 档。
 - [x] **三轮验收**：真实 v27 重绘成功；cap 行恰 1 条且 requested/actual=2000/1552；未标注 1552 行进入过滤后=0；两图仍 4/8，degradation 三臂档数=[2,2,1]。py_compile 通过，未提前新增面板。
 - [x] **源包与台账**：v27 为 1130 accepted、1 rejected；33M-LoRA n1500 已三种子闭合，148M-LoRA n1500 为 2/3。源包 100 文件，manifest SHA256=`9c2f0f74eec2cf51c00475350c161e4a30b33e06f66efc7e4c3cb02e8f2b4f01`，PPT 保持 v17。
+
+## N28. 2026-11-01 degradation 等价候选与 v28 PPT
+
+- [x] **④新面板**：degradation 33M-full 三档、148M-LoRA 两档三种子闭合，④由 4/8 升为 5/8；33M-LoRA 仍两档，⑤保持 4/8，不混用门槛。
+- [x] **独立配对复算**：full1500≈LoRA1000（Δ=0.000746199、CI=0.003635701）；full2000(cap1552)≈LoRA1500（Δ=−0.000846226、CI=0.017896596），均满足预注册等价候选规则。full1000↔LoRA1000 的 Δ=0.023764151，未等价。结果仅限 degradation random 实测范围。
+- [x] **v28 与源包**：1137 accepted、1 rejected；5 个 cap 行均为 requested=2000/actual=1552。源包 102 文件，manifest SHA256=`a989b8c9912e2ce7d536d43ace2e892502b9a1c83748b32694c40fb731548b88`。
+- [x] **PPT 验收**：30 页，④页更新候选和 cap，进度页同步④5/8、⑤4/8。PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`，PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`；lint/layout/CRC/实际渲染通过。
+- [ ] **后续**：补 33M-LoRA 第三档、148M-LoRA 后续档和 SSI；④/⑤继续分别验收，不提前完成 scaling 全矩阵。

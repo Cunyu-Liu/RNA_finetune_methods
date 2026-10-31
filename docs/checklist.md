@@ -164,3 +164,11 @@
 - [x] H4 台账：v20 仅更新 4 行 artifact/result/checkpoint 路径，其他字段不变；总行数 1102，不用路径恢复冒充新科学结果。
 - [ ] H5 后续：其余 44 格继续按 proof 补跑；当前 PPT 仍为 v17 阶段讨论版。
 
+## I 组：v28 degradation 等价与 cap 验收
+
+- [x] I1 数据：v28 共 1137 accepted、1 rejected；degradation 33M-full 三档、148M-LoRA 两档三种子，满足④门槛；33M-LoRA 两档，不满足⑤新面板门槛。
+- [x] I2 配对：独立复算 full1500≈LoRA1000、full2000(cap1552)≈LoRA1500；full1000↔LoRA1000 未等价。逐 seed 差值和 CI 与构图 metadata 一致。
+- [x] I3 cap：5 行 requested=2000/actual=1552，未标注的 1552 格未混入专用档；图注、页内说明和 metadata 一致。
+- [x] I4 交付：30 页 PPT SHA256=`6f07cb392db6fc59c5987fe84010c69f87dbaad68a3331b49cc8b5e95ca8b449`；PDF SHA256=`ccdb446c47170ec2f8bedafc4ed0c75a8fdb7eafa45f26ae3b0574437cb0095d`；lint/layout/字体/行距/CRC/渲染通过。
+- [ ] I5 边界：④5/8、⑤4/8，其余分层、Frozen、SSI 和全量科学矩阵继续执行，不宣称最终完成。
+
