@@ -232,3 +232,10 @@
 - RID `ft_rinalmomicro_mrl_full_s101_random_bestval_v1`: source result/plateau/best.ckpt/split_evidence consistent; best_epoch=0, train losses 0.956117/0.992135/0.992942/0.993054, validation 1.077904/1.077377/1.080336/1.090462, stopped after 4 epochs by bestval_v1 patience=3.
 - Independent CUDA evaluation on the same 7600 test rows reproduced Pearson r=-0.11194591982713607 and MSE=0.8315709233283997 exactly. Predictions are nearly constant (mean=-0.0294886492, SD=6.2545e-7), so the negative r is an output-collapse diagnostic, not an evaluation bug or meaningful inverse prediction. Tuning seed 101 remains excluded from formal means.
 - Evidence: `status/revalidation/mrl_negative_20261101/` (predictions NPZ, JSON summary, reconstructed split evidence). Code commit `71d0983` pushed to GitHub. Full suite at this checkpoint: 385 passed, 3 pre-existing E6-v2 queue-test failures; not recorded as all green.
+
+
+## 2026-11-01 Advisor-feedback experiment registrations and SpliceAI multiseed diagnostics
+- Registered `c5c_frozen_jobs_20261101.json`: 1008 bestval_v1 cells for eight tasks × three RiNALMo sizes × two splits × seven budgets × three formal seeds. Registered, not launched. Generator commit `a52f085`; `tests/test_expansion_queue.py`: 50 passed.
+- Registered `crispr_signal_jobs_20261101.json`: 108 cells for three strategies × three RiNALMo sizes × two splits × {6000,10000} × three seeds. Low-budget PR-AUC near baseline is not interpreted as equivalence. Commit `656dfb7`.
+- SpliceAI seed17/29/43 random pre/LoRA/full diagnostics and seed29-family diagnostics completed with exact full-test reconciliation. seed43-family LoRA previously failed at CUDA set_device before training; original log preserved and same-RID repair queue launched with no duplicate. Multiseed launcher commit `8df9f40`; related mechanism tests: 29 passed.
+- Controlled E6 figure regenerated from 30 unique cells (three seeds/group): y-axis delta NLL post-pre, individual-seed scatter and mean lines. 30M worst-seed full=26.2362 vs LoRA=3.3820, ratio=7.7576. Report scripts commit `4032b5f`.

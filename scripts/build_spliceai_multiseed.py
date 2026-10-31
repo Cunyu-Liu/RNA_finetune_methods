@@ -60,7 +60,7 @@ def main():
     performance = pd.DataFrame(performance)
     performance.to_csv(PACKAGE / f"data/spliceai_{split}_multiseed_performance.csv", index=False)
 
-    fig = plt.figure(figsize=(16, 8.6), constrained_layout=True)
+    fig = plt.figure(figsize=(16, 7.2), constrained_layout=True)
     grid = fig.add_gridspec(3, 4, width_ratios=(1, 1, 1, 1.22))
     for row_index, seed in enumerate((17, 29, 43)):
         for col, state in enumerate(STATES):
