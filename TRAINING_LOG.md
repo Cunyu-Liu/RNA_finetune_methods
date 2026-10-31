@@ -239,3 +239,7 @@
 - Registered `crispr_signal_jobs_20261101.json`: 108 cells for three strategies × three RiNALMo sizes × two splits × {6000,10000} × three seeds. Low-budget PR-AUC near baseline is not interpreted as equivalence. Commit `656dfb7`.
 - SpliceAI seed17/29/43 random pre/LoRA/full diagnostics and seed29-family diagnostics completed with exact full-test reconciliation. seed43-family LoRA previously failed at CUDA set_device before training; original log preserved and same-RID repair queue launched with no duplicate. Multiseed launcher commit `8df9f40`; related mechanism tests: 29 passed.
 - Controlled E6 figure regenerated from 30 unique cells (three seeds/group): y-axis delta NLL post-pre, individual-seed scatter and mean lines. 30M worst-seed full=26.2362 vs LoRA=3.3820, ratio=7.7576. Report scripts commit `4032b5f`.
+
+
+## 2026-11-01 SpliceAI family seed43 repair epoch0
+- Repair RID `ft_rinalmomicro_spliceai_lora_s43_family_b20fix_bestval_v1`: first epoch train_loss=0.003633, validation_loss=0.001193; best.ckpt and plateau.json persisted, best_epoch=0, stale_epochs=0, status=RUNNING. Continue to bestval patience=3; not complete and not used in figures.
