@@ -509,6 +509,22 @@ def test_complementary_registry_supports_perbase_bestval_main_matrix(tmp_path):
     }
 
 
+def test_c5c_registry_supports_frozen_only(tmp_path):
+    import expansion_jobs as registry
+    output = tmp_path / "c5c-frozen-jobs.json"
+    assert registry.main(["--output", str(output), "--wave", "c5c-all",
+                          "--strategies", "frozen"]) == 0
+    jobs = json.loads(output.read_text())
+    assert len(jobs) == 1008
+    assert len({j["rid"] for j in jobs}) == len(jobs)
+    assert {j["strategy"] for j in jobs} == {"frozen"}
+    assert {j["lr"] for j in jobs} == {"3e-4"}
+    mega_ncrna = next(j for j in jobs if j["model"] == "RiNALMo-mega" and
+                      j["task"] == "noncoding-rna-family")
+    assert "--batch-size" in mega_ncrna["args"]
+    assert mega_ncrna["args"][mega_ncrna["args"].index("--batch-size") + 1] == "16"
+
+
 def test_equivalence_rnasc_registry_uses_controlled_pair_and_lr(tmp_path):
     import expansion_jobs as registry
     output = tmp_path / "equivalence-rnasc-jobs.json"

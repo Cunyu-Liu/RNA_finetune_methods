@@ -101,15 +101,16 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     return job
 
 
-def c5c_ncrna_jobs():
+def c5c_ncrna_jobs(strategies=("lora", "full")):
     jobs = []
     for model in ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"):
-        for strategy in ("lora", "full"):
+        for strategy in strategies:
             for split in ("random", "family"):
                 for level in DENSE_LEVELS:
                     for seed in (17, 29, 43):
                         batch_size = (32 if model == "RiNALMo-micro" else
-                                      16 if model == "RiNALMo-mega" and strategy == "lora" else 8)
+                                      16 if model == "RiNALMo-mega" and
+                                      strategy in ("lora", "frozen") else 8)
                         need_gb = 8 if model == "RiNALMo-micro" else (
                             16 if model == "RiNALMo-mega" else 28)
                         jobs.append(job_for(
@@ -120,14 +121,14 @@ def c5c_ncrna_jobs():
     return jobs
 
 
-def c5c_other_task_jobs():
+def c5c_other_task_jobs(strategies=("lora", "full")):
     runners = dict(TASK_MODULES, spliceai=finetune_spl,
                    degradation=finetune_regbase, ssi=finetune_regbase)
     jobs = []
     for task in ("crispr-off-target", "mrl", "modification",
                  "secondary-structure", "spliceai", "degradation", "ssi"):
         for model in ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M"):
-            for strategy in ("lora", "full"):
+            for strategy in strategies:
                 for split in ("random", "family"):
                     for level in DENSE_LEVELS:
                         for seed in (17, 29, 43):
@@ -149,8 +150,8 @@ def c5c_other_task_jobs():
     return jobs
 
 
-def c5c_all_jobs():
-    return c5c_ncrna_jobs() + c5c_other_task_jobs()
+def c5c_all_jobs(strategies=("lora", "full")):
+    return c5c_ncrna_jobs(strategies) + c5c_other_task_jobs(strategies)
 
 
 def equivalence_rnasc_jobs():
@@ -306,9 +307,9 @@ def main(argv=None):
     parser.add_argument("--lr-selection", help="validation-LR selection JSON for --wave lr-tuned")
     args = parser.parse_args(argv)
     if args.wave == "c5c-ncrna":
-        jobs = c5c_ncrna_jobs()
+        jobs = c5c_ncrna_jobs(args.strategies.split(","))
     elif args.wave == "c5c-all":
-        jobs = c5c_all_jobs()
+        jobs = c5c_all_jobs(args.strategies.split(","))
     elif args.wave == "equivalence-rnasc":
         jobs = equivalence_rnasc_jobs()
     elif args.wave == "peft-rank":
