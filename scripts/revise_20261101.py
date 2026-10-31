@@ -1,3 +1,4 @@
+import copy
 from hashlib import sha256
 from pathlib import Path
 
@@ -43,6 +44,20 @@ def replace_picture(slide, name, path):
     picture.name = name
 
 
+def clone_slide(prs, index):
+    source = prs.slides[index]
+    destination = prs.slides.add_slide(source.slide_layout)
+    for shape in source.shapes:
+        destination.shapes._spTree.insert_element_before(
+            copy.deepcopy(shape._element), "p:extLst")
+    for rel in source.part.rels.values():
+        if "slideLayout" not in rel.reltype and "notesSlide" not in rel.reltype:
+            new_rid = destination.part.rels._add_relationship(
+                rel.reltype, rel._target, rel.is_external)
+            assert new_rid == rel.rId, (new_rid, rel.rId)
+    return destination
+
+
 def remove_answered_annotations(prs):
     removed = []
     for index, slide in enumerate(prs.slides, 1):
@@ -61,6 +76,26 @@ def main():
 
     set_text(prs.slides[1], "PurposeNote",
              "八任务的目的：检验结论是否随任务粒度、分类/回归、类别不平衡和 split 改变，区分普遍规律与任务边界；不是堆实验数量。最终输出“何时用何种策略”的条件化配方。")
+    table = next(shape.table for shape in prs.slides[1].shapes if shape.has_table)
+    updates = {
+        (0, 2): "关键实测结果（2026-11-01 · 导师反馈修订）",
+        (3, 1): "4/8 任务可判；新分层已注册",
+        (3, 2): "ncRNA/MRL/modification/SSP 的三臂五档可判；Frozen 七档 1008 格与 CRISPR 信号档 108 格已注册待阶段门；650M 大格在自然独占窗口补测",
+        (5, 2): "时间×性能与显存独立为结论⑥；使用最新 8 任务 runtime；650M full 25GB 实测保留，待自然窗口",
+        (6, 2): "controlled 30 格已重绘均值线与逐 seed 点；official 27/30 complete，650M LoRA 3 格按 corrected 队列补测",
+        (8, 1): "分类组合 4 任务；SpliceAI random 三种子",
+        (8, 2): "ncRNA/modification/CRISPR/SSP 组合图完成；SpliceAI random 三种子闭合，family 仅差最后 LoRA 源格；148M 六臂 5 任务闭合，650M 已有格保留",
+    }
+    for (row, col), text in updates.items():
+        frame = table.rows[row].cells[col].text_frame
+        paragraph = frame.paragraphs[0]
+        assert paragraph.runs
+        paragraph.runs[0].text = text
+        for run in paragraph.runs[1:]:
+            run._r.getparent().remove(run._r)
+        for extra in list(frame.paragraphs[1:]):
+            extra._p.getparent().remove(extra._p)
+        paragraph.line_spacing = 1.15
 
     slide = prs.slides[4]
     set_text(slide, "TextBox 2", "结论 ①  ncRNA 旧“家族崩溃”可由样本顺序伪影解释")
@@ -125,6 +160,12 @@ def main():
     picture.left, picture.top, picture.width = Inches(0.95), Inches(1.42), Inches(11.4)
     replace_picture(slide, "图片 7", composite / "ssp_classification_composite.png")
 
+    slide = prs.slides[7]
+    set_text(slide, "TextBox 5",
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR、SSP 主体闭合；SpliceAI/degradation/SSI 已有部分三种子单元，未闭合臂继续以斜线或 NA 标示，不把有结果写成任务闭合。")
+    replace_picture(slide, "Picture 4",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
+
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
              "读图：3e-4 是 runner 的 argparse 工程缺省，不是搜参最优；tuned 由 seed101 在 validation 选档，正式种子为 17/29/43。MRL −0.112 已经独立 CUDA 重评一致：预测近常数（SD=6.25×10⁻⁷），属于 micro-full@3e-4 输出坍缩，不是评测算错；tuning 格不进正式均值。")
@@ -153,6 +194,8 @@ def main():
              "数据：最新 best-val 台账 + MRL/modification 聚合 + B20 阶段表（仅补 frozen）；650M 大格在自然空出的独占显存窗口补测，已有 LoRA/frozen 保留，full 等未闭合项为 NA，不补零。")
     set_text(slide, "ReadNote",
              "读图：格内数字为已完成种子数，0 表示未闭合而非 0 分。148M 在 ncRNA/CRISPR/modification/MRL/SSP 六臂三种子齐，其余任务继续补；650M 只展示已有格，不提前写规模律。")
+    replace_picture(slide, "Picture 3",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/bigmodel_coverage.png")
 
     slide = prs.slides[23]
     set_text(slide, "TextBox 2", "结论④补充  MRL 高预算：legacy 局部对照")
@@ -166,9 +209,13 @@ def main():
 
     slide = prs.slides[25]
     set_text(slide, "TextBox 2", "结论 ⑥  成本：时间×性能的逐任务比较")
+    replace_picture(slide, "Picture 6",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_time_perf.png")
 
     slide = prs.slides[26]
     set_text(slide, "TextBox 2", "结论⑥补充  成本：显存峰值与规模边界")
+    replace_picture(slide, "Picture 6",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/peak_memory.png")
 
     slide = prs.slides[27]
     set_text(slide, "TextBox 2", "结论 ⑦  遗忘：controlled RNA-Sc 的 30M 峰值")
@@ -183,17 +230,49 @@ def main():
              "证据范围：八任务用于检验结论的任务边界，不是堆数量；SpliceAI random 三种子机制已闭合，family 待最后源格；④/⑤共用同源曲线，当前仅部分面板可判；时间/显存为⑥、遗忘为⑦，未闭合项不作最终结论。")
     set_text(prs.slides[29], "TextBox 21", "对应结论④/⑤")
     set_text(prs.slides[29], "TextBox 26", "对应结论①/机制")
+    for index, tag in ((19, "04"), (21, "05"), (22, "05a"), (23, "04b"),
+                       (24, "04c"), (25, "06a"), (26, "06b"), (27, "07")):
+        set_text(prs.slides[index], "TextBox 1", tag)
+
+    random_multiseed = composite / "spliceai_random_multiseed_composite.png"
+    family_multiseed = composite / "spliceai_family_multiseed_composite.png"
+    multiseed_ready = random_multiseed.is_file() and family_multiseed.is_file()
+    if multiseed_ready:
+        family_slide = clone_slide(prs, 13)
+        slide = prs.slides[13]
+        set_text(slide, "TextBox 2", "分类机制：SpliceAI random 的三种子对照")
+        set_text(slide, "TextBox 3",
+                 "三行依次为 seed17/29/43；每行左侧为三状态投影，右侧为对应 checkpoint 的 full-test macro-F1。")
+        set_text(slide, "TextBox 5",
+                 "读图：random split 下三种子均已完成。灰/红/蓝=negative/acceptor/donor；类别均衡只用于显示，性能用完整 test。family 的三种子见下一页。")
+        picture = shape_by_name(slide, "图片 7")
+        picture.left, picture.top, picture.width = Inches(1.45), Inches(1.42), Inches(10.4)
+        replace_picture(slide, "图片 7", random_multiseed)
+
+        set_text(family_slide, "TextBox 2", "分类机制：SpliceAI family 的三种子对照")
+        set_text(family_slide, "TextBox 3",
+                 "三行依次为 seed17/29/43；表示与 full-test 性能使用同一 checkpoint，避免把 split 差异误读为投影差异。")
+        set_text(family_slide, "TextBox 5",
+                 "读图：family split 下三种子均已完成。投影只用于描述，full-test macro-F1 用于性能判断；两页合读才可比较 random 与 family，不以 t-SNE 推断因果。")
+        picture = shape_by_name(family_slide, "图片 7")
+        picture.left, picture.top, picture.width = Inches(1.45), Inches(1.42), Inches(10.4)
+        replace_picture(family_slide, "图片 7", family_multiseed)
+        family_id = prs.slides._sldIdLst[-1]
+        prs.slides._sldIdLst.remove(family_id)
+        prs.slides._sldIdLst.insert(14, family_id)
+        set_text(prs.slides[28], "TextBox 10",
+                 "证据范围：八任务用于检验结论的任务边界，不是堆数量；SpliceAI random/family 三种子机制均闭合；④/⑤共用同源曲线，当前仅部分面板可判；时间/显存为⑥、遗忘为⑦，未闭合项不作最终结论。")
 
     slide_ids = prs.slides._sldIdLst
-    obsolete = slide_ids[20]
+    obsolete = slide_ids[20 + int(multiseed_ready)]
     prs.part.drop_rel(obsolete.rId)
     slide_ids.remove(obsolete)
-    moving = [slide_ids[22], slide_ids[23]]
+    moving = [slide_ids[22 + int(multiseed_ready)], slide_ids[23 + int(multiseed_ready)]]
     for element in moving:
         slide_ids.remove(element)
-    slide_ids.insert(20, moving[0])
-    slide_ids.insert(21, moving[1])
-    assert len(prs.slides) == 29
+    slide_ids.insert(20 + int(multiseed_ready), moving[0])
+    slide_ids.insert(21 + int(multiseed_ready), moving[1])
+    assert len(prs.slides) == 29 + int(multiseed_ready)
 
     removed = remove_answered_annotations(prs)
     prs.save(str(OUT))
