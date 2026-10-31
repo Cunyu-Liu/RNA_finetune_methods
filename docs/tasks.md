@@ -1453,3 +1453,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v17 导出**：1099 accepted、1 rejected；v16 的 1092 行逐字段保留，新增 7 格。6 个 SpliceAI 分层格仍约 1/3，另 1 格使 mega-CRISPR-family LR 组闭合。主图源包 81 文件，manifest SHA256=`112864d92ab65686f087c5c41c2a3a689ad223fb5c1884b2b0893d4e272028d9`。
 - [x] **原第 18 页（现第 19 页）**：补充“18/80 组、default 3e-4 未被已闭合组选中”的 interim 说明，同时保留 MRL 负值 CUDA 复核结论。30 页 v17 PPT SHA256=`4c86074a1de7e40109a994dc038781f72f4c1236786b6661b8f75ac9832f8874`，PDF SHA256=`45f88a5f5e503ab18c72751b0283b281ac617b854ebca21ec8c4f49e55be7404`；lint/layout/CRC/实际渲染通过。
 - [ ] **下一阶段门**：LR 全 80 组四档完整后才冻结选择并生成 tuned 正式任务；per-base 和 complementary 主矩阵继续优先闭合。Frozen 七档、CRISPR 信号档和 RNA-Sc 等价线仍不抢跑。
+
+## N19. 2026-11-01 rank 小批与 v18 staging
+
+- [x] **rank4/16 proof**：96 格中 63 complete、33 runnable；32 个 task×split×rank 组中 21 组三种子完整。ncRNA/CRISPR/modification/MRL/SSP 的 rank4/16 双 split 均齐，SpliceAI 仅 1 组齐，degradation/SSI 尚未形成整组。未启动其余 PEFT/rank 全量波次。
+- [x] **v18 staging**：1101 accepted、1 rejected；v17 的 1099 行逐字段保留，新增 2 个 SpliceAI 分层格仍约 1/3。没有新的主矩阵或 LR 科学信息，因此本轮不重复改 PPT；当前 PPT 仍使用 v17。
+- [x] **源包登记**：主图源包 revision=`20261101_staging_v31_v18ledger`，83 文件，manifest SHA256=`e9c17355bcf570f177d002a36f6ee64b1268facbab3501e7c78282e4fe7764d9`。v18 仅作 staging，最终冻结仍需全量 proof。
+- [~] **complementary 全量 proof**：定向 `verify-only` 正在逐 checkpoint 审计，等待真实汇总，不以运行时长或旧计数代替完成数。
