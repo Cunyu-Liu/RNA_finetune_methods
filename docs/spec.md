@@ -758,4 +758,7 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 **⑮ 650M 车道取舍（2026-10-31 用户决定）**：RiNALMo-650M 的 LoRA 实测峰值 ~17 GB、full ~25 GB，而单卡 32.7 GiB 在 13 个训练进程并行时已占 22.7 GiB，**无法在不牺牲在途任务的前提下开跑**。用户决定「不做 650M，PPT 写明显存受限」。据此：①⑤c-0（第 22 页）副标题与读图句改为「650M 需 40 GB 卡，本轮不测」；⑤d（第 23 页）读图句与数据句写明「LoRA 17 GB / full 25 GB，32.7 GiB 单卡无法与主队列并行，按决定本轮不测，不写规模律」；⑤b-2（第 27 页）副标题改为「650M full 峰值 25 GB，本轮不测」。②650M 已有格（ncRNA/CRISPR/MRL 的少量 LoRA 与阶段表 frozen）仍保留在图中作覆盖陈述，不删、不补零。③省下的算力全部给 8 任务六臂收口与 B 线等价线分层。
 
+
+**⑯ 2026-10-31 11:48 夜间复检（v3 台账 / ⑤d 口径纠偏 / 等价线首图）**：距上轮约 10 h，GPU 25.9 GiB、util 99%，13 个真实训练进程无重复。①台账增量导出 523+277=**800 accepted**（2 rejected），六臂满数据覆盖 451→**572/720**；SSP 18→25/30、SpliceAI 5→8/30、SSI 7→8/30、CRISPR 24→25/30。②C 线两格 SpliceAI frozen-family 已 CONVERGED 落盘（micro 0.3408 / ERNIE 0.3333，best_epoch=0、4 epoch）。③**⑤d 口径纠偏（重要）**：`build_time_perf_coverage.py` 注释写「阶段表只补 frozen」，实现却是「任一口径 n==0 就用阶段表填」，导致降解/SSI 的 LoRA 列显示 3 而 ①a-4 同一格是斜线（n<3），两页自相矛盾；已把补充条件收紧为 `strat == "frozen"`，⑤d 与 ①a-4 恢复一致。④新增 `build_equivalence_8task.py`：结论④ 的 8 面板等价线（33M full@1e-5 vs 148M LoRA@3e-4，逐档 ≥3 seeds 才出点，虚线指向「最小的 m 使 LoRA(m) ≥ full(n)」）；当前 3 面板可判（ncRNA/modification/MRL），CRISPR 因正例率 0.59%、1000–3000 档 PR-AUC≈基线，显式标「正例过少，需 ≥6000 档」，SpliceAI/SSP/降解/SSI 待分层数据。**该图暂不进 PPT 正文，等 ≥6 面板再替换 ④ 页。**
+
 **⑧ 归档与同步**：新图源包 `figure_source_data_20261030_eight_task_v14/`（revision=`20261030_eight_task_expansion_v14`，17 文件逐哈希）；旧图、旧表、历史交接文档核引用后移入 `archive_20261030/`，不删除隔离证据；本地、`/home` docs 与 `/teams` handoff 三地同步。
