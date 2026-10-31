@@ -1483,3 +1483,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v22 台账**：1114 accepted、1 rejected；新增 5 格，其中 4 格属于 degradation，1 格为 SpliceAI 低信号分层。33M-LoRA random/n1000 当前 2/3，148M-LoRA 当前 1/3，不能比较三臂或计算等价点。
 - [x] **源包**：92 文件，revision=`20261101_staging_v34_v22ledger`，manifest SHA256=`762fe3485d8b0d9ac8e98da0fc0b352a6a4fd813e8d6ce9d055a86f1530c24a2`。
 - [ ] **后续**：继续补齐 micro/mega LoRA 三种子及其他四档和 SSI；至少两臂各≥3档才更新④，至少两臂各≥3档才更新⑤，当前 PPT 保持 v17。
+
+## N23. 2026-11-01 degradation 33M 双臂 n1000 闭合
+
+- [x] **33M-LoRA random/n1000 三种子**：seed17/29/43 PCC=0.521700426/0.524656395/0.528780476，mean=0.525045766、SD=0.003556049、95% CI half-width=0.004024048；seed43 新格 proof=complete，best_epoch=5、9 epochs、patience=3 收敛。
+- [x] **同档描述性对照**：33M-full 三种子 mean=0.517049340，33M-LoRA mean=0.525045766；均值差=0.007996426，仅限 degradation random/n1000，不作普遍策略排序或跨规模等价结论。
+- [x] **v23 与源包**：1118 accepted、1 rejected；148M-LoRA random/n1000 为 2/3，full n1500 为 1/3，④/⑤仍不能新增面板。源包 94 文件，manifest SHA256=`4302e0eee8cdcc5ce124ddd2ae92ed276c95be0f0d56fa582326a194946c76af`，PPT 保持 v17。
