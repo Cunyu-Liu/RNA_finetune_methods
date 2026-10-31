@@ -1489,3 +1489,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-LoRA random/n1000 三种子**：seed17/29/43 PCC=0.521700426/0.524656395/0.528780476，mean=0.525045766、SD=0.003556049、95% CI half-width=0.004024048；seed43 新格 proof=complete，best_epoch=5、9 epochs、patience=3 收敛。
 - [x] **同档描述性对照**：33M-full 三种子 mean=0.517049340，33M-LoRA mean=0.525045766；均值差=0.007996426，仅限 degradation random/n1000，不作普遍策略排序或跨规模等价结论。
 - [x] **v23 与源包**：1118 accepted、1 rejected；148M-LoRA random/n1000 为 2/3，full n1500 为 1/3，④/⑤仍不能新增面板。源包 94 文件，manifest SHA256=`4302e0eee8cdcc5ce124ddd2ae92ed276c95be0f0d56fa582326a194946c76af`，PPT 保持 v17。
+
+## N24. 2026-11-01 degradation 三臂 n1000 闭合
+
+- [x] **148M-LoRA random/n1000 三种子**：seed17/29/43 PCC=0.537986511/0.538789430/0.545664533，mean=0.540813491、SD=0.004220264、95% CI half-width=0.004775678；三格均 proof=complete，best_epoch=4/6/5，epochs=8/10/9，patience=3 收敛。
+- [x] **三臂单档对照**：33M-full=0.517049340、33M-LoRA=0.525045766、148M-LoRA=0.540813491。仅说明 degradation random/n1000 的描述性排序，不是 scaling 曲线或 small-full(n)↔large-LoRA(m) 等价点。
+- [x] **v24 与源包**：1122 accepted、1 rejected；full/LoRA n1500 开始产出但未三种子闭合。源包 96 文件，manifest SHA256=`bb30603fb972bf77320edec60c2b6e5b9ba59a06e4d651c98e8fd05a2370ed9d`，PPT 保持 v17。
+- [ ] **后续**：优先闭合 n1500 三臂，再补 n2000；达到各图门槛后才重绘④/⑤。
