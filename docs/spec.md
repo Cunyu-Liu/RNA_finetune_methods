@@ -806,3 +806,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. SpliceAI random/family 的三种子机制图已全部闭合，当前 PPT 为 30 页；最后 family-LoRA 源格以 best_epoch=0、4 epochs、patience=3 收敛，macro-F1=0.419940687。分类组合图不替代其余科学矩阵的完成证明。
 2. 当前阶段输入为 `bestval_ledger_export_20261101_v16.csv`：1092 accepted、1 rejected，v15 的 1086 行逐字段保留。④/⑤仍只有 4/8 面板可判；SpliceAI 两臂近 1/3 只判 low_signal。主图与分类图源包分别为 79/53 个登记文件，版本和哈希见 PPT 交接 §26 与 tasks N17。
 3. 下一阶段沿用现有合法队列，不重启、不抢跑、不重复 RID；主矩阵与 LR/rank 批次闭合后，按阶段门推进 Frozen 七档、CRISPR 信号档、RNA-Sc 等价线和 E6 余格。当前 PPT 是 v16 阶段讨论版，不是全实验终版。
+
+### 10.41 v17 主矩阵与 LR 定向审计（2026-11-01）
+
+1. `expansion_queue.py --verify-only` 对真实 registry/proof 的审计为：LR tuning 75/320 complete，per-base 主矩阵 96/270 complete；其余为 runnable 或真实 running，不将 verify-only 的退出码 1 当作训练失败。
+2. 80 个 LR 组中 18 组四档完整、1 组 3/4、61 组未闭合。完整组均为 full：validation 选择 3e-5/1e-4 各 8 组、1e-5 两组，3e-4 为 0 组；test 未参与选择。这只是 interim，80 组全闭合前不生成 tuned 正式矩阵，不写最终 LR 配方。
+3. v17 为 1099 accepted、1 rejected；v16 的 1092 行逐字段保留。新增 6 个 SpliceAI 分层格继续近 1/3，只作 low_signal。当前 PPT 原第 18 页（现第 19 页）写明 18/80 组的边界，不把该比例或选档分布当作全量结果。

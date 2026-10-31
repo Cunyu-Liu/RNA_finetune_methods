@@ -148,3 +148,11 @@
 - [ ] F5 科学边界：④/⑤仍 4/8 面板可判，主矩阵、LR/rank、Frozen scaling、CRISPR 信号档、RNA-Sc 等价线和 E6 大格未全闭合；不得据本阶段验收宣称全部实验完成。
 - [ ] F6 最终工作：完成剩余实验后再做全稿图文复核、旧文档/废弃绘图源归档与三地同步。
 
+## G 组：2026-11-01 v17 LR 定向验收
+
+- [x] G1 LR：75/320 complete；18/80 组四档完整，选择只看 held-out best_val，test 不参与；已闭合组未选择 3e-4 只作 interim，未生成 tuned 正式任务。
+- [x] G2 主矩阵：per-base 96/270 complete；verify-only 的退出码 1 表示仍有未完成格，不等于训练失败或 proof 冲突。
+- [x] G3 v17：1099 accepted、1 rejected，v16 行不变；主图 manifest 81 文件全哈希通过。
+- [x] G4 PPT：30 页，SHA256=`4c86074a1de7e40109a994dc038781f72f4c1236786b6661b8f75ac9832f8874`；lint/layout/字体/行距/CRC/渲染通过，原第 18 页（现第 19 页）明确 LR 阶段性边界。
+- [ ] G5 未闭合：80 组 LR、default/tuned 正式复测及其余科学矩阵继续执行，当前仍不是全实验终版。
+

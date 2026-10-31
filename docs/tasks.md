@@ -1445,3 +1445,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [~] **远端执行快照**：现有 per-base、complementary、LR tuning、rank、数据量分层和 E6 队列继续运行；核查时有 8 个真实 CUDA 训练进程、显存约 20 GiB。进程状态不作为完成证明，不重启父队列、不重复提交运行中 RID，待完成批次后定向验收并导出下一版台账。
 - [ ] **续接顺序**：先完成主矩阵和当前 LR/rank 批次；LR 四档完整后按 validation 冻结选择并补 tuned；再按阶段门启动 Frozen 七档、CRISPR 信号档、RNA-Sc 等价线和 E6 大格。所有缺口仍以实时 proof 为准，不能以本节进程快照代替计数。
 - [ ] **同步与最终归档**：本阶段文件上传 `/home`、备份 `/teams` 并提交 GitHub；全科学矩阵闭合后统一完成 PPT 全文复核、废弃文档与旧绘图源归档。当前源数据均保留，不因版本刷新删除旧证据。
+
+## N18. 2026-11-01 v17 LR 与主矩阵定向审计
+
+- [x] **LR proof**：320 格中 75 complete；80 个 task×model×split 组中 18 组四档完整、1 组 3/4、61 组未闭合。完整组均为 full，validation 选档为 3e-5/1e-4 各 8 组、1e-5 两组，3e-4 为 0 组；test 不参与。80 组未全闭合，未生成 tuned 240 格。
+- [x] **per-base proof**：270 格中 96 complete，审计仅显示 runnable/running，没有将 verify-only 的未完成退出码误记为训练错误；现有队列继续，不重复启动。
+- [x] **v17 导出**：1099 accepted、1 rejected；v16 的 1092 行逐字段保留，新增 7 格。6 个 SpliceAI 分层格仍约 1/3，另 1 格使 mega-CRISPR-family LR 组闭合。主图源包 81 文件，manifest SHA256=`112864d92ab65686f087c5c41c2a3a689ad223fb5c1884b2b0893d4e272028d9`。
+- [x] **原第 18 页（现第 19 页）**：补充“18/80 组、default 3e-4 未被已闭合组选中”的 interim 说明，同时保留 MRL 负值 CUDA 复核结论。30 页 v17 PPT SHA256=`4c86074a1de7e40109a994dc038781f72f4c1236786b6661b8f75ac9832f8874`，PDF SHA256=`45f88a5f5e503ab18c72751b0283b281ac617b854ebca21ec8c4f49e55be7404`；lint/layout/CRC/实际渲染通过。
+- [ ] **下一阶段门**：LR 全 80 组四档完整后才冻结选择并生成 tuned 正式任务；per-base 和 complementary 主矩阵继续优先闭合。Frozen 七档、CRISPR 信号档和 RNA-Sc 等价线仍不抢跑。
