@@ -1415,7 +1415,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 ### B. 主矩阵、机制与学习率/PEFT
 
 - [ ] **P1 八任务六臂**：接管现有主队列，补齐 SpliceAI/degradation/SSI 的 LoRA/full 三种子及其他真实缺口；complete 不重训，n<3 斜线、NA 不补零，刷新第 8 页。
-- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成。其 LoRA 源格曾在 `set_device` 阶段 CUDA OOM（未训练、artifact 为空），日志已存 `status/failures/20261101/`，现以同 RID/参数建立单格修复队列，未双开；修复格已完成 epoch0（train=0.003633、val=0.001193，best.ckpt 已写入），仍需 patience=3 后续训练。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 待最后源格。
+- [~] **P2 SpliceAI 三种子机制**：seed17/29/43 random 三状态均完成，seed29-family 已完成，seed43-family 的 pre/full 已完成。其 LoRA 源格曾在 `set_device` 阶段 CUDA OOM（未训练、artifact 为空），日志已存 `status/failures/20261101/`，现以同 RID/参数建立单格修复队列，未双开；修复格已完成 epoch0–3，best_epoch=0，stale_epochs=3，macro-F1=0.419940687，已按 patience=3 收敛。全部 post 复用 checkpoint 且 full-test 对账通过，无重训；多 seed launcher 提交=`8df9f40`，random 组合图已出，family 的最后 LoRA 机制推理进行中。
 - [~] **分类任务组合图**：ncRNA/modification/CRISPR/SSP 已嵌入组合图；SpliceAI random 三种子图已完成，family 页待最后源格。性能均用 full-test，投影只用于显示；回归 t-SNE 页面保留。
 - [ ] **P3 LR 与 PEFT/rank**：完成 320 个 LR tuning 格，80 组四档齐全后冻结 validation 选择，再闭合 default/tuned 正式配对；继续既有 rank/DoRA 真实缺口，不把 tuning seed 或 legacy 混入正式均值。
 

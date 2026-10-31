@@ -243,3 +243,7 @@
 
 ## 2026-11-01 SpliceAI family seed43 repair epoch0
 - Repair RID `ft_rinalmomicro_spliceai_lora_s43_family_b20fix_bestval_v1`: first epoch train_loss=0.003633, validation_loss=0.001193; best.ckpt and plateau.json persisted, best_epoch=0, stale_epochs=0, status=RUNNING. Continue to bestval patience=3; not complete and not used in figures.
+
+
+## 2026-11-01 SpliceAI family seed43 repair converged
+- `ft_rinalmomicro_spliceai_lora_s43_family_b20fix_bestval_v1` completed four epochs and stopped with best_epoch=0, stale_epochs=3, status=CONVERGED. Losses: train 0.003633/0.001147/0.000998/0.000910; validation 0.001193/0.001131/0.000984/0.000943. macro-F1=0.41994068712743604. LoRA prediction and embedding artifacts are complete; joint t-SNE is in progress. No retraining of other cells.
