@@ -387,7 +387,7 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 4. **C 线（SpliceAI 修复）**：2 格在 15:50 UTC 被 SIGTERM（rc=-15，plateau 仍 RUNNING），重跑时发现 23:06 起的 orphan 仍在跑 → 出现同 RID 三开并发写同一 `best.ckpt/plateau.json`；kill 较晚两份、保留 orphan。**教训：manifest 的 `failed` 只代表「新父的子进程被杀」，不能作为「格已死」判据，必须 `/proc` 实测。**
 5. **台账与图**：delta 导出 496+27=**523 accepted**（0 rejected）；四图按新台账重绘（CRISPR 24→25/30、SSP 18→19/30）。
 6. **PDF 中文空白修复**：`fc-match "Microsoft YaHei"` 解析到 `PingFang.ttc`，LibreOffice 无法嵌入 `.ttc` → CJK 全空白；在 `ppt/work/fc/fonts.conf` 加 `<rejectfont><glob>*/*.ttc</glob></rejectfont>`，改走 `msyh_regular.ttf`（cmap 29898/CJK 20992），PDF 中文恢复。pptx 内字体名仍是 Microsoft YaHei。
-7. **交付**：30 页；PPT SHA256=`6ce4fb60320f1c1c…`，PDF SHA256=`69f09fa5307bb9b0…`（第 2 页进度表同步为 2026-10-31 夜间版，⑤c-0/⑤d/⑤b-2 按用户决定写明 650M 显存受限本轮不测）；验收 CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 第 18 页中文可提取（64 字）。
+7. **交付**：30 页；PPT SHA256=`35a9a679e556abc2…`，PDF SHA256=`3eb3444959160f54…`（第 2 页进度表同步为 2026-10-31 夜间版，⑤c-0/⑤d/⑤b-2 按用户决定写明 650M 显存受限本轮不测）；验收 CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei、PDF 第 18 页中文可提取（64 字）。
 8. **源包**：revision=`20261031_refresh_v16_lanes`，24 文件，manifest SHA256=`dbacbc26e7a0639ae01ca8b63729ac222628d0c05c8007c10240e1e17ecb1900`。
 
 ## 23. 2026-10-31 12:0x 夜间数据集刷新（v3 台账）
@@ -398,3 +398,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 4. **等价线首图**：新增 `build_equivalence_8task.py`，8 面板口径为 33M-full@1e-5 vs 148M-LoRA@3e-4、逐档 ≥3 seeds；当前 3 面板可判，CRISPR 标「正例过少」。图暂不入正文，等 ≥6 面板替换 ④ 页。
 5. **交付**：30 页；ZIP CRC 正常、越界 0、177 段 1.5 倍行距、全部 Microsoft YaHei。PPT SHA256=`6ce4fb60320f1c1c…`、PDF SHA256=`69f09fa5307bb9b0…`。
 6. **源包**：revision=`20261031_refresh_v17_v3ledger`，29 文件，manifest SHA256=`581c98314215e8fb97a975c65402cca1578e986a17230bf5ac6d6b33eb5020ed`。
+
+## 24. 2026-10-31 22:0x v4 台账与 ⑤c 换图
+
+1. **台账**：v3（800）→ v4（**994 accepted**，+194，1 rejected）；六臂满数据在 ncRNA/CRISPR/modification/MRL/SSP 五任务上 5 模型 × 3 seeds 全齐。
+2. **⑤c-0 页（第 22 页）换图**：由「ncRNA 单任务五档曲线」改为 `data_volume_8task.png`——33M-full@1e-5 / 33M-LoRA@3e-4 / 148M-LoRA@3e-4 三臂 × 5 档 × 3 seeds；4 面板闭合（ncRNA/modification/MRL/SSP）、CRISPR 按正例率 0.59% 标「正例过少」、SpliceAI/降解/SSI 标「待补」。标题、副标题、读图句同步改写，旧图内「650M and all other C5c arms remain pending」脚注随图替换消失。
+3. **结论④ 等价线**：4/8 面板可判，已有明确等价对（ncRNA 3000→2500、MRL 3000→2000、SSP 3000→1000）；图仍留在 fig 目录，等 ≥6 面板再替换正文。
+4. **交付**：30 页；CRC 正常、越界 0、177 段 1.5 倍行距、全 Microsoft YaHei。PPT SHA256=`35a9a679e556abc2…`、PDF SHA256=`3eb3444959160f54…`。
+5. **源包**：revision=`20261031_refresh_v18_v4ledger`，34 文件，manifest SHA256=`73d36f10e3a9a9db585002dc350bcde6b7d01a883a8539d662e9f044b2b6637c`。
