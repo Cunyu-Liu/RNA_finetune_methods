@@ -1459,4 +1459,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **rank4/16 proof**：96 格中 63 complete、33 runnable；32 个 task×split×rank 组中 21 组三种子完整。ncRNA/CRISPR/modification/MRL/SSP 的 rank4/16 双 split 均齐，SpliceAI 仅 1 组齐，degradation/SSI 尚未形成整组。未启动其余 PEFT/rank 全量波次。
 - [x] **v18 staging**：1101 accepted、1 rejected；v17 的 1099 行逐字段保留，新增 2 个 SpliceAI 分层格仍约 1/3。没有新的主矩阵或 LR 科学信息，因此本轮不重复改 PPT；当前 PPT 仍使用 v17。
 - [x] **源包登记**：主图源包 revision=`20261101_staging_v31_v18ledger`，83 文件，manifest SHA256=`e9c17355bcf570f177d002a36f6ee64b1268facbab3501e7c78282e4fe7764d9`。v18 仅作 staging，最终冻结仍需全量 proof。
-- [~] **complementary 全量 proof**：定向 `verify-only` 正在逐 checkpoint 审计，等待真实汇总，不以运行时长或旧计数代替完成数。
+- [x] **complementary 全量 proof**：逐 checkpoint 审计完成为 276 complete、48 incomplete；其中 4 个 conflict 已按 N20 恢复，其余 44 格为 runnable/running。恢复后与 accepted 对账为 280/324 complete。
+
+## N20. 2026-11-01 complementary 错根恢复闭环
+
+- [x] **定位 4 个真实 conflict**：ERNIE-SSP LoRA family seed29、RNA-FM CRISPR LoRA family seed43、RNA-FM CRISPR full random seed17/29；ledger=done 但 teams result_dir 缺失。快速缺文件扫描与全量审计的 4 个 conflict 一致。
+- [x] **源产物复核**：4 格 `/root/rna-ft-eval/artifacts` 的 result/plateau/best.ckpt 完整，源路径 `proof_state=complete`，均为 validation patience=3 收敛；无同名活跃 runner，不重训。
+- [x] **无覆盖迁移**：19 个文件复制到 teams，源目录保留，逐文件 SHA256 一致。迁移 manifest=`status/migrations/complementary_root_recovery_20261101.json`，SHA256=`54154aefbb2d7b6420d2c85d4e12821ed4b3f480252ebedaf07b383e7926a161`。
+- [x] **目标验收与台账**：4 格 teams 路径均 proof=complete，complementary 恢复为 280/324 complete。v19 为 1102 accepted；v20 仍 1102，仅将 4 行 artifact/result/checkpoint 路径改为 teams，其他字段不变。主图源包 88 文件（含迁移证明），manifest SHA256=`11f63bd6bb6e9be3044077d1aa7a32b75169676caeb518b8cd6a2033729133a2`。
+- [ ] **后续**：其余 44 格继续由原队列按 proof 补跑；本恢复不新增科学结果，当前 PPT 保持 v17，不重绘。

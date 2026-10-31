@@ -812,3 +812,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. `expansion_queue.py --verify-only` 对真实 registry/proof 的审计为：LR tuning 75/320 complete，per-base 主矩阵 96/270 complete；其余为 runnable 或真实 running，不将 verify-only 的退出码 1 当作训练失败。
 2. 80 个 LR 组中 18 组四档完整、1 组 3/4、61 组未闭合。完整组均为 full：validation 选择 3e-5/1e-4 各 8 组、1e-5 两组，3e-4 为 0 组；test 未参与选择。这只是 interim，80 组全闭合前不生成 tuned 正式矩阵，不写最终 LR 配方。
 3. v17 为 1099 accepted、1 rejected；v16 的 1092 行逐字段保留。新增 6 个 SpliceAI 分层格继续近 1/3，只作 low_signal。当前 PPT 原第 18 页（现第 19 页）写明 18/80 组的边界，不把该比例或选档分布当作全量结果。
+
+### 10.42 complementary 错根产物恢复（2026-11-01）
+
+1. 全量审计为 276 complete、48 incomplete；其中 4 格是 ledger done 但 teams result_dir 缺失的 conflict，其余 44 格为 runnable/running。4 格分别为 ERNIE-SSP LoRA family seed29、RNA-FM CRISPR LoRA family seed43 和 full random seed17/29。
+2. `/root/rna-ft-eval/artifacts` 中 4 格均有 result/plateau/best.ckpt 且源路径 `proof_state=complete`。迁移前无 teams 目标目录、无同名活跃 runner；采用无覆盖复制，保留源目录，19 个文件逐哈希一致，manifest=`status/migrations/complementary_root_recovery_20261101.json`，SHA256=`54154aefbb2d7b6420d2c85d4e12821ed4b3f480252ebedaf07b383e7926a161`。
+3. 迁移后 4 格 teams 路径均 `proof_state=complete`，不得重跑。complementary 恢复为 280/324 complete、44 个其他未完成格。v20 只将这 4 条 accepted 的 artifact/result/checkpoint 路径改为 teams；其余字段和科学指标不变。路径迁移不冒充新实验，当前 PPT 不因该操作重绘。

@@ -156,3 +156,11 @@
 - [x] G4 PPT：30 页，SHA256=`4c86074a1de7e40109a994dc038781f72f4c1236786b6661b8f75ac9832f8874`；lint/layout/字体/行距/CRC/渲染通过，原第 18 页（现第 19 页）明确 LR 阶段性边界。
 - [ ] G5 未闭合：80 组 LR、default/tuned 正式复测及其余科学矩阵继续执行，当前仍不是全实验终版。
 
+## H 组：complementary 错根恢复验收
+
+- [x] H1 全量审计：276 complete、48 incomplete，其中 4 个真实 conflict；其余 44 格为 runnable/running，未将 verify-only 退出码当作训练失败。
+- [x] H2 源证：4 格 `/root` result/plateau/best.ckpt 完整且源路径 proof=complete；无 teams 目标目录和同名活跃 runner，未重训。
+- [x] H3 迁移：19 个文件无覆盖复制并逐哈希一致，源目录保留；迁移后 4 格 teams proof=complete。complementary 现为 280/324 complete。
+- [x] H4 台账：v20 仅更新 4 行 artifact/result/checkpoint 路径，其他字段不变；总行数 1102，不用路径恢复冒充新科学结果。
+- [ ] H5 后续：其余 44 格继续按 proof 补跑；当前 PPT 仍为 v17 阶段讨论版。
+
