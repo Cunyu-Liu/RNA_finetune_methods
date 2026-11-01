@@ -511,3 +511,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 第7页 MRL 的 650M frozen 双 split 均三种子；第6页 modification 的 650M frozen random 三种子、family 为 n=1 斜线。两张官方图已用 v76 动态重绘，除预期单元外逐格一致，文字与嵌图同时更新。
 4. 第19页 LR 为 103/320、24/80 组；mega MRL full-random 选 3e-5 后 r=0.798969709，选档分布 10/9/5/0，test 不参与。
 5. 当前源包 revision=`20261101_refresh_v77_v76ledger_official_sixbar_dynamic`，227 个登记文件，manifest SHA256=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`。十张关键嵌图 SHA、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 39. 2026-11-01 当前 v77：SpliceAI full 与 modification n=2
+
+1. 当前 PPT 为 32 页，SHA256=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`；PDF SHA256=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`。输入 **1428 accepted、0 rejected**，4 格均 proof=complete。
+2. mega SpliceAI full-random 三种子 macro-F1=0.354690642/0.547941423/0.598939701，正式闭合；①a-4 的 SpliceAI 为 19/30。
+3. 650M modification frozen-family 为 2/3，页面改为 n=2 斜线；random 三种子不变。MRL 图和④/⑤不变；RNA-FM SSI LoRA-random 为 1/3。
+4. 当前源包 revision=`20261101_refresh_v78_v77ledger_spliceai_full_closure_mod_n2`，229 个登记文件，manifest SHA256=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`。per-base 144/270、complementary 298/324、LR 104/320（完整组仍 24/80）；嵌图、32 页 lint/layout/CRC 与实际渲染通过。

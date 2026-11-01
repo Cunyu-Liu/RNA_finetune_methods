@@ -307,3 +307,11 @@
 - [x] Z5 交付：227 文件 manifest=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`；PPT=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`；PDF=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] Z6 后续：继续其他真实缺口并提交动态图脚本与文档。
 
+## AA 组：v77 SpliceAI 与 modification 验收
+
+- [x] AA1 数据：1428 accepted、0 rejected；4 格 proof=complete。
+- [x] AA2 主矩阵：mega SpliceAI full-random 三种子闭合，SpliceAI 覆盖 19/30；per-base 144/270、complementary 298/324。
+- [x] AA3 650M：modification frozen-family 为 n=2 斜线，random 三种子不变；MRL 和④/⑤不变。
+- [x] AA4 交付：229 文件 manifest=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`；PPT=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`；PDF=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] AA5 后续：继续其他真实缺口并提交本批交付。
+

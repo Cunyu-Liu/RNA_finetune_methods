@@ -1020,3 +1020,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. MRL 的 650M frozen 双 split 均三种子：random=0.733612688、family=0.652095061；modification 的 650M frozen random 三种子=0.666272464，family 为 1/3=0.663015924。动态官方六柱图仅这些单元变化，其余单元逐格一致，已排除 `_seqmlfix` 重复变体。
 4. LR 第 24 组为 MRL mega-full-random，validation 选 3e-5（best_val=0.440936），test r=0.798969709；LR accepted=103/320、完整组=24/80，分布为 3e-5 十组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
 5. 源包 revision=`20261101_refresh_v77_v76ledger_official_sixbar_dynamic`，227 个登记文件（含 v70–v76、队列证据和动态官方图脚本），manifest SHA256=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`。PPT SHA256=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`，PDF SHA256=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC 和实际渲染通过。
+
+### 10.76 v77 SpliceAI full 闭合与 modification family n=2（2026-11-01）
+
+1. v77 为 1424+4=**1428 accepted、0 rejected**，v76 行逐字段保留；4 个新增格均 proof=complete。mega SpliceAI full-random 三种子 macro-F1=0.354690642/0.547941423/0.598939701，正式闭合，①a-4 的 SpliceAI 覆盖升为 19/30。
+2. 650M modification frozen-family 的 seed29 AUC=0.657170378，与 seed17 组成 2/3，页面改为 n=2 斜线；random 保持三种子=0.666272464。MRL 官方图不变，④/⑤不变。
+3. RNA-FM SSI LoRA-random/seed17 PCC=0.630259130，仅 1/3；ERNIE MRL full tuning 仅新增 3e-5 一格，LR accepted=104/320、完整组仍 24/80。per-base=144/270、complementary=298/324、rank=67/96。
+4. 源包 revision=`20261101_refresh_v78_v77ledger_spliceai_full_closure_mod_n2`，229 个登记文件，manifest SHA256=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`。PPT SHA256=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`，PDF SHA256=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC 与实际渲染通过。

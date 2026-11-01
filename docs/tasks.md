@@ -1857,3 +1857,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 第24组**：MRL mega-full-random validation 选 3e-5，test r=0.798969709；LR 103/320、24/80 组，分布 10/9/5/0，test 不参与。
 - [x] **v77 与交付**：227 文件 manifest=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`；PPT=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`，PDF=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交新动态图脚本与文档。
+
+## N76. 2026-11-01 v77 SpliceAI full 闭合与 modification n=2
+
+- [x] **v77 验收**：1428 accepted、0 rejected；4 格 proof=complete。mega SpliceAI full-random 三种子正式闭合，①a-4 的 SpliceAI 为 19/30。
+- [x] **650M modification**：frozen-family 为 2/3，页面改 n=2 斜线；random 三种子不变，MRL 图和④/⑤不变。
+- [x] **其他矩阵**：RNA-FM SSI LoRA-random 为 1/3；LR 104/320、完整组仍 24/80；per-base 144/270、complementary 298/324、rank 67/96。
+- [x] **v78 与交付**：229 文件 manifest=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`；PPT=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`，PDF=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交本批交付。
