@@ -1607,3 +1607,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **首个 mega 结果**：SSI 148M-LoRA random/n1000/seed17 PCC=0.561801670，proof=complete，best_epoch=0、4 epochs、patience=3 收敛，RTX 5090；当前仅 1/3，不能用于等价或 scaling 结论。
 - [x] **v39 与源包**：1205 accepted、1 rejected；源包 124 文件，manifest SHA256=`66270b9ab7d7e7e6e77706c13a96533e7ac2bfb237445cc11d29d6c68d498f1b`。
 - [~] **后续**：继续 mega 三种子和第三档，以及 degradation family 其他 LoRA 档；PPT 保持 v30，不新增面板。
+
+## N41. 2026-11-01 SSI full n2000 首点 staging
+
+- [x] **v40 staging**：1209 accepted、1 rejected；源包 126 文件，manifest SHA256=`9a8988c92d38e23c380d5f8a3e3fe80e217fd52f52bd7e83c85d133ea08fa8a8`。
+- [x] **当前结果**：SSI 33M-full random/n2000/seed17 PCC=0.590419027；其余新增为 degradation family cap 和 SpliceAI 低信号结果。148M-LoRA 仍 1/3，不能新增④/⑤面板。
+- [~] **后续**：继续 SSI 三种子和第三档，PPT 保持 v30。
