@@ -1815,3 +1815,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **MRL tuning 边界**：mega-full default 的 −0.079980258 只作 tuning 诊断，不写成正式三种子或最终 LR 结论。
 - [x] **v75 与交付**：199 文件 manifest=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`；PPT=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`，PDF=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段，及时提交本批交付。
+
+## N70. 2026-11-01 v70 首种子与 tuning staging
+
+- [x] **v70 验收**：1375 accepted、0 rejected；4 格 proof=complete。ERNIE SSI LoRA-family 为 1/3；MRL 为 tuning 格，SpliceAI 仍低信号。
+- [x] **矩阵与展示边界**：LR 95/320、完整组仍 23/80；per-base 121/270。没有新三种子单元或完整 LR 组，PPT 与 v75 源包保持 v69。
+- [ ] **后续**：等待其余种子和完整 LR 组后再更新展示版，继续其他真实缺口。

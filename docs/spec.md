@@ -986,3 +986,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. rank4 的 SpliceAI family/seed43 macro-F1=0.412751607，rank4/16 registry accepted=66/96；per-base registry accepted=120/270。SpliceAI family/n2500 仍近随机，④/⑤不变。
 3. MRL mega-full seed101 default 的 Pearson r=−0.079980258，属于 tuning 诊断格，不是正式三种子均值，也不改变已复核的 micro 负值结论；LR accepted=93/320，完整组仍 23/80，选档分布不变。
 4. 源包 revision=`20261101_refresh_v75_v69ledger_ernie_ssi_lora_closure`，199 个登记文件，manifest SHA256=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`。PPT SHA256=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`，PDF SHA256=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.70 v70 主矩阵首种子与 tuning staging（2026-11-01）
+
+1. v70 为 1371+4=**1375 accepted、0 rejected**，v69 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI LoRA-family/seed17 PCC=0.620692892，仅 1/3，不新增三种子单元。
+2. MRL mega-full 的 1e-4 tuning 格 Pearson r=0.062994892，仍只作选档诊断；micro SpliceAI full-family default 和 LoRA family/n3000 均近随机。LR accepted=95/320，完整组仍 23/80；per-base accepted=121/270。PPT 与 v75 源包保持 v69，v70 台账暂存 teams。
