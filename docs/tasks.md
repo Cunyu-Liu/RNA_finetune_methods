@@ -1787,3 +1787,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 与低信号边界**：RNA-FM CRISPR full-random 仅两档，LR 86/320、完整组仍 21/80；SpliceAI 仍 low_signal，④/⑤不变。
 - [x] **v72 与交付**：191 文件 manifest=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`；PPT=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`，PDF=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段，并及时提交本批代码与文档。
+
+## N66. 2026-11-01 v66 RNA-FM CRISPR LR 第 22 组
+
+- [x] **v66 验收**：1359 accepted、0 rejected；3 格 proof=complete。RNA-FM CRISPR full-random 四档闭合，validation 选 3e-5，test 不参与。
+- [x] **LR 分布**：88/320、22/80 组完整；3e-5 九组、1e-4 八组、1e-5 五组、3e-4 为 0。①a-4 和④/⑤不变。
+- [x] **v73 与交付**：193 文件 manifest=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`；PPT=`63ae89e3c4864588999f5d0cd5827f4247fce7921f588f4ee16e290643b06645`，PDF=`46fb153cdcdd541806f1896e1ee4375843b9d935e8469549384f93631978b193`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余 LR/rank、主矩阵、ncRNA family 和后续阶段，及时提交本批交付。

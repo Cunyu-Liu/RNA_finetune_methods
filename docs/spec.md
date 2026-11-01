@@ -962,3 +962,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v65 为 1352+4=**1356 accepted、0 rejected**，v64 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI frozen-family 三种子 PCC=0.554263229/0.555498222/0.558825956，mean=0.556195802，正式闭合，①a-4 的 SSI 覆盖升为 15/30。
 2. RNA-FM CRISPR full-random 的 default 与 1e-4 两格完成，但四档未齐；LR accepted=86/320，完整组仍 21/80，选档分布不变。SpliceAI family/n2000 仍近随机。
 3. 源包 revision=`20261101_refresh_v72_v65ledger_ernie_ssi_family_closure`，191 个登记文件，manifest SHA256=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`。PPT SHA256=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`，PDF SHA256=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`；32 页嵌图、lint/layout/CRC 与实际渲染通过，④/⑤不变。
+
+### 10.66 v66 RNA-FM CRISPR LR 第 22 组（2026-11-01）
+
+1. v66 为 1356+3=**1359 accepted、0 rejected**，v65 行逐字段保留；3 个新增格均 proof=complete。RNA-FM CRISPR full-random 四档 LR 闭合，validation 选 3e-5（best_val=0.025089），test PR-AUC=0.015980806 仅作结果报告。
+2. LR accepted=88/320、完整组=22/80；选档分布为 3e-5 九组、1e-4 八组、1e-5 五组、3e-4 为 0，test 不参与。SpliceAI family/n2000 仍近随机；①a-4 保持 25/26/18/14/15，④/⑤不变。
+3. 源包 revision=`20261101_refresh_v73_v66ledger_lr22_rnafm_crispr`，193 个登记文件，manifest SHA256=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`。PPT SHA256=`63ae89e3c4864588999f5d0cd5827f4247fce7921f588f4ee16e290643b06645`，PDF SHA256=`46fb153cdcdd541806f1896e1ee4375843b9d935e8469549384f93631978b193`；32 页嵌图、lint/layout/CRC 与实际渲染通过。

@@ -482,3 +482,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. ERNIE SSI frozen-family 三种子 PCC=0.554263229/0.555498222/0.558825956，mean=0.556195802，正式闭合；①a-4 的 SSI 为 15/30，五种任务为 25/26/18/14/15。
 3. RNA-FM CRISPR full-random 仅两档，LR 86/320、完整组仍 21/80；SpliceAI 低信号，random/family④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v72_v65ledger_ernie_ssi_family_closure`，191 个登记文件，manifest SHA256=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`。嵌图、32 页 lint/layout/CRC 与实际渲染通过，最终科学验收未完成。
+
+## 35. 2026-11-01 当前 v66：RNA-FM CRISPR LR 第 22 组
+
+1. 当前 PPT 为 32 页，SHA256=`63ae89e3c4864588999f5d0cd5827f4247fce7921f588f4ee16e290643b06645`；PDF SHA256=`46fb153cdcdd541806f1896e1ee4375843b9d935e8469549384f93631978b193`。输入 **1359 accepted、0 rejected**，3 个新增格均 proof=complete。
+2. RNA-FM CRISPR full-random 四档闭合，validation 选 3e-5（best_val=0.025089）；LR 88/320、22/80 组，选档分布 3e-5 九组、1e-4 八组、1e-5 五组、3e-4 为 0，test 不参与。
+3. ①a-4 保持 25/26/18/14/15，random/family④/⑤不变；SpliceAI 仍低信号。
+4. 当前源包 revision=`20261101_refresh_v73_v66ledger_lr22_rnafm_crispr`，193 个登记文件，manifest SHA256=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。
