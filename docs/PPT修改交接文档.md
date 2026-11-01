@@ -565,3 +565,8 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v90 新增 0，仍为 **1447 accepted、0 rejected**，没有页面内容变化，PPT 和 v83 源包继续保持 v88。
 2. 注册表 RID 精确对账为 per-base 149/270、complementary 303/324、LR 108/320、rank 68/96、equiv 417/420、650M frozen 23/25。per-base 的 v86/v88/v89 权威值为 147/149/149，替代此前阶段估算偏差；这些计数未写在 PPT 页面中，不影响现有图文。
 3. 审计证据=`status/registry_accepted_recount_20261101_v90.json`，SHA256=`8082d0df53c3e17c487c54f7c84e8cf35da4e835fa927ce05dcf00aa172c7f82`。
+
+## 47. 2026-11-01 v91 staging：展示版保持 v88
+
+1. v91 为 **1448 accepted、0 rejected**；新增 micro SpliceAI full-family/n3000/seed17，macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。
+2. equiv 进度升为 418/420，但无新三种子单元、完整 LR 组或有效④/⑤结果，因此 PPT 与 v83 源包保持 v88。当前 PPT/PDF SHA256 仍为 `20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc` / `3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。

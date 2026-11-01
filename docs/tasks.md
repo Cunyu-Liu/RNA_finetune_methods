@@ -1955,3 +1955,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **精确对账**：per-base 149/270、complementary 303/324、LR 108/320、rank 68/96、equiv 417/420、650M frozen 23/25。
 - [x] **历史计数纠偏**：per-base 权威序列为 v80–v82=146、v83–v86=147、v87=148、v88–v90=149；更正此前 v86/v88/v89 的估算偏差，科学图和结论不受影响。证据=`registry_accepted_recount_20261101_v90.json`，SHA256=`8082d0df53c3e17c487c54f7c84e8cf35da4e835fa927ce05dcf00aa172c7f82`。
 - [ ] **后续**：同步审计文档并提交；不重开重叠队列，继续剩余 canonical 格和主矩阵真实缺口。
+
+## N90. 2026-11-01 v91 equiv SpliceAI staging
+
+- [x] **单格验收**：v91 为 1448 accepted、0 rejected；micro SpliceAI full-family/n3000/seed17 macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。证据 SHA256=`b54ab8a648f106dd531cfb03ad950372375d8c1f43a4df822c1486a18873f42d`。
+- [x] **矩阵与展示**：equiv 418/420；per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、650M frozen 23/25。无新科学单元，PPT 与 v83 源包保持 v88。
+- [ ] **后续**：同步并提交 v91 文档，继续 equiv 最后两格和其他真实缺口，低信号格不用于等价或 scaling。

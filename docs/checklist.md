@@ -367,3 +367,10 @@
 - [x] AH3 纠偏：per-base 的 v86/v88/v89 权威值为 147/149/149，替代此前估算偏差；证据 SHA256=`8082d0df53c3e17c487c54f7c84e8cf35da4e835fa927ce05dcf00aa172c7f82`。
 - [ ] AH4 后续：同步并提交审计记录，继续真实科学缺口，不另起重叠队列。
 
+## AI 组：v91 equiv 低信号验收
+
+- [x] AI1 数据：1448 accepted、0 rejected；新增 micro SpliceAI full-family/n3000/seed17 proof=complete，CUDA/convergence 通过。
+- [x] AI2 科学边界：macro-F1=0.333280238，仍近随机，不用于等价或 scaling；equiv 418/420，其他矩阵计数不变。
+- [x] AI3 展示：无新科学单元，PPT 与 v83 源包保持 v88。
+- [ ] AI4 后续：同步并提交文档，继续剩余真实科学缺口。
+
