@@ -322,3 +322,10 @@
 - [x] AB3 交付：231 文件 manifest=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`；PPT=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`；PDF=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] AB4 后续：继续其他真实缺口并提交本批交付。
 
+## AC 组：v80 RNA-FM SSI 与 650M SSP 验收
+
+- [x] AC1 数据：1433 accepted、0 rejected；2 格 proof=complete。
+- [x] AC2 主矩阵：RNA-FM SSI LoRA-random 三种子 mean=0.630093485，SSI 覆盖 17/30；650M SSP 为 1/3，SSP 仍 26/30。
+- [x] AC3 交付：235 文件 manifest=`3198fd091d726d53bb11935016a27cbd1dfacfd6baabcf69b2adec2c7fa71ab4`；PPT=`6049a44feca49f0bf1823d4c84669dadbc0b3bd77a0b749fd0de789536887ae0`；PDF=`b405175eea336c4f34b0a4303a10ee661e699fd60c7f1e72197688104b32955c`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] AC4 后续：继续其他真实缺口并提交本批交付。
+
