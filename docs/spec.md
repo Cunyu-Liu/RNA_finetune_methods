@@ -1078,3 +1078,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. 源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 个登记文件，manifest SHA256=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`。v81–v86 台账均已纳入，图、CSV、metadata、脚本与 v86 一致。
 4. 当前 PPT 为 32 页，SHA256=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`；PDF SHA256=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`。pptx lint/layout、ZIP CRC、十张关键嵌图 SHA 和实际渲染均通过；Microsoft YaHei 与正文 1.5 倍行距保持，原始 PPT 未覆盖。
 5. 本轮只闭合一个科学单元，不代表全实验完成。继续主矩阵、650M frozen、LR/rank 和 equiv canonical 真实缺口；后续阶段门不变，dense 诊断不进入正式矩阵。
+
+### 10.86 v87 staging 与 LR 完整组漏计更正（2026-11-01）
+
+1. v87 为 1438+5=**1443 accepted、0 rejected**，v86 行逐字段保留；5 个新增格逐一 proof=complete，checkpoint/CUDA/convergence 独立复核通过。包括 SpliceAI tier 两格（仍近随机）、micro-full family 的 3e-5 tuning 格、rank16 一格和 RNA-FM SSI LoRA-family/seed29（PCC=0.592436074，2/3）。未形成新三种子科学单元，①a-4 与④/⑤不变。
+2. 当前 per-base=148/270、complementary=302/324、LR=108/320、rank4/16=68/96。对全部 320 个 LR 注册格重新执行 proof_state 得 108 complete、212 runnable，**25/80 组完整**；选档分布 3e-5 十一组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
+3. 历史计数纠偏：25 组并非 v87 新增。台账逐版对比显示 ERNIE MRL full-random 在 **v79** 已四档闭合，validation 选 1e-5；v79–v86 页面漏计该组。本轮按逐格证明将页面由 24 更正为 25，不把更正写成新实验。证据=`status/lr_validation_interim_20261101_v87.json`，SHA256=`c2607c32cf1a183fc902d5ddf675b406f94f1b2a209b7af7f7eef623c84d3264`。
+4. 源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 个登记文件，manifest SHA256=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`。PPT 只更新 LR 页计数及漏计说明，SHA256=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`；PDF SHA256=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`。32 页 lint/layout/CRC、十张关键嵌图 SHA 与 LR 页实际渲染通过。

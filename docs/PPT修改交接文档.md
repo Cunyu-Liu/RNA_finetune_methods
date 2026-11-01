@@ -539,3 +539,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第8页①a-4：650M SSP frozen-random 三种子 pair-F1=0.2448/0.2445/0.2636，mean≈0.250967，正式闭合；SSP 覆盖升为 27/30，五种任务为 27/27/19/17/17。图、图注和覆盖文字同步更新，其他用户手调内容不改。
 3. per-base 146/270、complementary 302/324、LR 107/320（完整组仍 24/80）、rank 67/96，random/family④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 个登记文件，manifest SHA256=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与实际渲染通过；原始 PPT 未覆盖，最终科学验收未完成。
+
+## 43. 2026-11-01 当前 v87：LR 完整组漏计更正
+
+1. 当前 PPT 为 32 页，SHA256=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`；PDF SHA256=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`。输入 **1443 accepted、0 rejected**，5 个新增格均 proof=complete，但未形成新三种子科学单元，①a-4 与④/⑤不变。
+2. 第19页 LR 更正为 **25/80 组**，选档分布 3e-5 十一组、1e-4 九组、1e-5 五组、3e-4 为 0。逐格 proof 和逐版台账证明第25组是 v79 已闭合的 ERNIE MRL full-random，validation 选 1e-5；此前漏计，并非 v87 新实验。80 组全闭合前不冻结 tuned 正式矩阵。
+3. 当前 per-base 148/270、complementary 302/324、LR 108/320、rank 68/96。源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 个登记文件，manifest SHA256=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`，含完整 LR interim 证明。
+4. 本页文字与图意仍一致，只更新计数及漏计说明；十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距和实际渲染通过，其他手调内容未改。

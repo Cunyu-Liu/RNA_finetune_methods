@@ -1925,3 +1925,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他矩阵边界**：per-base 146/270、complementary 302/324、LR 107/320（24/80 组完整）、rank 67/96；④/⑤不变，tuning 不进入正式三种子。
 - [x] **图与版式**：源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 文件，manifest=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`；PPT=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`，PDF=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`。32 页嵌图、lint/layout/CRC 和实际渲染通过，原文件未覆盖。
 - [ ] **同步与续跑**：完成五文档、源包、PPT/PDF 三地逐哈希验收并提交 GitHub；继续真实缺口和 v87 增量证明，不重复派发、不提前开启后续阶段门。
+
+## N86. 2026-11-01 v87 staging 与 LR 漏计更正
+
+- [x] **v86 同步**：247 文件、五文档和 PPT/PDF 三地验收通过；GitHub `cfd6379 Record 650M SSP random closure` 已推送。
+- [x] **v87 五格验收**：1443 accepted、0 rejected；5 格均 proof=complete、CUDA 收敛。SpliceAI tier 仍低信号，RNA-FM SSI LoRA-family 为 2/3，不新增科学单元。
+- [x] **LR 全量 proof 复核**：108/320 complete、212 runnable，25/80 组完整；选档分布 11/9/5/0。第25组实际在 v79 的 ERNIE MRL full-random 已闭合，validation 选 1e-5，现更正历史漏计而非冒充新增。
+- [x] **其他矩阵与交付**：per-base 148/270、complementary 302/324、rank 68/96。源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 文件，manifest=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`；PPT=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`，PDF=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`。32 页嵌图、lint/layout/CRC 和 LR 页渲染通过。
+- [ ] **后续**：完成 v87 三地同步与 GitHub 提交；继续主矩阵、650M frozen、LR/rank 和 equiv canonical 真实缺口。

@@ -337,3 +337,11 @@
 - [x] AD4 交付：247 文件 manifest=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`；PPT=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`，PDF=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`；32 页嵌图、lint/layout/CRC 和渲染通过。
 - [ ] AD5 后续：完成三地同步与 GitHub 提交；继续真实科学缺口，不将此单元闭合视为全实验完成。
 
+## AE 组：v87 staging 与 LR 计数纠偏验收
+
+- [x] AE1 数据：1443 accepted、0 rejected；5 格 proof=complete，CUDA/convergence 通过，未形成新三种子单元。
+- [x] AE2 矩阵：per-base 148/270、complementary 302/324、rank 68/96；④/⑤不变。
+- [x] AE3 LR：逐格重算 108/320 complete、212 runnable，25/80 组完整，选档 11/9/5/0；第25组为 v79 漏计的 ERNIE MRL random，validation 选 1e-5，非 v87 新组。
+- [x] AE4 交付：250 文件 manifest=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`；PPT=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`，PDF=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`；32 页 lint/layout/CRC、嵌图与 LR 页渲染通过。
+- [ ] AE5 后续：三地同步并提交；继续真实科学缺口，80 组全闭合前不冻结正式 tuned 矩阵。
+
