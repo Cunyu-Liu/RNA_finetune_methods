@@ -1898,3 +1898,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全恢复**：7 格均 proof=runnable、无同名 runner，以原注册表/state-dir 启动 3 worker，父 PID=4086799，complete 不重跑。证据=`status/queue_actions/equiv_tiers_resume_20261101.json`。
 - [x] **资源与防重**：GPU 20.13/32.61 GiB、util 99%，6 run、6 RID、0 重复；启动不记完成。
 - [ ] **后续**：等待 canonical 格完成后验收，dense 诊断不进入正式图，继续同步本批文档。
+
+## N82. 2026-11-01 v83 650M SSP 第二种子与 RNA-FM SSI family 首点
+
+- [x] **v83 验收**：1436 accepted、0 rejected；2 格 proof=complete。650M SSP frozen-random 为 2/3，RNA-FM SSI LoRA-family 为 1/3；per-base 147/270、complementary 301/324。
+- [x] **展示边界**：没有新增三种子单元，SSP 仍 26/30，PPT 与 v80 源包保持 v80，v83 台账暂存 teams。
+- [ ] **后续**：等待 seed43 和其他完成格，继续三轮验收并同步文档。

@@ -1055,3 +1055,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v82 相对 v81 新增 0，仍为 **1434 accepted、0 rejected**。统一 equiv/lora 父队列已退出：equiv 尚有 7 格 canonical 可运行；lora 尚有 13 格，但全部为 `_dense_` 诊断变体，按既定口径不重跑、不进入正式图。
 2.  equiv 7 格逐格 proof=runnable，且无同名活跃 runner。以原注册表、原 state-dir 和 3 worker 重启父 PID=4086799，不重跑 complete 格，其他队列不动。证据=`status/queue_actions/equiv_tiers_resume_20261101.json`。
 3. 恢复后 GPU=20.13/32.61 GiB、util=99%，在途 6 run、6 RID、0 重复；新父正在执行 proof 检查，启动不记完成。PPT 与 v80 源包保持 v80。
+
+### 10.82 v83 650M SSP 第二种子与 RNA-FM SSI family 首点（2026-11-01）
+
+1. v83 为 1434+2=**1436 accepted、0 rejected**，v82 行逐字段保留；2 个新增格均 proof=complete。650M SSP frozen-random/seed29 pair-F1=0.2445，best_epoch=5、9 epochs 后按 patience=3 收敛，与 seed17 组成 2/3，仍缺 seed43；SSP 覆盖仍为 26/30。
+2. RNA-FM SSI LoRA-family/seed17 PCC=0.593009039，仅 1/3；per-base=147/270、complementary=301/324。PPT 与 v80 源包保持 v80，v83 台账暂存 teams。
