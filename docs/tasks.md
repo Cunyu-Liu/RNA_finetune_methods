@@ -1613,3 +1613,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v40 staging**：1209 accepted、1 rejected；源包 126 文件，manifest SHA256=`9a8988c92d38e23c380d5f8a3e3fe80e217fd52f52bd7e83c85d133ea08fa8a8`。
 - [x] **当前结果**：SSI 33M-full random/n2000/seed17 PCC=0.590419027；其余新增为 degradation family cap 和 SpliceAI 低信号结果。148M-LoRA 仍 1/3，不能新增④/⑤面板。
 - [~] **后续**：继续 SSI 三种子和第三档，PPT 保持 v30。
+
+## N42. 2026-11-01 degradation family LoRA 2000 闭合
+
+- [x] **33M-LoRA requested2000 三种子**：actual=1680，seed17/29/43 PCC=0.396906205/0.378269200/0.396009081，mean=0.390394828、SD=0.010510679、95% CI half-width=0.011893953；三格 proof=complete，cap 与 random 分开。
+- [x] **v41 staging**：1216 accepted、1 rejected；源包 128 文件，manifest SHA256=`fd10bfb19ac6deaf6176e8a167fc0797a609aa6d2609fc2f442cb344699e6e30`。
+- [~] **当前边界**：SSI 148M-LoRA 为 2/3，n2000 的 33M-full/LoRA 也各为 2/3，仍不新增④/⑤面板，PPT 保持 v30。
