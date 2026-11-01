@@ -1601,3 +1601,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **degradation family full requested2000 闭合**：actual=1680，seed17/29/43 PCC=0.402724605/0.395423894/0.396414021，mean=0.398187507、SD=0.003960307、95% CI half-width=0.004481510；cap 与 random 分开记录。
 - [x] **v38 与源包**：1201 accepted、1 rejected；源包 122 文件，manifest SHA256=`cc79a777e6a6d40f217079df37f356d191fc894dca9e770a25e0743628d8fcd8`，PPT 保持 v30。
 - [ ] **后续**：继续 SSI 148M-LoRA 和第三档，degradation family 的其他 LoRA 档；未齐前不改④/⑤。
+
+## N40. 2026-11-01 SSI 148M-LoRA 首点落地
+
+- [x] **首个 mega 结果**：SSI 148M-LoRA random/n1000/seed17 PCC=0.561801670，proof=complete，best_epoch=0、4 epochs、patience=3 收敛，RTX 5090；当前仅 1/3，不能用于等价或 scaling 结论。
+- [x] **v39 与源包**：1205 accepted、1 rejected；源包 124 文件，manifest SHA256=`66270b9ab7d7e7e6e77706c13a96533e7ac2bfb237445cc11d29d6c68d498f1b`。
+- [~] **后续**：继续 mega 三种子和第三档，以及 degradation family 其他 LoRA 档；PPT 保持 v30，不新增面板。
