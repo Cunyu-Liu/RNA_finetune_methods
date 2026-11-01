@@ -904,3 +904,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. **重复派发事故**：`equiv_ssi` 与 `equiv_ssi_mega` 在 pre-ledger 模型加载窗口双开 mega family/n2000/seed43。较早 PID=4010381 于 03:16:46 结束时 manifest 冲突，较晚 PID=4010481 的最终 result/plateau/checkpoint 完整，现 `proof_state=complete`；只用最终完整证明，不混两次结果。随后发现 mega family/n2500/seed17 也双开，保留统一队列较早 PID=4010602，终止专用队列较晚 PID=4010670。
 4. 停止三个重叠 SSI equiv 父 PID=3961023/3978455/3986059，保留统一 `equiv_tiers`/`lora_tiers`；其他在途子进程不中断。复核 8 个 live manifest run、8 个唯一 RID、0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`，源包亦收录于 `data/migrations/`。后续不得再并行启动相互重叠的注册表。
 5. 源包 revision=`20261101_refresh_v67_v55ledger_family_proof_queue_consolidation`，157 个登记文件，manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`。PPT SHA256=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`，PDF SHA256=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、30 页 lint/layout/CRC 与实际渲染通过。
+
+### 10.56 v56 SSI family 四档 staging 与增并发门禁（2026-11-01）
+
+1. v56 为 1324+4=**1328 accepted、1 rejected**，v55 行逐字段保留；4 个新增格均 proof=complete。SSI family 148M-LoRA n2500 三种子 PCC=0.572414853/0.577096436/0.574558833，达到四档；另一个 SpliceAI family/n1500 格 macro-F1=0.333280238，仍近随机，只作 low_signal。
+2. 当前 random④/⑤没有新增科学结果，PPT 和 v67 源包保持 v55，不为 family staging 或无显示变化的结果制造新版图。v56 台账已在 teams 保存，待下一次可见图更新时一并纳入。
+3. GPU 核查为 22.46/32.61 GiB、util=99%，统一 equiv/lora 队列只有 2/1 个在途任务。尝试提高父调度并发前，发现 mega family/n3000/seed29 仍为 pre-ledger `pending`，故在任何 kill/start 前中止操作；未重启父进程、未终止子进程、未新增训练，避免重复派发。后续只有在在途子进程均 ledger=running 或自然结束后才允许调整父队列。

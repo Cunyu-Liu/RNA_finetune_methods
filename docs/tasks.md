@@ -1720,3 +1720,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **队列合并**：停止重叠父 3961023/3978455/3986059，保留统一 equiv/lora_tiers，其他子进程继续；复核 8 run/8 RID/0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`。
 - [x] **v67 与交付**：157 文件含队列证据，manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`；PPT=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`，PDF=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、lint/layout/CRC 和渲染通过。
 - [ ] **后续**：统一队列继续 family 和其他真实缺口；禁止重启已退休的重叠专用队列，完成格不重跑。
+
+## N57. 2026-11-01 v56 family staging 与并发安全门
+
+- [x] **v56 验收**：1328 accepted、1 rejected；4 格均 proof=complete。SSI family mega-LoRA n2500 三种子闭合、达到四档；SpliceAI 新格仍近随机，不写 scaling/等价。
+- [x] **不更新展示版**：random④/⑤与①a-4 没有新增可见科学结果，PPT 和 v67 源包保持 v55；v56 台账在 teams 留存，不与旧图源混成一包。
+- [x] **增并发前中止**：GPU 22.46/32.61 GiB、util=99%，但 mega n3000/seed29 仍 pre-ledger pending；已在任何进程操作前取消父队列重启，0 kill、0 start，避免双跑。
+- [ ] **后续**：等待在途格 running 或自然结束后再评估并发；统一队列继续 family 和其他真实缺口，不重启重叠专用队列。
