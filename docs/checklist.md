@@ -268,3 +268,11 @@
 - [x] U4 交付：189 文件 manifest=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`；PPT=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`；PDF=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] U5 后续：继续其他真实缺口并补推待推提交。
 
+## V 组：v65 ERNIE SSI family 验收
+
+- [x] V1 数据：1356 accepted、0 rejected；4 格 proof=complete。
+- [x] V2 主矩阵：ERNIE SSI frozen-family 三种子 mean=0.556195802，正式闭合，SSI 覆盖 15/30。
+- [x] V3 边界：LR 86/320、完整组仍 21/80；SpliceAI low_signal，④/⑤不变。
+- [x] V4 交付：191 文件 manifest=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`；PPT=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`；PDF=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] V5 后续：继续其他真实缺口并提交本批交付。
+

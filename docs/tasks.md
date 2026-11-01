@@ -1780,3 +1780,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 第21组**：ERNIE CRISPR full-family 四档闭合，validation 选 1e-5；LR 84/320、21/80 组，选档分布 8/8/5/0，test 不参与。
 - [x] **v71 与交付**：189 文件含路径证据，manifest=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`；PPT=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`，PDF=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段；网络恢复后补推全部待推提交。
+
+## N65. 2026-11-01 v65 ERNIE SSI family 闭合
+
+- [x] **v65 验收**：1356 accepted、0 rejected；4 格 proof=complete。ERNIE SSI frozen-family 三种子 mean=0.556195802，正式闭合，SSI①a-4 覆盖 15/30。
+- [x] **LR 与低信号边界**：RNA-FM CRISPR full-random 仅两档，LR 86/320、完整组仍 21/80；SpliceAI 仍 low_signal，④/⑤不变。
+- [x] **v72 与交付**：191 文件 manifest=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`；PPT=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`，PDF=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段，并及时提交本批代码与文档。

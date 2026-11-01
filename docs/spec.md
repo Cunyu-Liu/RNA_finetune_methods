@@ -956,3 +956,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 路径恢复格 macro-F1=0.368894380，与 seed29/43 构成正式三种子，SpliceAI①a-4 覆盖升为 18/30。ERNIE SSI frozen-family 目前 2/3，SSI 仍 14/30。
 3. ERNIE CRISPR full-family 四档 LR 闭合，validation 选 1e-5（best_val=0.035947），LR accepted=84/320、完整组=21/80；分布为 3e-5/1e-4 各 8 组、1e-5 五组，3e-4 为 0，test 不参与。
 4. 源包 revision=`20261101_refresh_v71_v64ledger_ledger_path_recovery_lr21`，189 个登记文件（含 v61–v64 与路径证据），manifest SHA256=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`。PPT SHA256=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`，PDF SHA256=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.65 v65 ERNIE SSI family 闭合（2026-11-01）
+
+1. v65 为 1352+4=**1356 accepted、0 rejected**，v64 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI frozen-family 三种子 PCC=0.554263229/0.555498222/0.558825956，mean=0.556195802，正式闭合，①a-4 的 SSI 覆盖升为 15/30。
+2. RNA-FM CRISPR full-random 的 default 与 1e-4 两格完成，但四档未齐；LR accepted=86/320，完整组仍 21/80，选档分布不变。SpliceAI family/n2000 仍近随机。
+3. 源包 revision=`20261101_refresh_v72_v65ledger_ernie_ssi_family_closure`，191 个登记文件，manifest SHA256=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`。PPT SHA256=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`，PDF SHA256=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`；32 页嵌图、lint/layout/CRC 与实际渲染通过，④/⑤不变。

@@ -475,3 +475,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 长期 rejected 的 mega SpliceAI frozen-family/seed17 已找到 teams 完整副本，前后 proof=complete，仅修 ledger out_dir，不重跑。三种子正式闭合，①a-4 的 SpliceAI 为 18/30；SSI 仍 14/30。
 3. 第19页 LR 更新为 84/320、21/80 组；ERNIE CRISPR full-family 选 1e-5，选档分布 8/8/5/0，test 不参与。
 4. 当前源包 revision=`20261101_refresh_v71_v64ledger_ledger_path_recovery_lr21`，189 个登记文件，manifest SHA256=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`。路径修复证据、v61–v64 台账、图和脚本一致；嵌图、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 34. 2026-11-01 当前 v65：ERNIE SSI family 闭合
+
+1. 当前 PPT 为 32 页，SHA256=`b89a50417f293bb7e7e3148f99f6c7d89fb87e454ddb47aef018704b07790540`；PDF SHA256=`53d93740ef9171d56156831e7938c85a5613c7e629d14339d7f61050947dc6d6`。输入 **1356 accepted、0 rejected**，4 个新增格均 proof=complete。
+2. ERNIE SSI frozen-family 三种子 PCC=0.554263229/0.555498222/0.558825956，mean=0.556195802，正式闭合；①a-4 的 SSI 为 15/30，五种任务为 25/26/18/14/15。
+3. RNA-FM CRISPR full-random 仅两档，LR 86/320、完整组仍 21/80；SpliceAI 低信号，random/family④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v72_v65ledger_ernie_ssi_family_closure`，191 个登记文件，manifest SHA256=`f875cd1392b2e2e871c5c706ed3cd8af6f5ad9a727d50f501bdfe4ac8773505d`。嵌图、32 页 lint/layout/CRC 与实际渲染通过，最终科学验收未完成。
