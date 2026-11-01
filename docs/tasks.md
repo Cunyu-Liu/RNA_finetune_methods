@@ -1567,3 +1567,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **SSI 首批**：33M-full random/n1000/seed17 PCC=0.562050997，33M-LoRA seed17/29=0.580907855/0.582093511，均 proof=complete、best_epoch=0、4 epochs 收敛；整组尚未闭合，不能新增④/⑤面板。
 - [x] **v34 与源包**：1174 accepted、1 rejected；源包 114 文件，manifest SHA256=`a4e0f8fa43283354b2ad131ce374713bc438a6487d98b05f527574ff5f1ed410`，PPT 保持 v30。
 - [ ] **后续**：补 SSI 三种子和后续档，以及 degradation family 的两个 LoRA 臂；单点不作最终 scaling 结论。
+
+## N35. 2026-11-01 SSI LoRA 与 degradation family 新单元
+
+- [x] **SSI 33M-LoRA random/n1000 闭合**：seed17/29/43 PCC=0.580907855/0.582093511/0.580662482，mean=0.581221282、SD=0.000765270、95% CI half-width=0.000865985；seed43 proof=complete，best_epoch=0、4 epochs 收敛。33M-full 为 2/3，148M-LoRA 未齐，不新增④/⑤面板。
+- [x] **degradation family full/n1500 闭合**：seed17/29/43 PCC=0.395550187/0.386570301/0.370900108，mean=0.384340199、SD=0.012475440、95% CI half-width=0.014117290；三格 proof=complete。
+- [x] **v35 与源包**：1179 accepted、1 rejected；源包 116 文件，manifest SHA256=`0f9d3ab5faf753263c643787c1f359109ada976602676b249269c9b6bbd61889`，PPT 保持 v30。
+- [ ] **后续**：补 SSI full 和 148M-LoRA、后续数据档，以及 degradation family 的两个 LoRA 臂。
