@@ -235,3 +235,12 @@
 - [x] Q4 证据与交付：队列证据入源包，157 文件 manifest=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`；PPT=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`；PDF=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、lint/layout/CRC、渲染通过。
 - [ ] Q5 后续：不得重启重叠专用队列；继续统一队列和后续科学矩阵。
 
+## R 组：v58 family 图与 32 页验收
+
+- [x] R1 数据：v58 共 1332 accepted、1 rejected；2 格 proof=complete，LR 77/320 但完整组仍 19/80。
+- [x] R2 family：④/⑤均 5/8，各 split 候选独立复算；random panels/candidates 不变，degradation cap=1680。
+- [x] R3 覆盖：SSI 正式单元修正为 13/30，不用阶段表替代未齐 best-val 种子。
+- [x] R4 工程：32 页 ZIP 无重复条目、CRC 通过；克隆 RID 映射和 slide31 冲突已修复；嵌图、字体、行距、布局和实际渲染通过。
+- [x] R5 交付：176 文件 manifest=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`；PPT=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`；PDF=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`。
+- [ ] R6 后续：ncRNA family 和其他矩阵继续补，不宣称全实验完成。
+

@@ -1734,3 +1734,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **SIGSTOP 动态门禁**：暂停 equiv/lora 父调度后发现两条车道都有 pre-ledger pending 子进程，已 SIGCONT 恢复；未换父、未杀训练、未启动新任务。证据=`status/queue_actions/tier_queue_rebalance_20261101.json`。
 - [x] **恢复复核**：8 live run、8 唯一 RID、0 重复；当前 PPT 与 v67 源包保持 v55。
 - [ ] **后续**：不在连续竞态下反复重启父队列；统一队列继续运行，待自然空窗再评估扩容。
+
+## N59. 2026-11-01 v58 family 图与 32 页交付
+
+- [x] **v58 验收**：1332 accepted、1 rejected；2 格 proof=complete。LR 77/320、19/80 组四档完整，选档不变；SpliceAI 仍低信号。
+- [x] **family④/⑤**：两脚本支持 `--split`，random 结果不变，family 均 5/8。MRL/degradation/SSI 有各自候选，modification/SSP 未观测到；不与 random 混配对。
+- [x] **正式覆盖纠偏**：SSI①a-4 从 14 改为 13，ERNIE frozen-random 仅 1/3 正式 best-val，不用阶段表补满三种子。
+- [x] **32 页 PPT**：新增第22页 family④和第26页 family⑤；修复克隆 relationship ID 和 slide31 重名问题，ZIP 无重复条目。
+- [x] **v68 源包**：176 文件含 v56–v58 和调度证据，manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`；PPT=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`，PDF=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`；嵌图、lint/layout/CRC 和实际渲染通过。
+- [ ] **后续**：ncRNA family tiers 与其他真实缺口继续补；family 5/8 不等于全任务闭合，最终科学验收仍未完成。

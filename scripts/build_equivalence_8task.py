@@ -1,6 +1,6 @@
 """结论④ 8 任务等价线：小模型全参 @n 与大模型 LoRA @m 的等价对。
 
-Each panel = one task (random split primary, family fallback). Two curves share the
+Each panel = one task; --split selects random or family. Two curves share the
 same labelled-sequence axis: RiNALMo-micro full-FT @1e-5 and RiNALMo-mega LoRA @3e-4.
 For every full budget n we draw a dotted guide to the LoRA curve and label the
 smallest m whose mean is >= full(n) mean; only cells with >=3 formal seeds qualify.
@@ -9,6 +9,7 @@ interpolated and never filled with zeros.
 """
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 import re
@@ -61,7 +62,7 @@ def load(path):
     df = df[df.requested_n_train.isin(BUDGETS)]
     df = df[df.seed.isin([17, 29, 43])]
     df = df[df.lr.isin([1e-5, 3e-4, 0.00001, 0.0003])]
-    df = df[~df.run_id.str.contains("_smoke|_diag|_noshuffle|_r4_|_r16_")]
+    df = df[~df.run_id.str.contains("_smoke|_diag|_noshuffle|_r4_|_r16_|_dense")]
     df = df[~df.run_id.str.endswith("_seqmlfix")]
     df = df[~df.artifact_dir.astype(str).str.contains("/home/cunyuliu/rna-ft-eval/artifacts")]
     return df
@@ -103,13 +104,12 @@ def equivalence(full, lora):
     return pairs
 
 
-def main():
+def main(split="random"):
     path = latest_export()
     df = load(path)
     fig, axes = plt.subplots(2, 4, figsize=(13.4, 6.4), dpi=200)
     tiles = []
     for ax, (task, label, metric) in zip(axes.flat, TASKS):
-        split = "random"
         full = arm(df, task, split, "RiNALMo-micro", "full")
         lora = arm(df, task, split, "RiNALMo-mega", "lora")
         if full.empty or lora.empty or len(full) < 2 or len(lora) < 2:
@@ -177,7 +177,7 @@ def main():
         fig.legend(handles, labels, loc="upper center", ncol=2, frameon=False,
                    fontsize=10, bbox_to_anchor=(0.5, 0.965))
     fig.suptitle("Data-budget equivalence | official same-family models | "
-                 "33M full-FT @1e-5 vs 148M LoRA @3e-4 | random split | "
+                 "33M full-FT @1e-5 vs 148M LoRA @3e-4 | %s split | " % split +
                  "bars = 3-seed mean", fontsize=11, y=1.02)
     caps = df[df.requested_n_train != df.actual_n_train][[
         "run_id", "task", "split", "model", "strategy",
@@ -189,12 +189,13 @@ def main():
              "x = requested budget; capped actual n is recorded in metadata"
              % path.name, fontsize=7.4, color="#555555")
     fig.tight_layout(rect=(0, 0.02, 1, 0.94))
-    png = OUT / "equivalence_8task.png"
+    stem = "equivalence_8task" + ("_family" if split == "family" else "")
+    png = OUT / (stem + ".png")
     fig.savefig(png, bbox_inches="tight")
-    fig.savefig(OUT / "equivalence_8task.pdf", bbox_inches="tight")
+    fig.savefig(OUT / (stem + ".pdf"), bbox_inches="tight")
     plotted = sum(1 for t in tiles if t["status"] == "plotted")
-    (OUT / "equivalence_8task_meta.json").write_text(json.dumps({
-        "figure": "equivalence_8task", "source": path.name,
+    (OUT / (stem + "_meta.json")).write_text(json.dumps({
+        "figure": stem, "source": path.name, "split": split,
         "panels_plotted": plotted, "panels_total": len(tiles), "tiles": tiles,
         "requested_vs_actual": caps,
     }, ensure_ascii=False, indent=1))
@@ -202,4 +203,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--split", choices=("random", "family"), default="random")
+    args = parser.parse_args()
+    main(args.split)

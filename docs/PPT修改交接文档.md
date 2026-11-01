@@ -446,3 +446,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. ERNIE degradation LoRA-family 正式三种子替换阶段表，覆盖计数仍 14/30；SSI family full/micro-LoRA 五档、mega-LoRA 三档。当前 random④/⑤仍 6/8、三组候选不变，未把 family 进展混入 random 面板。
 3. 两个 SSI 注册表曾在 pre-ledger 窗口重复派发。冲突 manifest 已排除，只有最终完整 proof 入库；另一起双跑保留较早进程、终止较晚进程。三个重叠父队列已停止，统一 equiv/lora_tiers 保留，复核 0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`。
 4. 当前源包 revision=`20261101_refresh_v67_v55ledger_family_proof_queue_consolidation`，157 个登记文件（含队列证据），manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`。嵌图、30 页 lint/layout/CRC 与实际渲染通过；最终科学验收未完成。
+
+## 30. 2026-11-01 当前 v58：32 页 random+family 对照
+
+1. 当前 PPT 为 **32 页**，SHA256=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`；PDF SHA256=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`。新增第22页 family④和第26页 family⑤，random 页保持原位置和内容。
+2. family④/⑤均 5/8。MRL、degradation、SSI 有各自等价候选，modification/SSP 未观测到；degradation cap=1680，候选非唯一。两 split 不合并且不互套配对。页 2 状态改为 random 6/8、family 5/8。
+3. ①a-4 的 SSI 正式覆盖修正为 13/30，阶段表不再替代未齐的 ERNIE frozen-random best-val 种子。LR 为 77/320、19/80 组完整，选档分布不变。
+4. 克隆关系 ID 已改为显式映射，family 克隆移至删除旧页前，ZIP 无重复 slide31 条目。32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距、八张嵌图 SHA 与实际渲染通过。
+5. 当前源包 revision=`20261101_refresh_v68_v58ledger_family_scaling_5of8`，176 个登记文件，manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`。全实验与最终科学验收仍未完成。

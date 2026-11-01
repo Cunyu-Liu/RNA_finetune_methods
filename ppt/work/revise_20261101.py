@@ -47,14 +47,19 @@ def replace_picture(slide, name, path):
 def clone_slide(prs, index):
     source = prs.slides[index]
     destination = prs.slides.add_slide(source.slide_layout)
-    for shape in source.shapes:
-        destination.shapes._spTree.insert_element_before(
-            copy.deepcopy(shape._element), "p:extLst")
+    rid_map = {}
     for rel in source.part.rels.values():
         if "slideLayout" not in rel.reltype and "notesSlide" not in rel.reltype:
             new_rid = destination.part.rels._add_relationship(
                 rel.reltype, rel._target, rel.is_external)
-            assert new_rid == rel.rId, (new_rid, rel.rId)
+            rid_map[rel.rId] = new_rid
+    for shape in source.shapes:
+        element = copy.deepcopy(shape._element)
+        for node in element.iter():
+            for attr, value in node.attrib.items():
+                if value in rid_map:
+                    node.set(attr, rid_map[value])
+        destination.shapes._spTree.insert_element_before(element, "p:extLst")
     return destination
 
 
@@ -79,7 +84,7 @@ def main():
     table = next(shape.table for shape in prs.slides[1].shapes if shape.has_table)
     updates = {
         (0, 2): "关键实测结果（2026-11-01 · 导师反馈修订）",
-        (3, 1): "④/⑤均 6/8 可判",
+        (3, 1): "random 6/8；family 5/8",
         (3, 2): "degradation/SSI 三臂均五档，④/⑤均6/8。SSI ④保留 full2000≈148M-LoRA1500、full2500/3000≈148M-LoRA2000 三组候选，非唯一；Frozen待阶段门",
         (5, 2): "时间×性能与显存独立为结论⑥；使用最新 8 任务 runtime；650M full 25GB 实测保留，待自然窗口",
         (6, 2): "controlled 30 格已重绘均值线与逐 seed 点；official 27/30 complete，650M LoRA 3 格按 corrected 队列补测",
@@ -162,7 +167,7 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/17/14/14 个三种子单元（共30）；斜线=n<3，空白=未完成，不把有结果写成任务闭合。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/17/14/13 个三种子单元（共30）；SSI按正式best-val重评，不用阶段表替代未齐种子；斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
@@ -266,6 +271,28 @@ def main():
         set_text(prs.slides[29], "TextBox 10",
                  "证据范围：八任务用于检验结论的任务边界，不是堆数量；SpliceAI random/family 三种子机制均闭合；④/⑤共用同源曲线，当前仅部分面板可判；时间/显存为⑥、遗忘为⑦，未闭合项不作最终结论。")
 
+    tier_dir = ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts"
+    family_ready = (tier_dir / "equivalence_8task_family.png").is_file() and \
+        (tier_dir / "data_volume_8task_family.png").is_file()
+    if family_ready:
+        family_equiv = clone_slide(prs, 20)
+        set_text(family_equiv, "TextBox 1", "04F")
+        set_text(family_equiv, "TextBox 2", "结论④补充  family：数据量等价的切分边界")
+        set_text(family_equiv, "TextBox 3",
+                 "family split；5/8 任务可判。MRL/degradation/SSI 有候选，modification/SSP 当前未观测到；不套用 random 配对。")
+        set_text(family_equiv, "TextBox 5",
+                 "读图：MRL full2000≈LoRA1000；degradation full1500/2000≈LoRA1000；SSI full1500≈LoRA1500、full3000≈LoRA2000。均满足逐 seed |Δ|≤0.02 且 CI 覆盖 0；degradation requested≥2000 的 actual=1680，候选非唯一。")
+        replace_picture(family_equiv, "Picture 6", tier_dir / "equivalence_8task_family.png")
+
+        family_scaling = clone_slide(prs, 22)
+        set_text(family_scaling, "TextBox 1", "05F")
+        set_text(family_scaling, "TextBox 2", "结论⑤补充  family：三臂数据量曲线")
+        set_text(family_scaling, "TextBox 3",
+                 "family split；5/8 任务可判。modification/MRL/SSP 三臂五档，degradation/SSI 达到至少三档；ncRNA 待补。")
+        set_text(family_scaling, "TextBox 5",
+                 "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation cap=1680，SSI 148M-LoRA 四档。等价配对见④ family 页。")
+        replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
+
     slide_ids = prs.slides._sldIdLst
     obsolete = slide_ids[20 + int(multiseed_ready)]
     prs.part.drop_rel(obsolete.rId)
@@ -275,7 +302,15 @@ def main():
         slide_ids.remove(element)
     slide_ids.insert(20 + int(multiseed_ready), moving[0])
     slide_ids.insert(21 + int(multiseed_ready), moving[1])
-    assert len(prs.slides) == 29 + int(multiseed_ready)
+    assert len(prs.slides) == 29 + int(multiseed_ready) + 2 * int(family_ready)
+
+    if family_ready:
+        family_equiv_id, family_scaling_id = slide_ids[-2], slide_ids[-1]
+        slide_ids.remove(family_equiv_id)
+        slide_ids.remove(family_scaling_id)
+        slide_ids.insert(21, family_equiv_id)
+        slide_ids.insert(25, family_scaling_id)
+    assert len(prs.slides) == 29 + int(multiseed_ready) + 2 * int(family_ready)
 
     removed = remove_answered_annotations(prs)
     prs.save(str(OUT))

@@ -916,3 +916,12 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v57 为 1328+2=**1330 accepted、1 rejected**，v56 行逐字段保留；两格均 proof=complete。ERNIE SSI frozen-random/seed17 PCC=0.592628039（仅 1/3）；SSI family 148M-LoRA n3000/seed17 PCC=0.579595851（仅 1/3）。均不形成新三种子单元或面板，PPT 与 v67 源包继续保持 v55。
 2. 再次评估 equiv/lora 父队列扩容时，先以 SIGSTOP 暂停父调度并动态枚举实际子进程，避免依据过期 PID 清单操作。两条车道均发现新的 pre-ledger `pending` 子进程，因此立即 SIGCONT 恢复原调度；未替换父进程、未终止训练、未新增任务。证据=`status/queue_actions/tier_queue_rebalance_20261101.json`。
 3. 恢复后复核 8 个 live manifest run、8 个唯一 RID、0 重复。当前不以显存空闲为理由绕过 pre-ledger 安全门，也不在连续竞态中反复重启父队列。
+
+### 10.58 v58 family ④/⑤ 5/8 与 32 页交付（2026-11-01）
+
+1. v58 为 1330+2=**1332 accepted、1 rejected**，v57 行逐字段保留；2 个新增格均 proof=complete。LR registry accepted=77/320，但四档完整组仍 19/80，选档分布不变。SpliceAI family/n3000 仍近随机。
+2. 两个绘图脚本新增 `--split random|family`；random 默认文件名和 panels/candidates 不变，family 独立输出，不混 split。**family④/⑤均为 5/8**：modification/MRL/SSP/degradation/SSI 可判，ncRNA 待补，CRISPR/SpliceAI 低信号。
+3. family④候选：MRL full2000≈LoRA1000（Δ=−0.003660819、CI=0.022557353）；degradation full1500/2000≈LoRA1000（Δ=0.013835748/−0.000011562，CI=0.017991626/0.007415681，requested≥2000 actual=1680）；SSI full1500≈LoRA1500、full3000≈LoRA2000（Δ=0.003376230/0.001199318，CI=0.003743386/0.001782110）。modification/SSP 当前未观测到等价候选，不套用 random 配对。
+4. ①a-4 的 SSI 正式三种子单元由 14 修正为 13：ERNIE frozen-random 正式 best-val 只有 1/3，不再用阶段表三种子代替未齐正式种子；这是证据口径纠偏，不是结果丢失。PPT 新增第22页 family④、第26页 family⑤，共32页。
+5. 克隆页修复了两类工程问题：非连续 relationship ID 改为旧/新 RID 映射；family 克隆移到删除旧页之前，避免重复 `slide31.xml`。最终 ZIP 无重复条目、CRC 通过。
+6. 源包 revision=`20261101_refresh_v68_v58ledger_family_scaling_5of8`，176 个登记文件（含 v56–v58 与调度证据），manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`。PPT SHA256=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`，PDF SHA256=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`；32 页 lint/layout/CRC、嵌图和实际渲染通过。
