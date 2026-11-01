@@ -1574,3 +1574,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **degradation family full/n1500 闭合**：seed17/29/43 PCC=0.395550187/0.386570301/0.370900108，mean=0.384340199、SD=0.012475440、95% CI half-width=0.014117290；三格 proof=complete。
 - [x] **v35 与源包**：1179 accepted、1 rejected；源包 116 文件，manifest SHA256=`0f9d3ab5faf753263c643787c1f359109ada976602676b249269c9b6bbd61889`，PPT 保持 v30。
 - [ ] **后续**：补 SSI full 和 148M-LoRA、后续数据档，以及 degradation family 的两个 LoRA 臂。
+
+## N36. 2026-11-01 SSI full 与 degradation family LoRA 闭合
+
+- [x] **SSI 33M-full random/n1000 三种子**：seed17/29/43 PCC=0.562050997/0.561920256/0.559949153，mean=0.561306802、SD=0.001177574、95% CI half-width=0.001332551；三格 proof=complete、best_epoch=0、4 epochs 收敛。148M-LoRA 和后续档未齐，不新增④/⑤面板。
+- [x] **degradation family 33M-LoRA n1000 三种子**：seed17/29/43 PCC=0.374414477/0.375550802/0.387538368，mean=0.379167882、SD=0.007271285、95% CI half-width=0.008228233；三格 proof=complete。
+- [x] **v36 与源包**：1185 accepted、1 rejected；源包 118 文件，manifest SHA256=`59e9d86abc45d4d60692b97850e77f2aba2959cd30c02ee1e9881795f27a50b3`，PPT 保持 v30。
+- [ ] **后续**：补 SSI 148M-LoRA 和后续档，以及 degradation family 的 148M-LoRA；单档单元不替代多档曲线。
