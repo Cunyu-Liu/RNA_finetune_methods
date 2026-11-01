@@ -1540,3 +1540,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v30 与源包**：1148 accepted、1 rejected；13 个 cap 行。源包 106 文件，manifest SHA256=`73bfe27bc67afe477d990d54c2c65a2440d422d5a420212cf6ee9a829394e365`。
 - [x] **最终交付**：PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`，PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/实际渲染通过。
 - [ ] **后续**：继续 degradation family/3000 档和 SSI，其他科学矩阵不提前收口。
+
+## N31. 2026-11-01 cap 重复结果登记（不改 PPT）
+
+- [x] **v31 staging**：1155 accepted、1 rejected；新增 7 格中 6 格为 degradation requested 2500/3000 的同 cap 重复点，1 格为 SpliceAI family 低信号结果。它们不改变④/⑤候选或面板计数，当前 PPT 保持 v30。
+- [x] **源包**：108 文件，revision=`20261101_staging_v42_v31ledger_cap_repeats`，manifest SHA256=`50ba91d378770d27b4138a917a266ae982d872cd736203e579803e115d86cbfc`。
+- [ ] **后续**：等待 degradation family、真正新任务 SSI 或其他科学矩阵闭合后再重绘，不为 cap 重复点制造新结论。
