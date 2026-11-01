@@ -489,3 +489,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. RNA-FM CRISPR full-random 四档闭合，validation 选 3e-5（best_val=0.025089）；LR 88/320、22/80 组，选档分布 3e-5 九组、1e-4 八组、1e-5 五组、3e-4 为 0，test 不参与。
 3. ①a-4 保持 25/26/18/14/15，random/family④/⑤不变；SpliceAI 仍低信号。
 4. 当前源包 revision=`20261101_refresh_v73_v66ledger_lr22_rnafm_crispr`，193 个登记文件，manifest SHA256=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 36. 2026-11-01 当前 v68：RNA-FM family LR 第 23 组
+
+1. 当前 PPT 为 32 页，SHA256=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`；PDF SHA256=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`。输入 **1367 accepted、0 rejected**，3 个新增格均 proof=complete。
+2. RNA-FM CRISPR full-family 四档闭合，validation 选 1e-4（best_val=0.028884）；LR 92/320、23/80 组，选档分布 3e-5 九组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
+3. ERNIE SSI LoRA-random 为 2/3，①a-4 和④/⑤不变；SpliceAI 仍低信号。
+4. 当前源包 revision=`20261101_refresh_v74_v68ledger_lr23_rnafm_family`，197 个登记文件，manifest SHA256=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。

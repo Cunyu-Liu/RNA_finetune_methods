@@ -973,3 +973,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v67 为 1359+5=**1364 accepted、0 rejected**，v66 行逐字段保留；5 个新增格均 proof=complete。ERNIE SSI LoRA-random/seed17 PCC=0.656606981，仅 1/3，不新增三种子单元。
 2. RNA-FM CRISPR full-family 已有 default/1e-4/3e-5 三档，仍缺 1e-5，不能形成第 23 个完整 LR 组；SpliceAI family/n2500 仍近随机。PPT 与 v73 源包保持 v66，v67 台账暂存 teams。
+
+### 10.68 v68 RNA-FM family LR 第 23 组（2026-11-01）
+
+1. v68 为 1364+3=**1367 accepted、0 rejected**，v67 行逐字段保留；3 个新增格均 proof=complete。RNA-FM CRISPR full-family 四档闭合，validation 选 1e-4（best_val=0.028884），test PR-AUC=0.035521692 仅作结果报告，default 的 test 高值不参与选档。
+2. LR accepted=92/320、完整组=23/80；选档分布为 3e-5 九组、1e-4 九组、1e-5 五组、3e-4 为 0。ERNIE SSI LoRA-random 目前 2/3，覆盖仍 15/30；SpliceAI 仍低信号，④/⑤不变。
+3. 源包 revision=`20261101_refresh_v74_v68ledger_lr23_rnafm_family`，197 个登记文件（含 v67–v68），manifest SHA256=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`。PPT SHA256=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`，PDF SHA256=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`；32 页嵌图、lint/layout/CRC 与实际渲染通过。

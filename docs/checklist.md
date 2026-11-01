@@ -283,3 +283,10 @@
 - [x] W3 交付：193 文件 manifest=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`；PPT=`63ae89e3c4864588999f5d0cd5827f4247fce7921f588f4ee16e290643b06645`；PDF=`46fb153cdcdd541806f1896e1ee4375843b9d935e8469549384f93631978b193`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] W4 后续：继续其他真实缺口并提交本批交付。
 
+## X 组：v68 RNA-FM family LR 验收
+
+- [x] X1 数据：1367 accepted、0 rejected；3 格 proof=complete。
+- [x] X2 LR：92/320、23/80 组完整；RNA-FM CRISPR full-family validation 选 1e-4，分布 9/9/5/0，test 不参与。
+- [x] X3 交付：197 文件 manifest=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`；PPT=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`；PDF=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] X4 后续：继续其他真实缺口并提交本批交付。
+
