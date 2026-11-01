@@ -396,3 +396,11 @@
 - [x] AL3 边界：不得把中间 loss、进程存活或 pre-plateau 写成最终科学结论；证据 SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。
 - [ ] AL4 后续：同步并提交记录，等待完整证明。
 
+## AM 组：v96 equiv canonical 与 family 五档验收
+
+- [x] AM1 数据：v95 无新增；v96 为 1452 accepted、0 rejected，新增格 proof=complete、CUDA 收敛。
+- [x] AM2 equiv：canonical 420/420，dense 诊断不计入；其他主矩阵和 LR/rank 继续。
+- [x] AM3 family：degradation 三臂五档，④候选不变，cap 边界不变；random④/⑤=6/8、family④/⑤=5/8。
+- [x] AM4 交付：275 文件 manifest=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`；PPT=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`；嵌图、lint/layout/CRC 与④/⑤渲染通过。
+- [ ] AM5 后续：同步并推送，继续真实科学缺口，不宣称全实验完成。
+

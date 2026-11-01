@@ -589,3 +589,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v94 新增 0，仍为 **1451 accepted、0 rejected**，PPT 和 v84 源包保持 v92。
 2. SSP seed43、equiv degradation 和长时 SpliceAI full-family 均有 plateau 推进；另一 LR 格处于 pre-plateau。以上只证明在训，不构成收敛或页面结论，故不修改图片或文字。
 3. 在训证据=`status/inflight_progress_20261101_v94.json`，SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。
+
+## 51. 2026-11-01 当前 v96：equiv canonical 与 family 五档
+
+1. v95 无新增；v96 输入 **1452 accepted、0 rejected**。最后一个 equiv canonical 格 proof=complete，equiv=420/420；dense 诊断不计入。PPT SHA256=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF SHA256=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`。
+2. 第26页 family⑤ 改为 modification/MRL/SSP/degradation/SSI 三臂均五档；degradation 原“5/5/4”已更正为“5/5/5”。第22页 family④ 候选不变，cap 后2000–3000仍同 actual=1680；第21/25页 random 结论不变。
+3. 当前 per-base 149/270、complementary 303/324、LR 109/320（25组）、rank 68/96、650M frozen 24/25；①a-4 不变。
+4. 当前源包 revision=`20261101_refresh_v85_v96ledger_equiv420_family_degradation_five_tiers`，275 个登记文件，manifest SHA256=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第21/22/25/26页实际渲染通过。

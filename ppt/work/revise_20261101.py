@@ -292,7 +292,7 @@ def main():
         set_text(family_scaling, "TextBox 1", "05F")
         set_text(family_scaling, "TextBox 2", "结论⑤补充  family：三臂数据量曲线")
         set_text(family_scaling, "TextBox 3",
-                 "family split；5/8 任务可判。modification/MRL/SSP/SSI 三臂五档，degradation 三臂为 5/5/4 档；ncRNA 待补。")
+                 "family split；5/8 任务可判。modification/MRL/SSP/degradation/SSI 三臂均五档；ncRNA 待补。")
         set_text(family_scaling, "TextBox 5",
                  "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation requested 2000–3000 同为 cap=1680，SSI 148M-LoRA 五档。等价配对见④ family 页。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")

@@ -1983,3 +1983,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **在训证据**：SSP seed43 到 epoch2、best=2；equiv degradation 到 epoch2、best=1；mega SpliceAI full-family 的 plateau 持续更新；LR 新格为 pre-plateau。均为 CUDA 进程，未提前记完成。
 - [x] **证据**：`inflight_progress_20261101_v94.json`，SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。
 - [ ] **后续**：同步并提交记录，等待 result/plateau/checkpoint 完整后再验收。
+
+## N94. 2026-11-01 v95–v96 equiv canonical 闭合
+
+- [x] **最后格验收**：v95 无新增；v96 为 1452 accepted、0 rejected。degradation family mega-LoRA n2000/seed17 PCC=0.404927912、best_epoch=1、5 epochs，proof=complete、CUDA 收敛，证据 SHA256=`a0902c12dea5ac0e084ceccc235cf94c4b8978ebb850ebaaf4d5698370a2fdc0`。
+- [x] **equiv canonical**：420/420；dense 诊断不计入、不重跑。per-base 149/270、complementary 303/324、LR 109/320（25组）、rank 68/96、650M frozen 24/25。
+- [x] **family④/⑤**：degradation 三臂五档；family④候选不变，cap 后重复点不解释为新收益；两 split 面板计数不变。
+- [x] **交付**：源包 revision=`20261101_refresh_v85_v96ledger_equiv420_family_degradation_five_tiers`，275 文件，manifest=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`；PPT=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`。嵌图、32 页 lint/layout/CRC 与四个④/⑤页面渲染通过。
+- [ ] **后续**：三地同步并推送；继续 SSP seed43、主矩阵、LR/rank 和后续阶段门，equiv 闭合不等于全实验完成。
