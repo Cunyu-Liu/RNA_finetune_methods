@@ -1904,3 +1904,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v83 验收**：1436 accepted、0 rejected；2 格 proof=complete。650M SSP frozen-random 为 2/3，RNA-FM SSI LoRA-family 为 1/3；per-base 147/270、complementary 301/324。
 - [x] **展示边界**：没有新增三种子单元，SSP 仍 26/30，PPT 与 v80 源包保持 v80，v83 台账暂存 teams。
 - [ ] **后续**：等待 seed43 和其他完成格，继续三轮验收并同步文档。
+
+## N83. 2026-11-01 v84 ERNIE MRL family LR 第二档
+
+- [x] **v84 验收**：1437 accepted、0 rejected；新增格 proof=complete。ERNIE MRL full-family 的 1e-4 格 r=0.689845602，仅 tuning 诊断。
+- [x] **展示边界**：LR 107/320、完整组仍 24/80，未形成新完整组；PPT 与 v80 源包保持 v80，v84 台账暂存 teams。
+- [ ] **后续**：等待四档闭合后计算 validation 选档，继续其他真实缺口并提交文档。

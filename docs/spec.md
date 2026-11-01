@@ -1060,3 +1060,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v83 为 1434+2=**1436 accepted、0 rejected**，v82 行逐字段保留；2 个新增格均 proof=complete。650M SSP frozen-random/seed29 pair-F1=0.2445，best_epoch=5、9 epochs 后按 patience=3 收敛，与 seed17 组成 2/3，仍缺 seed43；SSP 覆盖仍为 26/30。
 2. RNA-FM SSI LoRA-family/seed17 PCC=0.593009039，仅 1/3；per-base=147/270、complementary=301/324。PPT 与 v80 源包保持 v80，v83 台账暂存 teams。
+
+### 10.83 v84 ERNIE MRL family LR 第二档（2026-11-01）
+
+1. v84 为 1436+1=**1437 accepted、0 rejected**，v83 行逐字段保留；新增格 proof=complete。ERNIE MRL full-family 的 1e-4 tuning 格 Pearson r=0.689845602，best_epoch=1、5 epochs 后按 patience=3 收敛，仅作 validation 选档诊断。
+2. 该组尚未四档闭合，LR accepted=107/320、完整组仍 24/80，选档分布不变。PPT 与 v80 源包保持 v80，v84 台账暂存 teams。
