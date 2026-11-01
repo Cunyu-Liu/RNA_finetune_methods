@@ -1891,3 +1891,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v81 验收**：1434 accepted、0 rejected；新增格 proof=complete。ERNIE MRL full-family default 的 r=0.008370079，只作 tuning 诊断。
 - [x] **展示边界**：LR 106/320、完整组仍 24/80，未形成新完整组；PPT 与 v80 源包保持 v80，v81 台账暂存 teams。
 - [ ] **后续**：等待四档闭合后计算 validation 选档，继续其他真实缺口并提交文档。
+
+## N81. 2026-11-01 v82 equiv 恢复与 dense 排除
+
+- [x] **缺口审计**：v82 仍 1434 accepted、0 rejected。equiv 剩 7 格 canonical 可运行；lora 剩 13 格全部为 `_dense_` 诊断，按合同不重跑。
+- [x] **安全恢复**：7 格均 proof=runnable、无同名 runner，以原注册表/state-dir 启动 3 worker，父 PID=4086799，complete 不重跑。证据=`status/queue_actions/equiv_tiers_resume_20261101.json`。
+- [x] **资源与防重**：GPU 20.13/32.61 GiB、util 99%，6 run、6 RID、0 重复；启动不记完成。
+- [ ] **后续**：等待 canonical 格完成后验收，dense 诊断不进入正式图，继续同步本批文档。

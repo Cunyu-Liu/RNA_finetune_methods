@@ -1049,3 +1049,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v81 为 1433+1=**1434 accepted、0 rejected**，v80 行逐字段保留；新增格 proof=complete。ERNIE MRL full-family default tuning 的 Pearson r=0.008370079，仅作 held-out validation 选档诊断，不是正式三种子结果。
 2. 该组尚未四档闭合，LR accepted=106/320、完整组仍 24/80，选档分布不变。PPT 与 v80 源包保持 v80，v81 台账暂存 teams。
+
+### 10.81 v82 equiv 正式缺口恢复与 dense 排除（2026-11-01）
+
+1. v82 相对 v81 新增 0，仍为 **1434 accepted、0 rejected**。统一 equiv/lora 父队列已退出：equiv 尚有 7 格 canonical 可运行；lora 尚有 13 格，但全部为 `_dense_` 诊断变体，按既定口径不重跑、不进入正式图。
+2.  equiv 7 格逐格 proof=runnable，且无同名活跃 runner。以原注册表、原 state-dir 和 3 worker 重启父 PID=4086799，不重跑 complete 格，其他队列不动。证据=`status/queue_actions/equiv_tiers_resume_20261101.json`。
+3. 恢复后 GPU=20.13/32.61 GiB、util=99%，在途 6 run、6 RID、0 重复；新父正在执行 proof 检查，启动不记完成。PPT 与 v80 源包保持 v80。
