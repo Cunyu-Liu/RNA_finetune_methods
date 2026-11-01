@@ -411,3 +411,11 @@
 - [x] AN3 交付：279 文件 manifest=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`；PPT=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
 - [ ] AN4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
 
+## AO 组：v98 650M SSP family 闭合验收
+
+- [x] AO1 数据：1455 accepted、0 rejected；两格 proof=complete、CUDA 收敛。
+- [x] AO2 SSP：frozen-family 三种子 mean≈0.291666667，SSP覆盖28/30，①a-4为27/28/19/17/18，650M frozen 25/25。
+- [x] AO3 边界：RNA-FM MRL random tuning 仅1/4档，LR 111/320、完整组仍26/80；per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420。
+- [x] AO4 交付：282 文件 manifest=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`；PPT=`cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48`，PDF=`e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`；嵌图、lint/layout/CRC 与四个更新页渲染通过。
+- [ ] AO5 后续：三地同步并补推，继续真实科学缺口。
+

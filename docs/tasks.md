@@ -1999,3 +1999,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **证据与边界**：`lr_validation_interim_20261101_v97.json` SHA256=`8e4f19483b17a7525c20600ecc7cb5ab15d9bf25ba357a4686f1f146334a3d3e`；equiv 420/420、650M frozen 24/25，其他结论不变。
 - [x] **交付**：源包 revision=`20261101_refresh_v86_v97ledger_lr26_ernie_mrl_family`，279 文件，manifest=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`；PPT=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`。嵌图、32页 lint/layout/CRC 与 LR 页渲染通过。
 - [ ] **后续**：三地同步并补推 ac5c3d0 及本批提交；继续 SSP、主矩阵和其余 LR/rank 真实缺口。
+
+## N96. 2026-11-01 v98 650M SSP frozen-family 闭合
+
+- [x] **两格验收**：v98 为 1455 accepted、0 rejected；两格均 proof=complete、CUDA 收敛，证据 SHA256=`dc65070445e7e7d935a172c45fe7c1f168d156cb3518b486490df91bfdba50f3`。
+- [x] **SSP 闭合**：seed17/29/43=0.3237/0.2711/0.2802，mean≈0.291666667；SSP①a-4覆盖28/30，五项为27/28/19/17/18，650M frozen 25/25。
+- [x] **LR 与其他矩阵**：RNA-FM MRL random default 仅1/4档，LR 111/320、完整组仍26/80；per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420。
+- [x] **交付**：源包 revision=`20261101_refresh_v87_v98ledger_650m_ssp_family_closure`，282 文件，manifest=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`；PPT=`cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48`，PDF=`e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`。嵌图、32页 lint/layout/CRC 与四个更新页渲染通过。
+- [ ] **后续**：三地同步并补推待推提交；继续主矩阵、LR/rank 和后续阶段门，frozen 子队列闭合不等于全实验完成。

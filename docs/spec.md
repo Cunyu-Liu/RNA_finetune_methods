@@ -1143,3 +1143,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 该组四档 best_val 为 3e-4=0.983227、1e-4=0.518183、3e-5=0.516094、1e-5=0.517062，validation 选 **3e-5**；对应 test r=0.699845973 仅报告，不参与选档。LR 升至 **110/320、26/80 组完整**，选档分布为 3e-5 十二组、1e-4 九组、1e-5 五组、3e-4 为 0。
 3. 增量选档证据=`status/lr_validation_interim_20261101_v97.json`，SHA256=`8e4f19483b17a7525c20600ecc7cb5ab15d9bf25ba357a4686f1f146334a3d3e`；基座为 v87 全量 proof，本次四档再次逐格 proof。per-base=149/270、complementary=303/324、rank4/16=68/96、equiv=420/420、650M frozen=24/25；其他科学结论不变。
 4. 源包 revision=`20261101_refresh_v86_v97ledger_lr26_ernie_mrl_family`，279 个登记文件，manifest SHA256=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`。PPT SHA256=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF SHA256=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`；32 页 lint/layout/CRC、十张嵌图与 LR 页实际渲染通过。
+
+### 10.96 v98 650M SSP frozen-family 闭合（2026-11-01）
+
+1. v98 为 1453+2=**1455 accepted、0 rejected**，v97 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 独立复核通过。证据=`status/bestval_v98_new_proof.json`，SHA256=`dc65070445e7e7d935a172c45fe7c1f168d156cb3518b486490df91bfdba50f3`。
+2. 650M SSP frozen-family/seed43 pair-F1=0.2802，best_epoch=4、8 epochs；seed17/29/43=0.3237/0.2711/0.2802，mean≈0.291666667，正式三种子闭合。①a-4 的 SSP 覆盖由27/30升为**28/30**，五项计数为 **27/28/19/17/18**；650M frozen 子队列达 **25/25**。
+3. RNA-FM MRL full-random 的 default tuning 格 Pearson r=0.123029458，best_val=1.035913，仅1/4档，不形成新完整组。当前 per-base=149/270、complementary=304/324、LR=111/320（26/80组）、rank4/16=68/96、equiv=420/420；④/⑤不变。
+4. 源包 revision=`20261101_refresh_v87_v98ledger_650m_ssp_family_closure`，282 个登记文件，manifest SHA256=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`。PPT SHA256=`cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48`，PDF SHA256=`e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`；32页 lint/layout/CRC、十张嵌图与第8/27/28/29页实际渲染通过。
