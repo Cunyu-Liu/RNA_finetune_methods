@@ -1835,3 +1835,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **预算校准**：frozen 实测峰值约 4.88 GiB，旧 need=28 导致空等。无活跃子进程时停止旧父 3431053，frozen-only 25 格改 need=5.5，独立父 4039855、2 worker；LoRA/full 不动。
 - [x] **CUDA 与防重**：启动前 25 格 runnable、RID/result_dir 唯一、无目标 runner；首个 650M ncRNA frozen PID=4039876 已运行，GPU 22.47/32.61 GiB、util 99%，7 run/7 RID/0 重复。证据=`status/queue_actions/complementary_650m_frozen_launch_20261101.json`。
 - [ ] **后续**：按 result/plateau/checkpoint/CUDA 验收新格，第二 worker 资源门等待，不为占显存制造 OOM。
+
+## N73. 2026-11-01 v73–v74 650M frozen 在训复核
+
+- [x] **台账**：v73/v74 均无新增，仍 1375 accepted、0 rejected。
+- [x] **训练证据**：650M ncRNA frozen 已完成 epoch0，epoch0 val_loss=0.446144，epoch1 val_loss=0.374980，进程和日志均在推进。
+- [x] **展示边界**：PPT 与 v75 源包保持 v69，不把中间 loss 或进程存活写成收敛结论。
+- [ ] **后续**：等待 result/plateau/checkpoint 完整后验收，并同步本批文档。

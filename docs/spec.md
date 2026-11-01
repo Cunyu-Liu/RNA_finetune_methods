@@ -1002,3 +1002,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v72 相对 v71 新增 0，仍为 **1375 accepted、0 rejected**。complementary 的 44 个未验收格逐格 proof 均为 runnable，且全部属于 650M：frozen 25、LoRA 1、full 18；不是冲突或结果丢失。
 2. 这 25 个 frozen 格沿用 `need_gb=28`，但既有 650M frozen 实测峰值约 4.88 GiB，导致父队列长期空等。当前 GPU 有 13.46 GiB 空闲、util 66%，且 complementary 无活跃子进程，故停止旧父 PID=3431053，仅抽取 frozen 25 格，保留 RID/result_dir，校准 `need_gb=5.5`，以独立 state-dir 和 2 worker 启动新父 PID=4039855。LoRA/full 未启动，仍等自然独占窗口。
 3. 启动前 25 格均 runnable、RID/result_dir 唯一、无目标 runner；证据=`status/queue_actions/complementary_650m_frozen_launch_20261101.json`。首个 `ft_rinalmo650m_noncodingrnafamily_frozen_s17_random_bestval_v1` PID=4039876 已真实 CUDA 运行，GPU 22.47/32.61 GiB、util 99%；当前 7 run、7 RID、0 重复。启动不记完成，第二 worker 按资源门等待。
+
+### 10.73 v73–v74 650M frozen 在训证据（2026-11-01）
+
+1. v73/v74 均无新增完成格，仍为 **1375 accepted、0 rejected**。首个 650M ncRNA frozen 的 ledger 为 running，plateau 已完成 epoch0，日志进入 epoch1；epoch0 train/val loss=0.86045/0.446144，epoch1 val_loss=0.374980，说明 CUDA 训练正常推进而非空进程。
+2. 当前只记录中间训练状态，不提前写收敛或性能结论；PPT 与 v75 源包保持 v69，待 result/plateau/checkpoint 完整后再验收。
