@@ -211,3 +211,11 @@
 - [x] N5 交付哈希：PPT=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`；PDF=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`。
 - [ ] N6 后续：全量科学矩阵、family、Frozen、LR/rank、CRISPR 信号档、RNA-Sc 与 E6 继续按阶段门执行。
 
+## O 组：v53 SSI 多候选与队列审计验收
+
+- [x] O1 数据：v53 共 1292 accepted、1 rejected；16 个新增格均 proof=complete，CUDA/convergence 复核通过。
+- [x] O2 候选：三组 SSI 等价候选逐 seed 独立复算通过，正文写“候选非唯一”；④/⑤均 6/8，148M-LoRA 四档。
+- [x] O3 审计：per-base 105/270、LR 76/320、rank4/16 65/96 为实时 proof 进度，不与 v53 新增混算。
+- [x] O4 交付：152 文件 manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`；PPT=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`；PDF=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`；嵌图、lint/layout/CRC 和实际渲染通过。
+- [ ] O5 后续：其余 family、主矩阵、LR/rank、Frozen 和后续阶段继续执行。
+

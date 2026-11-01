@@ -1693,3 +1693,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **源包一致性修复**：旧包中 v43 中间表已刷新为 v52；图、CSV、metadata、脚本、台账同源，显存图脚注与元数据自动读取当前台账。revision=`20261101_refresh_v64_v52ledger_source_provenance_fix`，150 文件，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
 - [x] **PPT 实际渲染**：第25页图片覆盖读图首行已下移修复；六张嵌图 SHA 与源 PNG 一致。最终 PPT SHA256=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`，PDF SHA256=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`；30 页 lint/layout/CRC/字体/行距通过。
 - [ ] **后续**：继续 SSI mega 后续档、degradation/SSI family 与其他真实缺口；不把 staging、单点或 6/8 面板写成全实验完成。
+
+## N54. 2026-11-01 v53 SSI 四档与候选非唯一
+
+- [x] **v52 同步**：v52 文档、150 项源数据、PPT/PDF 三地逐哈希验收，GitHub `fa2fb26 Refresh SSI scaling and figure provenance` 已推送。
+- [x] **v53 训练验收**：1292 accepted、1 rejected；新增 16 格均 proof=complete。SSI mega-LoRA n2000/n2500 三种子闭合，达到四档；family 和 degradation 也有闭合单元。
+- [x] **三组等价候选**：full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000 均逐 seed 复算通过，Δ/CI 分别为 −0.000599762/0.002969352、0.002588068/0.003163662、−0.002505816/0.004525282；正文改“候选非唯一”，不再写唯一候选。
+- [x] **其他矩阵审计**：实时 proof 为 per-base 105/270、LR 76/320、rank4/16 65/96；只记录队列进度，不冒充 v53 新增或最终完成。
+- [x] **v65 源包与交付**：152 文件，revision=`20261101_refresh_v65_v53ledger_ssi_four_tier_candidates`，manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`。PPT SHA256=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`，PDF SHA256=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`；嵌图、lint/layout/CRC 和实际渲染通过。
+- [ ] **后续**：继续 SSI mega n3000、family、主矩阵、LR/rank 和其他阶段格；④/⑤仍为 6/8，不宣称全实验完成。

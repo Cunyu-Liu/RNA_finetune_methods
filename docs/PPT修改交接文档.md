@@ -425,3 +425,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 6. **遗忘图**：A 轴=`ΔNLL=post−pre`，正=遗忘、负=反向增益；散点为单 run、连线为均值。controlled 30 格、每组 3 seeds，30M worst-seed 比=7.7576×；official fixed-mask 分协议不混入。图源=`figure_source_data_20261101_e6/`，代码提交 `4032b5f`。
 7. **v52 数据与候选**：当前 PPT 输入为 **1276 accepted、1 rejected**，18 个新增格均 proof=complete。图内来源为 `bestval_ledger_export_20261101_v52`。SSI 仅 full2000≈LoRA1500 合格，Δ=−0.000599762、CI=0.002969352；其他近值 CI 不覆盖 0，不写等价。①a-4 五种任务三种子单元为 25/26/17/13/14。当前源包 revision=`20261101_refresh_v64_v52ledger_source_provenance_fix`，150 个登记文件，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
 8. **当前验收**：30 页 ZIP CRC、`pptx_lint.py`、`validate_report_layout.py` 全部通过；Microsoft YaHei、正文 1.5 倍行距和 LibreOffice 实际渲染通过。六张更新图的嵌图 SHA 与源 PNG 一致；第25页图片/读图框重叠已修复，显存图脚注与元数据已自动引用 v52。④/⑤候选、图文一致性和 cap 均已核对，未修改页保留用户手调内容。主矩阵、LR/rank、Frozen scaling、CRISPR 信号档、RNA-Sc 等价线和 E6 余格继续按真实 proof 推进，最终科学验收尚未完成。
+
+## 27. 2026-11-01 当前 v53 阶段交付
+
+1. 当前 PPT 仍为 `ppt/RNA_LM微调策略评测-导师讨论修订版_20261101_导师反馈修订.pptx`，30 页，SHA256=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`；PDF SHA256=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`。原始 30 页基底未覆盖。
+2. 当前输入为 **1292 accepted、1 rejected**，16 个新增格均 proof=complete。④/⑤均 6/8；SSI 33M-full/LoRA 五档、148M-LoRA 四档。④现有三组候选：full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000，均通过逐 seed 差值和 CI 复算，页面已写“候选非唯一”。
+3. 当前源包 revision=`20261101_refresh_v65_v53ledger_ssi_four_tier_candidates`，152 个登记文件，manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`。图、CSV、metadata、脚本与 v53 台账一致，六张嵌图 SHA、30 页 lint/layout/CRC 和实际渲染通过。
+4. 实时 proof 审计为 per-base 105/270、LR 76/320、rank4/16 65/96；只作队列进度。主矩阵、family、Frozen scaling、LR/rank、CRISPR 信号档、RNA-Sc 与 E6 仍未完成，当前文件不是最终科学版。

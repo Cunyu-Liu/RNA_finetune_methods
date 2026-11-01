@@ -880,3 +880,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. ①a-4 的 CRISPR/SSP/SpliceAI/degradation/SSI 三种子单元分别为 25/26/17/13/14 个（各共30）。PPT 更新①a-4、④/⑤、大模型覆盖与时间/显存图；第25页图片与读图框重叠已修复，显存图脚注与元数据改为自动引用当前台账。
 4. 旧源包部分中间表仍停留 v43，本次已将图、CSV、metadata、脚本与 v52 台账统一。源包 revision=`20261101_refresh_v64_v52ledger_source_provenance_fix`，150 个登记文件，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
 5. 最终 PPT SHA256=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`，PDF SHA256=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`；30 页 lint/layout/字体/行距/CRC、六张嵌图 SHA 与实际渲染通过。全量科学矩阵、family、Frozen、LR/rank 与 E6 仍未完成。
+
+### 10.53 v53 SSI 四档与等价候选非唯一（2026-11-01）
+
+1. v53 为 1276+16=**1292 accepted、1 rejected**，v52 行逐字段保留；16 个新增格均逐一通过 `proof_state=complete` 和 CUDA/convergence 复核。SSI random 148M-LoRA 的 n2000/n2500 三种子闭合，达到四档；family 的 33M-full n2500、33M-LoRA n1500 及 degradation 148M-LoRA n2500/n3000 也闭合。
+2. 逐 seed 独立复算得到三组 SSI 等价候选：full2000≈LoRA1500（Δ=−0.000599762、CI=0.002969352）、full2500≈LoRA2000（Δ=0.002588068、CI=0.003163662）、full3000≈LoRA2000（Δ=−0.002505816、CI=0.004525282）。三者的 |Δ|≤0.02 且 CI 覆盖 0，故必须写“候选非唯一”；其他近值仍不写等价。④/⑤均保持 6/8。
+3. 实时 proof 审计：per-base=105/270、LR tuning=76/320、rank4/16=65/96；这些是队列进度，不是 v53 新增结果，也不替代全量验收。v53 的①a-4 三种子单元计数仍为 25/26/17/13/14，ERNIE degradation frozen-family 只有 2/3，不误写闭合。
+4. 源包 revision=`20261101_refresh_v65_v53ledger_ssi_four_tier_candidates`，152 个登记文件，manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`。PPT 已改“三组候选、非唯一”和 148M-LoRA 四档。
+5. 最终 PPT SHA256=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`，PDF SHA256=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`；30 页 lint/layout/CRC、六张嵌图 SHA 与④/⑤及其他更新页实际渲染通过。
