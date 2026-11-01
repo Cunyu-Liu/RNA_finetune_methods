@@ -115,14 +115,18 @@ def main():
     set_text(slide, "TextBox 3",
              "这是序列级 12 标签任务。已测非 650M 模型的 random−family 差值为 −0.211~+0.058，方向与幅度随模型/策略变化，不能称对切分免疫。")
     set_text(slide, "TextBox 5",
-             "读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。650M 未闭合为 NA。")
+             "读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。650M frozen random 已三种子，family 为 n=1 斜线，其余未闭合项为 NA。")
+    replace_picture(slide, "Picture 6",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/modification_bestval_official_sixbar.png")
 
     slide = prs.slides[6]
     set_text(slide, "TextBox 2", "结论 ①a-3  MRL：family 普遍下降，RiNALMo 三档性能接近")
     set_text(slide, "TextBox 3",
              "micro/mega/650M 的 LoRA random=0.804/0.804/0.793，family=0.711/0.725/0.710；规模差异小，符合当前 MRL 任务的规模收益饱和，并非异常。")
     set_text(slide, "TextBox 5",
-             "读图：三档同属 RiNALMo 家族，接近结果只说明当前数据、指标与协议下规模增益有限，不能推广到所有任务。650M frozen random 为 n=2 斜线，full 等未闭合项为 NA；family 降幅按模型与策略分别比较。")
+             "读图：三档同属 RiNALMo 家族，接近结果只说明当前数据、指标与协议下规模增益有限，不能推广到所有任务。650M frozen 双 split 已三种子闭合，full 等未闭合项为 NA；family 降幅按模型与策略分别比较。")
+    replace_picture(slide, "Picture 6",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/mrl_bestval_official_sixbar.png")
 
     composite = ROOT / "交接文档/绘图数据/current/figure_source_data_20261101_classification_composite/figures"
     slide = prs.slides[8]
@@ -167,13 +171,13 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/18/14/16 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 27/26/18/17/16 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 23/80 组，validation 选档均未选 3e-4（3e-5 九组、1e-4 九组、1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 24/80 组，validation 选档均未选 3e-4（3e-5 十组、1e-4 九组、1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

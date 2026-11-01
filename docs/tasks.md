@@ -1848,3 +1848,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v75 验收**：1377 accepted、0 rejected；2 格 proof=complete。ERNIE SSI LoRA-family 为 2/3，SpliceAI 仍低信号；per-base 122/270。
 - [x] **展示边界**：未形成新三种子单元，PPT 与源包 revision v75 保持 v69，v75 台账暂存 teams。
 - [ ] **后续**：等待 seed43 和其他完成格，继续三轮验收并同步文档。
+
+## N75. 2026-11-01 v76 主矩阵与 650M frozen 大批验收
+
+- [x] **47 格完整证明**：v76 共 1424 accepted、0 rejected；47 格均 proof=complete（main37/LR8/rank1/tier1），不混淆新验收与启动时间。
+- [x] **覆盖与矩阵**：①a-4 为 27/26/18/17/16；per-base 142/270、complementary 297/324、rank 67/96。650M frozen 新增 17 格入库，LoRA/full 不强行启动。
+- [x] **官方图纠偏**：MRL 650M frozen 双 split 三种子，modification random 三种子、family 1/3；动态六柱图仅这些单元变化，其余逐格一致，并排除 `_seqmlfix` 重复。
+- [x] **LR 第24组**：MRL mega-full-random validation 选 3e-5，test r=0.798969709；LR 103/320、24/80 组，分布 10/9/5/0，test 不参与。
+- [x] **v77 与交付**：227 文件 manifest=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`；PPT=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`，PDF=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交新动态图脚本与文档。

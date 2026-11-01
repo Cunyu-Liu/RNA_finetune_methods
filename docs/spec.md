@@ -1012,3 +1012,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v75 为 1375+2=**1377 accepted、0 rejected**，v74 行逐字段保留；2 个新增格均 proof=complete。ERNIE SSI LoRA-family/seed29 PCC=0.620248196，与 seed17 组成 2/3，仍缺 seed43，不新增三种子单元。
 2. SpliceAI family/n3000/seed29 macro-F1=0.333280238，仍近随机；per-base accepted=122/270。PPT 与源包 revision v75 保持 v69，v75 台账暂存 teams。
+
+### 10.75 v76 主矩阵大批闭合、650M frozen 与 LR 24 组（2026-11-01）
+
+1. v76 为 1375+47=**1424 accepted、0 rejected**，v75 行逐字段保留；47 个新增 accepted 格逐一通过 `proof_state=complete`、result/plateau/checkpoint/CUDA/convergence 复核（main37、LR8、rank1、tier1）。这些是新增验收，不把历史 artifact 完成时间冒充本轮启动时间。
+2. ①a-4 的 CRISPR/SSP/SpliceAI/degradation/SSI 三种子单元为 **27/26/18/17/16**。per-base=142/270、complementary=297/324、rank4/16=67/96。650M frozen 新增 17 格入库，现 ncRNA/CRISPR/MRL/modification 共 22 格；LoRA/full 仍按自然窗口，未强行启动。
+3. MRL 的 650M frozen 双 split 均三种子：random=0.733612688、family=0.652095061；modification 的 650M frozen random 三种子=0.666272464，family 为 1/3=0.663015924。动态官方六柱图仅这些单元变化，其余单元逐格一致，已排除 `_seqmlfix` 重复变体。
+4. LR 第 24 组为 MRL mega-full-random，validation 选 3e-5（best_val=0.440936），test r=0.798969709；LR accepted=103/320、完整组=24/80，分布为 3e-5 十组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
+5. 源包 revision=`20261101_refresh_v77_v76ledger_official_sixbar_dynamic`，227 个登记文件（含 v70–v76、队列证据和动态官方图脚本），manifest SHA256=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`。PPT SHA256=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`，PDF SHA256=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC 和实际渲染通过。

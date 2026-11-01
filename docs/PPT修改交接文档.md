@@ -503,3 +503,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. ERNIE SSI LoRA-random 三种子 PCC=0.656606981/0.659070557/0.656716318，正式闭合；①a-4 的 SSI 为 16/30，五种任务为 25/26/18/14/16。
 3. per-base 120/270、rank4/16 66/96、LR 93/320（完整组仍 23/80）。MRL mega-full default 的 −0.079980258 仅作 tuning 诊断，不写成正式三种子或最终 LR 结论；④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v75_v69ledger_ernie_ssi_lora_closure`，199 个登记文件，manifest SHA256=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 38. 2026-11-01 当前 v76：主矩阵与 650M frozen 大批更新
+
+1. 当前 PPT 为 32 页，SHA256=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`；PDF SHA256=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`。输入 **1424 accepted、0 rejected**，47 格均 proof=complete。
+2. 第8页①a-4 为 27/26/18/17/16；per-base 142/270、complementary 297/324、rank 67/96。650M frozen 新增 17 格入库，LoRA/full 未强行启动。
+3. 第7页 MRL 的 650M frozen 双 split 均三种子；第6页 modification 的 650M frozen random 三种子、family 为 n=1 斜线。两张官方图已用 v76 动态重绘，除预期单元外逐格一致，文字与嵌图同时更新。
+4. 第19页 LR 为 103/320、24/80 组；mega MRL full-random 选 3e-5 后 r=0.798969709，选档分布 10/9/5/0，test 不参与。
+5. 当前源包 revision=`20261101_refresh_v77_v76ledger_official_sixbar_dynamic`，227 个登记文件，manifest SHA256=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`。十张关键嵌图 SHA、32 页 lint/layout/CRC 与实际渲染通过。

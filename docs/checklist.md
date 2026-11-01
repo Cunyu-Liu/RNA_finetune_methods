@@ -298,3 +298,12 @@
 - [x] Y4 交付：199 文件 manifest=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`；PPT=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`；PDF=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] Y5 后续：继续其他真实缺口并提交本批交付。
 
+## Z 组：v76 主矩阵与官方图验收
+
+- [x] Z1 数据：1424 accepted、0 rejected；47 格均 proof=complete，CUDA/convergence 通过。
+- [x] Z2 覆盖：①a-4 为 27/26/18/17/16；per-base 142/270、complementary 297/324、rank 67/96；650M frozen 新入库 17 格。
+- [x] Z3 官方图：MRL 650M frozen 双 split 闭合，modification random 闭合、family 1/3；动态图仅预期单元变化。
+- [x] Z4 LR：103/320、24/80 组完整；mega MRL random 选 3e-5，test r=0.798969709，test 不参与选档。
+- [x] Z5 交付：227 文件 manifest=`c2c9df3680940631288228a6cf8ecdb8cb32c09065c7e0d917b39815ab09c3dd`；PPT=`b4c4138d3806d2bfaaccefe95520d794ad2d6df1d8fe9cb96db7ec3629841b17`；PDF=`8a720537b145f26012b5d451b586b48414c9b15ef512843f2f170ae7befd743a`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] Z6 后续：继续其他真实缺口并提交动态图脚本与文档。
+
