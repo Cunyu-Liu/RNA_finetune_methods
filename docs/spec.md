@@ -1136,3 +1136,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. **equiv canonical=420/420**；lora 的 `_dense_` 诊断仍按合同不重跑、不计入 canonical。当前 per-base=149/270、complementary=303/324、LR=109/320（25/80 组）、rank4/16=68/96、650M frozen=24/25。
 3. 新增格补齐 degradation family 的 148M-LoRA n2000 三种子，family⑤ 的 degradation 三臂由 5/5/4 变为 **5/5/5**。family④ 候选仍为 full1500及 cap 后2000–3000≈LoRA1000，MRL/SSI 候选不变；requested 2000–3000 同 actual=1680，不重复计数据收益。random④/⑤=6/8，family④/⑤=5/8，均不变。
 4. 源包 revision=`20261101_refresh_v85_v96ledger_equiv420_family_degradation_five_tiers`，275 个登记文件，manifest SHA256=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`。PPT SHA256=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF SHA256=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`；32 页 lint/layout/CRC、十张嵌图与第21/22/25/26页实际渲染通过。
+
+### 10.95 v97 ERNIE MRL family LR 第 26 组（2026-11-01）
+
+1. v97 为 1452+1=**1453 accepted、0 rejected**，v96 行逐字段保留。新增 ERNIE MRL full-family 的 1e-5 tuning 格 Pearson r=0.700298920，best_epoch=1、5 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v97_new_proof.json`，SHA256=`dda2d1eeff46b226819276e4ea11206ed5894a1dc8afcefa2bd393e6d1b3f31b`。
+2. 该组四档 best_val 为 3e-4=0.983227、1e-4=0.518183、3e-5=0.516094、1e-5=0.517062，validation 选 **3e-5**；对应 test r=0.699845973 仅报告，不参与选档。LR 升至 **110/320、26/80 组完整**，选档分布为 3e-5 十二组、1e-4 九组、1e-5 五组、3e-4 为 0。
+3. 增量选档证据=`status/lr_validation_interim_20261101_v97.json`，SHA256=`8e4f19483b17a7525c20600ecc7cb5ab15d9bf25ba357a4686f1f146334a3d3e`；基座为 v87 全量 proof，本次四档再次逐格 proof。per-base=149/270、complementary=303/324、rank4/16=68/96、equiv=420/420、650M frozen=24/25；其他科学结论不变。
+4. 源包 revision=`20261101_refresh_v86_v97ledger_lr26_ernie_mrl_family`，279 个登记文件，manifest SHA256=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`。PPT SHA256=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF SHA256=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`；32 页 lint/layout/CRC、十张嵌图与 LR 页实际渲染通过。

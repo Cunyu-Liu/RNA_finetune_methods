@@ -404,3 +404,10 @@
 - [x] AM4 交付：275 文件 manifest=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`；PPT=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`；嵌图、lint/layout/CRC 与④/⑤渲染通过。
 - [ ] AM5 后续：同步并推送，继续真实科学缺口，不宣称全实验完成。
 
+## AN 组：v97 LR 第26组验收
+
+- [x] AN1 数据：1453 accepted、0 rejected；新增 ERNIE MRL family 1e-5 格 proof=complete、CUDA 收敛。
+- [x] AN2 选档：四档闭合，validation 选3e-5（best_val=0.516094），test 不参与；LR 110/320、26/80组，分布12/9/5/0。
+- [x] AN3 交付：279 文件 manifest=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`；PPT=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
+- [ ] AN4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
+

@@ -177,7 +177,7 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 25/80 组（更正 v79 漏计），validation 选档均未选 3e-4（3e-5 十一组、1e-4 九组、1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
+             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 26/80 组，validation 选档均未选 3e-4（3e-5 十二组、1e-4 九组、1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

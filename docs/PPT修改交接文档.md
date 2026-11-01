@@ -596,3 +596,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第26页 family⑤ 改为 modification/MRL/SSP/degradation/SSI 三臂均五档；degradation 原“5/5/4”已更正为“5/5/5”。第22页 family④ 候选不变，cap 后2000–3000仍同 actual=1680；第21/25页 random 结论不变。
 3. 当前 per-base 149/270、complementary 303/324、LR 109/320（25组）、rank 68/96、650M frozen 24/25；①a-4 不变。
 4. 当前源包 revision=`20261101_refresh_v85_v96ledger_equiv420_family_degradation_five_tiers`，275 个登记文件，manifest SHA256=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第21/22/25/26页实际渲染通过。
+
+## 52. 2026-11-01 当前 v97：ERNIE MRL family LR 第26组
+
+1. 当前 PPT 为 32 页，SHA256=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`；PDF SHA256=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`。输入 **1453 accepted、0 rejected**，新增格 proof=complete。
+2. 第19页 LR 更新为 **26/80 组**，选档分布3e-5十二组、1e-4九组、1e-5五组、3e-4为0。ERNIE MRL full-family 四档闭合，validation 选3e-5（best_val=0.516094），test r=0.699845973仅报告，不参与选档。
+3. 当前 per-base 149/270、complementary 303/324、rank 68/96、equiv 420/420、650M frozen 24/25；①a-4 与④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v86_v97ledger_lr26_ernie_mrl_family`，279 个登记文件，manifest SHA256=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。

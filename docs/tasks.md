@@ -1991,3 +1991,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **family④/⑤**：degradation 三臂五档；family④候选不变，cap 后重复点不解释为新收益；两 split 面板计数不变。
 - [x] **交付**：源包 revision=`20261101_refresh_v85_v96ledger_equiv420_family_degradation_five_tiers`，275 文件，manifest=`804d3822db3174de2e24628468f3ce52fefc42a99fc37ef790dd2350389fc5fe`；PPT=`0efc70be20c74dbb0e496cf6d60fb5b8a40b1c1af71805f8e5ee6a07f7f7d4a0`，PDF=`418215d64737eeab55a3a662de939d4c3e0f911c4ec38eb225dd47b47778cb75`。嵌图、32 页 lint/layout/CRC 与四个④/⑤页面渲染通过。
 - [ ] **后续**：三地同步并推送；继续 SSP seed43、主矩阵、LR/rank 和后续阶段门，equiv 闭合不等于全实验完成。
+
+## N95. 2026-11-01 v97 ERNIE MRL family LR 第26组
+
+- [x] **单格验收**：v97 为 1453 accepted、0 rejected；新增 1e-5 格 r=0.700298920、best_epoch=1、5 epochs，proof=complete、CUDA 收敛。
+- [x] **四档选档**：3e-4/1e-4/3e-5/1e-5 的 best_val=0.983227/0.518183/0.516094/0.517062，validation 选3e-5；test r=0.699845973仅报告。LR 110/320、26/80组，分布12/9/5/0。
+- [x] **证据与边界**：`lr_validation_interim_20261101_v97.json` SHA256=`8e4f19483b17a7525c20600ecc7cb5ab15d9bf25ba357a4686f1f146334a3d3e`；equiv 420/420、650M frozen 24/25，其他结论不变。
+- [x] **交付**：源包 revision=`20261101_refresh_v86_v97ledger_lr26_ernie_mrl_family`，279 文件，manifest=`f7abfe573cf4c5577a1c6a662da644038ca9e089863c624f2e7f6d26ff609117`；PPT=`f30bbce2e888c33c80035df18db0e52c1a42f92a1a7065cafd1853e4c273ae8c`，PDF=`096bb834d6906d765523abc38f1b39b179b70309372ce5d5ec2cf4bdfb85a363`。嵌图、32页 lint/layout/CRC 与 LR 页渲染通过。
+- [ ] **后续**：三地同步并补推 ac5c3d0 及本批提交；继续 SSP、主矩阵和其余 LR/rank 真实缺口。
