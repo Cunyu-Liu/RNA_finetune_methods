@@ -496,3 +496,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. RNA-FM CRISPR full-family 四档闭合，validation 选 1e-4（best_val=0.028884）；LR 92/320、23/80 组，选档分布 3e-5 九组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
 3. ERNIE SSI LoRA-random 为 2/3，①a-4 和④/⑤不变；SpliceAI 仍低信号。
 4. 当前源包 revision=`20261101_refresh_v74_v68ledger_lr23_rnafm_family`，197 个登记文件，manifest SHA256=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 37. 2026-11-01 当前 v69：ERNIE SSI LoRA 闭合
+
+1. 当前 PPT 为 32 页，SHA256=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`；PDF SHA256=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`。输入 **1371 accepted、0 rejected**，4 个新增格均 proof=complete。
+2. ERNIE SSI LoRA-random 三种子 PCC=0.656606981/0.659070557/0.656716318，正式闭合；①a-4 的 SSI 为 16/30，五种任务为 25/26/18/14/16。
+3. per-base 120/270、rank4/16 66/96、LR 93/320（完整组仍 23/80）。MRL mega-full default 的 −0.079980258 仅作 tuning 诊断，不写成正式三种子或最终 LR 结论；④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v75_v69ledger_ernie_ssi_lora_closure`，199 个登记文件，manifest SHA256=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。

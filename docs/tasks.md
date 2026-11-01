@@ -1807,3 +1807,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 分布**：92/320、23/80 组完整；3e-5 九组、1e-4 九组、1e-5 五组、3e-4 为 0。ERNIE SSI LoRA-random 为 2/3，覆盖不变。
 - [x] **v74 与交付**：197 文件 manifest=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`；PPT=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`，PDF=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余 LR/rank、主矩阵、ncRNA family 和后续阶段，及时提交本批交付。
+
+## N69. 2026-11-01 v69 ERNIE SSI LoRA 闭合与 rank 进度
+
+- [x] **v69 验收**：1371 accepted、0 rejected；4 格 proof=complete。ERNIE SSI LoRA-random 三种子正式闭合，SSI①a-4 覆盖 16/30。
+- [x] **矩阵进度**：per-base 120/270、rank4/16 66/96、LR 93/320（完整组仍 23/80）。SpliceAI 仍低信号，④/⑤不变。
+- [x] **MRL tuning 边界**：mega-full default 的 −0.079980258 只作 tuning 诊断，不写成正式三种子或最终 LR 结论。
+- [x] **v75 与交付**：199 文件 manifest=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`；PPT=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`，PDF=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段，及时提交本批交付。

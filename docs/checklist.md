@@ -290,3 +290,11 @@
 - [x] X3 交付：197 文件 manifest=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`；PPT=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`；PDF=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] X4 后续：继续其他真实缺口并提交本批交付。
 
+## Y 组：v69 ERNIE SSI LoRA 与 rank 验收
+
+- [x] Y1 数据：1371 accepted、0 rejected；4 格 proof=complete。
+- [x] Y2 主矩阵：ERNIE SSI LoRA-random 三种子闭合，SSI 覆盖 16/30；per-base 120/270、rank 66/96。
+- [x] Y3 边界：LR 93/320、完整组仍 23/80；MRL 新负值仅 tuning 诊断，④/⑤不变。
+- [x] Y4 交付：199 文件 manifest=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`；PPT=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`；PDF=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] Y5 后续：继续其他真实缺口并提交本批交付。
+

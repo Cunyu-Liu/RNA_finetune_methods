@@ -979,3 +979,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v68 为 1364+3=**1367 accepted、0 rejected**，v67 行逐字段保留；3 个新增格均 proof=complete。RNA-FM CRISPR full-family 四档闭合，validation 选 1e-4（best_val=0.028884），test PR-AUC=0.035521692 仅作结果报告，default 的 test 高值不参与选档。
 2. LR accepted=92/320、完整组=23/80；选档分布为 3e-5 九组、1e-4 九组、1e-5 五组、3e-4 为 0。ERNIE SSI LoRA-random 目前 2/3，覆盖仍 15/30；SpliceAI 仍低信号，④/⑤不变。
 3. 源包 revision=`20261101_refresh_v74_v68ledger_lr23_rnafm_family`，197 个登记文件（含 v67–v68），manifest SHA256=`521dfaf63b5c46c8508c11db118fe8b15f75a931049bdd0ae83ea1d5e585f097`。PPT SHA256=`51810eee3fa4f125d5c41a7db55eaf93e5b51b1a68837bdaf4e1e35625f224ce`，PDF SHA256=`3b3acaa39bed1bb86d70fd3eaae0b83fbf062d41f4435af2817635a31ad45d4c`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.69 v69 ERNIE SSI LoRA 闭合与 rank 进度（2026-11-01）
+
+1. v69 为 1367+4=**1371 accepted、0 rejected**，v68 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI LoRA-random 三种子 PCC=0.656606981/0.659070557/0.656716318，正式闭合，①a-4 的 SSI 覆盖升为 16/30。
+2. rank4 的 SpliceAI family/seed43 macro-F1=0.412751607，rank4/16 registry accepted=66/96；per-base registry accepted=120/270。SpliceAI family/n2500 仍近随机，④/⑤不变。
+3. MRL mega-full seed101 default 的 Pearson r=−0.079980258，属于 tuning 诊断格，不是正式三种子均值，也不改变已复核的 micro 负值结论；LR accepted=93/320，完整组仍 23/80，选档分布不变。
+4. 源包 revision=`20261101_refresh_v75_v69ledger_ernie_ssi_lora_closure`，199 个登记文件，manifest SHA256=`4b96b214f5d4bf3cb035e8039c50d3e57dec3ddf44b2c16b352c63725ce9c32d`。PPT SHA256=`8912ed078a327135503d1f4d24b2635f9a5996bdf879baec4acdfb2b19a59019`，PDF SHA256=`ed337eb4eb9af7a2566e9c47ab12f1c39d6fda3c9d218352dcdb8574c5aa5547`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
