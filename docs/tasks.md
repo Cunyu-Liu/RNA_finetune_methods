@@ -1546,3 +1546,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v31 staging**：1155 accepted、1 rejected；新增 7 格中 6 格为 degradation requested 2500/3000 的同 cap 重复点，1 格为 SpliceAI family 低信号结果。它们不改变④/⑤候选或面板计数，当前 PPT 保持 v30。
 - [x] **源包**：108 文件，revision=`20261101_staging_v42_v31ledger_cap_repeats`，manifest SHA256=`50ba91d378770d27b4138a917a266ae982d872cd736203e579803e115d86cbfc`。
 - [ ] **后续**：等待 degradation family、真正新任务 SSI 或其他科学矩阵闭合后再重绘，不为 cap 重复点制造新结论。
+
+## N32. 2026-11-01 SSI 独立子队列启动
+
+- [x] **GitHub 恢复**：网络超时的旧推送已安全终止；恢复后 `1411d84..bcecd4d` 推送成功，两个待推提交均已上 GitHub。
+- [x] **v32 staging**：1161 accepted、1 rejected，主要是 degradation 同 cap 结果；源包 110 文件，manifest SHA256=`52b574ca4dd593793a5ec46eeff9f889e907b563ea01ba089d4e50984ac67550`，PPT 保持 v30。
+- [x] **SSI-only 拆分**：equiv=60、micro-LoRA=30，均 canonical、非 dense，启动前全 runnable、RID 唯一、无同名 runner。两个独立 state-dir 各 2 worker，使用 `ssh -f` 和全绝对路径，父 PID=3978455/3978477。
+- [x] **首个 CUDA 证据**：SSI 33M-LoRA random/n1000/seed17 PID=3978503，`--device 0`，GPU 实占 1204 MiB；启动不记完成。
+- [ ] **后续**：等待 SSI 三种子和多档闭合后再考虑新面板，degradation family 继续原队列，不重跑 complete 格。

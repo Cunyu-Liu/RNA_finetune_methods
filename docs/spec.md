@@ -848,3 +848,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v30 中 degradation 三臂均至少三档：33M-full 四档、33M-LoRA 三档、148M-LoRA 三档；④/⑤均保持 5/8，但证据覆盖更完整。full2500↔LoRA1500 为第三个等价候选，Δ=−0.000846227、CI=0.017896603；full2500↔LoRA2000 也满足规则，说明候选非唯一，构图按预注册的最接近配对选择，不写唯一交点。
 2. requested 2000/2500 的 actual 均为 1552，full2000/2500 的候选属于同一 cap，不能重复计为新增数据证据。metadata 保存 13 个 cap 行，页面明确“候选非唯一”和 cap 边界。
 3. 最终 PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`，PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/实际渲染通过。v30 为 1148 accepted、1 rejected，其他任务继续补。
+
+### 10.48 SSI 优先级拆分与 GitHub 恢复（2026-11-01）
+
+1. degradation random 五档基本闭合后，继续执行同 cap 重复点会延迟 SSI 的首个任务覆盖。现从既有 equiv/lora 子注册表抽取 SSI-only canonical 任务，不新增实验设计：equiv=60、micro-LoRA=30，RID/result_dir 唯一，启动前均 runnable、无同名 runner。
+2. 使用 `ssh -f` 和全绝对路径启动两个独立 state-dir，各 2 worker，避免此前 launcher 变量作用域和 SSH 挂起问题。equiv/lora 父 PID=3978455/3978477。首个 SSI 33M-LoRA random/n1000/seed17 PID=3978503 已使用 `--device 0`，GPU 实占 1204 MiB，未发生 CPU 降级；启动不记完成。
+3. 之前卡住的 GitHub 推送经 `ls-remote` 超时确认是网络问题，已终止而不影响提交。网络恢复后 `1411d84..bcecd4d` 推送成功，`aff69ea` 与 `bcecd4d` 均已上 GitHub。v32 为 1161 accepted、1 rejected，主要仍是 degradation 同 cap 结果，PPT 保持 v30。
