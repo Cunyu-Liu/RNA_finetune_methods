@@ -610,3 +610,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第8页①a-4：650M SSP frozen-family 三种子 pair-F1=0.3237/0.2711/0.2802，mean≈0.291666667，正式闭合；SSP覆盖28/30，五种任务为27/28/19/17/18。第27页热图对应格显示3，第28/29页成本图同步至v98。
 3. RNA-FM MRL full-random default tuning 仅1/4档，LR 111/320、完整组仍26/80；per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420、650M frozen 25/25，④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v87_v98ledger_650m_ssp_family_closure`，282 个登记文件，manifest SHA256=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/27/28/29页实际渲染通过。
+
+## 54. 2026-11-01 v99 staging：展示版保持 v98
+
+1. v99 为 **1456 accepted、0 rejected**；RNA-FM MRL full-random 的1e-4格 r=0.771872145、best_val=0.506725，proof=complete、CUDA 收敛。
+2. 该组仅完成两档，仍缺3e-5/1e-5；LR 112/320、完整组保持26/80，不提前选档。无新三种子单元，PPT 与 v87 源包保持 v98。
+3. 当前 PPT/PDF SHA256 仍为 `cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48` / `e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`。

@@ -2007,3 +2007,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 与其他矩阵**：RNA-FM MRL random default 仅1/4档，LR 111/320、完整组仍26/80；per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420。
 - [x] **交付**：源包 revision=`20261101_refresh_v87_v98ledger_650m_ssp_family_closure`，282 文件，manifest=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`；PPT=`cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48`，PDF=`e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`。嵌图、32页 lint/layout/CRC 与四个更新页渲染通过。
 - [ ] **后续**：三地同步并补推待推提交；继续主矩阵、LR/rank 和后续阶段门，frozen 子队列闭合不等于全实验完成。
+
+## N97. 2026-11-01 v99 RNA-FM MRL random LR 第二档
+
+- [x] **单格验收**：v99 为 1456 accepted、0 rejected；1e-4 格 r=0.771872145、best_val=0.506725、best_epoch=2、6 epochs，proof=complete、CUDA 收敛。证据 SHA256=`6eb02c46c7b1a37d0e0d94253687dcbb48339de9648960ad5b6657fa5fea2a95`。
+- [x] **选档边界**：该组仅两档，缺3e-5/1e-5；LR 112/320、完整组仍26/80，不提前选档。
+- [x] **展示边界**：per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420、650M frozen 25/25；PPT 与 v87 源包保持 v98。
+- [ ] **后续**：同步并提交文档，等待四档闭合后继续 validation 选档和其他真实缺口。

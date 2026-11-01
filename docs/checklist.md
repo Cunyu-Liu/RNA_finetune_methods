@@ -419,3 +419,10 @@
 - [x] AO4 交付：282 文件 manifest=`81fccb0f004ab613475bd586273f4118769334fdffcf936f9f29e5decaa4cb2a`；PPT=`cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48`，PDF=`e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`；嵌图、lint/layout/CRC 与四个更新页渲染通过。
 - [ ] AO5 后续：三地同步并补推，继续真实科学缺口。
 
+## AP 组：v99 LR 第二档 staging 验收
+
+- [x] AP1 数据：1456 accepted、0 rejected；RNA-FM MRL random 1e-4 格 proof=complete、CUDA 收敛。
+- [x] AP2 边界：该组仅两档，LR 112/320、完整组仍26/80，不提前选档；其他矩阵计数不变。
+- [x] AP3 展示：无新科学单元，PPT 与 v87 源包保持 v98。
+- [ ] AP4 后续：同步并提交，等待四档闭合和其他真实科学缺口。
+
