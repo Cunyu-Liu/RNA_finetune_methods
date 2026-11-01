@@ -345,3 +345,11 @@
 - [x] AE4 交付：250 文件 manifest=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`；PPT=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`，PDF=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`；32 页 lint/layout/CRC、嵌图与 LR 页渲染通过。
 - [ ] AE5 后续：三地同步并提交；继续真实科学缺口，80 组全闭合前不冻结正式 tuned 矩阵。
 
+## AF 组：v88 RNA-FM SSI family 验收
+
+- [x] AF1 数据：1446 accepted、0 rejected；3 格 proof=complete，CUDA/convergence 通过。
+- [x] AF2 科学单元：RNA-FM SSI LoRA-family 三种子 mean≈0.592750128，SSI 覆盖 18/30，①a-4 为 27/27/19/17/18。
+- [x] AF3 边界：650M SSP frozen-family 仅 1/3，SpliceAI tier 低信号；per-base 150/270、complementary 303/324、LR 108/320（25组）、rank 68/96，④/⑤不变。
+- [x] AF4 交付：252 文件 manifest=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`；PPT=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`；十张嵌图、32 页 lint/layout/CRC 和第8/27/28/29页渲染通过。
+- [ ] AF5 后续：完成三地同步与 GitHub 同步，继续真实科学缺口。
+

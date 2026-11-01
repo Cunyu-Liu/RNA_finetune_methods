@@ -546,3 +546,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第19页 LR 更正为 **25/80 组**，选档分布 3e-5 十一组、1e-4 九组、1e-5 五组、3e-4 为 0。逐格 proof 和逐版台账证明第25组是 v79 已闭合的 ERNIE MRL full-random，validation 选 1e-5；此前漏计，并非 v87 新实验。80 组全闭合前不冻结 tuned 正式矩阵。
 3. 当前 per-base 148/270、complementary 302/324、LR 108/320、rank 68/96。源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 个登记文件，manifest SHA256=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`，含完整 LR interim 证明。
 4. 本页文字与图意仍一致，只更新计数及漏计说明；十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距和实际渲染通过，其他手调内容未改。
+
+## 44. 2026-11-01 当前 v88：RNA-FM SSI LoRA-family 闭合
+
+1. 当前 PPT 为 32 页，SHA256=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`；PDF SHA256=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。输入 **1446 accepted、0 rejected**，3 个新增格均 proof=complete。
+2. 第8页①a-4：RNA-FM SSI LoRA-family 三种子 PCC=0.593009039/0.592436075/0.592805270，mean≈0.592750128，正式闭合；SSI 覆盖升为 18/30，五种任务为 27/27/19/17/18。
+3. 第27页覆盖图补入 650M SSP frozen-family/seed17（pair-F1=0.3237），但仅 1/3，不写闭合；第28/29页成本图同步到 v88。per-base 150/270、complementary 303/324、LR 108/320（25组）、rank 68/96，④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v83_v88ledger_rnafm_ssi_family_closure`，252 个登记文件，manifest SHA256=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第8/27/28/29页实际渲染通过。

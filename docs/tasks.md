@@ -1933,3 +1933,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 全量 proof 复核**：108/320 complete、212 runnable，25/80 组完整；选档分布 11/9/5/0。第25组实际在 v79 的 ERNIE MRL full-random 已闭合，validation 选 1e-5，现更正历史漏计而非冒充新增。
 - [x] **其他矩阵与交付**：per-base 148/270、complementary 302/324、rank 68/96。源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 文件，manifest=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`；PPT=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`，PDF=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`。32 页嵌图、lint/layout/CRC 和 LR 页渲染通过。
 - [ ] **后续**：完成 v87 三地同步与 GitHub 提交；继续主矩阵、650M frozen、LR/rank 和 equiv canonical 真实缺口。
+
+## N87. 2026-11-01 v88 RNA-FM SSI LoRA-family 闭合
+
+- [x] **v87 同步**：250 文件、五文档和 PPT/PDF 三地验收通过；提交 `0020c7f Correct validation LR completion count` 已生成，推送状态单独跟踪。
+- [x] **v88 三格证明**：1446 accepted、0 rejected；3 格均 proof=complete、CUDA 收敛。650M SSP frozen-family 为 1/3，SpliceAI tier 仍低信号。
+- [x] **新科学单元**：RNA-FM SSI LoRA-family 三种子 mean≈0.592750128，SSI①a-4 覆盖 18/30，五项为 27/27/19/17/18；per-base 150/270、complementary 303/324、LR 108/320（25组）、rank 68/96。
+- [x] **动态图源与交付**：源包 revision=`20261101_refresh_v83_v88ledger_rnafm_ssi_family_closure`，252 文件，manifest=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`；PPT=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。十张嵌图、32 页 lint/layout/CRC 与第8/27/28/29页渲染通过。
+- [ ] **后续**：完成 v88 三地同步、提交与推送；继续真实缺口，650M SSP family 未齐三种子前不写成闭合。

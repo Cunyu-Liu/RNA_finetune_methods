@@ -1085,3 +1085,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 当前 per-base=148/270、complementary=302/324、LR=108/320、rank4/16=68/96。对全部 320 个 LR 注册格重新执行 proof_state 得 108 complete、212 runnable，**25/80 组完整**；选档分布 3e-5 十一组、1e-4 九组、1e-5 五组、3e-4 为 0，test 不参与。
 3. 历史计数纠偏：25 组并非 v87 新增。台账逐版对比显示 ERNIE MRL full-random 在 **v79** 已四档闭合，validation 选 1e-5；v79–v86 页面漏计该组。本轮按逐格证明将页面由 24 更正为 25，不把更正写成新实验。证据=`status/lr_validation_interim_20261101_v87.json`，SHA256=`c2607c32cf1a183fc902d5ddf675b406f94f1b2a209b7af7f7eef623c84d3264`。
 4. 源包 revision=`20261101_refresh_v82_v87ledger_lr25_proof_recount`，250 个登记文件，manifest SHA256=`b0c2e75bc1caa3c803a0431ccb6822329fa029486103515234c9f9466c064876`。PPT 只更新 LR 页计数及漏计说明，SHA256=`4763f848d14edb56370d06c233e46f43762f1529b99e2e9b92772fdb7ce362c2`；PDF SHA256=`49fb729fcd327741302774b2ab563796c20fc3f28fe57dab2b1d36b65af475b4`。32 页 lint/layout/CRC、十张关键嵌图 SHA 与 LR 页实际渲染通过。
+
+### 10.87 v88 RNA-FM SSI LoRA-family 闭合（2026-11-01）
+
+1. v88 为 1443+3=**1446 accepted、0 rejected**，v87 行逐字段保留；3 个新增格均 proof=complete，result/plateau/checkpoint/CUDA/convergence 独立复核通过。650M SSP frozen-family/seed17 pair-F1=0.3237，best_epoch=4、8 epochs，仅 1/3；SpliceAI family tier 新格仍近随机。
+2. RNA-FM SSI LoRA-family 三种子 PCC=0.593009039/0.592436075/0.592805270，mean≈0.592750128，正式闭合；①a-4 的 SSI 覆盖由 17/30 升为 **18/30**，五项计数为 **27/27/19/17/18**。per-base=150/270、complementary=303/324、LR=108/320（25/80 组完整）、rank4/16=68/96；④/⑤不变。
+3. 动态重建①a-4、时间×性能、覆盖和显存图，MRL/modification 官方图逐哈希不变；`data/`、`figures/`、`scripts/` 三处源文件同步。源包 revision=`20261101_refresh_v83_v88ledger_rnafm_ssi_family_closure`，252 个登记文件，manifest SHA256=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`。
+4. 当前 PPT SHA256=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF SHA256=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。32 页 lint/layout/CRC、十张关键嵌图 SHA 与第8/27/28/29页实际渲染通过。
