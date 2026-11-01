@@ -1946,5 +1946,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 
 - [x] **v88 交付**：三地验收通过，GitHub `20cf0ec Record RNA-FM SSI family closure` 已推送并核对远端 HEAD。
 - [x] **v89 单格验收**：1447 accepted、0 rejected；mega SpliceAI LoRA-family/n3000/seed17 macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。证据=`bestval_v89_new_proof.json`，SHA256=`40998779cb5f4d5f02c14b2e942e21e7d62ec4204f3b0ba297410c50120d9775`。
-- [x] **展示边界**：per-base 151/270、complementary 303/324、LR 108/320（25组）、rank 68/96；未新增科学单元，PPT 和 v83 源包保持 v88。
+- [x] **展示边界**：per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96；未新增科学单元，PPT 和 v83 源包保持 v88。
 - [ ] **后续**：同步 v89 文档并提交；继续真实缺口，低信号格不用于 scaling 或等价结论。
+
+## N89. 2026-11-01 v90 注册表计数审计
+
+- [x] **台账**：v90 新增 0，仍 1447 accepted、0 rejected；PPT 和 v83 源包保持 v88。
+- [x] **精确对账**：per-base 149/270、complementary 303/324、LR 108/320、rank 68/96、equiv 417/420、650M frozen 23/25。
+- [x] **历史计数纠偏**：per-base 权威序列为 v80–v82=146、v83–v86=147、v87=148、v88–v90=149；更正此前 v86/v88/v89 的估算偏差，科学图和结论不受影响。证据=`registry_accepted_recount_20261101_v90.json`，SHA256=`8082d0df53c3e17c487c54f7c84e8cf35da4e835fa927ce05dcf00aa172c7f82`。
+- [ ] **后续**：同步审计文档并提交；不重开重叠队列，继续剩余 canonical 格和主矩阵真实缺口。

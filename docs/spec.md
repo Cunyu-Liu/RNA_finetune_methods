@@ -1096,5 +1096,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 ### 10.88 v89 SpliceAI family 分层 staging（2026-11-01）
 
 1. v89 为 1446+1=**1447 accepted、0 rejected**，v88 行逐字段保留。新增 `ft_rinalmomega_spliceai_lora_s17_family_b20fix_e33000_bestval_v1` proof=complete，CUDA/RTX5090、checkpoint 和 plateau=CONVERGED 复核通过；macro-F1=0.333280238，best_epoch=0、4 epochs，仍近随机，只记 low_signal，不形成新面板或等价候选。
-2. 当前 per-base=151/270、complementary=303/324、LR=108/320（25/80 组完整）、rank4/16=68/96；①a-4 与④/⑤不变。独立证据=`status/bestval_v89_new_proof.json`，SHA256=`40998779cb5f4d5f02c14b2e942e21e7d62ec4204f3b0ba297410c50120d9775`。
+2. 当前 per-base=149/270、complementary=303/324、LR=108/320（25/80 组完整）、rank4/16=68/96；①a-4 与④/⑤不变。独立证据=`status/bestval_v89_new_proof.json`，SHA256=`40998779cb5f4d5f02c14b2e942e21e7d62ec4204f3b0ba297410c50120d9775`。
 3. 因没有新增三种子科学单元或完整 LR 组，当前 PPT 和 v83 源包继续保持 v88；v89 台账与证明保存在 teams，待下一次可见更新一并纳入，不制造无科学变化的图版本。
+
+### 10.89 v90 无新增与注册表计数审计（2026-11-01）
+
+1. v90 相对 v89 新增 0，仍为 **1447 accepted、0 rejected**。按注册表 RID 精确对账：per-base=149/270、complementary=303/324、LR=108/320、rank4/16=68/96、equiv=417/420、650M frozen 子队列=23/25；当前 PPT 与 v83 源包保持 v88。
+2. per-base 权威逐版计数为 v80–v82=146、v83–v86=147、v87=148、v88–v90=149。此前 v86 写成 146、v88 写成 150、v89 一度写成 151 均为阶段估算偏差，不是实验结果变化；现以 RID 对账纠正，①a-4 和科学结论不受影响。
+3. 审计证据=`status/registry_accepted_recount_20261101_v90.json`，SHA256=`8082d0df53c3e17c487c54f7c84e8cf35da4e835fa927ce05dcf00aa172c7f82`。队列核查时有 7 个实际训练进程；equiv 仅余 3 格、650M frozen 仅余 2 格，未另起重叠注册表。
