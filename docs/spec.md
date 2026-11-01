@@ -1164,3 +1164,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. SpliceAI micro-LoRA random rank16 三种子 macro-F1=0.403154654/0.492961421/0.549270923，mean=0.481795666；rank4/16=69/96，只作同模型同 split 阶段结果，不与 rank8 直接排名。mega SpliceAI full-family/seed17 macro-F1=0.522046068，仅1/3，SpliceAI①a-4仍为19/30，覆盖热图由0改为1。
 4. 当前 per-base=150/270、complementary=304/324、equiv=420/420、650M frozen=25/25；mega modification random LR 仅2/4，不新增完整组，④/⑤不变。
 5. 源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 个登记文件，manifest SHA256=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`。PPT SHA256=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF SHA256=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`；32页 lint/layout/CRC、十张嵌图与第8/19/20/27/28/29页实际渲染通过。
+
+### 10.99 v101 650M LoRA 单格自然窗口启动（2026-11-02）
+
+1. v101 相对 v100 新增 0，仍为 **1466 accepted、0 rejected**。当前 per-base=150/270、complementary=304/324、LR=120/320（28/80组）、rank4/16=69/96、equiv=420/420、650M frozen=25/25；PPT 和 v88 源包保持 v100。
+2. 对 complementary 的 650M LoRA 逐格 proof 后，唯一 runnable 缺口为 `ft_rinalmo650m_crisprofftarget_lora_s43_family_bestval_v1`，其余均 complete。利用自然显存窗口，以单格注册表、need_gb=16、1 worker 启动父 PID=4122509；实际训练子 PID=4122556，参数含 `--device 0`，未强行启动 650M full。
+3. 启动只记在训，不记完成。证据=`status/complementary_650m_lora_20261102/launch_evidence.json`，SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`；待 result/plateau/checkpoint 完整后再验收。

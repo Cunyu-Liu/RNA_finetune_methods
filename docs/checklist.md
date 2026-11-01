@@ -434,3 +434,10 @@
 - [x] AQ4 交付：289 文件 manifest=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`；PPT=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`；嵌图、lint/layout/CRC 与六页渲染通过。
 - [ ] AQ5 后续：三地同步并补推，继续真实科学缺口，不将 rank 阶段格写成完整矩阵结论。
 
+## AR 组：v101 650M LoRA 启动验收
+
+- [x] AR1 台账：v101 新增 0，仍 1466 accepted、0 rejected；展示版保持 v100。
+- [x] AR2 审计：唯一 runnable 的 650M LoRA 为 CRISPR family/seed43，其他格 complete，无同名 runner。
+- [x] AR3 启动：单格队列 need=16、1 worker，父4122509、子4122556，真实 CUDA 参数；启动不记完成，证据 SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。
+- [ ] AR4 后续：等待 result/plateau/checkpoint 完整证明，不在资源不足时强行启动大格。
+

@@ -623,3 +623,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第19页 LR 更新为 **28/80 组**，分布3e-5十三组、1e-4九组、1e-5六组、3e-4为0。RNA-FM MRL random 选1e-5、family 选3e-5，test 不参与。第20页写入 SpliceAI random rank16 三种子 mean=0.481795666，rank4/16=69/96；保留 legacy 图与未闭合边界，不与 rank8 直接排名。
 3. mega SpliceAI full-family/seed17 macro-F1=0.522046068，仅1/3；第27页覆盖热图由0改为1，第8页仍保留斜线，SpliceAI三种子单元仍为19/30。per-base 150/270、complementary 304/324、equiv 420/420、650M frozen 25/25。
 4. 当前源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 个登记文件，manifest SHA256=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/19/20/27/28/29页实际渲染通过。
+
+## 56. 2026-11-02 v101：650M LoRA 启动，展示版保持 v100
+
+1. v101 新增 0，仍为 **1466 accepted、0 rejected**，PPT 和 v88 源包保持 v100。
+2. 唯一未完成的 650M LoRA 为 CRISPR family/seed43，已在自然显存窗口以单格队列启动，父 PID=4122509、训练子 PID=4122556，真实 `--device 0`。启动不等于完成，不修改覆盖热图或性能柱。
+3. 证据=`status/complementary_650m_lora_20261102/launch_evidence.json`，SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。

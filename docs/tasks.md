@@ -2022,3 +2022,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **rank 与主矩阵**：SpliceAI random rank16 三种子 mean=0.481795666，rank4/16=69/96；mega full-family/seed17=0.522046068，仅1/3。per-base 150/270、complementary 304/324、equiv 420/420、650M frozen 25/25。
 - [x] **交付**：源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 文件，manifest=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`；PPT=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`。嵌图、32页 lint/layout/CRC 与六个更新页渲染通过。
 - [ ] **后续**：三地同步并补推待推提交；继续主矩阵、LR/rank 和后续阶段门，rank16 不与 rank8 直接排名。
+
+## N99. 2026-11-02 v101 650M LoRA 单格启动
+
+- [x] **台账**：v101 新增 0，仍 1466 accepted、0 rejected；PPT 与 v88 源包保持 v100。
+- [x] **缺口审计**：complementary 的 650M LoRA 逐格 proof，唯一 runnable 为 CRISPR family/seed43，其余 complete；无同名 runner。
+- [x] **自然窗口启动**：单格注册表、need=16、1 worker，父 PID=4122509、训练子 PID=4122556，真实 `--device 0`；不启动650M full、不记完成。证据 SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。
+- [ ] **后续**：同步并提交启动记录，等待完整证明后继续主矩阵、LR/rank 和大格自然窗口。
