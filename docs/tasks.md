@@ -1593,3 +1593,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **拆分与防重**：从现有 SSI equiv 注册表抽取 mega-LoRA 30 格，RID/result_dir 唯一，启动前全 runnable、无同名 runner，need=3.5 GiB；不新增实验设计。
 - [x] **队列与资源门**：独立 state-dir 以 2 worker、`ssh -f` 和绝对路径启动，父 PID=3986059。核查时 GPU=29.9/32.6 GiB、util=99%，未达到 3.5+1 GiB 安全门，父进程等待而未启动训练；不是失败或完成，不强行制造 OOM。
 - [~] **后续**：micro-full/LoRA 自然释放后由 mega 队列补位；④/⑤和 PPT 保持 v30，等真实结果验收。
+
+## N39. 2026-11-01 SSI 两档与 degradation family 新单元
+
+- [x] **SSI n1500 双臂闭合**：33M-full 三种子 mean=0.579315371、SD=0.002808807；33M-LoRA mean=0.593860551、SD=0.002887879。与 n1000 组成两档，148M-LoRA 未齐，不新增④/⑤面板。
+- [x] **degradation family 148M-LoRA n1000 闭合**：seed17/29/43 PCC=0.402921387/0.388757415/0.402849038，mean=0.398175947、SD=0.008156768、95% CI half-width=0.009230252；三格 proof=complete。
+- [x] **degradation family full requested2000 闭合**：actual=1680，seed17/29/43 PCC=0.402724605/0.395423894/0.396414021，mean=0.398187507、SD=0.003960307、95% CI half-width=0.004481510；cap 与 random 分开记录。
+- [x] **v38 与源包**：1201 accepted、1 rejected；源包 122 文件，manifest SHA256=`cc79a777e6a6d40f217079df37f356d191fc894dca9e770a25e0743628d8fcd8`，PPT 保持 v30。
+- [ ] **后续**：继续 SSI 148M-LoRA 和第三档，degradation family 的其他 LoRA 档；未齐前不改④/⑤。
