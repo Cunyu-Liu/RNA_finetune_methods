@@ -1554,3 +1554,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **SSI-only 拆分**：equiv=60、micro-LoRA=30，均 canonical、非 dense，启动前全 runnable、RID 唯一、无同名 runner。两个独立 state-dir 各 2 worker，使用 `ssh -f` 和全绝对路径，父 PID=3978455/3978477。
 - [x] **首个 CUDA 证据**：SSI 33M-LoRA random/n1000/seed17 PID=3978503，`--device 0`，GPU 实占 1204 MiB；启动不记完成。
 - [ ] **后续**：等待 SSI 三种子和多档闭合后再考虑新面板，degradation family 继续原队列，不重跑 complete 格。
+
+## N33. 2026-11-01 degradation family 首批结果
+
+- [x] **v33 staging**：1165 accepted、1 rejected；源包 112 文件，manifest SHA256=`1acce019e887dbaec06496785efc4013227fa7882c010c6892bf75613c5cc737`。
+- [x] **family 首批**：degradation 33M-full family/n1000 的 seed17/29 PCC=0.388945060/0.378433095，best_epoch=2/1，epochs=6/5；低于 random 同档，但 seed43 未闭合，不作三种子或 split 定律。
+- [~] **后续**：继续 family seed43、两个 LoRA 臂和 SSI；当前④/⑤保持 v30，不用 family 单点修改 random 页面。
