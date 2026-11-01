@@ -1917,3 +1917,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **在途证据**：650M SSP seed43 已到 epoch5、best_epoch=3，validation loss 整体下降；ERNIE MRL family 的 3e-5/1e-5 尚未启动。
 - [x] **展示边界**：PPT 与 v80 源包保持 v80，不把中间 epoch 写成完成结果。
 - [ ] **后续**：等待新完成格并继续三轮验收，及时提交本批文档。
+
+## N85. 2026-11-01 v86 650M SSP frozen-random 闭合
+
+- [x] **单格完整证明**：新增 650M SSP frozen-random/seed43，pair-F1=0.2636、best_epoch=3、7 epochs，proof=complete；result/plateau/checkpoint/CUDA/convergence 独立复核通过。
+- [x] **三种子闭合**：seed17/29/43=0.2448/0.2445/0.2636，mean≈0.250967。v86 为 1438 accepted、0 rejected；①a-4 为 27/27/19/17/17。
+- [x] **其他矩阵边界**：per-base 146/270、complementary 302/324、LR 107/320（24/80 组完整）、rank 67/96；④/⑤不变，tuning 不进入正式三种子。
+- [x] **图与版式**：源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 文件，manifest=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`；PPT=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`，PDF=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`。32 页嵌图、lint/layout/CRC 和实际渲染通过，原文件未覆盖。
+- [ ] **同步与续跑**：完成五文档、源包、PPT/PDF 三地逐哈希验收并提交 GitHub；继续真实缺口和 v87 增量证明，不重复派发、不提前开启后续阶段门。

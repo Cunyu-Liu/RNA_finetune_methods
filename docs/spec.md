@@ -1070,3 +1070,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v85 相对 v84 新增 0，仍为 **1437 accepted、0 rejected**。650M SSP frozen-random/seed43 当前已到 epoch5、best_epoch=3，validation losses=[0.570911,0.527924,0.489130,0.468455,0.483426,0.477253]，处于正常收敛过程，尚不能作为完成结果。
 2. ERNIE MRL full-family 的 3e-5 与 1e-5 两档尚未启动。PPT 与 v80 源包保持 v80，等待新完成格后再验收。
+
+### 10.85 v86 650M SSP frozen-random 三种子闭合（2026-11-01）
+
+1. v86 为 1437+1=**1438 accepted、0 rejected**，v85 行逐字段保留。新增 `ft_rinalmo650m_secondarystructure_frozen_s43_random_pairalign_bestval_v1` 的 result/plateau/checkpoint/CUDA/convergence 均独立复核，proof_state=complete；pair-F1=0.2636，best_epoch=3，7 epochs 后按 patience=3 收敛。
+2. 650M SSP frozen-random 三种子 pair-F1=0.2448/0.2445/0.2636，mean≈0.250967，正式闭合；①a-4 的 SSP 覆盖由 26/30 升为 **27/30**，CRISPR/SSP/SpliceAI/degradation/SSI 现为 **27/27/19/17/17**。per-base=146/270、complementary=302/324、LR=107/320（24/80 组完整，选档分布 10/9/5/0）、rank4/16=67/96；random④/⑤均 6/8、family④/⑤均 5/8，结论不变。
+3. 源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 个登记文件，manifest SHA256=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`。v81–v86 台账均已纳入，图、CSV、metadata、脚本与 v86 一致。
+4. 当前 PPT 为 32 页，SHA256=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`；PDF SHA256=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`。pptx lint/layout、ZIP CRC、十张关键嵌图 SHA 和实际渲染均通过；Microsoft YaHei 与正文 1.5 倍行距保持，原始 PPT 未覆盖。
+5. 本轮只闭合一个科学单元，不代表全实验完成。继续主矩阵、650M frozen、LR/rank 和 equiv canonical 真实缺口；后续阶段门不变，dense 诊断不进入正式矩阵。

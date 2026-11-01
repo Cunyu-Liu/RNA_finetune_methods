@@ -329,3 +329,11 @@
 - [x] AC3 交付：235 文件 manifest=`3198fd091d726d53bb11935016a27cbd1dfacfd6baabcf69b2adec2c7fa71ab4`；PPT=`6049a44feca49f0bf1823d4c84669dadbc0b3bd77a0b749fd0de789536887ae0`；PDF=`b405175eea336c4f34b0a4303a10ee661e699fd60c7f1e72197688104b32955c`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] AC4 后续：继续其他真实缺口并提交本批交付。
 
+## AD 组：v86 650M SSP 三种子闭合验收
+
+- [x] AD1 数据：1438 accepted、0 rejected；新增 seed43 pair-F1=0.2636，proof=complete，checkpoint/CUDA/convergence 独立复核通过。
+- [x] AD2 科学单元：650M SSP frozen-random 三种子 mean≈0.250967；SSP 覆盖 27/30，①a-4 为 27/27/19/17/17。
+- [x] AD3 边界：per-base 146/270、complementary 302/324、LR 107/320（24/80 组）、rank 67/96；④/⑤与 validation 选档规则不变。
+- [x] AD4 交付：247 文件 manifest=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`；PPT=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`，PDF=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`；32 页嵌图、lint/layout/CRC 和渲染通过。
+- [ ] AD5 后续：完成三地同步与 GitHub 提交；继续真实科学缺口，不将此单元闭合视为全实验完成。
+

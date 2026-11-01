@@ -532,3 +532,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. RNA-FM SSI LoRA-random 三种子 mean=0.630093485，正式闭合；①a-4 的 SSI 为 17/30。650M SSP frozen-random/seed17 pair-F1=0.2448，仅 1/3，SSP 仍 26/30。
 3. per-base 146/270、complementary 300/324、LR 105/320（完整组仍 24/80）、rank 67/96，④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v80_v80ledger_rnafm_ssi_closure_650m_ssp_first`，235 个登记文件，manifest SHA256=`3198fd091d726d53bb11935016a27cbd1dfacfd6baabcf69b2adec2c7fa71ab4`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。
+
+## 42. 2026-11-01 当前 v86：650M SSP frozen-random 闭合
+
+1. 当前 PPT 为 32 页，SHA256=`83a708ab22ae2f93be732bb4bd622b26239e4d6cd684d3c0feded2d87f503e56`；PDF SHA256=`fa11997cbd00e02bba9f24514c24adbfc261e08227c46f7e007cfa184c10a1a7`。输入 **1438 accepted、0 rejected**，新增格 proof=complete。
+2. 第8页①a-4：650M SSP frozen-random 三种子 pair-F1=0.2448/0.2445/0.2636，mean≈0.250967，正式闭合；SSP 覆盖升为 27/30，五种任务为 27/27/19/17/17。图、图注和覆盖文字同步更新，其他用户手调内容不改。
+3. per-base 146/270、complementary 302/324、LR 107/320（完整组仍 24/80）、rank 67/96，random/family④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v81_v86ledger_650m_ssp_closure`，247 个登记文件，manifest SHA256=`845920a3c818a40258ad9fe2c3da6d6dbe1b312a62e84b21ea88c6cb462a8189`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与实际渲染通过；原始 PPT 未覆盖，最终科学验收未完成。
