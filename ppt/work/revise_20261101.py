@@ -79,8 +79,8 @@ def main():
     table = next(shape.table for shape in prs.slides[1].shapes if shape.has_table)
     updates = {
         (0, 2): "关键实测结果（2026-11-01 · 导师反馈修订）",
-        (3, 1): "④/⑤均 5/8 可判",
-        (3, 2): "degradation ④三个候选（2000/2500同cap）；⑤三臂均≥3档。requested≥2000实际1552，不是新增数据；Frozen七档等待阶段门",
+        (3, 1): "④ 5/8；⑤ 6/8 可判",
+        (3, 2): "degradation 三臂均≥3档；SSI 33M full/LoRA已三档，⑤新增面板。148M-LoRA仅一档，④仍待第二档；Frozen七档等待阶段门",
         (5, 2): "时间×性能与显存独立为结论⑥；使用最新 8 任务 runtime；650M full 25GB 实测保留，待自然窗口",
         (6, 2): "controlled 30 格已重绘均值线与逐 seed 点；official 27/30 complete，650M LoRA 3 格按 corrected 队列补测",
         (8, 1): "5 个分类组合任务；SpliceAI 双 split 三种子",
@@ -184,9 +184,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 5/8 可判。degradation 三臂均至少三档；requested≥2000 实际均为 1552，cap 不是新增数据。")
+             "同模型内比较策略；④ 5/8、⑤ 6/8 可判。degradation 三臂均至少三档；SSI 的 33M-full/LoRA 也已形成三档。")
     set_text(slide, "TextBox 5",
-             "读图：degradation 三臂均至少三档；requested 2000/2500 是同一训练上限，重复点只说明 cap，不能解释为更多数据带来的平台。与④共用数据、分开回答；其他任务继续补齐，Frozen 待阶段门。")
+             "读图：SSI 的 33M-full/LoRA 在 n=1000/1500/2000 上均有三种子，PCC 整体上升；148M-LoRA 仅一档，不能判④等价。degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 

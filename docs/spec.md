@@ -860,3 +860,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. 结论④需要 SSI 的 148M-LoRA，但其 30 格排在 33M-full 全矩阵之后。现从 `equiv_ssi_jobs_20261101.json` 抽取 `equiv_ssi_mega_jobs_20261101.json`，不新增实验：30 格、RID/result_dir 唯一、启动前全 runnable、无同名 runner，need=3.5 GiB。
 2. 独立 state-dir `equiv_ssi_mega_20261101` 以 2 worker、`ssh -f` 和全绝对路径启动，父 PID=3986059，artifact 根指向 teams。首次进程核查时 GPU=29.9/32.6 GiB、util=99%，未达到 3.5+1 GiB 安全门，故父进程等待而未启动训练；这是正常资源等待，不是失败或完成，禁止为占满显存制造 OOM。
 3. 现有 micro-full seed43/n1500 和 micro-LoRA seed17/n2000 继续运行，待自然释放后由 mega 队列补位。④/⑤和 PPT 保持 v30，直到真实结果闭合。
+
+### 10.50 SSI scaling 达 6/8 与 cap split 修正（2026-11-01）
+
+1. v43 中 SSI 的 33M-full/LoRA 已形成 1000/1500/2000 三档三种子，PCC 均随数据量上升，故⑤由 5/8 升为 6/8；148M-LoRA 只有 n1000 一档，④仍 5/8，不把⑤进展写成④等价证据。
+2. 首次 v43 渲染时，degradation cap 标签混入 family actual=1680。已将 `task_caps` 限定为当前 split，random 页面只显示 actual=1552；metadata 仍逐行保留 split，不能跨 split 合并 cap 数值。
+3. 最终 PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`，PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/实际渲染通过。v43 为 1222 accepted、1 rejected，源包 132 文件，manifest SHA256=`7c271fe6d40e5d1166eb0fd3acaac8e35b2a8aed73830a120f504cc599fcd40e`。

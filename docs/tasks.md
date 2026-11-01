@@ -1625,3 +1625,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **mega-LoRA random/n1000 三种子**：seed17/29/43 PCC=0.561801670/0.558674289/0.556744422，mean=0.559073460、SD=0.002552145、95% CI half-width=0.002888024；三格 proof=complete、best_epoch=0、4 epochs 收敛。
 - [x] **v42 与源包**：1219 accepted、1 rejected；源包 130 文件，manifest SHA256=`f04a5ca308d043db713c6d0012b3808b348f8356973f40a1f2e1bb30239bae91`。
 - [~] **后续**：④需要该臂至少再一档，n2000 的 33M-full/LoRA 仍各为 2/3；当前不新增④/⑤面板，PPT 保持 v30。
+
+## N44. 2026-11-01 SSI scaling 达 6/8 与 cap split 修正
+
+- [x] **⑤新增 SSI 面板**：33M-full/LoRA 已形成 1000/1500/2000 三档三种子，PCC 均随数据量上升，⑤由 5/8 升为 6/8；148M-LoRA 仅一档，④仍 5/8。
+- [x] **cap split 纠错**：首次渲染发现 family actual=1680 混入 random cap 标签，已将 `task_caps` 限定当前 split，random 只显示 1552；metadata 逐行保留 split。
+- [x] **v43 与源包**：1222 accepted、1 rejected；源包 132 文件，manifest SHA256=`7c271fe6d40e5d1166eb0fd3acaac8e35b2a8aed73830a120f504cc599fcd40e`。
+- [x] **最终交付**：PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`，PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/实际渲染通过。
+- [ ] **后续**：继续 SSI 148M-LoRA 第二档，④/⑤分开验收，不提前宣称全任务完成。

@@ -158,7 +158,7 @@ def main():
         if not any(pair["equivalent"] for pair in pairs):
             ax.text(0.5, 0.04, "当前范围未观测到等价候选", ha="center", va="bottom",
                     fontsize=7.8, color="#777777", transform=ax.transAxes)
-        task_caps = df[(df.task == task) &
+        task_caps = df[(df.task == task) & (df.split == split) &
                        (df.requested_n_train != df.actual_n_train)]
         if not task_caps.empty:
             minimum = int(task_caps.requested_n_train.min())

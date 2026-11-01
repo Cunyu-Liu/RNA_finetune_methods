@@ -114,7 +114,7 @@ def main():
                 continue
             ax.errorbar(g.requested_n_train, g["mean"], yerr=g["ci"], fmt=mk + "-",
                         color=col, lw=1.6, ms=4.5, capsize=2.5, label=cname)
-        task_caps = df[(df.task == task) &
+        task_caps = df[(df.task == task) & (df.split == split) &
                        (df.requested_n_train != df.actual_n_train)]
         if not task_caps.empty:
             minimum = int(task_caps.requested_n_train.min())

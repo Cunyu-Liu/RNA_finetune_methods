@@ -188,3 +188,10 @@
 - [x] K4 交付：PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`；PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/渲染通过。
 - [ ] K5 后续：degradation family/3000 档、SSI 和其他科学矩阵继续执行。
 
+## L 组：v43 SSI scaling 与 cap split 验收
+
+- [x] L1 数据：v43 共 1222 accepted、1 rejected；SSI 33M-full/LoRA 三档三种子，⑤达 6/8，④仍 5/8。
+- [x] L2 cap split：首次发现 family actual=1680 混入 random 标签后，已将 cap 限定当前 split；random 只显示 1552，metadata 逐行保留 split。
+- [x] L3 交付：PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`；PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/渲染通过。
+- [ ] L4 后续：继续 SSI 148M-LoRA 第二档和其他科学矩阵，不提前宣称全实验完成。
+
