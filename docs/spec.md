@@ -910,3 +910,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v56 为 1324+4=**1328 accepted、1 rejected**，v55 行逐字段保留；4 个新增格均 proof=complete。SSI family 148M-LoRA n2500 三种子 PCC=0.572414853/0.577096436/0.574558833，达到四档；另一个 SpliceAI family/n1500 格 macro-F1=0.333280238，仍近随机，只作 low_signal。
 2. 当前 random④/⑤没有新增科学结果，PPT 和 v67 源包保持 v55，不为 family staging 或无显示变化的结果制造新版图。v56 台账已在 teams 保存，待下一次可见图更新时一并纳入。
 3. GPU 核查为 22.46/32.61 GiB、util=99%，统一 equiv/lora 队列只有 2/1 个在途任务。尝试提高父调度并发前，发现 mega family/n3000/seed29 仍为 pre-ledger `pending`，故在任何 kill/start 前中止操作；未重启父进程、未终止子进程、未新增训练，避免重复派发。后续只有在在途子进程均 ledger=running 或自然结束后才允许调整父队列。
+
+### 10.57 v57 首种子 staging 与 SIGSTOP 安全复查（2026-11-01）
+
+1. v57 为 1328+2=**1330 accepted、1 rejected**，v56 行逐字段保留；两格均 proof=complete。ERNIE SSI frozen-random/seed17 PCC=0.592628039（仅 1/3）；SSI family 148M-LoRA n3000/seed17 PCC=0.579595851（仅 1/3）。均不形成新三种子单元或面板，PPT 与 v67 源包继续保持 v55。
+2. 再次评估 equiv/lora 父队列扩容时，先以 SIGSTOP 暂停父调度并动态枚举实际子进程，避免依据过期 PID 清单操作。两条车道均发现新的 pre-ledger `pending` 子进程，因此立即 SIGCONT 恢复原调度；未替换父进程、未终止训练、未新增任务。证据=`status/queue_actions/tier_queue_rebalance_20261101.json`。
+3. 恢复后复核 8 个 live manifest run、8 个唯一 RID、0 重复。当前不以显存空闲为理由绕过 pre-ledger 安全门，也不在连续竞态中反复重启父队列。

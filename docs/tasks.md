@@ -1727,3 +1727,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **不更新展示版**：random④/⑤与①a-4 没有新增可见科学结果，PPT 和 v67 源包保持 v55；v56 台账在 teams 留存，不与旧图源混成一包。
 - [x] **增并发前中止**：GPU 22.46/32.61 GiB、util=99%，但 mega n3000/seed29 仍 pre-ledger pending；已在任何进程操作前取消父队列重启，0 kill、0 start，避免双跑。
 - [ ] **后续**：等待在途格 running 或自然结束后再评估并发；统一队列继续 family 和其他真实缺口，不重启重叠专用队列。
+
+## N58. 2026-11-01 v57 首种子与父队列安全复查
+
+- [x] **v57 验收**：1330 accepted、1 rejected；2 格均 proof=complete。ERNIE SSI frozen-random 与 SSI family mega n3000 各只有 seed17，不新增三种子单元或面板。
+- [x] **SIGSTOP 动态门禁**：暂停 equiv/lora 父调度后发现两条车道都有 pre-ledger pending 子进程，已 SIGCONT 恢复；未换父、未杀训练、未启动新任务。证据=`status/queue_actions/tier_queue_rebalance_20261101.json`。
+- [x] **恢复复核**：8 live run、8 唯一 RID、0 重复；当前 PPT 与 v67 源包保持 v55。
+- [ ] **后续**：不在连续竞态下反复重启父队列；统一队列继续运行，待自然空窗再评估扩容。
