@@ -1663,3 +1663,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-full n3000 三种子**：seed17/29/43 PCC=0.602670339/0.602108070/0.601224306，mean=0.602000905、SD=0.000728949、95% CI half-width=0.000824883；三格 proof=complete，best_epoch=0、4 epochs 收敛。full 的 1000–3000 五档均闭合。
 - [x] **v48 与源包**：1244 accepted、1 rejected；源包 142 文件，manifest SHA256=`d99502481d197061528b9619c940f14aac2f80929eead1001ccc9eb521cc7a81`。
 - [~] **后续**：继续 SSI 148M-LoRA n1500 和 micro-LoRA n3000；④/⑤计数不变，PPT 保持 v43。
+
+## N50. 2026-11-01 SSI family 与 n3000 staging
+
+- [x] **v49 staging**：1249 accepted、1 rejected；源包 144 文件，manifest SHA256=`f5e1cdbfd53e082fe4f2d3586c91123c778875810bedb506bc7903b1f7694cbe`。
+- [x] **新增覆盖**：SSI 33M-full family/n1000/seed17 PCC=0.528667923，33M-LoRA random/n3000/seed17 PCC=0.610487635；148M-LoRA n1500 仍为 2/3，不能新增④/⑤面板。
+- [~] **后续**：继续 mega n1500 和 family 各臂，PPT 保持 v43。
