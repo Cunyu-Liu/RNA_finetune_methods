@@ -1760,3 +1760,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **④/⑤边界**：random/family panels 和 candidates 不变，family⑤的 SSI 五档、degradation 5/5/4 档不变。
 - [x] **v70 与交付**：180 文件 manifest=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`；PPT=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`，PDF=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：GitHub 网络恢复后补推 af3de2f/2050a24 及本批提交；继续主矩阵、ncRNA family 和后续阶段。
+
+## N62. 2026-11-01 v61 首种子与 LR family staging
+
+- [x] **v61 验收**：1348 accepted、1 rejected；4 格 proof=complete。ERNIE SSI frozen-family 为 1/3，ERNIE CRISPR full-family LR 仅两档，不改变 20/80 完整组；SpliceAI 仍低信号。
+- [x] **展示版不变**：①a-4、④/⑤和 LR 页没有新增可见结论，PPT 与 v70 源包保持 v60，v61 台账暂存 teams。
+- [ ] **后续**：等待新三种子或完整 LR 组再更新展示版；继续补推 af3de2f/2050a24/bf52cd8。

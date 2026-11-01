@@ -939,3 +939,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. ERNIE CRISPR full-random 的四档 LR 全部完成，使 LR accepted=80/320、完整组=20/80。validation 选 1e-5（best_val=0.02518），分布为 3e-5/1e-4 各 8 组、1e-5 四组，3e-4 为 0；test 未参与选择，1e-5 的 test PR-AUC=0.011708813 仅作结果报告。
 3. random/family④/⑤的 panels 和 candidates 不变，family⑤仍为 SSI 三臂五档、degradation 5/5/4 档。当前 PPT 为 32 页，只更新①a-4、LR 及图源。
 4. 源包 revision=`20261101_refresh_v70_v60ledger_formal_ssi_closure_lr20`，180 个登记文件，manifest SHA256=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`。PPT SHA256=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`，PDF SHA256=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；嵌图、32 页 lint/layout/CRC 和实际渲染通过。
+
+### 10.61 v61 首种子与 LR family staging（2026-11-01）
+
+1. v61 为 1344+4=**1348 accepted、1 rejected**，v60 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI frozen-family/seed17 PCC=0.554263229，仅 1/3；ERNIE CRISPR full-family 的 default 与 1e-4 两格完成，但该 LR 组尚未四档闭合，不改变 20/80 完整组。
+2. SpliceAI family/n2000 仍 macro-F1=0.333280238，为近随机 low_signal。①a-4、random/family④/⑤和 LR 页均无新增可见结论，PPT 与 v70 源包保持 v60；v61 台账在 teams 保存，待下一次可见更新纳入。
