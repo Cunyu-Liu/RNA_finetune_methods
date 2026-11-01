@@ -1885,3 +1885,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **650M SSP**：frozen-random/seed17 pair-F1=0.2448，仅 1/3，SSP 仍 26/30；per-base 146/270、complementary 300/324、LR 105/320（完整组仍 24/80）、rank 67/96。
 - [x] **v80 与交付**：235 文件 manifest=`3198fd091d726d53bb11935016a27cbd1dfacfd6baabcf69b2adec2c7fa71ab4`；PPT=`6049a44feca49f0bf1823d4c84669dadbc0b3bd77a0b749fd0de789536887ae0`，PDF=`b405175eea336c4f34b0a4303a10ee661e699fd60c7f1e72197688104b32955c`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交本批交付。
+
+## N80. 2026-11-01 v81 ERNIE MRL family default tuning
+
+- [x] **v81 验收**：1434 accepted、0 rejected；新增格 proof=complete。ERNIE MRL full-family default 的 r=0.008370079，只作 tuning 诊断。
+- [x] **展示边界**：LR 106/320、完整组仍 24/80，未形成新完整组；PPT 与 v80 源包保持 v80，v81 台账暂存 teams。
+- [ ] **后续**：等待四档闭合后计算 validation 选档，继续其他真实缺口并提交文档。

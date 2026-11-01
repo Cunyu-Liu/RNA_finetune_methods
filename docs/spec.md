@@ -1044,3 +1044,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v80 为 1431+2=**1433 accepted、0 rejected**，v79 行逐字段保留；2 个新增格均 proof=complete。RNA-FM SSI LoRA-random 三种子 PCC=0.630259130/0.630326725/0.629694601，mean=0.630093485，正式闭合，①a-4 的 SSI 覆盖升为 17/30。
 2. 650M SSP frozen-random/seed17 pair-F1=0.2448，best_epoch=3、7 epochs 后按 patience=3 收敛，仅 1/3，不新增 SSP 三种子单元；SSP 仍为 26/30。per-base=146/270、complementary=300/324、LR=105/320（完整组仍 24/80）、rank=67/96，④/⑤不变。
 3. 源包 revision=`20261101_refresh_v80_v80ledger_rnafm_ssi_closure_650m_ssp_first`，235 个登记文件（含 v79–v80），manifest SHA256=`3198fd091d726d53bb11935016a27cbd1dfacfd6baabcf69b2adec2c7fa71ab4`。PPT SHA256=`6049a44feca49f0bf1823d4c84669dadbc0b3bd77a0b749fd0de789536887ae0`，PDF SHA256=`b405175eea336c4f34b0a4303a10ee661e699fd60c7f1e72197688104b32955c`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.80 v81 ERNIE MRL family default tuning（2026-11-01）
+
+1. v81 为 1433+1=**1434 accepted、0 rejected**，v80 行逐字段保留；新增格 proof=complete。ERNIE MRL full-family default tuning 的 Pearson r=0.008370079，仅作 held-out validation 选档诊断，不是正式三种子结果。
+2. 该组尚未四档闭合，LR accepted=106/320、完整组仍 24/80，选档分布不变。PPT 与 v80 源包保持 v80，v81 台账暂存 teams。
