@@ -227,3 +227,11 @@
 - [x] P4 交付：154 文件 manifest=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`；PPT=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`；PDF=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`；嵌图、lint/layout/CRC、渲染通过。
 - [ ] P5 后续：其余 family、主矩阵、LR/rank、Frozen 和后续阶段继续执行。
 
+## Q 组：v55 队列去重与 family 验收
+
+- [x] Q1 数据：v55 共 1324 accepted、1 rejected；9 个新增格最终均 proof=complete。
+- [x] Q2 科学边界：SSI family full/micro-LoRA 五档、mega-LoRA 三档；random④/⑤不变。degradation 覆盖仍 14/30，不把阶段表替换计作新增覆盖。
+- [x] Q3 去重：较晚重复进程已终止，三个重叠父队列已退休；8 live run/8 RID/0 重复，统一 equiv/lora_tiers 保留。
+- [x] Q4 证据与交付：队列证据入源包，157 文件 manifest=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`；PPT=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`；PDF=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、lint/layout/CRC、渲染通过。
+- [ ] Q5 后续：不得重启重叠专用队列；继续统一队列和后续科学矩阵。
+

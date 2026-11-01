@@ -896,3 +896,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. SSI family 的 33M-full 五档、33M-LoRA 四档、148M-LoRA n1000 已闭合；family 148M-LoRA n1500 为 2/3，不能把 family 写成全闭合。v54 registry accepted 对账为 per-base 106/270、complementary 280/324、LR 76/320、rank4/16 65/96。
 4. LR 的 80 组中 **19 组四档完整**，validation 选档为 3e-5/1e-4 各 8 组、1e-5 三组，3e-4 为 0；test 不参与。此仍为 interim，80 组全闭合前不生成 tuned 正式矩阵。
 5. 源包 revision=`20261101_refresh_v66_v54ledger_ssi_three_arm_closure_lr19`，154 个登记文件，manifest SHA256=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`。最终 PPT SHA256=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`，PDF SHA256=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`；嵌图、30 页 lint/layout/CRC 与实际渲染通过。
+
+### 10.55 v55 family 补全与 SSI 重复派发处置（2026-11-01）
+
+1. v54 的集群提交 `8699f85` 已在网络恢复后成功补推。v55 为 1315+9=**1324 accepted、1 rejected**，v54 行逐字段保留；9 个新增格最终均通过 `proof_state=complete`、checkpoint/CUDA/convergence 复核。
+2. ERNIE degradation LoRA-family 三种子 PCC=0.411077789/0.409588748/0.414239530，正式 best-val 替换阶段表，但该格已有三种子，故①a-4 覆盖计数仍为 14/30，不虚增。SSI family 的 33M-full/LoRA 五档、148M-LoRA 三档，达到 family 后续分析门槛；当前 random④/⑤的 6/8 和三组候选不变。
+3. **重复派发事故**：`equiv_ssi` 与 `equiv_ssi_mega` 在 pre-ledger 模型加载窗口双开 mega family/n2000/seed43。较早 PID=4010381 于 03:16:46 结束时 manifest 冲突，较晚 PID=4010481 的最终 result/plateau/checkpoint 完整，现 `proof_state=complete`；只用最终完整证明，不混两次结果。随后发现 mega family/n2500/seed17 也双开，保留统一队列较早 PID=4010602，终止专用队列较晚 PID=4010670。
+4. 停止三个重叠 SSI equiv 父 PID=3961023/3978455/3986059，保留统一 `equiv_tiers`/`lora_tiers`；其他在途子进程不中断。复核 8 个 live manifest run、8 个唯一 RID、0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`，源包亦收录于 `data/migrations/`。后续不得再并行启动相互重叠的注册表。
+5. 源包 revision=`20261101_refresh_v67_v55ledger_family_proof_queue_consolidation`，157 个登记文件，manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`。PPT SHA256=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`，PDF SHA256=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、30 页 lint/layout/CRC 与实际渲染通过。

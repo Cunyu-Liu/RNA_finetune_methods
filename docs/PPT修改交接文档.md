@@ -439,3 +439,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. ④/⑤均 6/8；degradation 与 SSI 三臂均五档。SSI ④仍为 full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000 三组候选，n3000 新点未增加候选。①a-4 的五种任务三种子单元为 25/26/17/14/14。
 3. 第19页 LR interim 更新为 19/80 组四档完整，3e-5/1e-4 各 8 组、1e-5 三组，3e-4 为 0；仍需全量和正式种子复测。v54 registry accepted 为 per-base 106/270、complementary 280/324、LR 76/320、rank 65/96。
 4. 当前源包 revision=`20261101_refresh_v66_v54ledger_ssi_three_arm_closure_lr19`，154 个登记文件，manifest SHA256=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`。嵌图、30 页 lint/layout/CRC 和实际渲染通过；全实验与最终科学验收尚未完成。
+
+## 29. 2026-11-01 当前 v55 阶段交付与队列边界
+
+1. 当前 PPT 为 30 页，SHA256=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`；PDF SHA256=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`。输入 **1324 accepted、1 rejected**，9 个新增格最终均 proof=complete。
+2. ERNIE degradation LoRA-family 正式三种子替换阶段表，覆盖计数仍 14/30；SSI family full/micro-LoRA 五档、mega-LoRA 三档。当前 random④/⑤仍 6/8、三组候选不变，未把 family 进展混入 random 面板。
+3. 两个 SSI 注册表曾在 pre-ledger 窗口重复派发。冲突 manifest 已排除，只有最终完整 proof 入库；另一起双跑保留较早进程、终止较晚进程。三个重叠父队列已停止，统一 equiv/lora_tiers 保留，复核 0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`。
+4. 当前源包 revision=`20261101_refresh_v67_v55ledger_family_proof_queue_consolidation`，157 个登记文件（含队列证据），manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`。嵌图、30 页 lint/layout/CRC 与实际渲染通过；最终科学验收未完成。

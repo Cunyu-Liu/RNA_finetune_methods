@@ -1711,3 +1711,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 与其他矩阵**：76/320 accepted，19/80 组四档完整；3e-5/1e-4 各 8 组、1e-5 三组，未选 3e-4，仍为 interim。registry accepted 为 per-base 106/270、complementary 280/324、rank 65/96。
 - [x] **v66 与交付**：154 文件，manifest SHA256=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`；PPT=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`，PDF=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`；嵌图、lint/layout/CRC 和实际渲染通过。
 - [ ] **后续**：继续 SSI family、其余主矩阵、LR/rank、Frozen 和后续阶段格，不以 SSI random 闭合代替全任务完成。
+
+## N56. 2026-11-01 v55 family 结果与队列合并
+
+- [x] **GitHub 补推**：网络恢复后 `8699f85 Close SSI three-arm scaling tiers` 已成功推送，v54 提交不再欠推。
+- [x] **v55 训练验收**：1324 accepted、1 rejected；9 个新增格最终均 proof=complete。ERNIE degradation LoRA-family 三种子闭合，但覆盖仍为 14/30；SSI family full/micro-LoRA 五档、mega-LoRA 三档，random④/⑤不变。
+- [x] **双跑定位**：mega family/n2000/seed43 的两个 PID=4010381/4010481 在 pre-ledger 窗口重叠；前者 manifest 冲突排除，后者最终完整 proof 才入库。mega family/n2500/seed17 双开时保留较早 4010602、终止较晚 4010670。
+- [x] **队列合并**：停止重叠父 3961023/3978455/3986059，保留统一 equiv/lora_tiers，其他子进程继续；复核 8 run/8 RID/0 重复。证据=`status/queue_actions/ssi_queue_consolidation_20261101.json`。
+- [x] **v67 与交付**：157 文件含队列证据，manifest SHA256=`485ac4887b0e6f1b854bc3dd72f88c0ea867cdbfcf2882b44690a53f9c1f2752`；PPT=`e61f2469b78054583ab0e840426c6696b3d2c5b6334358cd0d186477e0b05034`，PDF=`7067c6bd7fd514630a7791678be3fbd695e89069e964dd33b0e3d06211f0a5da`；嵌图、lint/layout/CRC 和渲染通过。
+- [ ] **后续**：统一队列继续 family 和其他真实缺口；禁止重启已退休的重叠专用队列，完成格不重跑。
