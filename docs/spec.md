@@ -996,3 +996,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v71 相对 v70 新增 0，仍为 **1375 accepted、0 rejected**。长时运行的 mega SpliceAI full-random/seed17 已于 03:48 收敛并在此前台账入库，plateau 为 best_epoch=0、4 epochs、patience=3，不是卡死。
 2. 当前 6 个在途 run、6 个唯一 RID、0 重复。SpliceAI LoRA family/n3000、MRL mega-full tuning、SpliceAI full-random/seed29、SSI LoRA-family/seed29 均有 plateau 进度；两格 pre-ledger pending 属新启动，未见 CPU 静默降级证据。当前展示版与 v75 源包保持 v69，不根据进程存活或中间 plateau 提前写结论。
+
+### 10.72 v72 complementary 650M frozen 预算校准与启动（2026-11-01）
+
+1. v72 相对 v71 新增 0，仍为 **1375 accepted、0 rejected**。complementary 的 44 个未验收格逐格 proof 均为 runnable，且全部属于 650M：frozen 25、LoRA 1、full 18；不是冲突或结果丢失。
+2. 这 25 个 frozen 格沿用 `need_gb=28`，但既有 650M frozen 实测峰值约 4.88 GiB，导致父队列长期空等。当前 GPU 有 13.46 GiB 空闲、util 66%，且 complementary 无活跃子进程，故停止旧父 PID=3431053，仅抽取 frozen 25 格，保留 RID/result_dir，校准 `need_gb=5.5`，以独立 state-dir 和 2 worker 启动新父 PID=4039855。LoRA/full 未启动，仍等自然独占窗口。
+3. 启动前 25 格均 runnable、RID/result_dir 唯一、无目标 runner；证据=`status/queue_actions/complementary_650m_frozen_launch_20261101.json`。首个 `ft_rinalmo650m_noncodingrnafamily_frozen_s17_random_bestval_v1` PID=4039876 已真实 CUDA 运行，GPU 22.47/32.61 GiB、util 99%；当前 7 run、7 RID、0 重复。启动不记完成，第二 worker 按资源门等待。

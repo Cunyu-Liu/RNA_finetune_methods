@@ -1828,3 +1828,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **在途证据**：6 run、6 RID、0 重复；多格 plateau 正常推进，两格 pre-ledger 属新启动，未见 CPU 静默降级证据。
 - [x] **展示版不变**：PPT 与 v75 源包保持 v69，不把中间 plateau 或进程存活写成最终结论。
 - [ ] **后续**：等待新完成格并继续三轮验收，及时补推本批文档。
+
+## N72. 2026-11-01 v72 650M frozen 预算校准与启动
+
+- [x] **未验收审计**：complementary 44 格全部 runnable，且全为 650M（frozen25/LoRA1/full18），不是 conflict；v72 仍 1375 accepted、0 rejected。
+- [x] **预算校准**：frozen 实测峰值约 4.88 GiB，旧 need=28 导致空等。无活跃子进程时停止旧父 3431053，frozen-only 25 格改 need=5.5，独立父 4039855、2 worker；LoRA/full 不动。
+- [x] **CUDA 与防重**：启动前 25 格 runnable、RID/result_dir 唯一、无目标 runner；首个 650M ncRNA frozen PID=4039876 已运行，GPU 22.47/32.61 GiB、util 99%，7 run/7 RID/0 重复。证据=`status/queue_actions/complementary_650m_frozen_launch_20261101.json`。
+- [ ] **后续**：按 result/plateau/checkpoint/CUDA 验收新格，第二 worker 资源门等待，不为占显存制造 OOM。
