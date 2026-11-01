@@ -1645,3 +1645,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-full n2500 三种子**：seed17/29/43 PCC=0.596767788/0.598502056/0.595451220，整组闭合；33M-LoRA n2500 为 2/3，148M-LoRA n1500 仍缺两个种子，④/⑤计数不变。
 - [x] **v45 与源包**：1235 accepted、1 rejected；源包 136 文件，manifest SHA256=`360e1c48473876b1fe6015c4bfa537cf515d63a16db7c34f61e196e5d95da262`。
 - [~] **后续**：继续 mega n1500 和 micro-LoRA n2500，PPT 保持 v43。
+
+## N47. 2026-11-01 待运行种子复核（避免误判闭合）
+
+- [x] **v46 staging**：1239 accepted、1 rejected；源包 138 文件，manifest SHA256=`0b77c9e4973f1134f36dc84889e8f83756b2afaa1229b1156fcfd70ed83d02c3`。
+- [x] **待运行证据**：degradation family mega-LoRA requested2000 的 seed17 尚无 result/plateau，也无同名进程，属于未启动而非结果丢失；该组实际为 2/3。此前口头预判闭合已立即更正，未重跑或写入科学结论。
+- [~] **当前边界**：SSI 148M-LoRA n1500 也为 2/3，33M-LoRA n2500 为 2/3；④/⑤不变，PPT 保持 v43。
