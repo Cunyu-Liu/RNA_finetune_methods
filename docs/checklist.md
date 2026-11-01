@@ -374,3 +374,10 @@
 - [x] AI3 展示：无新科学单元，PPT 与 v83 源包保持 v88。
 - [ ] AI4 后续：同步并提交文档，继续剩余真实科学缺口。
 
+## AJ 组：v92 650M SSP family n=2 验收
+
+- [x] AJ1 数据：1449 accepted、0 rejected；新增 seed29 pair-F1=0.2711，proof=complete，CUDA/convergence 通过。
+- [x] AJ2 科学边界：seed17/29=0.3237/0.2711，当前 2/3，不写闭合；①a-4 与④/⑤不变，650M frozen 24/25。
+- [x] AJ3 交付：264 文件 manifest=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`；PPT=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`；嵌图、lint/layout/CRC 与四个更新页渲染通过。
+- [ ] AJ4 后续：三地同步并推送，等待 seed43，继续真实科学缺口。
+

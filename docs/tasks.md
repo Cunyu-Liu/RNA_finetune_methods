@@ -1961,3 +1961,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：v91 为 1448 accepted、0 rejected；micro SpliceAI full-family/n3000/seed17 macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。证据 SHA256=`b54ab8a648f106dd531cfb03ad950372375d8c1f43a4df822c1486a18873f42d`。
 - [x] **矩阵与展示**：equiv 418/420；per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、650M frozen 23/25。无新科学单元，PPT 与 v83 源包保持 v88。
 - [ ] **后续**：同步并提交 v91 文档，继续 equiv 最后两格和其他真实缺口，低信号格不用于等价或 scaling。
+
+## N91. 2026-11-01 v92 650M SSP family 第二种子
+
+- [x] **单格验收**：v92 为 1449 accepted、0 rejected；650M SSP frozen-family/seed29 pair-F1=0.2711、best_epoch=5、9 epochs，proof=complete、CUDA 收敛，证据 SHA256=`81cbeb33c81f55f3bf434d8a1522df80c8de39dc0ba6d3136c2f5e696881f7a5`。
+- [x] **科学边界**：与 seed17=0.3237 组成 2/3，缺 seed43，不写闭合；per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、equiv 418/420、650M frozen 24/25。
+- [x] **图与交付**：源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 文件，manifest=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`；PPT=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。十张嵌图、32 页 lint/layout/CRC 与四个更新页渲染通过。
+- [ ] **后续**：完成三地同步与 GitHub 推送，等待 seed43 和 equiv 最后两格，继续主矩阵真实缺口。

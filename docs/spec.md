@@ -1110,3 +1110,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v91 为 1447+1=**1448 accepted、0 rejected**，v90 行逐字段保留。新增 `ft_rinalmomicro_spliceai_full_s17_family_b20fix_e33000_lr1e-05_bestval_v1` proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过；macro-F1=0.333280238，best_epoch=0、4 epochs，仍近随机，不形成新面板或等价候选。
 2. 当前 per-base=149/270、complementary=303/324、LR=108/320（25/80 组）、rank4/16=68/96、equiv=418/420、650M frozen=23/25；①a-4 与④/⑤不变。证据=`status/bestval_v91_new_proof.json`，SHA256=`b54ab8a648f106dd531cfb03ad950372375d8c1f43a4df822c1486a18873f42d`。
 3. 无新增三种子单元或完整 LR 组，PPT 与 v83 源包保持 v88；v91 台账和证明在 teams 留存，待下一次可见更新纳入。
+
+### 10.91 v92 650M SSP frozen-family 第二种子（2026-11-01）
+
+1. v92 为 1448+1=**1449 accepted、0 rejected**，v91 行逐字段保留。新增 650M SSP frozen-family/seed29 pair-F1=0.2711，best_epoch=5、9 epochs，proof=complete，CUDA、checkpoint 和 plateau=CONVERGED 复核通过；与 seed17=0.3237 组成 2/3，仍缺 seed43，不写闭合。证据=`status/bestval_v92_new_proof.json`，SHA256=`81cbeb33c81f55f3bf434d8a1522df80c8de39dc0ba6d3136c2f5e696881f7a5`。
+2. 当前 per-base=149/270、complementary=303/324、LR=108/320（25/80 组）、rank4/16=68/96、equiv=418/420、650M frozen=24/25；①a-4 三项五种任务计数与④/⑤不变。
+3. 源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 个登记文件，manifest SHA256=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`。v89–v92 台账、各新增格证明和 v90 计数审计均已纳入；动态图源三处一致。
+4. 当前 PPT SHA256=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF SHA256=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。32 页 lint/layout/CRC、十张关键嵌图 SHA 与第8/27/28/29页实际渲染通过；第27页 SSP frozen-family 显示 2，第8页仍为 n<3 斜线。

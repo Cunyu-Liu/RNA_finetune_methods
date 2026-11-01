@@ -570,3 +570,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 
 1. v91 为 **1448 accepted、0 rejected**；新增 micro SpliceAI full-family/n3000/seed17，macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。
 2. equiv 进度升为 418/420，但无新三种子单元、完整 LR 组或有效④/⑤结果，因此 PPT 与 v83 源包保持 v88。当前 PPT/PDF SHA256 仍为 `20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc` / `3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。
+
+## 48. 2026-11-01 当前 v92：650M SSP frozen-family n=2
+
+1. 当前 PPT 为 32 页，SHA256=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`；PDF SHA256=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。输入 **1449 accepted、0 rejected**，新增格 proof=complete。
+2. 650M SSP frozen-family 的 seed17/29 pair-F1=0.3237/0.2711，目前 2/3。第27页覆盖热图显示 2，第8页对应柱仍为 n<3 斜线，不写三种子闭合；第28/29页成本图同步至 v92。
+3. 当前 per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、equiv 418/420、650M frozen 24/25；①a-4 与④/⑤不变。
+4. 当前源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 个登记文件，manifest SHA256=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第8/27/28/29页实际渲染通过。
