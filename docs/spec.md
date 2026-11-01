@@ -1065,3 +1065,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v84 为 1436+1=**1437 accepted、0 rejected**，v83 行逐字段保留；新增格 proof=complete。ERNIE MRL full-family 的 1e-4 tuning 格 Pearson r=0.689845602，best_epoch=1、5 epochs 后按 patience=3 收敛，仅作 validation 选档诊断。
 2. 该组尚未四档闭合，LR accepted=107/320、完整组仍 24/80，选档分布不变。PPT 与 v80 源包保持 v80，v84 台账暂存 teams。
+
+### 10.84 v85 在途进度复查（2026-11-01）
+
+1. v85 相对 v84 新增 0，仍为 **1437 accepted、0 rejected**。650M SSP frozen-random/seed43 当前已到 epoch5、best_epoch=3，validation losses=[0.570911,0.527924,0.489130,0.468455,0.483426,0.477253]，处于正常收敛过程，尚不能作为完成结果。
+2. ERNIE MRL full-family 的 3e-5 与 1e-5 两档尚未启动。PPT 与 v80 源包保持 v80，等待新完成格后再验收。

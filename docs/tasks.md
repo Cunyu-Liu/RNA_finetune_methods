@@ -1910,3 +1910,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v84 验收**：1437 accepted、0 rejected；新增格 proof=complete。ERNIE MRL full-family 的 1e-4 格 r=0.689845602，仅 tuning 诊断。
 - [x] **展示边界**：LR 107/320、完整组仍 24/80，未形成新完整组；PPT 与 v80 源包保持 v80，v84 台账暂存 teams。
 - [ ] **后续**：等待四档闭合后计算 validation 选档，继续其他真实缺口并提交文档。
+
+## N84. 2026-11-01 v85 在途进度复查
+
+- [x] **台账**：v85 新增 0，仍 1437 accepted、0 rejected。
+- [x] **在途证据**：650M SSP seed43 已到 epoch5、best_epoch=3，validation loss 整体下降；ERNIE MRL family 的 3e-5/1e-5 尚未启动。
+- [x] **展示边界**：PPT 与 v80 源包保持 v80，不把中间 epoch 写成完成结果。
+- [ ] **后续**：等待新完成格并继续三轮验收，及时提交本批文档。
