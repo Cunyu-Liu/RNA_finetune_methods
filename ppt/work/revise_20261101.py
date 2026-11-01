@@ -167,13 +167,13 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/17/14/14 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/18/14/14 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 20/80 组，validation 选档均未选 3e-4（3e-5/1e-4 各 8 组，1e-5 四组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 21/80 组，validation 选档均未选 3e-4（3e-5/1e-4 各 8 组，1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

@@ -1772,3 +1772,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v62 验收**：1349 accepted、1 rejected；新增格 proof=complete。ERNIE CRISPR full-family 已有 3e-4/1e-4/3e-5，缺 1e-5；LR 83/320、完整组仍 20/80。
 - [x] **队列与展示**：6 live run、6 RID、0 重复；无新增可见结论，PPT 与 v70 源包保持 v60。
 - [ ] **后续**：等待 1e-5 完成后再计算该组 validation 选档；继续其他矩阵和待推提交。
+
+## N64. 2026-11-01 v64 路径恢复与 LR 21 组
+
+- [x] **路径修复**：长期 rejected 的 mega SpliceAI frozen-family/seed17 在 teams 有完整副本，前后 proof=complete；仅修 ledger out_dir，不重跑，artifact 哈希入证据。v64 rejected=0。
+- [x] **v64 验收**：1352 accepted、0 rejected；3 个新增格均 proof=complete。恢复格补齐正式三种子，SpliceAI 覆盖 18/30；SSI 仍 14/30。
+- [x] **LR 第21组**：ERNIE CRISPR full-family 四档闭合，validation 选 1e-5；LR 84/320、21/80 组，选档分布 8/8/5/0，test 不参与。
+- [x] **v71 与交付**：189 文件含路径证据，manifest=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`；PPT=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`，PDF=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、LR/rank、ncRNA family 和后续阶段；网络恢复后补推全部待推提交。

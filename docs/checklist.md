@@ -260,3 +260,11 @@
 - [x] T4 交付：180 文件 manifest=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`；PPT=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`；PDF=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] T5 后续：补推待推提交，继续主矩阵、ncRNA family 和后续阶段。
 
+## U 组：v64 路径恢复与 LR 21 组验收
+
+- [x] U1 路径：teams 完整副本前后 proof=complete，仅修 ledger 路径、不重跑，artifact SHA 留证；v64 rejected=0。
+- [x] U2 数据：1352 accepted、0 rejected；3 格 proof=complete，SpliceAI 覆盖 18/30，SSI 14/30。
+- [x] U3 LR：84/320、21/80 组完整；新组 validation 选 1e-5，选档分布 8/8/5/0，test 不参与。
+- [x] U4 交付：189 文件 manifest=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`；PPT=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`；PDF=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] U5 后续：继续其他真实缺口并补推待推提交。
+

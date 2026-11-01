@@ -949,3 +949,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v62 为 1348+1=**1349 accepted、1 rejected**，v61 行逐字段保留；新增格 proof=complete。ERNIE CRISPR full-family 的 3e-5 格 PR-AUC=0.005194954，已有 3e-4/1e-4/3e-5 三档，仍缺 1e-5，不能提前形成第 21 个完整组。
 2. 当前 LR registry accepted=83/320、完整组=20/80。在途 6 个 manifest run、6 个唯一 RID、0 重复。PPT 与 v70 源包继续保持 v60，v62 台账暂存 teams。
+
+### 10.64 v64 ledger 路径恢复、SpliceAI 18 与 LR 21（2026-11-01）
+
+1. v63 无新增；v64 为 1349+3=**1352 accepted、0 rejected**，v63 行逐字段保留，3 个新增格均 proof=complete。长期 rejected 的 `ft_rinalmomega_spliceai_frozen_s17_family_b20fix_bestval_v1` 已找到 teams 完整副本，修复前/后均 `proof_state=complete`，仅将 ledger out_dir 从 `/root/...` 修为 teams，**不重跑**。证据=`status/migrations/spliceai_mega_frozen_s17_family_ledger_path_repair_20261101.json`，包含 result/plateau/best.ckpt SHA256。
+2. 路径恢复格 macro-F1=0.368894380，与 seed29/43 构成正式三种子，SpliceAI①a-4 覆盖升为 18/30。ERNIE SSI frozen-family 目前 2/3，SSI 仍 14/30。
+3. ERNIE CRISPR full-family 四档 LR 闭合，validation 选 1e-5（best_val=0.035947），LR accepted=84/320、完整组=21/80；分布为 3e-5/1e-4 各 8 组、1e-5 五组，3e-4 为 0，test 不参与。
+4. 源包 revision=`20261101_refresh_v71_v64ledger_ledger_path_recovery_lr21`，189 个登记文件（含 v61–v64 与路径证据），manifest SHA256=`0131b8eb5b175ecda8aa968c7d822306d77fa4662e553dfc953db7acc625658e`。PPT SHA256=`704ae8f0d45c6298bff1c35b08b9de62807236df3085b20e10e2fdd8b0b8ca6a`，PDF SHA256=`f7c5332c4030139a948057e4d721fe066a9b46cbe5ee669faa47bfafa652affc`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
