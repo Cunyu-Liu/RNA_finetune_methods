@@ -1560,3 +1560,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v33 staging**：1165 accepted、1 rejected；源包 112 文件，manifest SHA256=`1acce019e887dbaec06496785efc4013227fa7882c010c6892bf75613c5cc737`。
 - [x] **family 首批**：degradation 33M-full family/n1000 的 seed17/29 PCC=0.388945060/0.378433095，best_epoch=2/1，epochs=6/5；低于 random 同档，但 seed43 未闭合，不作三种子或 split 定律。
 - [~] **后续**：继续 family seed43、两个 LoRA 臂和 SSI；当前④/⑤保持 v30，不用 family 单点修改 random 页面。
+
+## N34. 2026-11-01 SSI 首批与 degradation family 三种子
+
+- [x] **degradation family full/n1000 闭合**：seed17/29/43 PCC=0.388945060/0.378433095/0.379857664，mean=0.382411940、SD=0.005702508、95% CI half-width=0.006452995；三格 proof=complete、patience=3 收敛。
+- [x] **SSI 首批**：33M-full random/n1000/seed17 PCC=0.562050997，33M-LoRA seed17/29=0.580907855/0.582093511，均 proof=complete、best_epoch=0、4 epochs 收敛；整组尚未闭合，不能新增④/⑤面板。
+- [x] **v34 与源包**：1174 accepted、1 rejected；源包 114 文件，manifest SHA256=`a4e0f8fa43283354b2ad131ce374713bc438a6487d98b05f527574ff5f1ed410`，PPT 保持 v30。
+- [ ] **后续**：补 SSI 三种子和后续档，以及 degradation family 的两个 LoRA 臂；单点不作最终 scaling 结论。
