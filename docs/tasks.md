@@ -1651,3 +1651,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v46 staging**：1239 accepted、1 rejected；源包 138 文件，manifest SHA256=`0b77c9e4973f1134f36dc84889e8f83756b2afaa1229b1156fcfd70ed83d02c3`。
 - [x] **待运行证据**：degradation family mega-LoRA requested2000 的 seed17 尚无 result/plateau，也无同名进程，属于未启动而非结果丢失；该组实际为 2/3。此前口头预判闭合已立即更正，未重跑或写入科学结论。
 - [~] **当前边界**：SSI 148M-LoRA n1500 也为 2/3，33M-LoRA n2500 为 2/3；④/⑤不变，PPT 保持 v43。
+
+## N48. 2026-11-01 SSI LoRA n2500 闭合 staging
+
+- [x] **33M-LoRA n2500 三种子**：seed17/29/43 PCC=0.602828377/0.609665477/0.605354468，整组闭合；33M-full n3000 为 2/3，148M-LoRA n1500 仍为 2/3，④/⑤计数不变。
+- [x] **v47 与源包**：1243 accepted、1 rejected；源包 140 文件，manifest SHA256=`09a4082e5b17d72d952b80ed0206e5b3af57eef88a0d903ee5775e59bdd8161c`。
+- [~] **后续**：继续 SSI 148M-LoRA n1500 和 full n3000，PPT 保持 v43。
