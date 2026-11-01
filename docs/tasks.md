@@ -1639,3 +1639,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **mega n1500 首点**：seed17 PCC=0.590475738，proof=complete，best_epoch=0、4 epochs、patience=3 收敛，RTX 5090；仍缺两个种子，④不能升至 6/8。
 - [x] **v44 与源包**：1229 accepted、1 rejected；源包 134 文件，manifest SHA256=`97b720f5eb90eed04894cb4ff155806f6e8e1c02642d157bd0d72959e51b4b6f`。
 - [~] **后续**：继续 mega n1500 三种子和 n2500 各臂，PPT 保持 v43。
+
+## N46. 2026-11-01 SSI full n2500 闭合 staging
+
+- [x] **33M-full n2500 三种子**：seed17/29/43 PCC=0.596767788/0.598502056/0.595451220，整组闭合；33M-LoRA n2500 为 2/3，148M-LoRA n1500 仍缺两个种子，④/⑤计数不变。
+- [x] **v45 与源包**：1235 accepted、1 rejected；源包 136 文件，manifest SHA256=`360e1c48473876b1fe6015c4bfa537cf515d63a16db7c34f61e196e5d95da262`。
+- [~] **后续**：继续 mega n1500 和 micro-LoRA n2500，PPT 保持 v43。
