@@ -1587,3 +1587,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v37 staging**：1192 accepted、1 rejected；源包 120 文件，manifest SHA256=`9661d29922e550ca820c0e5aa0ff9485f0d663cf45239961dee1c9fab8b175fc`。
 - [x] **当前覆盖**：SSI n1500 的 33M-full=1/3、33M-LoRA=2/3、148M-LoRA=0/3；degradation family 148M-LoRA n1000=2/3。degradation family full 的 requested 2000 实际 n_train=1680，需与 random cap1552 分开记录。
 - [~] **后续**：继续闭合三种子，不新增④/⑤面板，PPT 保持 v30；cap 绘图时按 split 和 RID 分别标注，不能混用 actual 数。
+
+## N38. 2026-11-01 SSI 148M-LoRA 独立队列
+
+- [x] **拆分与防重**：从现有 SSI equiv 注册表抽取 mega-LoRA 30 格，RID/result_dir 唯一，启动前全 runnable、无同名 runner，need=3.5 GiB；不新增实验设计。
+- [x] **队列与资源门**：独立 state-dir 以 2 worker、`ssh -f` 和绝对路径启动，父 PID=3986059。核查时 GPU=29.9/32.6 GiB、util=99%，未达到 3.5+1 GiB 安全门，父进程等待而未启动训练；不是失败或完成，不强行制造 OOM。
+- [~] **后续**：micro-full/LoRA 自然释放后由 mega 队列补位；④/⑤和 PPT 保持 v30，等真实结果验收。

@@ -854,3 +854,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. degradation random 五档基本闭合后，继续执行同 cap 重复点会延迟 SSI 的首个任务覆盖。现从既有 equiv/lora 子注册表抽取 SSI-only canonical 任务，不新增实验设计：equiv=60、micro-LoRA=30，RID/result_dir 唯一，启动前均 runnable、无同名 runner。
 2. 使用 `ssh -f` 和全绝对路径启动两个独立 state-dir，各 2 worker，避免此前 launcher 变量作用域和 SSH 挂起问题。equiv/lora 父 PID=3978455/3978477。首个 SSI 33M-LoRA random/n1000/seed17 PID=3978503 已使用 `--device 0`，GPU 实占 1204 MiB，未发生 CPU 降级；启动不记完成。
 3. 之前卡住的 GitHub 推送经 `ls-remote` 超时确认是网络问题，已终止而不影响提交。网络恢复后 `1411d84..bcecd4d` 推送成功，`aff69ea` 与 `bcecd4d` 均已上 GitHub。v32 为 1161 accepted、1 rejected，主要仍是 degradation 同 cap 结果，PPT 保持 v30。
+
+### 10.49 SSI 148M-LoRA 独立车道与显存等待（2026-11-01）
+
+1. 结论④需要 SSI 的 148M-LoRA，但其 30 格排在 33M-full 全矩阵之后。现从 `equiv_ssi_jobs_20261101.json` 抽取 `equiv_ssi_mega_jobs_20261101.json`，不新增实验：30 格、RID/result_dir 唯一、启动前全 runnable、无同名 runner，need=3.5 GiB。
+2. 独立 state-dir `equiv_ssi_mega_20261101` 以 2 worker、`ssh -f` 和全绝对路径启动，父 PID=3986059，artifact 根指向 teams。首次进程核查时 GPU=29.9/32.6 GiB、util=99%，未达到 3.5+1 GiB 安全门，故父进程等待而未启动训练；这是正常资源等待，不是失败或完成，禁止为占满显存制造 OOM。
+3. 现有 micro-full seed43/n1500 和 micro-LoRA seed17/n2000 继续运行，待自然释放后由 mega 队列补位。④/⑤和 PPT 保持 v30，直到真实结果闭合。
