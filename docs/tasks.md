@@ -1619,3 +1619,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-LoRA requested2000 三种子**：actual=1680，seed17/29/43 PCC=0.396906205/0.378269200/0.396009081，mean=0.390394828、SD=0.010510679、95% CI half-width=0.011893953；三格 proof=complete，cap 与 random 分开。
 - [x] **v41 staging**：1216 accepted、1 rejected；源包 128 文件，manifest SHA256=`fd10bfb19ac6deaf6176e8a167fc0797a609aa6d2609fc2f442cb344699e6e30`。
 - [~] **当前边界**：SSI 148M-LoRA 为 2/3，n2000 的 33M-full/LoRA 也各为 2/3，仍不新增④/⑤面板，PPT 保持 v30。
+
+## N43. 2026-11-01 SSI 148M-LoRA n1000 闭合
+
+- [x] **mega-LoRA random/n1000 三种子**：seed17/29/43 PCC=0.561801670/0.558674289/0.556744422，mean=0.559073460、SD=0.002552145、95% CI half-width=0.002888024；三格 proof=complete、best_epoch=0、4 epochs 收敛。
+- [x] **v42 与源包**：1219 accepted、1 rejected；源包 130 文件，manifest SHA256=`f04a5ca308d043db713c6d0012b3808b348f8356973f40a1f2e1bb30239bae91`。
+- [~] **后续**：④需要该臂至少再一档，n2000 的 33M-full/LoRA 仍各为 2/3；当前不新增④/⑤面板，PPT 保持 v30。
