@@ -1657,3 +1657,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-LoRA n2500 三种子**：seed17/29/43 PCC=0.602828377/0.609665477/0.605354468，整组闭合；33M-full n3000 为 2/3，148M-LoRA n1500 仍为 2/3，④/⑤计数不变。
 - [x] **v47 与源包**：1243 accepted、1 rejected；源包 140 文件，manifest SHA256=`09a4082e5b17d72d952b80ed0206e5b3af57eef88a0d903ee5775e59bdd8161c`。
 - [~] **后续**：继续 SSI 148M-LoRA n1500 和 full n3000，PPT 保持 v43。
+
+## N49. 2026-11-01 SSI full 五档闭合
+
+- [x] **33M-full n3000 三种子**：seed17/29/43 PCC=0.602670339/0.602108070/0.601224306，mean=0.602000905、SD=0.000728949、95% CI half-width=0.000824883；三格 proof=complete，best_epoch=0、4 epochs 收敛。full 的 1000–3000 五档均闭合。
+- [x] **v48 与源包**：1244 accepted、1 rejected；源包 142 文件，manifest SHA256=`d99502481d197061528b9619c940f14aac2f80929eead1001ccc9eb521cc7a81`。
+- [~] **后续**：继续 SSI 148M-LoRA n1500 和 micro-LoRA n3000；④/⑤计数不变，PPT 保持 v43。
