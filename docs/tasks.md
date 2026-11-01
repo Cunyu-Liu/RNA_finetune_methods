@@ -1766,3 +1766,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v61 验收**：1348 accepted、1 rejected；4 格 proof=complete。ERNIE SSI frozen-family 为 1/3，ERNIE CRISPR full-family LR 仅两档，不改变 20/80 完整组；SpliceAI 仍低信号。
 - [x] **展示版不变**：①a-4、④/⑤和 LR 页没有新增可见结论，PPT 与 v70 源包保持 v60，v61 台账暂存 teams。
 - [ ] **后续**：等待新三种子或完整 LR 组再更新展示版；继续补推 af3de2f/2050a24/bf52cd8。
+
+## N63. 2026-11-01 v62 ERNIE family LR 第三档
+
+- [x] **v62 验收**：1349 accepted、1 rejected；新增格 proof=complete。ERNIE CRISPR full-family 已有 3e-4/1e-4/3e-5，缺 1e-5；LR 83/320、完整组仍 20/80。
+- [x] **队列与展示**：6 live run、6 RID、0 重复；无新增可见结论，PPT 与 v70 源包保持 v60。
+- [ ] **后续**：等待 1e-5 完成后再计算该组 validation 选档；继续其他矩阵和待推提交。
