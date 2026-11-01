@@ -1532,3 +1532,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **嵌图问题定位与修复**：首次渲染发现⑤文字为 5/8、图片仍为 v4，根因是修订脚本只改文字未替换 Picture 6。已补 `replace_picture()`，最终嵌图与源 PNG SHA=`fc4d4e5822de08ba403960ebc794ada5bc1f0264f00af7538e20a388eaee1e0c` 一致，④/⑤渲染均正确。
 - [x] **最终 v29 交付**：PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`，PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`；30 页 lint/layout/CRC/字体/行距/实际渲染通过。
 - [ ] **后续**：继续 148M-LoRA 第三档、SSI 和其他科学矩阵；5/8 不是全任务完成。
+
+## N30. 2026-11-01 cap 下第三候选与三臂分档
+
+- [x] **三臂分档**：degradation 33M-full 四档、33M-LoRA 三档、148M-LoRA 三档，均三种子；④/⑤保持 5/8。
+- [x] **第三候选与非唯一性**：full2500(cap1552)≈LoRA1500，Δ=−0.000846227、CI=0.017896603；full2500≈LoRA2000 也满足规则，故页面明确“候选非唯一”，构图按最接近配对，不写唯一交点。2000/2500 同 cap，不重复计为新增数据证据。
+- [x] **v30 与源包**：1148 accepted、1 rejected；13 个 cap 行。源包 106 文件，manifest SHA256=`73bfe27bc67afe477d990d54c2c65a2440d422d5a420212cf6ee9a829394e365`。
+- [x] **最终交付**：PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`，PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/实际渲染通过。
+- [ ] **后续**：继续 degradation family/3000 档和 SSI，其他科学矩阵不提前收口。

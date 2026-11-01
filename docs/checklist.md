@@ -180,3 +180,11 @@
 - [x] J4 交付：PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`；PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`；30 页 lint/layout/CRC/实际渲染通过。
 - [ ] J5 边界：其余任务、Frozen 和完整科学矩阵继续执行，④/⑤的 5/8 不是全实验完成。
 
+## K 组：v30 cap 候选与分档验收
+
+- [x] K1 数据：v30 共 1148 accepted、1 rejected；degradation 三臂均至少三档，④/⑤均 5/8。
+- [x] K2 候选：full2500(cap1552)≈LoRA1500；full2500≈LoRA2000 也满足规则，页面明确候选非唯一，不写唯一交点。
+- [x] K3 cap：2000/2500 同 actual=1552，13 个 cap 行入 metadata，不重复计为新增数据证据。
+- [x] K4 交付：PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`；PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/渲染通过。
+- [ ] K5 后续：degradation family/3000 档、SSI 和其他科学矩阵继续执行。
+

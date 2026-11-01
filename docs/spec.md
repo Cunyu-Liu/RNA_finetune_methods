@@ -842,3 +842,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v29 中 degradation 33M-LoRA 已有 1000/1500/2000 三档三种子，故⑤也达到 5/8；④保持 5/8。requested 2000/2500 的 actual n_train 均为 1552，不能把相同训练上限的重复点解释为新增数据收益或自然平台。
 2. 两张图在 degradation 面板直接标 `requested≥2000: actual n=1552`，metadata 保留 8 个 cap 行。PPT 页脚明确 requested 与 actual 的区别，④继续显示两个等价候选，⑤只描述模型内三档曲线。
 3. 首次 v29 渲染发现⑤正文已是 5/8、嵌图却仍为旧 v4，根因是修订脚本只改文字未替换 Picture 6。已补 `replace_picture()` 并复核最终嵌图 SHA=`fc4d4e5822de08ba403960ebc794ada5bc1f0264f00af7538e20a388eaee1e0c` 与源 PNG 一致，④/⑤实际渲染均通过。最终 PPT SHA256=`6081017e88ae18eaad8d4325e5a68b13ac4d3d94da8951b14d0a4796be7d3307`，PDF SHA256=`a378075ecc1d754c5ff94bb96e546386165fc00bdb0a418703b242b7574c9ff2`。
+
+### 10.47 cap 下候选非唯一与三臂分档验收（2026-11-01）
+
+1. v30 中 degradation 三臂均至少三档：33M-full 四档、33M-LoRA 三档、148M-LoRA 三档；④/⑤均保持 5/8，但证据覆盖更完整。full2500↔LoRA1500 为第三个等价候选，Δ=−0.000846227、CI=0.017896603；full2500↔LoRA2000 也满足规则，说明候选非唯一，构图按预注册的最接近配对选择，不写唯一交点。
+2. requested 2000/2500 的 actual 均为 1552，full2000/2500 的候选属于同一 cap，不能重复计为新增数据证据。metadata 保存 13 个 cap 行，页面明确“候选非唯一”和 cap 边界。
+3. 最终 PPT SHA256=`4420d4e51fd4e0668a5ff63d9afc5c269c747b4ac8a33f9871391acf2ac5cac1`，PDF SHA256=`9695f050e3e0133924b119f4590c606a727e7830d0e231455d1a0f7af8225d40`；④/⑤ lint/layout/CRC/实际渲染通过。v30 为 1148 accepted、1 rejected，其他任务继续补。
