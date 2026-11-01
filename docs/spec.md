@@ -1027,3 +1027,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 650M modification frozen-family 的 seed29 AUC=0.657170378，与 seed17 组成 2/3，页面改为 n=2 斜线；random 保持三种子=0.666272464。MRL 官方图不变，④/⑤不变。
 3. RNA-FM SSI LoRA-random/seed17 PCC=0.630259130，仅 1/3；ERNIE MRL full tuning 仅新增 3e-5 一格，LR accepted=104/320、完整组仍 24/80。per-base=144/270、complementary=298/324、rank=67/96。
 4. 源包 revision=`20261101_refresh_v78_v77ledger_spliceai_full_closure_mod_n2`，229 个登记文件，manifest SHA256=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`。PPT SHA256=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`，PDF SHA256=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.77 v78 650M modification 双 split 闭合（2026-11-01）
+
+1. v78 为 1428+2=**1430 accepted、0 rejected**，v77 行逐字段保留；2 个新增格均 proof=complete。650M modification frozen-family 三种子 AUC=0.663015924/0.657170378/0.660444625，mean=0.660210309，正式闭合；random 也已三种子=0.666272464，页面改为双 split 闭合。
+2. RNA-FM SSI LoRA-random/seed29 PCC=0.630326725，与 seed17 组成 2/3，仍缺 seed43，不新增三种子单元。per-base=145/270、complementary=299/324、LR=104/320（完整组仍 24/80）、rank=67/96，④/⑤不变。
+3. 源包 revision=`20261101_refresh_v79_v78ledger_modification_650m_closure`，231 个登记文件，manifest SHA256=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`。PPT SHA256=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`，PDF SHA256=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC 与实际渲染通过。

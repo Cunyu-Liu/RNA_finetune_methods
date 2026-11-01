@@ -315,3 +315,10 @@
 - [x] AA4 交付：229 文件 manifest=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`；PPT=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`；PDF=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] AA5 后续：继续其他真实缺口并提交本批交付。
 
+## AB 组：v78 650M modification 闭合验收
+
+- [x] AB1 数据：1430 accepted、0 rejected；2 格 proof=complete。
+- [x] AB2 主矩阵：650M modification frozen-family 三种子 mean=0.660210309，双 split 闭合；RNA-FM SSI LoRA-random 为 2/3。
+- [x] AB3 交付：231 文件 manifest=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`；PPT=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`；PDF=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] AB4 后续：继续其他真实缺口并提交本批交付。
+

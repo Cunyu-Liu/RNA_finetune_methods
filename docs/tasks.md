@@ -1865,3 +1865,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他矩阵**：RNA-FM SSI LoRA-random 为 1/3；LR 104/320、完整组仍 24/80；per-base 144/270、complementary 298/324、rank 67/96。
 - [x] **v78 与交付**：229 文件 manifest=`66dc9eb61ae3e09bf75d713d3e687e94da168e2de5eba20659497a4c653c507c`；PPT=`d803f96747c06f9a423e813173ed309d6ba70861930ae6522aa771953962c6ea`，PDF=`85060f303a4516cdb4a176bd709e12c1b57039c7c3158dbe5b46a03a10f37a83`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交本批交付。
+
+## N77. 2026-11-01 v78 650M modification 双 split 闭合
+
+- [x] **v78 验收**：1430 accepted、0 rejected；2 格 proof=complete。650M modification frozen-family 三种子 mean=0.660210309，正式闭合；random 也闭合，页面改双 split。
+- [x] **其他边界**：RNA-FM SSI LoRA-random 为 2/3，未新增单元；per-base 145/270、complementary 299/324、LR 104/320（完整组仍 24/80）、rank 67/96，④/⑤不变。
+- [x] **v79 与交付**：231 文件 manifest=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`；PPT=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`，PDF=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交本批交付。
