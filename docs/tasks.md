@@ -1821,3 +1821,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v70 验收**：1375 accepted、0 rejected；4 格 proof=complete。ERNIE SSI LoRA-family 为 1/3；MRL 为 tuning 格，SpliceAI 仍低信号。
 - [x] **矩阵与展示边界**：LR 95/320、完整组仍 23/80；per-base 121/270。没有新三种子单元或完整 LR 组，PPT 与 v75 源包保持 v69。
 - [ ] **后续**：等待其余种子和完整 LR 组后再更新展示版，继续其他真实缺口。
+
+## N71. 2026-11-01 v71 在途完整性复查
+
+- [x] **台账**：v71 新增 0，仍 1375 accepted、0 rejected。长时 mega SpliceAI full-random/seed17 已收敛并入库，不是卡死。
+- [x] **在途证据**：6 run、6 RID、0 重复；多格 plateau 正常推进，两格 pre-ledger 属新启动，未见 CPU 静默降级证据。
+- [x] **展示版不变**：PPT 与 v75 源包保持 v69，不把中间 plateau 或进程存活写成最终结论。
+- [ ] **后续**：等待新完成格并继续三轮验收，及时补推本批文档。

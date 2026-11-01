@@ -991,3 +991,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v70 为 1371+4=**1375 accepted、0 rejected**，v69 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI LoRA-family/seed17 PCC=0.620692892，仅 1/3，不新增三种子单元。
 2. MRL mega-full 的 1e-4 tuning 格 Pearson r=0.062994892，仍只作选档诊断；micro SpliceAI full-family default 和 LoRA family/n3000 均近随机。LR accepted=95/320，完整组仍 23/80；per-base accepted=121/270。PPT 与 v75 源包保持 v69，v70 台账暂存 teams。
+
+### 10.71 v71 在途训练完整性复查（2026-11-01）
+
+1. v71 相对 v70 新增 0，仍为 **1375 accepted、0 rejected**。长时运行的 mega SpliceAI full-random/seed17 已于 03:48 收敛并在此前台账入库，plateau 为 best_epoch=0、4 epochs、patience=3，不是卡死。
+2. 当前 6 个在途 run、6 个唯一 RID、0 重复。SpliceAI LoRA family/n3000、MRL mega-full tuning、SpliceAI full-random/seed29、SSI LoRA-family/seed29 均有 plateau 进度；两格 pre-ledger pending 属新启动，未见 CPU 静默降级证据。当前展示版与 v75 源包保持 v69，不根据进程存活或中间 plateau 提前写结论。
