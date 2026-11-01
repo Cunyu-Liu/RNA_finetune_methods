@@ -583,3 +583,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v93 为 **1451 accepted、0 rejected**；mega SpliceAI family/n3000/seed43 仍近随机，equiv 419/420，不形成有效④/⑤结果。
 2. ERNIE MRL full-family 的 3e-5 tuning 格 r=0.699845973；该组仍缺 1e-5，LR 109/320、完整组保持25/80，不提前选档。
 3. 无新三种子科学单元或完整 LR 组，PPT 和 v84 源包保持 v92；PPT/PDF SHA256 仍为 `2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a` / `acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。
+
+## 50. 2026-11-01 v94：在训状态，不更新展示版
+
+1. v94 新增 0，仍为 **1451 accepted、0 rejected**，PPT 和 v84 源包保持 v92。
+2. SSP seed43、equiv degradation 和长时 SpliceAI full-family 均有 plateau 推进；另一 LR 格处于 pre-plateau。以上只证明在训，不构成收敛或页面结论，故不修改图片或文字。
+3. 在训证据=`status/inflight_progress_20261101_v94.json`，SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。

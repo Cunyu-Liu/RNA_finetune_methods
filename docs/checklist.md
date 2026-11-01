@@ -389,3 +389,10 @@
 - [x] AK4 展示：无新科学单元，PPT 与 v84 源包保持 v92。
 - [ ] AK5 后续：同步并提交文档，继续剩余真实科学缺口。
 
+## AL 组：v94 在训状态验收
+
+- [x] AL1 台账：v94 新增 0，仍 1451 accepted、0 rejected；展示版保持 v92。
+- [x] AL2 进度：SSP seed43 与 equiv degradation 均已有 epoch 推进，mega SpliceAI full-family 未卡死；仅作 RUNNING/PENDING 证据。
+- [x] AL3 边界：不得把中间 loss、进程存活或 pre-plateau 写成最终科学结论；证据 SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。
+- [ ] AL4 后续：同步并提交记录，等待完整证明。
+

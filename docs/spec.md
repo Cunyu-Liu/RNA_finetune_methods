@@ -1123,3 +1123,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v93 为 1449+2=**1451 accepted、0 rejected**，v92 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 独立复核通过。证据=`status/bestval_v93_new_proof.json`，SHA256=`df86584effbf8b6bed843e9b42f519f994d4a443e53e621bde445bb842b872c1`。
 2. mega SpliceAI LoRA-family/n3000/seed43 macro-F1=0.333280238，仍近随机，equiv 升至 **419/420**，不形成有效 scaling 或等价结果。ERNIE MRL full-family 的 3e-5 tuning 格 Pearson r=0.699845973，best_epoch=0、4 epochs；该组已有 default/1e-4/3e-5 三档，仍缺 1e-5，不能提前选档。
 3. 当前 per-base=149/270、complementary=303/324、LR=109/320（完整组仍25/80）、rank4/16=68/96、650M frozen=24/25；①a-4 与④/⑤不变。无新增科学单元，PPT 和 v84 源包保持 v92。
+
+### 10.93 v94 在训进度复核（2026-11-01）
+
+1. v94 相对 v93 新增 0，仍为 **1451 accepted、0 rejected**。当前 per-base=149/270、complementary=303/324、LR=109/320（25/80 组）、rank4/16=68/96、equiv=419/420、650M frozen=24/25；PPT 和 v84 源包保持 v92。
+2. 在训证据显示：650M SSP family/seed43 已完成 epoch2、best_epoch=2；最后的 equiv degradation 已完成 epoch2、best_epoch=1；mega SpliceAI full-family 已有 3 个 epoch 的 plateau 记录，未卡死。micro SpliceAI full-family 的 1e-5 新格处于 pre-plateau 阶段，均使用 `--device 0`。
+3. 以上仅为 RUNNING/PENDING 状态，不能写成收敛或最终性能结论。证据=`status/inflight_progress_20261101_v94.json`，SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。

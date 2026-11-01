@@ -1976,3 +1976,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR**：ERNIE MRL full-family 的 3e-5 格 r=0.699845973；该组现有三档、缺 1e-5，LR 109/320，完整组仍25/80，不提前选档。
 - [x] **展示边界**：per-base 149/270、complementary 303/324、rank 68/96、650M frozen 24/25；无新科学单元，PPT 与 v84 源包保持 v92。
 - [ ] **后续**：同步并提交 v93 文档，继续 equiv 最后一格、SSP seed43 和 LR 第四档。
+
+## N93. 2026-11-01 v94 在训进度复核
+
+- [x] **台账**：v94 新增 0，仍 1451 accepted、0 rejected；PPT 与 v84 源包保持 v92。
+- [x] **在训证据**：SSP seed43 到 epoch2、best=2；equiv degradation 到 epoch2、best=1；mega SpliceAI full-family 的 plateau 持续更新；LR 新格为 pre-plateau。均为 CUDA 进程，未提前记完成。
+- [x] **证据**：`inflight_progress_20261101_v94.json`，SHA256=`b674a7cf5c9e09e2cbfabb9c60c25d5986c2482b64d6e0ce3721e10491246848`。
+- [ ] **后续**：同步并提交记录，等待 result/plateau/checkpoint 完整后再验收。
