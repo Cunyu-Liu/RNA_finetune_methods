@@ -932,3 +932,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. family⑤中 SSI 三臂均五档，degradation 三臂为 5/5/4 档；modification/MRL/SSP 三臂五档。family④/⑤仍均为 5/8，random panels/candidates 不变。
 3. family④的 degradation 新增 full2500/3000≈LoRA1000，与 full2000 同属 requested 2000–3000、actual=1680 的同一 cap；加上 full1500≈LoRA1000，共四组候选，但 cap 后重复点不得解释为新增数据收益。MRL 与 SSI 候选不变，modification/SSP 仍未观测到。
 4. 源包 revision=`20261101_refresh_v69_v59ledger_family_five_tier_closure`，178 个登记文件，manifest SHA256=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`。PPT 保持 32 页并更新第22/26页文字与图，SHA256=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`；PDF SHA256=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；嵌图、lint/layout/CRC 和实际渲染通过。
+
+### 10.60 v60 SSI 正式闭合与 LR 20 组（2026-11-01）
+
+1. v60 为 1340+4=**1344 accepted、1 rejected**，v59 行逐字段保留；4 个新增格均 proof=complete。ERNIE SSI frozen-random 三种子 PCC=0.592628039/0.593290266/0.592314811，正式 best-val 闭合，①a-4 的 SSI 覆盖恢复为 14/30；这次不是用阶段表补齐。
+2. ERNIE CRISPR full-random 的四档 LR 全部完成，使 LR accepted=80/320、完整组=20/80。validation 选 1e-5（best_val=0.02518），分布为 3e-5/1e-4 各 8 组、1e-5 四组，3e-4 为 0；test 未参与选择，1e-5 的 test PR-AUC=0.011708813 仅作结果报告。
+3. random/family④/⑤的 panels 和 candidates 不变，family⑤仍为 SSI 三臂五档、degradation 5/5/4 档。当前 PPT 为 32 页，只更新①a-4、LR 及图源。
+4. 源包 revision=`20261101_refresh_v70_v60ledger_formal_ssi_closure_lr20`，180 个登记文件，manifest SHA256=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`。PPT SHA256=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`，PDF SHA256=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；嵌图、32 页 lint/layout/CRC 和实际渲染通过。

@@ -252,3 +252,11 @@
 - [x] S4 交付：178 文件 manifest=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`；PPT=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`；PDF=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] S5 后续：补推 af3de2f 及后续提交；继续 ncRNA family 和其他真实缺口。
 
+## T 组：v60 正式覆盖与 LR 20 组验收
+
+- [x] T1 数据：v60 共 1344 accepted、1 rejected；4 格 proof=complete。
+- [x] T2 主矩阵：ERNIE SSI frozen-random 三种子闭合，①a-4 为 25/26/17/14/14，不用阶段表补齐。
+- [x] T3 LR：80/320、20/80 组完整；新组 validation 选 1e-5，test 不参与，选档分布 8/8/4/0。
+- [x] T4 交付：180 文件 manifest=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`；PPT=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`；PDF=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] T5 后续：补推待推提交，继续主矩阵、ncRNA family 和后续阶段。
+

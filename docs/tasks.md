@@ -1752,3 +1752,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v69 与 32 页交付**：178 文件 manifest=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`；PPT=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`，PDF=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；嵌图、lint/layout/CRC、渲染通过。
 - [ ] **GitHub 欠推**：v58 的 `af3de2f` 因网络超时待补推；v59 提交后一并检查，不重复并发推送。
 - [ ] **后续**：ncRNA family tiers、主矩阵和后续阶段继续，family 5/8 不是全任务完成。
+
+## N61. 2026-11-01 v60 SSI 正式闭合与 LR 20 组
+
+- [x] **v60 验收**：1344 accepted、1 rejected；4 格 proof=complete。ERNIE SSI frozen-random 三种子闭合，①a-4 恢复 14/30，按正式 best-val 计数。
+- [x] **LR 第20组**：ERNIE CRISPR full-random 四档闭合，validation 选 1e-5；LR 80/320、20/80 组完整，3e-5/1e-4 各 8 组、1e-5 四组，test 不参与选档。
+- [x] **④/⑤边界**：random/family panels 和 candidates 不变，family⑤的 SSI 五档、degradation 5/5/4 档不变。
+- [x] **v70 与交付**：180 文件 manifest=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`；PPT=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`，PDF=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] **后续**：GitHub 网络恢复后补推 af3de2f/2050a24 及本批提交；继续主矩阵、ncRNA family 和后续阶段。

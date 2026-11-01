@@ -461,3 +461,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第26页 family⑤：SSI 三臂五档，degradation 三臂 5/5/4 档；modification/MRL/SSP 三臂五档。family④/⑤均保持 5/8，random 不变。
 3. 第22页 family④：degradation full1500及 cap 后2000–3000均≈LoRA1000；requested 2000–3000 同 actual=1680，不重复计数据收益。MRL/SSI 候选不变，modification/SSP 未观测到。
 4. 当前源包 revision=`20261101_refresh_v69_v59ledger_family_five_tier_closure`，178 个登记文件，manifest SHA256=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。v58 提交 `af3de2f` 因网络超时待补推，全实验尚未完成。
+
+## 32. 2026-11-01 当前 v60：SSI 正式闭合与 LR 20 组
+
+1. 当前 PPT 为 32 页，SHA256=`33f45133c73355f6cf29e24cf6280dcb8374a2139bc978ba983a14a700aa2e0d`；PDF SHA256=`d49998702494246a37793cee54823dcdacabe509c9cd9cd8b0a5bbbf36b488dc`。输入 **1344 accepted、1 rejected**，4 个新增格均 proof=complete。
+2. 第8页①a-4：ERNIE SSI frozen-random 三种子正式闭合，五种任务覆盖为 25/26/17/14/14，按 best-val 计数，不用阶段表补齐。
+3. 第19页 LR：80/320、20/80 组四档完整；新增 ERNIE CRISPR full-random 组 validation 选 1e-5，选档分布为 3e-5/1e-4 各 8 组、1e-5 四组、3e-4 为 0，test 不参与。
+4. 当前源包 revision=`20261101_refresh_v70_v60ledger_formal_ssi_closure_lr20`，180 个登记文件，manifest SHA256=`9b385523ccc243af8fb643a26cb337fd726efe36cdc01b54667f667e55a81102`。random/family④/⑤不变；嵌图、32 页 lint/layout/CRC 与实际渲染通过。GitHub 欠推 af3de2f/2050a24，全实验未完成。
