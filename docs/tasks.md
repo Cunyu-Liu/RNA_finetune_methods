@@ -1633,3 +1633,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v43 与源包**：1222 accepted、1 rejected；源包 132 文件，manifest SHA256=`7c271fe6d40e5d1166eb0fd3acaac8e35b2a8aed73830a120f504cc599fcd40e`。
 - [x] **最终交付**：PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`，PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/实际渲染通过。
 - [ ] **后续**：继续 SSI 148M-LoRA 第二档，④/⑤分开验收，不提前宣称全任务完成。
+
+## N45. 2026-11-01 SSI 148M-LoRA n1500 首点
+
+- [x] **mega n1500 首点**：seed17 PCC=0.590475738，proof=complete，best_epoch=0、4 epochs、patience=3 收敛，RTX 5090；仍缺两个种子，④不能升至 6/8。
+- [x] **v44 与源包**：1229 accepted、1 rejected；源包 134 文件，manifest SHA256=`97b720f5eb90eed04894cb4ff155806f6e8e1c02642d157bd0d72959e51b4b6f`。
+- [~] **后续**：继续 mega n1500 三种子和 n2500 各臂，PPT 保持 v43。
