@@ -1033,3 +1033,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v78 为 1428+2=**1430 accepted、0 rejected**，v77 行逐字段保留；2 个新增格均 proof=complete。650M modification frozen-family 三种子 AUC=0.663015924/0.657170378/0.660444625，mean=0.660210309，正式闭合；random 也已三种子=0.666272464，页面改为双 split 闭合。
 2. RNA-FM SSI LoRA-random/seed29 PCC=0.630326725，与 seed17 组成 2/3，仍缺 seed43，不新增三种子单元。per-base=145/270、complementary=299/324、LR=104/320（完整组仍 24/80）、rank=67/96，④/⑤不变。
 3. 源包 revision=`20261101_refresh_v79_v78ledger_modification_650m_closure`，231 个登记文件，manifest SHA256=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`。PPT SHA256=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`，PDF SHA256=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC 与实际渲染通过。
+
+### 10.78 v79 ERNIE MRL tuning staging（2026-11-01）
+
+1. v79 为 1430+1=**1431 accepted、0 rejected**，v78 行逐字段保留；新增格 proof=complete。ERNIE MRL full-random 的 1e-5 tuning 格 Pearson r=0.785207070，只用于 held-out validation 选档，不是正式三种子结果。
+2. 该 LR 组尚未四档闭合，LR accepted=105/320、完整组仍 24/80，选档分布不变。PPT 与 v79 源包保持 v78，v79 台账暂存 teams。

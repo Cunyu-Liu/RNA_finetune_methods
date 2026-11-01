@@ -1872,3 +1872,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：RNA-FM SSI LoRA-random 为 2/3，未新增单元；per-base 145/270、complementary 299/324、LR 104/320（完整组仍 24/80）、rank 67/96，④/⑤不变。
 - [x] **v79 与交付**：231 文件 manifest=`780b8fc039487a9c7a086e7097f00777a20fdad61403e577e76a700fddfb774a`；PPT=`fcde2a2d92eeb5927b09618304c8ae723aa2b9d099c23928bb0923f45ba1f3a0`，PDF=`fed444a6657773ac27af0d95ad0fe1daaf0dbd25c0584d379be41ed1a680f941`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余主矩阵、650M frozen、LR/rank 和后续阶段，及时提交本批交付。
+
+## N78. 2026-11-01 v79 ERNIE MRL tuning staging
+
+- [x] **v79 验收**：1431 accepted、0 rejected；新增格 proof=complete。ERNIE MRL full-random 的 1e-5 格 r=0.785207070，只作 tuning 诊断。
+- [x] **展示边界**：LR 105/320、完整组仍 24/80，未形成新完整组；PPT 与 v79 源包保持 v78，v79 台账暂存 teams。
+- [ ] **后续**：等待四档闭合后计算 validation 选档，继续其他真实缺口并提交文档。
