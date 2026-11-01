@@ -1117,3 +1117,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 当前 per-base=149/270、complementary=303/324、LR=108/320（25/80 组）、rank4/16=68/96、equiv=418/420、650M frozen=24/25；①a-4 三项五种任务计数与④/⑤不变。
 3. 源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 个登记文件，manifest SHA256=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`。v89–v92 台账、各新增格证明和 v90 计数审计均已纳入；动态图源三处一致。
 4. 当前 PPT SHA256=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF SHA256=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。32 页 lint/layout/CRC、十张关键嵌图 SHA 与第8/27/28/29页实际渲染通过；第27页 SSP frozen-family 显示 2，第8页仍为 n<3 斜线。
+
+### 10.92 v93 equiv 与 LR staging（2026-11-01）
+
+1. v93 为 1449+2=**1451 accepted、0 rejected**，v92 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 独立复核通过。证据=`status/bestval_v93_new_proof.json`，SHA256=`df86584effbf8b6bed843e9b42f519f994d4a443e53e621bde445bb842b872c1`。
+2. mega SpliceAI LoRA-family/n3000/seed43 macro-F1=0.333280238，仍近随机，equiv 升至 **419/420**，不形成有效 scaling 或等价结果。ERNIE MRL full-family 的 3e-5 tuning 格 Pearson r=0.699845973，best_epoch=0、4 epochs；该组已有 default/1e-4/3e-5 三档，仍缺 1e-5，不能提前选档。
+3. 当前 per-base=149/270、complementary=303/324、LR=109/320（完整组仍25/80）、rank4/16=68/96、650M frozen=24/25；①a-4 与④/⑤不变。无新增科学单元，PPT 和 v84 源包保持 v92。

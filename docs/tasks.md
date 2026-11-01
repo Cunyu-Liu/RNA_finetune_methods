@@ -1968,3 +1968,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **科学边界**：与 seed17=0.3237 组成 2/3，缺 seed43，不写闭合；per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、equiv 418/420、650M frozen 24/25。
 - [x] **图与交付**：源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 文件，manifest=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`；PPT=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。十张嵌图、32 页 lint/layout/CRC 与四个更新页渲染通过。
 - [ ] **后续**：完成三地同步与 GitHub 推送，等待 seed43 和 equiv 最后两格，继续主矩阵真实缺口。
+
+## N92. 2026-11-01 v93 equiv 与 LR staging
+
+- [x] **两格验收**：v93 为 1451 accepted、0 rejected；两格均 proof=complete、CUDA 收敛，证据 SHA256=`df86584effbf8b6bed843e9b42f519f994d4a443e53e621bde445bb842b872c1`。
+- [x] **equiv**：mega SpliceAI family/n3000/seed43 仍近随机，equiv 419/420，不用于有效④/⑤结论。
+- [x] **LR**：ERNIE MRL full-family 的 3e-5 格 r=0.699845973；该组现有三档、缺 1e-5，LR 109/320，完整组仍25/80，不提前选档。
+- [x] **展示边界**：per-base 149/270、complementary 303/324、rank 68/96、650M frozen 24/25；无新科学单元，PPT 与 v84 源包保持 v92。
+- [ ] **后续**：同步并提交 v93 文档，继续 equiv 最后一格、SSP seed43 和 LR 第四档。

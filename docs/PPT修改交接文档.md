@@ -577,3 +577,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 650M SSP frozen-family 的 seed17/29 pair-F1=0.3237/0.2711，目前 2/3。第27页覆盖热图显示 2，第8页对应柱仍为 n<3 斜线，不写三种子闭合；第28/29页成本图同步至 v92。
 3. 当前 per-base 149/270、complementary 303/324、LR 108/320（25组）、rank 68/96、equiv 418/420、650M frozen 24/25；①a-4 与④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v84_v92ledger_650m_ssp_family_n2`，264 个登记文件，manifest SHA256=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第8/27/28/29页实际渲染通过。
+
+## 49. 2026-11-01 v93 staging：展示版保持 v92
+
+1. v93 为 **1451 accepted、0 rejected**；mega SpliceAI family/n3000/seed43 仍近随机，equiv 419/420，不形成有效④/⑤结果。
+2. ERNIE MRL full-family 的 3e-5 tuning 格 r=0.699845973；该组仍缺 1e-5，LR 109/320、完整组保持25/80，不提前选档。
+3. 无新三种子科学单元或完整 LR 组，PPT 和 v84 源包保持 v92；PPT/PDF SHA256 仍为 `2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a` / `acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`。

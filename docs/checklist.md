@@ -381,3 +381,11 @@
 - [x] AJ3 交付：264 文件 manifest=`508c6387ab079e36130d938c81de2ceb2ef30860e139b7827f31d9cf3b193d1c`；PPT=`2dfc707a9030c173ea3399662ecdfaa8094bdfdfdc281fd021142b28d2eb385a`，PDF=`acb07573ab8e97f4712c502908963459da6482cf7239db808ba5c6f069815339`；嵌图、lint/layout/CRC 与四个更新页渲染通过。
 - [ ] AJ4 后续：三地同步并推送，等待 seed43，继续真实科学缺口。
 
+## AK 组：v93 equiv 与 LR staging 验收
+
+- [x] AK1 数据：1451 accepted、0 rejected；两格 proof=complete，CUDA/convergence 通过。
+- [x] AK2 equiv：419/420，新增 SpliceAI 格仍近随机，不用于等价或 scaling。
+- [x] AK3 LR：ERNIE MRL family 已有三档、缺 1e-5；109/320，完整组仍25/80，不提前选档。
+- [x] AK4 展示：无新科学单元，PPT 与 v84 源包保持 v92。
+- [ ] AK5 后续：同步并提交文档，继续剩余真实科学缺口。
+
