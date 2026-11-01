@@ -1156,3 +1156,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v99 为 1455+1=**1456 accepted、0 rejected**，v98 行逐字段保留。新增 RNA-FM MRL full-random 的 1e-4 tuning 格 Pearson r=0.771872145，best_val=0.506725，best_epoch=2、6 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v99_new_proof.json`，SHA256=`6eb02c46c7b1a37d0e0d94253687dcbb48339de9648960ad5b6657fa5fea2a95`。
 2. 该组目前 default/1e-4 两档，仍缺3e-5/1e-5，不能提前选档；LR=112/320，完整组仍26/80。per-base=149/270、complementary=304/324、rank4/16=68/96、equiv=420/420、650M frozen=25/25；其他结论不变。
 3. 无新三种子单元或完整 LR 组，PPT 与 v87 源包保持 v98，台账和证明在 teams 留存，待下一次可见更新纳入。
+
+### 10.98 v100 RNA-FM MRL 双 split LR 与 rank16 阶段闭合（2026-11-02）
+
+1. v100 为 1456+10=**1466 accepted、0 rejected**，v99 行逐字段保留；10 个新增格逐一 proof=complete，result/plateau/checkpoint/CUDA/convergence 独立复核通过。证据=`status/bestval_v100_new_proof.json`，SHA256=`e4c3c6d7b5e511cda5402ee35be1b752f24283d8c960a2c2284d197b9c164e72`。
+2. RNA-FM MRL full-random 四档闭合，validation 选 **1e-5**（best_val=0.482556，test r=0.796958409 仅报告）；full-family 四档闭合，选 **3e-5**（best_val=0.506152，test r=0.690764693 仅报告）。LR 升至 **120/320、28/80 组完整**，选档分布为 3e-5 十三组、1e-4 九组、1e-5 六组、3e-4 为 0。证据=`status/lr_validation_interim_20261101_v100.json`，SHA256=`e705fb8f44628f2705261035b18c79f25d0db785035a85713a0bbdc86fb1e9d9`。
+3. SpliceAI micro-LoRA random rank16 三种子 macro-F1=0.403154654/0.492961421/0.549270923，mean=0.481795666；rank4/16=69/96，只作同模型同 split 阶段结果，不与 rank8 直接排名。mega SpliceAI full-family/seed17 macro-F1=0.522046068，仅1/3，SpliceAI①a-4仍为19/30，覆盖热图由0改为1。
+4. 当前 per-base=150/270、complementary=304/324、equiv=420/420、650M frozen=25/25；mega modification random LR 仅2/4，不新增完整组，④/⑤不变。
+5. 源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 个登记文件，manifest SHA256=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`。PPT SHA256=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF SHA256=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`；32页 lint/layout/CRC、十张嵌图与第8/19/20/27/28/29页实际渲染通过。

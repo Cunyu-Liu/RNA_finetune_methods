@@ -426,3 +426,11 @@
 - [x] AP3 展示：无新科学单元，PPT 与 v87 源包保持 v98。
 - [ ] AP4 后续：同步并提交，等待四档闭合和其他真实科学缺口。
 
+## AQ 组：v100 双 split LR 与 rank16 验收
+
+- [x] AQ1 数据：1466 accepted、0 rejected；10 格 proof=complete、CUDA 收敛。
+- [x] AQ2 LR：RNA-FM MRL random 选1e-5、family 选3e-5，test 不参与；120/320、28/80组，分布13/9/6/0。
+- [x] AQ3 rank/主矩阵：SpliceAI random rank16 三种子 mean=0.481795666，rank 69/96；mega full-family 仅1/3，per-base 150/270、complementary 304/324。
+- [x] AQ4 交付：289 文件 manifest=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`；PPT=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`；嵌图、lint/layout/CRC 与六页渲染通过。
+- [ ] AQ5 后续：三地同步并补推，继续真实科学缺口，不将 rank 阶段格写成完整矩阵结论。
+

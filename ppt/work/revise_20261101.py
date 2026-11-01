@@ -177,7 +177,13 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 26/80 组，validation 选档均未选 3e-4（3e-5 十二组、1e-4 九组、1e-5 五组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
+             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 28/80 组，validation 选档均未选 3e-4（3e-5 十三组、1e-4 九组、1e-5 六组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
+
+    slide = prs.slides[18]
+    set_text(slide, "TextBox 3",
+             "rank 需按任务与架构评估；ncRNA rank8 复核 random=0.918、family=0.900。新增 SpliceAI random rank16 三种子 macro-F1=0.482；rank4/16 矩阵为 69/96，尚未闭合。")
+    set_text(slide, "TextBox 5",
+             "读图：现有面板为 legacy 对照；新增 rank16 只作同模型同 split 阶段结果，不与 rank8 直接排名。rank8 ncRNA 复核6/6：random=0.918±0.009、family=0.900±0.005；完整 PEFT/rank 矩阵待后续阶段门。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

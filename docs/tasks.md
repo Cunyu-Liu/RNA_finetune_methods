@@ -2014,3 +2014,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **选档边界**：该组仅两档，缺3e-5/1e-5；LR 112/320、完整组仍26/80，不提前选档。
 - [x] **展示边界**：per-base 149/270、complementary 304/324、rank 68/96、equiv 420/420、650M frozen 25/25；PPT 与 v87 源包保持 v98。
 - [ ] **后续**：同步并提交文档，等待四档闭合后继续 validation 选档和其他真实缺口。
+
+## N98. 2026-11-02 v100 双 split LR 与 rank16 阶段闭合
+
+- [x] **十格验收**：v100 为 1466 accepted、0 rejected；10 格均 proof=complete、CUDA 收敛，证据 SHA256=`e4c3c6d7b5e511cda5402ee35be1b752f24283d8c960a2c2284d197b9c164e72`。
+- [x] **LR 第27/28组**：RNA-FM MRL random 选1e-5（best_val=0.482556），family 选3e-5（best_val=0.506152），test 不参与。LR 120/320、28/80组，分布13/9/6/0；证据 SHA256=`e705fb8f44628f2705261035b18c79f25d0db785035a85713a0bbdc86fb1e9d9`。
+- [x] **rank 与主矩阵**：SpliceAI random rank16 三种子 mean=0.481795666，rank4/16=69/96；mega full-family/seed17=0.522046068，仅1/3。per-base 150/270、complementary 304/324、equiv 420/420、650M frozen 25/25。
+- [x] **交付**：源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 文件，manifest=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`；PPT=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`，PDF=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`。嵌图、32页 lint/layout/CRC 与六个更新页渲染通过。
+- [ ] **后续**：三地同步并补推待推提交；继续主矩阵、LR/rank 和后续阶段门，rank16 不与 rank8 直接排名。

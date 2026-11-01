@@ -616,3 +616,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v99 为 **1456 accepted、0 rejected**；RNA-FM MRL full-random 的1e-4格 r=0.771872145、best_val=0.506725，proof=complete、CUDA 收敛。
 2. 该组仅完成两档，仍缺3e-5/1e-5；LR 112/320、完整组保持26/80，不提前选档。无新三种子单元，PPT 与 v87 源包保持 v98。
 3. 当前 PPT/PDF SHA256 仍为 `cb3ed7103fec5dd578e45b01c886c5b0265d3e8cc722c3bfea1ba197f6f0ad48` / `e3a1a1d507b82bd0da0b2f7e976ae66994834546296c02dae1db02161ed2c024`。
+
+## 55. 2026-11-02 当前 v100：LR 第28组与 rank16 阶段结果
+
+1. 当前 PPT 为32页，SHA256=`e875cc79c4fe811eb0f01390763612bac0cb75cc7094a649f7ee514e4f10d0a2`；PDF SHA256=`49baa9f9670427aad9f7231ef5b2bb37707c1290b60026366db49f7baa6cc7d5`。输入 **1466 accepted、0 rejected**，10 个新增格均 proof=complete。
+2. 第19页 LR 更新为 **28/80 组**，分布3e-5十三组、1e-4九组、1e-5六组、3e-4为0。RNA-FM MRL random 选1e-5、family 选3e-5，test 不参与。第20页写入 SpliceAI random rank16 三种子 mean=0.481795666，rank4/16=69/96；保留 legacy 图与未闭合边界，不与 rank8 直接排名。
+3. mega SpliceAI full-family/seed17 macro-F1=0.522046068，仅1/3；第27页覆盖热图由0改为1，第8页仍保留斜线，SpliceAI三种子单元仍为19/30。per-base 150/270、complementary 304/324、equiv 420/420、650M frozen 25/25。
+4. 当前源包 revision=`20261102_refresh_v88_v100ledger_lr28_rank16_spliceai`，289 个登记文件，manifest SHA256=`7e318f82cf327cbae2787d11e274cecbcb5de48cd36667ad5c9be687c9c6f93f`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/19/20/27/28/29页实际渲染通过。
