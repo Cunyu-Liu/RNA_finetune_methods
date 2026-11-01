@@ -925,3 +925,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 4. ①a-4 的 SSI 正式三种子单元由 14 修正为 13：ERNIE frozen-random 正式 best-val 只有 1/3，不再用阶段表三种子代替未齐正式种子；这是证据口径纠偏，不是结果丢失。PPT 新增第22页 family④、第26页 family⑤，共32页。
 5. 克隆页修复了两类工程问题：非连续 relationship ID 改为旧/新 RID 映射；family 克隆移到删除旧页之前，避免重复 `slide31.xml`。最终 ZIP 无重复条目、CRC 通过。
 6. 源包 revision=`20261101_refresh_v68_v58ledger_family_scaling_5of8`，176 个登记文件（含 v56–v58 与调度证据），manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`。PPT SHA256=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`，PDF SHA256=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`；32 页 lint/layout/CRC、嵌图和实际渲染通过。
+
+### 10.59 v59 family 五档闭合与 cap 重复候选（2026-11-01）
+
+1. v59 为 1332+8=**1340 accepted、1 rejected**，v58 行逐字段保留；8 个新增格均 proof=complete。LR accepted=78/320，四档完整组仍 19/80，选档不变。①a-4 的 SSI 正式覆盖保持 13/30，ERNIE frozen-random 目前 2/3。
+2. family⑤中 SSI 三臂均五档，degradation 三臂为 5/5/4 档；modification/MRL/SSP 三臂五档。family④/⑤仍均为 5/8，random panels/candidates 不变。
+3. family④的 degradation 新增 full2500/3000≈LoRA1000，与 full2000 同属 requested 2000–3000、actual=1680 的同一 cap；加上 full1500≈LoRA1000，共四组候选，但 cap 后重复点不得解释为新增数据收益。MRL 与 SSI 候选不变，modification/SSP 仍未观测到。
+4. 源包 revision=`20261101_refresh_v69_v59ledger_family_five_tier_closure`，178 个登记文件，manifest SHA256=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`。PPT 保持 32 页并更新第22/26页文字与图，SHA256=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`；PDF SHA256=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；嵌图、lint/layout/CRC 和实际渲染通过。

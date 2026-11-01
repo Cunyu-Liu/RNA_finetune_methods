@@ -281,16 +281,16 @@ def main():
         set_text(family_equiv, "TextBox 3",
                  "family split；5/8 任务可判。MRL/degradation/SSI 有候选，modification/SSP 当前未观测到；不套用 random 配对。")
         set_text(family_equiv, "TextBox 5",
-                 "读图：MRL full2000≈LoRA1000；degradation full1500/2000≈LoRA1000；SSI full1500≈LoRA1500、full3000≈LoRA2000。均满足逐 seed |Δ|≤0.02 且 CI 覆盖 0；degradation requested≥2000 的 actual=1680，候选非唯一。")
+                 "读图：MRL full2000≈LoRA1000；degradation full1500及 cap 后2000–3000均≈LoRA1000；SSI full1500≈LoRA1500、full3000≈LoRA2000。均满足逐 seed |Δ|≤0.02 且 CI 覆盖 0；degradation requested 2000–3000 同为 actual=1680，不重复计数据收益。")
         replace_picture(family_equiv, "Picture 6", tier_dir / "equivalence_8task_family.png")
 
         family_scaling = clone_slide(prs, 22)
         set_text(family_scaling, "TextBox 1", "05F")
         set_text(family_scaling, "TextBox 2", "结论⑤补充  family：三臂数据量曲线")
         set_text(family_scaling, "TextBox 3",
-                 "family split；5/8 任务可判。modification/MRL/SSP 三臂五档，degradation/SSI 达到至少三档；ncRNA 待补。")
+                 "family split；5/8 任务可判。modification/MRL/SSP/SSI 三臂五档，degradation 三臂为 5/5/4 档；ncRNA 待补。")
         set_text(family_scaling, "TextBox 5",
-                 "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation cap=1680，SSI 148M-LoRA 四档。等价配对见④ family 页。")
+                 "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation requested 2000–3000 同为 cap=1680，SSI 148M-LoRA 五档。等价配对见④ family 页。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
 
     slide_ids = prs.slides._sldIdLst

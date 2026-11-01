@@ -454,3 +454,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. ①a-4 的 SSI 正式覆盖修正为 13/30，阶段表不再替代未齐的 ERNIE frozen-random best-val 种子。LR 为 77/320、19/80 组完整，选档分布不变。
 4. 克隆关系 ID 已改为显式映射，family 克隆移至删除旧页前，ZIP 无重复 slide31 条目。32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距、八张嵌图 SHA 与实际渲染通过。
 5. 当前源包 revision=`20261101_refresh_v68_v58ledger_family_scaling_5of8`，176 个登记文件，manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`。全实验与最终科学验收仍未完成。
+
+## 31. 2026-11-01 当前 v59：family 五档更新
+
+1. 当前 PPT 为 32 页，SHA256=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`；PDF SHA256=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`。输入 **1340 accepted、1 rejected**，8 个新增格均 proof=complete。
+2. 第26页 family⑤：SSI 三臂五档，degradation 三臂 5/5/4 档；modification/MRL/SSP 三臂五档。family④/⑤均保持 5/8，random 不变。
+3. 第22页 family④：degradation full1500及 cap 后2000–3000均≈LoRA1000；requested 2000–3000 同 actual=1680，不重复计数据收益。MRL/SSI 候选不变，modification/SSP 未观测到。
+4. 当前源包 revision=`20261101_refresh_v69_v59ledger_family_five_tier_closure`，178 个登记文件，manifest SHA256=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`。嵌图、32 页 lint/layout/CRC 与实际渲染通过。v58 提交 `af3de2f` 因网络超时待补推，全实验尚未完成。

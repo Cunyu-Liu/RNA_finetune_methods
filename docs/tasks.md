@@ -1743,3 +1743,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **32 页 PPT**：新增第22页 family④和第26页 family⑤；修复克隆 relationship ID 和 slide31 重名问题，ZIP 无重复条目。
 - [x] **v68 源包**：176 文件含 v56–v58 和调度证据，manifest SHA256=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`；PPT=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`，PDF=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`；嵌图、lint/layout/CRC 和实际渲染通过。
 - [ ] **后续**：ncRNA family tiers 与其他真实缺口继续补；family 5/8 不等于全任务闭合，最终科学验收仍未完成。
+
+## N60. 2026-11-01 v59 family 五档与 cap 重复候选
+
+- [x] **v59 验收**：1340 accepted、1 rejected；8 格 proof=complete。LR 78/320、19/80 组完整，选档不变；SSI①a-4 保持 13/30。
+- [x] **family⑤**：SSI 三臂五档，degradation 三臂 5/5/4 档，其他三个可判任务三臂五档；family④/⑤仍 5/8，random 不变。
+- [x] **cap 候选边界**：degradation family 现有 full1500及 cap 后2000/2500/3000≈LoRA1000 四组候选；requested 2000–3000 同 actual=1680，不重复计数据收益。MRL/SSI 候选不变。
+- [x] **v69 与 32 页交付**：178 文件 manifest=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`；PPT=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`，PDF=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；嵌图、lint/layout/CRC、渲染通过。
+- [ ] **GitHub 欠推**：v58 的 `af3de2f` 因网络超时待补推；v59 提交后一并检查，不重复并发推送。
+- [ ] **后续**：ncRNA family tiers、主矩阵和后续阶段继续，family 5/8 不是全任务完成。

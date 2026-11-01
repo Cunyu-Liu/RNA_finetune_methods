@@ -244,3 +244,11 @@
 - [x] R5 交付：176 文件 manifest=`abf4607438d886299eba5e3d5b15ad30f8c621b246a1b42bba5cf5d980232b10`；PPT=`eab7aabfe732088073df37cf7cf784761335b77702049eb1e38e8f32fd4b067a`；PDF=`01a1371f9af0d686bf68fb7935a9a74add84fa0187fe06b67ea53861154a5990`。
 - [ ] R6 后续：ncRNA family 和其他矩阵继续补，不宣称全实验完成。
 
+## S 组：v59 family 五档验收
+
+- [x] S1 数据：v59 共 1340 accepted、1 rejected；8 格 proof=complete，LR 78/320 但完整组仍 19/80。
+- [x] S2 family⑤：SSI 三臂五档，degradation 5/5/4 档；family④/⑤仍 5/8，random 不变。
+- [x] S3 cap：degradation family 四组候选中 requested 2000–3000 同 actual=1680，不重复计数据收益；MRL/SSI 候选不变。
+- [x] S4 交付：178 文件 manifest=`600f1499061c83e2589babf240ec4ebd6b7e7b5854e23b78a26caf1f316c1e68`；PPT=`ef56c08380dbf7afd680e105c5759eaa3075376468fc7fa2a29aeeb704af951f`；PDF=`6d4f49e7f0ab7b646b62b29be5e512c7650ff8edbd41c6425d6cc70894d52bfd`；32 页嵌图、lint/layout/CRC、渲染通过。
+- [ ] S5 后续：补推 af3de2f 及后续提交；继续 ncRNA family 和其他真实缺口。
+
