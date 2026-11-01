@@ -1683,3 +1683,13 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **v51 与源包**：1258 accepted、1 rejected；源包 148 文件，manifest SHA256=`1bdf862e3e5797427559cc6a91a99c2cf84f8fc5e477a285d39a2d064fc28480`。
 - [x] **最终交付**：PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`，PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/实际渲染通过。
 - [ ] **后续**：继续其他任务、family、Frozen 和全量科学矩阵，④/⑤的 6/8 不是全实验完成。
+
+## N53. 2026-11-01 v52 主图、SSI 五档与源包修复
+
+- [x] **v51 同步**：旧 stage2 已备份为 `stage2_pre_v51`；v51 文档、148 项源数据、PPT/PDF 经逐哈希验收后同步三地，GitHub 提交 `ee4f557 Add SSI equivalence candidate` 已推送。
+- [x] **v52 训练验收**：1276 accepted、1 rejected；新增 18 格均 proof=complete，逐格核对 ledger/result/plateau/checkpoint/CUDA/convergence。SSI family full n1500/n2000 与 LoRA n1000 三种子闭合，degradation family mega-LoRA n1500 闭合。
+- [x] **④/⑤边界**：④/⑤均保持 6/8。SSI random 的 33M-full/LoRA 均五档、148M-LoRA 两档；mega n2000 仍 2/3，唯一等价候选 full2000≈LoRA1500 不变。独立逐 seed 复算 Δ=−0.000599762、CI=0.002969352。
+- [x] **①a-4 与成本图**：五种扩展任务的三种子单元依次为 25/26/17/13/14（共30），图和页内计数一致；时间、显存和大模型覆盖图同步到 v52。
+- [x] **源包一致性修复**：旧包中 v43 中间表已刷新为 v52；图、CSV、metadata、脚本、台账同源，显存图脚注与元数据自动读取当前台账。revision=`20261101_refresh_v64_v52ledger_source_provenance_fix`，150 文件，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
+- [x] **PPT 实际渲染**：第25页图片覆盖读图首行已下移修复；六张嵌图 SHA 与源 PNG 一致。最终 PPT SHA256=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`，PDF SHA256=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`；30 页 lint/layout/CRC/字体/行距通过。
+- [ ] **后续**：继续 SSI mega 后续档、degradation/SSI family 与其他真实缺口；不把 staging、单点或 6/8 面板写成全实验完成。

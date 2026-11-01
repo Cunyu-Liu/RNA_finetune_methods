@@ -202,3 +202,12 @@
 - [x] M3 交付：PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`；PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/渲染通过。
 - [ ] M4 后续：继续其他任务、family、Frozen 和全量科学矩阵，不提前宣称全实验完成。
 
+## N 组：v52 图源一致性与实际渲染验收
+
+- [x] N1 训练：v52 共 1276 accepted、1 rejected；18 个新增格均 proof=complete，result/plateau/checkpoint/CUDA/convergence 独立复核通过。
+- [x] N2 科学边界：④/⑤均 6/8；SSI 33M-full/LoRA 五档、148M-LoRA 两档，等价候选不变，mega n2000 未闭合不补点。
+- [x] N3 图源：图、CSV、metadata、脚本和 v52 台账统一；150 文件逐哈希，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
+- [x] N4 版式与溯源：第25页图片/读图框重叠已修复，显存图旧日期脚注已改为动态 v52；六张嵌图 SHA、30 页 lint/layout/CRC 和实际渲染通过。
+- [x] N5 交付哈希：PPT=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`；PDF=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`。
+- [ ] N6 后续：全量科学矩阵、family、Frozen、LR/rank、CRISPR 信号档、RNA-Sc 与 E6 继续按阶段门执行。
+

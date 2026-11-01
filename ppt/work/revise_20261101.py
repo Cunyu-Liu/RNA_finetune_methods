@@ -80,7 +80,7 @@ def main():
     updates = {
         (0, 2): "关键实测结果（2026-11-01 · 导师反馈修订）",
         (3, 1): "④/⑤均 6/8 可判",
-        (3, 2): "degradation 三臂均≥3档；SSI 33M full/LoRA已三档，⑤新增面板。④新增 full2000≈148M-LoRA1500，其他最近配对未等价；Frozen待阶段门",
+        (3, 2): "degradation 三臂均≥3档；SSI 33M full/LoRA已五档、148M-LoRA两档，④/⑤均6/8。④候选仍为 full2000≈148M-LoRA1500；Frozen待阶段门",
         (5, 2): "时间×性能与显存独立为结论⑥；使用最新 8 任务 runtime；650M full 25GB 实测保留，待自然窗口",
         (6, 2): "controlled 30 格已重绘均值线与逐 seed 点；official 27/30 complete，650M LoRA 3 格按 corrected 队列补测",
         (8, 1): "5 个分类组合任务；SpliceAI 双 split 三种子",
@@ -162,7 +162,7 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR、SSP 主体闭合；SpliceAI/degradation/SSI 已有部分三种子单元，未闭合臂继续以斜线或 NA 标示，不把有结果写成任务闭合。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 25/26/17/13/14 个三种子单元（共30）；斜线=n<3，空白=未完成，不把有结果写成任务闭合。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
@@ -184,9 +184,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。degradation 三臂均至少三档；SSI 的 33M-full/LoRA 已形成三档，148M-LoRA 已两档。")
+             "同模型内比较策略；④/⑤均 6/8 可判。degradation 三臂五档；SSI 的 33M-full/LoRA 已五档，148M-LoRA 已两档。")
     set_text(slide, "TextBox 5",
-             "读图：SSI 的 33M-full/LoRA 在 n=1000/1500/2000 上均有三种子，PCC 整体上升；148M-LoRA 已两档，④新增 full2000≈LoRA1500。degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
+             "读图：SSI 的 33M-full/LoRA 五档 PCC 整体上升；148M-LoRA 两档，④候选仍为 full2000≈LoRA1500。degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 
@@ -198,6 +198,7 @@ def main():
              "读图：格内数字为已完成种子数，0 表示未闭合而非 0 分。148M 在 ncRNA/CRISPR/modification/MRL/SSP 六臂三种子齐，其余任务继续补；650M 只展示已有格，不提前写规模律。")
     replace_picture(slide, "Picture 3",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/bigmodel_coverage.png")
+    shape_by_name(slide, "ReadNote").top = Inches(5.42)
 
     slide = prs.slides[23]
     set_text(slide, "TextBox 2", "结论④补充  MRL 高预算：legacy 局部对照")

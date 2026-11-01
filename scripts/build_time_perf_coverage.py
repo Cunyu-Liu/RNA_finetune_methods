@@ -234,7 +234,7 @@ def main():
     print(cov.groupby("model")[CELL_KEYS].sum().to_string())
     (OUT / "time_perf_coverage_meta.json").write_text(json.dumps({
         "revision": "20261030_2030_work",
-        "source": "bestval_ledger_export_20261030.csv",
+        "source": latest_export().name,
         "notes": "wall time = median of completed seeds on shared RTX5090; not a controlled benchmark",
     }, ensure_ascii=False, indent=2))
 
@@ -281,8 +281,10 @@ def draw_memory(df, path_png, path_pdf):
     ax.set_axisbelow(True)
     ax.legend(ncol=3, loc="upper left", fontsize=9)
     ax.set_ylim(0, max(30, float(m.max_gb.max()) * 1.12))
+    tag = latest_export().stem.replace("bestval_ledger_export_", "")
     fig.text(0.995, -0.03,
-             "source: bestval ledger export 20261030 (peak_mem_mb of completed runs) · bar = median of per-task medians; whisker = min–max across the 8 tasks\n"
+             ("source: bestval ledger export %s (peak_mem_mb of completed runs) · " % tag) +
+             "bar = median of per-task medians; whisker = min–max across the 8 tasks\n"
              "显存与标签顺序无关，可用于成本判断；但绝对值随 batch/序列长度变化，跨任务比较须同时看 min–max",
              transform=fig.transFigure, ha="right", va="top", fontsize=6.6, color="#777777")
     fig.savefig(path_png, dpi=300, bbox_inches="tight", facecolor="white")

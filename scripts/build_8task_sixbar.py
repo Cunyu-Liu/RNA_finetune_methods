@@ -315,7 +315,7 @@ def main():
     (OUT / "eight_task_sixbar_meta.json").write_text(json.dumps({
         "figure": "eight_task_sixbar",
         "revision": "20261030_2030_work",
-        "sources": ["current_results/bestval_ledger_export_20261030.csv",
+        "sources": [latest_export().name,
                     "figures/mrl_bestval_official_sixbar_20261030_data.csv",
                     "figures/modification_bestval_official_sixbar_data.csv",
                     "figures/extension_three_task_sixbar_data.csv"],

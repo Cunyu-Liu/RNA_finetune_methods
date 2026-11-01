@@ -872,3 +872,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v51 中 SSI 148M-LoRA 已形成 1000/1500 两档三种子，33M-full 五档完整，满足④两臂各至少两档，④由 5/8 升为 6/8；⑤保持 6/8。
 2. 独立逐 seed 复算：只有 full2000↔LoRA1500 满足规则，Δ=−0.000599762、95% CI half-width=0.002969352。其他最近配对虽 |Δ|<0.02，但 CI 不覆盖 0，不写等价。候选仅限 SSI random 的实测范围，不插值、不外推。
 3. 最终 PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`，PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/实际渲染通过。v51 为 1258 accepted、1 rejected，源包 148 文件，manifest SHA256=`1bdf862e3e5797427559cc6a91a99c2cf84f8fc5e477a285d39a2d064fc28480`。
+
+### 10.52 v52 主图、SSI 五档与源包一致性（2026-11-01）
+
+1. v52 为 1258+18=**1276 accepted、1 rejected**，v51 的 1258 行逐字段保留。18 个新增格逐一通过 `proof_state=complete`，并独立复核 result/plateau/checkpoint/CUDA/convergence；未将导出器的文件存在检查当作最终证明。
+2. SSI family 的 33M-full n1500/n2000 三种子均值分别为 0.543860820/0.555126482，33M-LoRA family n1000 三种子均值为 0.545655802；degradation family 的 148M-LoRA n1500 三种子均值为 0.406641231。SSI random 的 33M-full/LoRA 均达五档，148M-LoRA n2000 为 2/3，因此④/⑤均保持 6/8，唯一 SSI 等价候选不变。
+3. ①a-4 的 CRISPR/SSP/SpliceAI/degradation/SSI 三种子单元分别为 25/26/17/13/14 个（各共30）。PPT 更新①a-4、④/⑤、大模型覆盖与时间/显存图；第25页图片与读图框重叠已修复，显存图脚注与元数据改为自动引用当前台账。
+4. 旧源包部分中间表仍停留 v43，本次已将图、CSV、metadata、脚本与 v52 台账统一。源包 revision=`20261101_refresh_v64_v52ledger_source_provenance_fix`，150 个登记文件，manifest SHA256=`8003394a861f801d70d057f5b246600c366ea4b5e335e529f94220ae3087ffcc`。
+5. 最终 PPT SHA256=`1ea24b847e64bdb77238c914de0f8f98b4620363a9236363d622272e48b46505`，PDF SHA256=`ed4c7b224e3a846f80022f9a9242714070bfe41d01ac48915835d564ff73d74c`；30 页 lint/layout/字体/行距/CRC、六张嵌图 SHA 与实际渲染通过。全量科学矩阵、family、Frozen、LR/rank 与 E6 仍未完成。
