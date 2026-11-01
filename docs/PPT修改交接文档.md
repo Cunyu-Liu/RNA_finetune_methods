@@ -432,3 +432,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 当前输入为 **1292 accepted、1 rejected**，16 个新增格均 proof=complete。④/⑤均 6/8；SSI 33M-full/LoRA 五档、148M-LoRA 四档。④现有三组候选：full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000，均通过逐 seed 差值和 CI 复算，页面已写“候选非唯一”。
 3. 当前源包 revision=`20261101_refresh_v65_v53ledger_ssi_four_tier_candidates`，152 个登记文件，manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`。图、CSV、metadata、脚本与 v53 台账一致，六张嵌图 SHA、30 页 lint/layout/CRC 和实际渲染通过。
 4. 实时 proof 审计为 per-base 105/270、LR 76/320、rank4/16 65/96；只作队列进度。主矩阵、family、Frozen scaling、LR/rank、CRISPR 信号档、RNA-Sc 与 E6 仍未完成，当前文件不是最终科学版。
+
+## 28. 2026-11-01 当前 v54 阶段交付
+
+1. 当前 PPT 为 30 页，SHA256=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`；PDF SHA256=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`。当前输入 **1315 accepted、1 rejected**，23 个新增格均 proof=complete。
+2. ④/⑤均 6/8；degradation 与 SSI 三臂均五档。SSI ④仍为 full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000 三组候选，n3000 新点未增加候选。①a-4 的五种任务三种子单元为 25/26/17/14/14。
+3. 第19页 LR interim 更新为 19/80 组四档完整，3e-5/1e-4 各 8 组、1e-5 三组，3e-4 为 0；仍需全量和正式种子复测。v54 registry accepted 为 per-base 106/270、complementary 280/324、LR 76/320、rank 65/96。
+4. 当前源包 revision=`20261101_refresh_v66_v54ledger_ssi_three_arm_closure_lr19`，154 个登记文件，manifest SHA256=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`。嵌图、30 页 lint/layout/CRC 和实际渲染通过；全实验与最终科学验收尚未完成。

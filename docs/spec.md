@@ -888,3 +888,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. 实时 proof 审计：per-base=105/270、LR tuning=76/320、rank4/16=65/96；这些是队列进度，不是 v53 新增结果，也不替代全量验收。v53 的①a-4 三种子单元计数仍为 25/26/17/13/14，ERNIE degradation frozen-family 只有 2/3，不误写闭合。
 4. 源包 revision=`20261101_refresh_v65_v53ledger_ssi_four_tier_candidates`，152 个登记文件，manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`。PPT 已改“三组候选、非唯一”和 148M-LoRA 四档。
 5. 最终 PPT SHA256=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`，PDF SHA256=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`；30 页 lint/layout/CRC、六张嵌图 SHA 与④/⑤及其他更新页实际渲染通过。
+
+### 10.54 v54 SSI 三臂五档与 LR 19 组（2026-11-01）
+
+1. v54 为 1292+23=**1315 accepted、1 rejected**，v53 行逐字段保留；23 个新增格均通过 `proof_state=complete`、checkpoint/CUDA/convergence 复核。其中 3 格为 ERNIE degradation LoRA-random 主矩阵，三种子 PCC=0.546107384/0.547974123/0.564120337；①a-4 的 degradation 三种子单元升为 14/30。
+2. SSI random 的 33M-full、33M-LoRA、148M-LoRA 均达 1000–3000 五档三种子，PCC 整体上升。④仍只有三组候选 full2000≈LoRA1500、full2500≈LoRA2000、full3000≈LoRA2000，n3000 新点未增加候选；④/⑤均保持 6/8。
+3. SSI family 的 33M-full 五档、33M-LoRA 四档、148M-LoRA n1000 已闭合；family 148M-LoRA n1500 为 2/3，不能把 family 写成全闭合。v54 registry accepted 对账为 per-base 106/270、complementary 280/324、LR 76/320、rank4/16 65/96。
+4. LR 的 80 组中 **19 组四档完整**，validation 选档为 3e-5/1e-4 各 8 组、1e-5 三组，3e-4 为 0；test 不参与。此仍为 interim，80 组全闭合前不生成 tuned 正式矩阵。
+5. 源包 revision=`20261101_refresh_v66_v54ledger_ssi_three_arm_closure_lr19`，154 个登记文件，manifest SHA256=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`。最终 PPT SHA256=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`，PDF SHA256=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`；嵌图、30 页 lint/layout/CRC 与实际渲染通过。

@@ -219,3 +219,11 @@
 - [x] O4 交付：152 文件 manifest SHA256=`1b9aeb2c0f41bc7786d06faffdb88f24fcd7102f0e7881fa695abce127491d12`；PPT=`f8151e1604663948ece241e6115cf20cd02e594a2ca4390db5759fdacd1ca5da`；PDF=`cfd9726650767e7258cc9648b15603a15f2f653775fe8e215f583330fd6a6ec8`；嵌图、lint/layout/CRC 和实际渲染通过。
 - [ ] O5 后续：其余 family、主矩阵、LR/rank、Frozen 和后续阶段继续执行。
 
+## P 组：v54 SSI 三臂与 LR 阶段验收
+
+- [x] P1 数据：v54 共 1315 accepted、1 rejected；23 个新增格均 proof=complete，CUDA/convergence 通过。
+- [x] P2 科学边界：SSI random 三臂五档，④候选仍三组；④/⑤均 6/8，family mega n1500 未闭合。
+- [x] P3 其他矩阵：LR 76/320、19/80 组闭合，选档未选 3e-4；per-base 106/270、complementary 280/324、rank 65/96。
+- [x] P4 交付：154 文件 manifest=`8849f8c6ccc7df35b7f37a14e551e21031469b459e2aaa9d82e0d8dc64f86cca`；PPT=`6936bc7bce748962f7947b243aa2a11258b77f4cde00c4846ec180e5984584d6`；PDF=`94f453080ed96290b74f715db7b02b915943854d41c8256d8cd059fc9db8ad23`；嵌图、lint/layout/CRC、渲染通过。
+- [ ] P5 后续：其余 family、主矩阵、LR/rank、Frozen 和后续阶段继续执行。
+
