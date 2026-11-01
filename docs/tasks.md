@@ -1794,3 +1794,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR 分布**：88/320、22/80 组完整；3e-5 九组、1e-4 八组、1e-5 五组、3e-4 为 0。①a-4 和④/⑤不变。
 - [x] **v73 与交付**：193 文件 manifest=`10d08978c5cccd93662e4949e9474d78c303a9021a23cb47b0ef74319d1dd366`；PPT=`63ae89e3c4864588999f5d0cd5827f4247fce7921f588f4ee16e290643b06645`，PDF=`46fb153cdcdd541806f1896e1ee4375843b9d935e8469549384f93631978b193`；32 页嵌图、lint/layout/CRC、渲染通过。
 - [ ] **后续**：继续其余 LR/rank、主矩阵、ncRNA family 和后续阶段，及时提交本批交付。
+
+## N67. 2026-11-01 v67 首种子与 RNA-FM family LR staging
+
+- [x] **v67 验收**：1364 accepted、0 rejected；5 格 proof=complete。ERNIE SSI LoRA-random 为 1/3，RNA-FM CRISPR full-family 三档缺 1e-5，SpliceAI 仍低信号。
+- [x] **展示版不变**：没有新三种子单元或完整 LR 组，PPT 与 v73 源包保持 v66，v67 台账暂存 teams。
+- [ ] **后续**：等待其余种子和 1e-5 完成后再更新展示版，继续其他真实缺口。
