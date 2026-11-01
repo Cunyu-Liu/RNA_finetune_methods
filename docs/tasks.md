@@ -1581,3 +1581,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **degradation family 33M-LoRA n1000 三种子**：seed17/29/43 PCC=0.374414477/0.375550802/0.387538368，mean=0.379167882、SD=0.007271285、95% CI half-width=0.008228233；三格 proof=complete。
 - [x] **v36 与源包**：1185 accepted、1 rejected；源包 118 文件，manifest SHA256=`59e9d86abc45d4d60692b97850e77f2aba2959cd30c02ee1e9881795f27a50b3`，PPT 保持 v30。
 - [ ] **后续**：补 SSI 148M-LoRA 和后续档，以及 degradation family 的 148M-LoRA；单档单元不替代多档曲线。
+
+## N37. 2026-11-01 SSI 后续档与 family cap staging
+
+- [x] **v37 staging**：1192 accepted、1 rejected；源包 120 文件，manifest SHA256=`9661d29922e550ca820c0e5aa0ff9485f0d663cf45239961dee1c9fab8b175fc`。
+- [x] **当前覆盖**：SSI n1500 的 33M-full=1/3、33M-LoRA=2/3、148M-LoRA=0/3；degradation family 148M-LoRA n1000=2/3。degradation family full 的 requested 2000 实际 n_train=1680，需与 random cap1552 分开记录。
+- [~] **后续**：继续闭合三种子，不新增④/⑤面板，PPT 保持 v30；cap 绘图时按 split 和 RID 分别标注，不能混用 actual 数。
