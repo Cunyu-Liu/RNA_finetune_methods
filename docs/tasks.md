@@ -1941,3 +1941,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **新科学单元**：RNA-FM SSI LoRA-family 三种子 mean≈0.592750128，SSI①a-4 覆盖 18/30，五项为 27/27/19/17/18；per-base 150/270、complementary 303/324、LR 108/320（25组）、rank 68/96。
 - [x] **动态图源与交付**：源包 revision=`20261101_refresh_v83_v88ledger_rnafm_ssi_family_closure`，252 文件，manifest=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`；PPT=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。十张嵌图、32 页 lint/layout/CRC 与第8/27/28/29页渲染通过。
 - [ ] **后续**：完成 v88 三地同步、提交与推送；继续真实缺口，650M SSP family 未齐三种子前不写成闭合。
+
+## N88. 2026-11-01 v89 SpliceAI 分层 staging
+
+- [x] **v88 交付**：三地验收通过，GitHub `20cf0ec Record RNA-FM SSI family closure` 已推送并核对远端 HEAD。
+- [x] **v89 单格验收**：1447 accepted、0 rejected；mega SpliceAI LoRA-family/n3000/seed17 macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。证据=`bestval_v89_new_proof.json`，SHA256=`40998779cb5f4d5f02c14b2e942e21e7d62ec4204f3b0ba297410c50120d9775`。
+- [x] **展示边界**：per-base 151/270、complementary 303/324、LR 108/320（25组）、rank 68/96；未新增科学单元，PPT 和 v83 源包保持 v88。
+- [ ] **后续**：同步 v89 文档并提交；继续真实缺口，低信号格不用于 scaling 或等价结论。

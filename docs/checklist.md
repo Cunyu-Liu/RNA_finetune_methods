@@ -353,3 +353,10 @@
 - [x] AF4 交付：252 文件 manifest=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`；PPT=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`；十张嵌图、32 页 lint/layout/CRC 和第8/27/28/29页渲染通过。
 - [ ] AF5 后续：完成三地同步与 GitHub 同步，继续真实科学缺口。
 
+## AG 组：v89 低信号 staging 验收
+
+- [x] AG1 数据：1447 accepted、0 rejected；新增 SpliceAI family/n3000/seed17 proof=complete，CUDA/convergence 通过。
+- [x] AG2 科学边界：macro-F1=0.333280238，仍近随机，不形成新面板、scaling 或等价候选；①a-4 与④/⑤不变。
+- [x] AG3 进度与展示：per-base 151/270、complementary 303/324、LR 108/320（25组）、rank 68/96；PPT 和 v83 源包保持 v88。
+- [ ] AG4 后续：同步文档并提交，继续真实科学缺口。
+

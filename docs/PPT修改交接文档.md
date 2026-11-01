@@ -553,3 +553,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第8页①a-4：RNA-FM SSI LoRA-family 三种子 PCC=0.593009039/0.592436075/0.592805270，mean≈0.592750128，正式闭合；SSI 覆盖升为 18/30，五种任务为 27/27/19/17/18。
 3. 第27页覆盖图补入 650M SSP frozen-family/seed17（pair-F1=0.3237），但仅 1/3，不写闭合；第28/29页成本图同步到 v88。per-base 150/270、complementary 303/324、LR 108/320（25组）、rank 68/96，④/⑤不变。
 4. 当前源包 revision=`20261101_refresh_v83_v88ledger_rnafm_ssi_family_closure`，252 个登记文件，manifest SHA256=`3ef91e4553c1f874c5d64362fcfe64a961d4da643b8c951aaafa6686f7c49b7e`。十张关键嵌图 SHA、32 页 lint/layout/CRC、Microsoft YaHei、正文 1.5 倍行距与第8/27/28/29页实际渲染通过。
+
+## 45. 2026-11-01 v89 staging：展示版保持 v88
+
+1. v89 为 **1447 accepted、0 rejected**；新增 mega SpliceAI LoRA-family/n3000/seed17，macro-F1=0.333280238，proof=complete、CUDA 收敛，仍近随机。
+2. 未形成新三种子单元、完整 LR 组或有效④/⑤结果，故 PPT 与 v83 源包继续保持 v88，不重画无科学变化的页面。v89 台账和独立证明保存在 teams，下一次可见更新一并纳入。
+3. 当前展示版仍为 32 页，PPT SHA256=`20b3ffd36d099cea82367892d181e7d7ed4b12866ba9a25c5ce792818cd866fc`，PDF SHA256=`3701d2bbba135f33beccc069cc722977d42bf84642b9814f1157407c2c782b80`。
