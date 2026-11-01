@@ -1675,3 +1675,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **33M-full family/n1000 三种子**：seed17/29/43 PCC=0.528667923/0.524056900/0.528363214，mean=0.527029346、SD=0.002578718、95% CI half-width=0.002918094；三格 proof=complete，best_epoch=0、4 epochs 收敛。
 - [x] **v50 与源包**：1254 accepted、1 rejected；源包 146 文件，manifest SHA256=`fac6ba8a156bfd427b0b55c28831649ab88e7fdc49310de3726d9332bd751864`。
 - [~] **后续**：继续 SSI 148M-LoRA n1500 和 micro-LoRA n3000；④/⑤不变，PPT 保持 v43。
+
+## N52. 2026-11-01 SSI 等价候选与④ 6/8
+
+- [x] **④新增 SSI 面板**：148M-LoRA 已形成 1000/1500 两档三种子，33M-full 五档完整，④由 5/8 升为 6/8；⑤保持 6/8。
+- [x] **独立配对复算**：只有 full2000≈LoRA1500 合格，Δ=−0.000599762、CI=0.002969352；其他最近配对虽 |Δ|<0.02，但 CI 不覆盖 0，不写等价。仅限 SSI random 实测范围。
+- [x] **v51 与源包**：1258 accepted、1 rejected；源包 148 文件，manifest SHA256=`1bdf862e3e5797427559cc6a91a99c2cf84f8fc5e477a285d39a2d064fc28480`。
+- [x] **最终交付**：PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`，PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/实际渲染通过。
+- [ ] **后续**：继续其他任务、family、Frozen 和全量科学矩阵，④/⑤的 6/8 不是全实验完成。

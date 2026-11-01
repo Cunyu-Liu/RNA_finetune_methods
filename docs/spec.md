@@ -866,3 +866,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v43 中 SSI 的 33M-full/LoRA 已形成 1000/1500/2000 三档三种子，PCC 均随数据量上升，故⑤由 5/8 升为 6/8；148M-LoRA 只有 n1000 一档，④仍 5/8，不把⑤进展写成④等价证据。
 2. 首次 v43 渲染时，degradation cap 标签混入 family actual=1680。已将 `task_caps` 限定为当前 split，random 页面只显示 actual=1552；metadata 仍逐行保留 split，不能跨 split 合并 cap 数值。
 3. 最终 PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`，PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/实际渲染通过。v43 为 1222 accepted、1 rejected，源包 132 文件，manifest SHA256=`7c271fe6d40e5d1166eb0fd3acaac8e35b2a8aed73830a120f504cc599fcd40e`。
+
+### 10.51 SSI 等价候选与④ 6/8（2026-11-01）
+
+1. v51 中 SSI 148M-LoRA 已形成 1000/1500 两档三种子，33M-full 五档完整，满足④两臂各至少两档，④由 5/8 升为 6/8；⑤保持 6/8。
+2. 独立逐 seed 复算：只有 full2000↔LoRA1500 满足规则，Δ=−0.000599762、95% CI half-width=0.002969352。其他最近配对虽 |Δ|<0.02，但 CI 不覆盖 0，不写等价。候选仅限 SSI random 的实测范围，不插值、不外推。
+3. 最终 PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`，PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/实际渲染通过。v51 为 1258 accepted、1 rejected，源包 148 文件，manifest SHA256=`1bdf862e3e5797427559cc6a91a99c2cf84f8fc5e477a285d39a2d064fc28480`。

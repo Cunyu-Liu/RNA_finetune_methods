@@ -195,3 +195,10 @@
 - [x] L3 交付：PPT SHA256=`e0500164654d1a2548ba46997a6b4538c88b4ce1398bed143e3ab1a944f3d9b6`；PDF SHA256=`0688b217f77ee4292a8d0c15e2a432362f9f56de76292806e4b0086a21f2d8bd`；30 页 lint/layout/CRC/渲染通过。
 - [ ] L4 后续：继续 SSI 148M-LoRA 第二档和其他科学矩阵，不提前宣称全实验完成。
 
+## M 组：v51 SSI 等价候选验收
+
+- [x] M1 数据：v51 共 1258 accepted、1 rejected；SSI 148M-LoRA 两档三种子，④达 6/8，⑤保持 6/8。
+- [x] M2 配对：只有 full2000≈LoRA1500 合格，Δ=−0.000599762、CI=0.002969352；其他近值 CI 不覆盖 0，不写等价。
+- [x] M3 交付：PPT SHA256=`f42956457d25b348073a5a30e30c6053fd4f141fc3ac557ee94ec9c09a80fe27`；PDF SHA256=`6677a73f02f46de13c36752078246ebc569a097cf152a9a20f2470cc8719561b`；④/⑤ lint/layout/CRC/渲染通过。
+- [ ] M4 后续：继续其他任务、family、Frozen 和全量科学矩阵，不提前宣称全实验完成。
+
