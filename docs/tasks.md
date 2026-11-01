@@ -1842,3 +1842,9 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **训练证据**：650M ncRNA frozen 已完成 epoch0，epoch0 val_loss=0.446144，epoch1 val_loss=0.374980，进程和日志均在推进。
 - [x] **展示边界**：PPT 与 v75 源包保持 v69，不把中间 loss 或进程存活写成收敛结论。
 - [ ] **后续**：等待 result/plateau/checkpoint 完整后验收，并同步本批文档。
+
+## N74. 2026-11-01 v75 ERNIE SSI LoRA-family 第二种子
+
+- [x] **v75 验收**：1377 accepted、0 rejected；2 格 proof=complete。ERNIE SSI LoRA-family 为 2/3，SpliceAI 仍低信号；per-base 122/270。
+- [x] **展示边界**：未形成新三种子单元，PPT 与源包 revision v75 保持 v69，v75 台账暂存 teams。
+- [ ] **后续**：等待 seed43 和其他完成格，继续三轮验收并同步文档。

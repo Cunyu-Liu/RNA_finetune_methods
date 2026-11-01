@@ -1007,3 +1007,8 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v73/v74 均无新增完成格，仍为 **1375 accepted、0 rejected**。首个 650M ncRNA frozen 的 ledger 为 running，plateau 已完成 epoch0，日志进入 epoch1；epoch0 train/val loss=0.86045/0.446144，epoch1 val_loss=0.374980，说明 CUDA 训练正常推进而非空进程。
 2. 当前只记录中间训练状态，不提前写收敛或性能结论；PPT 与 v75 源包保持 v69，待 result/plateau/checkpoint 完整后再验收。
+
+### 10.74 v75 ERNIE SSI LoRA-family 第二种子（2026-11-01）
+
+1. v75 为 1375+2=**1377 accepted、0 rejected**，v74 行逐字段保留；2 个新增格均 proof=complete。ERNIE SSI LoRA-family/seed29 PCC=0.620248196，与 seed17 组成 2/3，仍缺 seed43，不新增三种子单元。
+2. SpliceAI family/n3000/seed29 macro-F1=0.333280238，仍近随机；per-base accepted=122/270。PPT 与源包 revision v75 保持 v69，v75 台账暂存 teams。
