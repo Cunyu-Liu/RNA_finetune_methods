@@ -2046,3 +2046,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **rank**：88/96、29/32组三种子闭合；新增 degradation 双split、SpliceAI family rank16、SSI random rank4，保留同口径边界。证据 SHA256=`3009603411378b8f31f35ae0b22b74d87fa45b35245021b993ea6466303d32f5`。
 - [x] **交付**：源包 revision=`20261102_refresh_v90_v103ledger_lr41_main_rank_closure`，301 文件，manifest=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`；PPT=`9274ee5e25f812e50beefbc60428e83944a74e8851826e231de178e04fcd0291`，PDF=`f3fd759639c84ef4e839aee0019ccccc10e05a81ceb9cc4a696c46a8ef080285`。嵌图、32页 lint/layout/CRC 与六个更新页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 rank 剩余8格、主矩阵、LR和后续阶段门，不宣称全实验完成。
+
+## N102. 2026-11-02 v104 rank 89/96 与 SSI family 第二种子
+
+- [x] **两格验收**：v104 为 1539 accepted、0 rejected；两格均 proof=complete、CUDA 收敛，证据 SHA256=`f76bbfcceb24da0ee02ac853527fdceddebf330f325e5b8b5581e5a61889a428`。
+- [x] **LR边界**：ERNIE SSP random 仅2/4档，LR 170/320、完整组仍41/80，不提前选档。
+- [x] **rank进度**：SSI family rank4 为2/3，rank4/16=89/96、三种子组仍29/32；页面只更新进度和剩余7格。证据 SHA256=`d254b2522cedea7a0dfb03dd71e8dc277c2088203c76fea5ac97bc634ed42e1b`。
+- [x] **交付**：源包 revision=`20261102_refresh_v91_v104ledger_rank89_ssi_family_n2`，305 文件，manifest=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`；PPT=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`，PDF=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 rank 剩余7格和其他真实科学缺口。

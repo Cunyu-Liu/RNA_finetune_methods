@@ -644,3 +644,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 第19页 LR 更新为 **41/80组**，分布3e-5十九、1e-4十二、1e-5九、3e-4一组。RNA-FM modification family 默认档最优，页面明确“必须逐组validation”，不再沿用旧的“默认未被选择”表述；test 不参与。
 4. 第20页 rank 更新为 **88/96、29/32组三种子闭合**，写入 degradation 双split、SpliceAI family rank16 和 SSI random rank4 的阶段均值；现有图仍标 legacy，不与rank8直接排名。
 5. 当前源包 revision=`20261102_refresh_v90_v103ledger_lr41_main_rank_closure`，301 个登记文件，manifest SHA256=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/19/20/27/28/29页实际渲染通过。
+
+## 59. 2026-11-02 当前 v104：rank 89/96
+
+1. 当前 PPT 为32页，SHA256=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`；PDF SHA256=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`。输入 **1539 accepted、0 rejected**，两个新增格均 proof=complete。
+2. 第20页 rank 更新为 **89/96、29/32组三种子闭合、剩余7格**。SSI family rank4 仅2/3，不写成闭合；现有图仍标legacy，其他阶段均值和结论不变。
+3. ERNIE SSP random 仅2/4档，LR 170/320、完整组仍41/80；per-base 153/270、complementary 306/324、equiv 420/420、650M frozen 25/25，①a-4与④/⑤不变。
+4. 当前源包 revision=`20261102_refresh_v91_v104ledger_rank89_ssi_family_n2`，305 个登记文件，manifest SHA256=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。

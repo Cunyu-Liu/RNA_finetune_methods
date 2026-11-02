@@ -457,3 +457,11 @@
 - [x] AT5 交付：301 文件 manifest=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`；PPT=`9274ee5e25f812e50beefbc60428e83944a74e8851826e231de178e04fcd0291`，PDF=`f3fd759639c84ef4e839aee0019ccccc10e05a81ceb9cc4a696c46a8ef080285`；嵌图、lint/layout/CRC 与六页渲染通过。
 - [ ] AT6 后续：三地同步并推送，继续真实科学缺口，不宣称全实验完成。
 
+## AU 组：v104 rank 89/96 验收
+
+- [x] AU1 数据：1539 accepted、0 rejected；两格 proof=complete、CUDA 收敛。
+- [x] AU2 边界：ERNIE SSP random 仅2/4档，LR 170/320、完整组仍41/80；SSI family rank4 为2/3。
+- [x] AU3 rank：89/96、29/32组三种子闭合，页面只更新进度，不写 SSI family 闭合。
+- [x] AU4 交付：305 文件 manifest=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`；PPT=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`，PDF=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
+- [ ] AU5 后续：三地同步并推送，继续剩余7格和其他真实科学缺口。
+
