@@ -1245,3 +1245,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 该组四档 best_val 为3e-4=0.500993、1e-4=0.388270、3e-5=0.445255、1e-5=0.516688，validation 选 **1e-4**；test pair-F1=0.2975仅报告，不参与选档。LR 升至 **174/320、42/80组完整**，选档分布为3e-5十九组、1e-4十三组、1e-5九组、3e-4一组。证据=`status/lr_validation_interim_20261101_v113.json`，SHA256=`7a10ac5358f6ee80101111c5b831717984c68a97bbbdc030ac0b7a079f4074f7`。
 3. 当前 per-base=154/270、complementary=306/324、rank4/16=92/96（30/32组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和默认档反例结论不变。
 4. 源包 revision=`20261102_refresh_v96_v113ledger_lr42_ernie_ssp_family`，334 个登记文件，manifest SHA256=`eb7a3065eef5fba25eb025a4f931075396189de33f6c94251fa9fa6d512c78d2`。PPT SHA256=`3e5c3b95c440293d203f5262d94e6bb156738e7c0e84ab8b39cd7e3e58e803a4`，PDF SHA256=`9e4c0be9e0d1e8d51b6efbca3332bece0b8c10a6a720174132aed75e5be22500`；32页 lint/layout/CRC、十张嵌图与 LR 页实际渲染通过。
+
+### 10.111 v114 SSI random rank16 闭合与 rank 93/96（2026-11-02）
+
+1. v114 为 1547+2=**1549 accepted、0 rejected**，v113 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v114_new_proof.json`，SHA256=`bba93c544d5aa6f06b8b41cd47e5cb40ce5ac674a00e59ddc1025b964cd5ddae`。
+2. SSI random rank16 三种子 PCC=0.634591544/0.635330892/0.633885457，mean=0.634602631，正式闭合；rank4/16升至 **93/96、31/32组三种子闭合**，仅剩 family rank16 的3格。证据=`status/rank_progress_20261101_v114.json`，SHA256=`ec16c3675b7924ee439949f31d878d4d2227b41a50c11d6a02a7e86bd502965f`。
+3. RNA-FM SSP full-random default tuning pair-F1=0.1679、best_val=0.571500，仅1/4档；LR=175/320、完整组仍42/80。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。
+4. 源包 revision=`20261102_refresh_v97_v114ledger_rank93_ssi_random_r16_closure`，338 个登记文件，manifest SHA256=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`。PPT SHA256=`2064f15759c017dd664dace4230cf1de7e0a1bbdcab124d4c3c3350a971eb492`，PDF SHA256=`2d9a0f8693d92e7c754bd10d77b5bdb44eaf9680218afd377c0b734ab3c212fb`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。

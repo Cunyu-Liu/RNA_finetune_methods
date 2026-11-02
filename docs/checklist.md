@@ -522,3 +522,11 @@
 - [x] BC3 交付：334 文件 manifest=`eb7a3065eef5fba25eb025a4f931075396189de33f6c94251fa9fa6d512c78d2`；PPT=`3e5c3b95c440293d203f5262d94e6bb156738e7c0e84ab8b39cd7e3e58e803a4`，PDF=`9e4c0be9e0d1e8d51b6efbca3332bece0b8c10a6a720174132aed75e5be22500`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
 - [ ] BC4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
 
+## BD 组：v114 SSI random rank16 验收
+
+- [x] BD1 数据：1549 accepted、0 rejected；两格 proof=complete、CUDA 收敛。
+- [x] BD2 rank：SSI random rank16 三种子 mean=0.634602631；93/96、31/32组闭合，仅剩family rank16三格。
+- [x] BD3 边界：RNA-FM SSP random default 仅1/4档，LR 175/320、完整组仍42/80；per-base 154/270、complementary 306/324。
+- [x] BD4 交付：338 文件 manifest=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`；PPT=`2064f15759c017dd664dace4230cf1de7e0a1bbdcab124d4c3c3350a971eb492`，PDF=`2d9a0f8693d92e7c754bd10d77b5bdb44eaf9680218afd377c0b734ab3c212fb`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
+- [ ] BD5 后续：三地同步并补推，继续剩余3格和其他真实科学缺口。
+
