@@ -1170,3 +1170,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v101 相对 v100 新增 0，仍为 **1466 accepted、0 rejected**。当前 per-base=150/270、complementary=304/324、LR=120/320（28/80组）、rank4/16=69/96、equiv=420/420、650M frozen=25/25；PPT 和 v88 源包保持 v100。
 2. 对 complementary 的 650M LoRA 逐格 proof 后，唯一 runnable 缺口为 `ft_rinalmo650m_crisprofftarget_lora_s43_family_bestval_v1`，其余均 complete。利用自然显存窗口，以单格注册表、need_gb=16、1 worker 启动父 PID=4122509；实际训练子 PID=4122556，参数含 `--device 0`，未强行启动 650M full。
 3. 启动只记在训，不记完成。证据=`status/complementary_650m_lora_20261102/launch_evidence.json`，SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`；待 result/plateau/checkpoint 完整后再验收。
+
+### 10.100 v102 micro SpliceAI family LR 第29组（2026-11-02）
+
+1. v102 为 1466+2=**1468 accepted、0 rejected**，v101 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v102_new_proof.json`，SHA256=`573b76edc42e675a171c092be812cdb23606496cb4d2893437b37186f44a00fc`。
+2. micro SpliceAI full-family 四档 best_val 为3e-4=0.003249、1e-4=0.003244、3e-5=0.001168、1e-5=0.001202，validation 选 **3e-5**；test macro-F1=0.338468501 仅报告。LR 升至 **122/320、29/80组完整**，选档分布3e-5十四组、1e-4九组、1e-5六组、3e-4为0。证据=`status/lr_validation_interim_20261101_v102.json`，SHA256=`38ea44334e15e88202046e2c05b591aa68bfc941df555ba6443e7277df08ebde`。
+3. micro degradation full-random default 仅1/4档，PCC=0.504850050、best_val=0.354035，不形成新完整组。per-base=150/270、complementary=304/324、rank4/16=69/96、equiv=420/420、650M frozen=25/25；650M CRISPR LoRA 仍在训，不记完成。
+4. 源包 revision=`20261102_refresh_v89_v102ledger_lr29_micro_spliceai_family`，296 个登记文件，manifest SHA256=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`。PPT SHA256=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`，PDF SHA256=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`；32页 lint/layout/CRC、十张嵌图与 LR 页实际渲染通过。

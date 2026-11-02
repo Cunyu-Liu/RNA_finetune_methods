@@ -629,3 +629,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v101 新增 0，仍为 **1466 accepted、0 rejected**，PPT 和 v88 源包保持 v100。
 2. 唯一未完成的 650M LoRA 为 CRISPR family/seed43，已在自然显存窗口以单格队列启动，父 PID=4122509、训练子 PID=4122556，真实 `--device 0`。启动不等于完成，不修改覆盖热图或性能柱。
 3. 证据=`status/complementary_650m_lora_20261102/launch_evidence.json`，SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。
+
+## 57. 2026-11-02 当前 v102：micro SpliceAI family LR 第29组
+
+1. 当前 PPT 为32页，SHA256=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`；PDF SHA256=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`。输入 **1468 accepted、0 rejected**，两个新增格均 proof=complete。
+2. 第19页 LR 更新为 **29/80组**，分布3e-5十四组、1e-4九组、1e-5六组、3e-4为0。micro SpliceAI full-family 四档闭合，validation 选3e-5（best_val=0.001168），test macro-F1=0.338468501仅报告。
+3. micro degradation random default 仅1/4档；per-base 150/270、complementary 304/324、rank 69/96、equiv 420/420、650M frozen 25/25。650M CRISPR LoRA 在训，不修改其覆盖或性能图。
+4. 当前源包 revision=`20261102_refresh_v89_v102ledger_lr29_micro_spliceai_family`，296 个登记文件，manifest SHA256=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。

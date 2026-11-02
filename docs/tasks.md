@@ -2029,3 +2029,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **缺口审计**：complementary 的 650M LoRA 逐格 proof，唯一 runnable 为 CRISPR family/seed43，其余 complete；无同名 runner。
 - [x] **自然窗口启动**：单格注册表、need=16、1 worker，父 PID=4122509、训练子 PID=4122556，真实 `--device 0`；不启动650M full、不记完成。证据 SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。
 - [ ] **后续**：同步并提交启动记录，等待完整证明后继续主矩阵、LR/rank 和大格自然窗口。
+
+## N100. 2026-11-02 v102 micro SpliceAI family LR 第29组
+
+- [x] **两格验收**：v102 为 1468 accepted、0 rejected；两格均 proof=complete、CUDA 收敛，证据 SHA256=`573b76edc42e675a171c092be812cdb23606496cb4d2893437b37186f44a00fc`。
+- [x] **四档选档**：micro SpliceAI full-family 选3e-5（best_val=0.001168），test macro-F1=0.338468501仅报告；LR 122/320、29/80组，分布14/9/6/0。证据 SHA256=`38ea44334e15e88202046e2c05b591aa68bfc941df555ba6443e7277df08ebde`。
+- [x] **其他边界**：micro degradation random 仅1/4档；per-base 150/270、complementary 304/324、rank 69/96、equiv 420/420、650M frozen 25/25，650M LoRA 在训不记完成。
+- [x] **交付**：源包 revision=`20261102_refresh_v89_v102ledger_lr29_micro_spliceai_family`，296 文件，manifest=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`；PPT=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`，PDF=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`。嵌图、32页 lint/layout/CRC 与 LR 页渲染通过。
+- [ ] **后续**：三地同步并推送，继续主矩阵、LR/rank 和大格自然窗口。

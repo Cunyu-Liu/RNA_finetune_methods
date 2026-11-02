@@ -441,3 +441,10 @@
 - [x] AR3 启动：单格队列 need=16、1 worker，父4122509、子4122556，真实 CUDA 参数；启动不记完成，证据 SHA256=`b9d1fe1e4e988b7d45a2005031b9172ce4ca1de5dd1b7e424c5f59c6256547df`。
 - [ ] AR4 后续：等待 result/plateau/checkpoint 完整证明，不在资源不足时强行启动大格。
 
+## AS 组：v102 LR 第29组验收
+
+- [x] AS1 数据：1468 accepted、0 rejected；两格 proof=complete、CUDA 收敛。
+- [x] AS2 选档：micro SpliceAI full-family 选3e-5，test 不参与；LR 122/320、29/80组，分布14/9/6/0。
+- [x] AS3 交付：296 文件 manifest=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`；PPT=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`，PDF=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
+- [ ] AS4 后续：三地同步并推送，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
+
