@@ -561,3 +561,11 @@
 - [x] BH4 交付：353 文件 manifest=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`；PPT=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`；嵌图、lint/layout/CRC 与第20/21页渲染通过。
 - [ ] BH5 后续：三地同步并推送，继续真实科学缺口，不宣称全实验完成。
 
+## BI 组：v117 LR 第44组与计数纠偏验收
+
+- [x] BI1 数据：1562 accepted、0 rejected；4格 proof=complete、CUDA 收敛。
+- [x] BI2 选档：degradation family 选3e-5，test 不参与；LR 184/320、44/80组，分布20/13/9/2，random default仍缺。
+- [x] BI3 纠偏：v113–v116 accepted=173/174/176/180，此前均多1；完整组和选档不受影响，v117=184。
+- [x] BI4 交付：357 文件 manifest=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`；PPT=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
+- [ ] BI5 后续：三地同步并推送，继续真实科学缺口。
+

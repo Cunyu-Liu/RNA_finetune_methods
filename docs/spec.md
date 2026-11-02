@@ -1282,3 +1282,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. RNA-FM SSP full-random 四档 best_val 为3e-4=0.571500、1e-4=0.595991、3e-5=0.601495、1e-5=0.612157，validation 选默认 **3e-4**，test pair-F1=0.1679仅报告。LR 升至 **181/320、43/80组完整**，选档分布为3e-5十九组、1e-4十三组、1e-5九组、3e-4两组。证据=`status/lr_validation_interim_20261101_v116.json`，SHA256=`fba8d10a5851de238883ad3af2a47513a7fa8825dc8099f3ea8a58dcc5fe2e4a`。
 4. ERNIE degradation full-family 已有 default/1e-4/1e-5 三档，仍缺3e-5，不新增完整组。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；其他结论不变。
 5. 源包 revision=`20261102_refresh_v100_v116ledger_rank96_lr43`，353 个登记文件，manifest SHA256=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`。PPT SHA256=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF SHA256=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`；33页 lint/layout/CRC、11张关键嵌图与第20/21页实际渲染通过。
+
+### 10.116 v117 ERNIE degradation family LR 第44组与计数纠偏（2026-11-02）
+
+1. v117 为 1558+4=**1562 accepted、0 rejected**，v116 行逐字段保留；4 个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v117_new_proof.json`，SHA256=`39b6c7be1c3f6ba2c5dce010ee90c8cd3e41c7a51de95953e26f573f0467862c`。
+2. ERNIE degradation full-family 四档 best_val 为3e-4=0.332811、1e-4=0.208660、3e-5=0.205632、1e-5=0.212614，validation 选 **3e-5**，test PCC=0.414904407仅报告。LR 为 **184/320、44/80组完整**，选档分布为3e-5二十组、1e-4十三组、1e-5九组、3e-4两组。证据=`status/lr_validation_interim_20261101_v117.json`，SHA256=`ca47840dfccd0cf0df448f0204e5fb1fccea856f08aaa853e29cefae62164a05`。
+3. ERNIE degradation random 的 default 尚未完成，其余三档已闭合，不新增完整组。per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；其他结论不变。
+4. **accepted计数纠偏**：精确注册表审计显示 v113/v114/v115/v116 的 LR accepted 分别为 **173/174/176/180**，此前阶段文档的174/175/177/181均多1；v117正确值为184。完整组、选档与图意不受影响，PPT只显示完整组所以无需追溯改图。该纠偏已写入 v117 证据的 `count_correction`。
+5. 源包 revision=`20261102_refresh_v101_v117ledger_lr44_ernie_degradation`，357 个登记文件，manifest SHA256=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`。PPT SHA256=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF SHA256=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`；33页 lint/layout/CRC、11张嵌图与 LR 页实际渲染通过。

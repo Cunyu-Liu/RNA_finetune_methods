@@ -2155,3 +2155,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：ERNIE degradation family 仍缺3e-5；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
 - [x] **交付**：源包 revision=`20261102_refresh_v100_v116ledger_rank96_lr43`，353 文件，manifest=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`；PPT=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`。嵌图、33页 lint/layout/CRC 与第20/21页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 LR、主矩阵和后续阶段门，rank闭合不等于全实验完成。
+
+## N116. 2026-11-02 v117 ERNIE degradation family LR 第44组
+
+- [x] **四格验收**：v117 为 1562 accepted、0 rejected；4格均 proof=complete、CUDA 收敛，证据 SHA256=`39b6c7be1c3f6ba2c5dce010ee90c8cd3e41c7a51de95953e26f573f0467862c`。
+- [x] **四档选档**：degradation family 选3e-5（best_val=0.205632），test 不参与；LR 184/320、44/80组，分布20/13/9/2。证据 SHA256=`ca47840dfccd0cf0df448f0204e5fb1fccea856f08aaa853e29cefae62164a05`。
+- [x] **计数纠偏**：注册表精确审计 v113–v116 accepted=173/174/176/180，此前文档均多1；v117=184。完整组和选档不受影响，random default仍缺。
+- [x] **交付**：源包 revision=`20261102_refresh_v101_v117ledger_lr44_ernie_degradation`，357 文件，manifest=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`；PPT=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`。嵌图、33页 lint/layout/CRC 与 LR 页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 degradation random default、主矩阵和其余 LR 真实缺口。
