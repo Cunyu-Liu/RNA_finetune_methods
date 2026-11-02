@@ -501,3 +501,10 @@
 - [x] AZ3 交付：323 文件 manifest=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`；PPT=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
 - [ ] AZ4 后续：三地同步并推送，继续剩余5格和其他真实科学缺口。
 
+## BA 组：v111 ERNIE SSP family LR 第三档验收
+
+- [x] BA1 数据：1545 accepted、0 rejected；3e-5格 proof=complete、CUDA 收敛。
+- [x] BA2 边界：该组已有三档、缺1e-5，LR 173/320、完整组仍41/80，不提前选档。
+- [x] BA3 展示：无新科学单元，PPT 与 v94 源包保持 v110。
+- [ ] BA4 后续：同步并提交，等待第四档和真实科学缺口。
+

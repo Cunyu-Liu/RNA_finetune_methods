@@ -684,3 +684,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 rank 更新为 **91/96、30/32组三种子闭合、剩余5格**。SSI random rank16/seed17 PCC=0.634591544，仅1/3，不写成闭合；现有图仍标legacy，其他阶段均值不变。
 3. 当前 per-base 154/270、complementary 306/324、LR 172/320（41组）、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和 LR 选档不变。
 4. 当前源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 个登记文件，manifest SHA256=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。
+
+## 65. 2026-11-02 v111 staging：展示版保持 v110
+
+1. v111 为 **1545 accepted、0 rejected**；ERNIE SSP full-family 的3e-5格 pair-F1=0.2438、best_val=0.445255，proof=complete、CUDA 收敛。
+2. 该组已有三档、缺1e-5，LR 173/320、完整组仍41/80，不提前选档。无新三种子单元，PPT 与 v94 源包保持 v110。
+3. 当前 PPT/PDF SHA256 仍为 `4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243` / `151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`。

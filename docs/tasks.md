@@ -2092,3 +2092,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：per-base 154/270、complementary 306/324、LR 172/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
 - [x] **交付**：源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 文件，manifest=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`；PPT=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 rank 剩余5格和其他真实科学缺口。
+
+## N108. 2026-11-02 v111 ERNIE SSP family LR 第三档
+
+- [x] **单格验收**：v111 为 1545 accepted、0 rejected；3e-5格 pair-F1=0.2438、best_val=0.445255、best_epoch=2、6 epochs，proof=complete、CUDA 收敛。证据 SHA256=`a2f311d1b6793a6b18561ab4fbbae14c83af11d3acd5c4441e1b3a6aeb6417ef`。
+- [x] **选档边界**：该组已有三档、缺1e-5，LR 173/320、完整组仍41/80，不提前选档；其他矩阵计数不变。
+- [x] **展示边界**：无新科学单元，PPT 与 v94 源包保持 v110。
+- [ ] **后续**：同步并提交文档，等待第四档和真实科学缺口。

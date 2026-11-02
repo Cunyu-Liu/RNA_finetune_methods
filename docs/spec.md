@@ -1225,3 +1225,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 该格仅1/3，不形成新三种子组；rank4/16升至 **91/96**，三种子组仍30/32，剩余5格。证据=`status/rank_progress_20261101_v110.json`，SHA256=`bbed37cbbcb2b1413d174298ced46c009b5e1739e4cbdc455ab3525cee1ae7e6`。
 3. 当前 per-base=154/270、complementary=306/324、LR=172/320（41/80组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。rank 页只更新进度，不改变既有阶段均值。
 4. 源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 个登记文件，manifest SHA256=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`。PPT SHA256=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF SHA256=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
+
+### 10.108 v111 ERNIE SSP family LR 第三档（2026-11-02）
+
+1. v111 为 1544+1=**1545 accepted、0 rejected**，v110 行逐字段保留。新增 ERNIE SSP full-family 的3e-5 tuning 格 pair-F1=0.2438，best_val=0.445255，best_epoch=2、6 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v111_new_proof.json`，SHA256=`a2f311d1b6793a6b18561ab4fbbae14c83af11d3acd5c4441e1b3a6aeb6417ef`。
+2. 该组已有 default/1e-4/3e-5 三档，仍缺1e-5，LR=173/320、完整组仍41/80，不提前选档。per-base=154/270、complementary=306/324、rank4/16=91/96、equiv=420/420、650M frozen=25/25；其他结论不变。
+3. 无新三种子单元或完整 LR 组，PPT 和 v94 源包保持 v110；台账与证明在 teams 留存，待下一次可见更新纳入。
