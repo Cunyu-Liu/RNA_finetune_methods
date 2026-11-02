@@ -1192,3 +1192,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. ERNIE SSP full-random 的1e-5格 pair-F1=0.1793，当前仅2/4档，不形成新完整 LR 组；LR=170/320，完整组仍41/80。SSI family rank4/seed29 PCC=0.598189570，与seed17组成2/3，rank4/16升至 **89/96**，三种子组仍29/32。
 3. 当前 per-base=153/270、complementary=306/324、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。rank 页仅更新89/96与剩余7格，不写 SSI family 闭合。证据=`status/rank_progress_20261101_v104.json`，SHA256=`d254b2522cedea7a0dfb03dd71e8dc277c2088203c76fea5ac97bc634ed42e1b`。
 4. 源包 revision=`20261102_refresh_v91_v104ledger_rank89_ssi_family_n2`，305 个登记文件，manifest SHA256=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`。PPT SHA256=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`，PDF SHA256=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
+
+### 10.103 v105–v106 在训与 650M full 资源门（2026-11-02）
+
+1. v105/v106 均无新增完成格，仍为 **1539 accepted、0 rejected**。当前 per-base=153/270、complementary=306/324、LR=170/320（41/80组）、rank4/16=89/96（29/32组）、equiv=420/420、650M frozen=25/25；PPT 和 v91 源包保持 v104。
+2. rank 剩余7格全部属于 SSI：family rank4 缺seed43，random/family rank16各缺三种子。已做120秒有界结果等待，未把未生成 result 的格写成完成。
+3. 资源核查时有3个实际训练进程，GPU约9.67/32.61GiB、空闲22.45GiB，低于650M full的28GiB安全预算，故未强行启动大格；现有 per-base/LR/rank 父队列继续运行，待自然窗口再补大格。

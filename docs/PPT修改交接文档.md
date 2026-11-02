@@ -651,3 +651,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 rank 更新为 **89/96、29/32组三种子闭合、剩余7格**。SSI family rank4 仅2/3，不写成闭合；现有图仍标legacy，其他阶段均值和结论不变。
 3. ERNIE SSP random 仅2/4档，LR 170/320、完整组仍41/80；per-base 153/270、complementary 306/324、equiv 420/420、650M frozen 25/25，①a-4与④/⑤不变。
 4. 当前源包 revision=`20261102_refresh_v91_v104ledger_rank89_ssi_family_n2`，305 个登记文件，manifest SHA256=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。
+
+## 60. 2026-11-02 v105–v106：在训与资源门
+
+1. v105/v106 均无新增完成格，仍为 **1539 accepted、0 rejected**，PPT 和 v91 源包保持 v104。
+2. rank 剩余7格全部属于SSI；有界等待未生成result，不修改页面。资源核查时空闲22.45GiB，低于650M full的28GiB预算，未强行启动大格。
+3. 当前仍有 per-base/LR/rank 的真实训练在运行，待完整证明或自然大模型窗口后再更新。

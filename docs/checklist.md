@@ -465,3 +465,10 @@
 - [x] AU4 交付：305 文件 manifest=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`；PPT=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`，PDF=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
 - [ ] AU5 后续：三地同步并推送，继续剩余7格和其他真实科学缺口。
 
+## AV 组：v105–v106 在训与资源门验收
+
+- [x] AV1 台账：两版新增0，仍1539 accepted、0 rejected；展示版保持v104。
+- [x] AV2 缺口：rank剩余7格全属SSI，未生成result的格不记完成。
+- [x] AV3 资源：空闲22.45GiB低于650M full预算28GiB，未强行启动大格；现有队列继续。
+- [ ] AV4 后续：同步并提交记录，等待完整证明和自然资源窗口。
+

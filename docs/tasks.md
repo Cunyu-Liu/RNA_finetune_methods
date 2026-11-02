@@ -2054,3 +2054,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **rank进度**：SSI family rank4 为2/3，rank4/16=89/96、三种子组仍29/32；页面只更新进度和剩余7格。证据 SHA256=`d254b2522cedea7a0dfb03dd71e8dc277c2088203c76fea5ac97bc634ed42e1b`。
 - [x] **交付**：源包 revision=`20261102_refresh_v91_v104ledger_rank89_ssi_family_n2`，305 文件，manifest=`95c0e22718e7ebe7be6aa20a11391ec3c14dd939bb23ca7eba68b4cc1ab3e501`；PPT=`9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d`，PDF=`28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 rank 剩余7格和其他真实科学缺口。
+
+## N103. 2026-11-02 v105–v106 在训与资源门
+
+- [x] **台账**：v105/v106 新增0，仍1539 accepted、0 rejected；PPT 与 v91 源包保持 v104。
+- [x] **rank缺口**：剩余7格全部属于SSI，family rank4缺1格，random/family rank16各缺3格；有界等待未生成结果，不记完成。
+- [x] **资源门**：核查时3个实际训练进程、空闲22.45GiB，低于650M full的28GiB预算，未强行启动大格，现有父队列继续。
+- [ ] **后续**：同步并提交在训记录，等待真实完成格和自然大模型窗口。
