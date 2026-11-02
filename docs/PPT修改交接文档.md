@@ -677,3 +677,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. mega SpliceAI LoRA-family/seed17 macro-F1=0.528533981，仅1/3。第27页覆盖热图由0改为1，第8页仍为 n<3 斜线，SpliceAI三种子覆盖仍20/30；第28/29页成本图同步至v109。
 3. ERNIE SSP full-family 的1e-4档完成，当前2/4档，LR 172/320、完整组仍41/80；per-base 154/270、complementary 306/324、rank 90/96、equiv 420/420、650M frozen 25/25。
 4. 当前源包 revision=`20261102_refresh_v93_v109ledger_mega_spliceai_family_n1`，319 个登记文件，manifest SHA256=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/27/28/29页实际渲染通过。
+
+## 64. 2026-11-02 当前 v110：SSI random rank16 首点
+
+1. 当前 PPT 为32页，SHA256=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`；PDF SHA256=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`。输入 **1544 accepted、0 rejected**，新增格 proof=complete。
+2. 第20页 rank 更新为 **91/96、30/32组三种子闭合、剩余5格**。SSI random rank16/seed17 PCC=0.634591544，仅1/3，不写成闭合；现有图仍标legacy，其他阶段均值不变。
+3. 当前 per-base 154/270、complementary 306/324、LR 172/320（41组）、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和 LR 选档不变。
+4. 当前源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 个登记文件，manifest SHA256=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。

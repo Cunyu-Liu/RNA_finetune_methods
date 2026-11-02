@@ -181,9 +181,9 @@ def main():
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
-             "rank4/16 已 90/96，30/32 组三种子闭合。degradation 双 split、SpliceAI family rank16、SSI random/family rank4 新增闭合；ncRNA rank8 复核不变。")
+             "rank4/16 已 91/96，30/32 组三种子闭合。degradation 双 split、SpliceAI family rank16、SSI random/family rank4 新增闭合；ncRNA rank8 复核不变。")
     set_text(slide, "TextBox 5",
-             "读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；剩余 6 格补齐后再冻结结论。")
+             "读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；剩余 5 格补齐后再冻结结论。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

@@ -2084,3 +2084,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR与其他矩阵**：ERNIE SSP family 为2/4档，LR 172/320、完整组仍41/80；per-base 154/270、complementary 306/324、rank 90/96、equiv 420/420、650M frozen 25/25。
 - [x] **交付**：源包 revision=`20261102_refresh_v93_v109ledger_mega_spliceai_family_n1`，319 文件，manifest=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`；PPT=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`。嵌图、32页 lint/layout/CRC 与四个更新页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 SpliceAI 其余种子、rank和 LR 真实缺口。
+
+## N107. 2026-11-02 v110 SSI random rank16 首点
+
+- [x] **单格验收**：v110 为 1544 accepted、0 rejected；seed17 PCC=0.634591544，proof=complete、CUDA 收敛，证据 SHA256=`cf2bc91f2adfa2e96e5e399a71adcb1839d542e76a30c3fa020dbcd1d1ec9778`。
+- [x] **rank边界**：SSI random rank16 为1/3，rank4/16=91/96、三种子组仍30/32，剩余5格。证据 SHA256=`bbed37cbbcb2b1413d174298ced46c009b5e1739e4cbdc455ab3525cee1ae7e6`。
+- [x] **其他边界**：per-base 154/270、complementary 306/324、LR 172/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 文件，manifest=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`；PPT=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 rank 剩余5格和其他真实科学缺口。

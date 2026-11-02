@@ -494,3 +494,10 @@
 - [x] AY4 交付：319 文件 manifest=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`；PPT=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`；嵌图、lint/layout/CRC 与四页渲染通过。
 - [ ] AY5 后续：三地同步并推送，继续真实科学缺口。
 
+## AZ 组：v110 SSI random rank16 首点验收
+
+- [x] AZ1 数据：1544 accepted、0 rejected；新增seed17 proof=complete、CUDA 收敛。
+- [x] AZ2 rank：SSI random rank16 为1/3，91/96、30/32组闭合，剩余5格，不写成三种子闭合。
+- [x] AZ3 交付：323 文件 manifest=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`；PPT=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
+- [ ] AZ4 后续：三地同步并推送，继续剩余5格和其他真实科学缺口。
+

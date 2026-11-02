@@ -1218,3 +1218,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. mega SpliceAI LoRA-family/seed17 macro-F1=0.528533981，仅1/3；覆盖热图由0改为1，主矩阵保留 n<3 斜线，SpliceAI 三种子覆盖仍20/30。ERNIE SSP full-family 的1e-4格 pair-F1=0.2975、best_val=0.388270，当前2/4档，LR=172/320、完整组仍41/80。
 3. 当前 per-base=154/270、complementary=306/324、rank4/16=90/96（30/32组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。
 4. 源包 revision=`20261102_refresh_v93_v109ledger_mega_spliceai_family_n1`，319 个登记文件，manifest SHA256=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`。PPT SHA256=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF SHA256=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`；32页 lint/layout/CRC、十张嵌图与第8/27/28/29页实际渲染通过。
+
+### 10.107 v110 SSI random rank16 首点与 rank 91/96（2026-11-02）
+
+1. v110 为 1543+1=**1544 accepted、0 rejected**，v109 行逐字段保留。新增 SSI random rank16/seed17 PCC=0.634591544，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v110_new_proof.json`，SHA256=`cf2bc91f2adfa2e96e5e399a71adcb1839d542e76a30c3fa020dbcd1d1ec9778`。
+2. 该格仅1/3，不形成新三种子组；rank4/16升至 **91/96**，三种子组仍30/32，剩余5格。证据=`status/rank_progress_20261101_v110.json`，SHA256=`bbed37cbbcb2b1413d174298ced46c009b5e1739e4cbdc455ab3525cee1ae7e6`。
+3. 当前 per-base=154/270、complementary=306/324、LR=172/320（41/80组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。rank 页只更新进度，不改变既有阶段均值。
+4. 源包 revision=`20261102_refresh_v94_v110ledger_rank91_ssi_random_r16_n1`，323 个登记文件，manifest SHA256=`f1d3d5f8b2de180ba2d16d2e2ad6a1836d435b0644aa6ce7ab2f3b528ebd9875`。PPT SHA256=`4c01e9c2f1122da9aead1c2722b53edfb35db1e387f3055e0d01398e515e3243`，PDF SHA256=`151d548f7f202ef38e0c39d4cae8438e25976678a9189b893a5a46c2801019e4`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
