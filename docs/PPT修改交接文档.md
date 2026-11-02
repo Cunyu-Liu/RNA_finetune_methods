@@ -718,3 +718,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 新增第5页“结论①a-1 ncRNA 性能总览”，原 shuffle/no-shuffle 机制页保留为第6页。双页分别回答“修正后性能如何”和“旧 family 崩溃为何隔离”，不再用机制页代替性能页。后续页顺延：①a-4第9页、LR第20页、rank第21页、覆盖第28页、成本第29/30页。
 3. `build_8task_sixbar.py` 复用原六柱聚合与绘图逻辑生成单面板，源包 revision=`20261102_refresh_v98_v114ledger_ncrna_sixbar_overview`，344 个登记文件，manifest SHA256=`4498127752f24a2932529585a98fa43dc383d8ab8cfca8e82948beb4681f3d44`。
 4. 克隆顺序导致的 slide33 重名已修复。最终 **33页**，ZIP无重复、CRC正常，lint/layout、Microsoft YaHei、正文1.5倍行距、11张关键嵌图 SHA 与双页实际渲染通过。PPT SHA256=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF SHA256=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。其他用户手调内容未改。
+
+## 70. 2026-11-02 LR 小格优先调度记录
+
+1. 本项为资源调度，不改变PPT内容。发现650M full队首阻塞后，先暂停旧父3431054并确认唯一子进程43189已 ledger=running，再仅终止父调度，训练不中断。
+2. 全部320个 canonical 格按need_gb升序重排，RID/result_dir/need_gb不变，原表备份；以原state-dir启动新父45383，旧子继续，central ledger防重。
+3. 新父正在proof扫描，不记训练完成。证据=`status/queue_actions/lr_small_first_rebalance_20261102.json`，SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。

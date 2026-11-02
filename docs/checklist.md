@@ -538,3 +538,10 @@
 - [x] BE4 交付：33页 lint/layout/CRC、字体行距、11张嵌图与双页渲染通过；PPT=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。
 - [ ] BE5 后续：三地同步并推送，继续在安全预算内补位和完成真实科学缺口。
 
+## BF 组：LR 小格优先调度验收
+
+- [x] BF1 防重：旧父暂停后确认唯一子进程 ledger=running，仅终止父，不杀训练。
+- [x] BF2 注册表：全部320格、原RID/result_dir/need_gb不变，按need升序；原表备份，new SHA256=`f9fdc348314be90a0a9c1de8e61d8efc582de3ba2557e8c31daea208c2bd9a9e`。
+- [x] BF3 恢复：原state-dir新父45383，旧子43189继续；新父proof扫描不记完成，证据 SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
+- [ ] BF4 后续：核验新子进程、唯一RID与实际显存，不为占显存制造OOM；同步并提交记录。
+

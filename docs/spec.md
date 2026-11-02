@@ -1260,3 +1260,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. PPT 新增第5页“结论①a-1 ncRNA 性能总览”，原 shuffle/no-shuffle 机制页保留为第6页，形成“性能结论+机制解释”的双页结构。后续页顺延：①a-4第9页、LR第20页、rank第21页、覆盖第28页、成本第29/30页；其他用户手调内容不改。
 4. 克隆顺序曾产生 slide33 重名，已改为先创建部件、暂时移出顺序表，再插入第5页。最终 **33页**，ZIP无重复条目、CRC正常，lint/layout、Microsoft YaHei、正文1.5倍行距、11张关键嵌图 SHA 和双页实际渲染通过。PPT SHA256=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF SHA256=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。
 5. 资源核查时有3个实际训练进程、空闲22.375GiB，未达到650M full的28GiB安全预算，故不强行启动大格；现有 per-base/LR/rank 队列继续在安全预算内补位，不重复派发。
+
+### 10.113 LR 小格优先调度，解除大格队首阻塞（2026-11-02）
+
+1. 资源核查发现 LR 前面的650M full需要28GiB，使后续小格也无法补位。先 SIGSTOP 父 PID=3431054，确认唯一直接子进程 PID=43189 已是 ledger=running，随后仅终止父调度，**不中断在训子进程**。
+2. 全部320个 canonical LR 格保持原 RID/result_dir/need_gb，按 need_gb 升序生成 `lr_tuning_jobs_20261030_small_first_20261102.json`，registry SHA256=`f9fdc348314be90a0a9c1de8e61d8efc582de3ba2557e8c31daea208c2bd9a9e`。原注册表备份为 `lr_tuning_jobs_20261030.pre_small_first_20261102.json`，不修改实验设计。
+3. 以原 state-dir 启动新父 PID=45383，避免650M full队首阻塞；旧子进程43189继续训练，central ledger防止重复派发。当前新父仍在proof扫描，未将调度动作记为完成结果。证据=`status/queue_actions/lr_small_first_rebalance_20261102.json`，SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
+4. 当前 PPT 保持33页ncRNA双页版，无新增科学结果。后续按新子进程、RID、显存和完整proof核验，不为占显存制造OOM。
