@@ -745,3 +745,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 LR 更新为 **44/80组**，分布3e-5二十组、1e-4十三组、1e-5九组、3e-4两组。degradation family 选3e-5（best_val=0.205632），test 不参与；random default仍缺。
 3. 计数审计：v113–v116 accepted=173/174/176/180，此前阶段文档均多1；v117=184。PPT仅显示完整组，图意与选档不受影响。
 4. 当前源包 revision=`20261102_refresh_v101_v117ledger_lr44_ernie_degradation`，357 个登记文件，manifest SHA256=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`。11张关键嵌图 SHA、33页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。
+
+## 74. 2026-11-02 v118 staging：展示版保持 v117
+
+1. v118 为 **1563 accepted、0 rejected**；ERNIE SSP full-random 的1e-4格 pair-F1=0.3052、best_val=0.439936，proof=complete、CUDA 收敛。
+2. 该组已有三档、缺 default，LR 185/320、完整组仍44/80，不提前选档。无新三种子单元，PPT 与 v101 源包保持 v117。
+3. 当前 PPT/PDF SHA256 仍为 `bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d` / `d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`。

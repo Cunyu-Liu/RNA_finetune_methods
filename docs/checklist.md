@@ -569,3 +569,10 @@
 - [x] BI4 交付：357 文件 manifest=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`；PPT=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
 - [ ] BI5 后续：三地同步并推送，继续真实科学缺口。
 
+## BJ 组：v118 ERNIE SSP random LR 第三档验收
+
+- [x] BJ1 数据：1563 accepted、0 rejected；1e-4格 proof=complete、CUDA 收敛。
+- [x] BJ2 边界：该组已有三档、缺 default，LR 185/320、完整组仍44/80，不提前选档。
+- [x] BJ3 展示：无新科学单元，PPT 与 v101 源包保持 v117。
+- [ ] BJ4 后续：同步并提交，等待 default 和真实科学缺口。
+

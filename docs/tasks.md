@@ -2163,3 +2163,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **计数纠偏**：注册表精确审计 v113–v116 accepted=173/174/176/180，此前文档均多1；v117=184。完整组和选档不受影响，random default仍缺。
 - [x] **交付**：源包 revision=`20261102_refresh_v101_v117ledger_lr44_ernie_degradation`，357 文件，manifest=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`；PPT=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`。嵌图、33页 lint/layout/CRC 与 LR 页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 degradation random default、主矩阵和其余 LR 真实缺口。
+
+## N117. 2026-11-02 v118 ERNIE SSP random LR 第三档
+
+- [x] **单格验收**：v118 为 1563 accepted、0 rejected；1e-4格 pair-F1=0.3052、best_val=0.439936、best_epoch=1、5 epochs，proof=complete、CUDA 收敛。证据 SHA256=`02bf13d0c34c1ef497d7c52f0d83f61d3f863fc9a11af42a012cb5d74256e831`。
+- [x] **选档边界**：该组已有三档、缺 default，LR 185/320、完整组仍44/80，不提前选档；其他矩阵计数不变。
+- [x] **展示边界**：无新科学单元，PPT 与 v101 源包保持 v117。
+- [ ] **后续**：同步并提交文档，等待 default 和真实科学缺口。

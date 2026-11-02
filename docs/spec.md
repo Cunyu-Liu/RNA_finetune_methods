@@ -1290,3 +1290,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. ERNIE degradation random 的 default 尚未完成，其余三档已闭合，不新增完整组。per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；其他结论不变。
 4. **accepted计数纠偏**：精确注册表审计显示 v113/v114/v115/v116 的 LR accepted 分别为 **173/174/176/180**，此前阶段文档的174/175/177/181均多1；v117正确值为184。完整组、选档与图意不受影响，PPT只显示完整组所以无需追溯改图。该纠偏已写入 v117 证据的 `count_correction`。
 5. 源包 revision=`20261102_refresh_v101_v117ledger_lr44_ernie_degradation`，357 个登记文件，manifest SHA256=`4aea79e4e400a6d73045fe6d5dfe2bea5e1438de5307ac18956dc4aa39a5f7c1`。PPT SHA256=`bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d`，PDF SHA256=`d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`；33页 lint/layout/CRC、11张嵌图与 LR 页实际渲染通过。
+
+### 10.117 v118 ERNIE SSP random LR 第三档（2026-11-02）
+
+1. v118 为 1562+1=**1563 accepted、0 rejected**，v117 行逐字段保留。新增 ERNIE SSP full-random 的1e-4 tuning 格 pair-F1=0.3052，best_val=0.439936，best_epoch=1、5 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v118_new_proof.json`，SHA256=`02bf13d0c34c1ef497d7c52f0d83f61d3f863fc9a11af42a012cb5d74256e831`。
+2. 该组已有1e-4/3e-5/1e-5三档，仍缺 default，LR=185/320、完整组仍44/80，不提前选档。per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；其他结论不变。
+3. 无新三种子单元或完整 LR 组，PPT 和 v101 源包保持 v117；台账与证明在 teams 留存，待下一次可见更新纳入。
