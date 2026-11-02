@@ -805,3 +805,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. `expansion_queue.py`已改为外部模型锁占用时保留pending、跨模型继续、下轮重试；旧代码回归失败，修复后完整调度测试连续两次51 passed。提交`87d1c28`已推送。
 3. OOM恢复父71153仅登记原degradation失败RID，共享LR state-dir/model locks；启动时free=14.677GiB、无子进程，等待显存和模型锁，不强行启动。注册表SHA256=`14cb904f637d82f29ffa2a9d06518117585e68ea07a903927375bfe0ace8650c`。
 4. 在训证据=`status/queue_actions/lr_oom_recovery_20261102.json`，SHA256=`4dee861cb3fd11714aca9efb107f42d7ea3630b5985ff70dd12890b9efb6e383`；不改变任何性能图或完成计数。
+
+## 83. 2026-11-02 v134–v135：生产等待验证，PPT不变
+
+1. v134/v135新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
+2. 恢复父71153正常，原OOM RID无新增manifest记录、无子进程，pending等待未被错误跳过，生产环境验证模型锁修复生效。
+3. 证据=`status/queue_actions/lr_oom_recovery_wait_check_20261102.json`，SHA256=`99218d3f9cb6274327042e40d89f7e4629b14f98563e0877e5d548964682dbde`；只验证调度行为，不改变性能图。

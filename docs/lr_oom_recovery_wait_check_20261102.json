@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-11-02T10:06:41.927065+00:00",
+  "rid": "ft_ernierna_degradation_full_s101_random_b20fix_bestval_v1",
+  "recovery_parent": 71153,
+  "new_manifest_records_since_recovery": [],
+  "child_started": false,
+  "status": "pending_wait_preserved",
+  "code_git_sha": "87d1c28"
+}
