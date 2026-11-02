@@ -2200,4 +2200,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全补位**：34个need≤7GiB未完成格生成独立注册表，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`；新父63074与旧per-base父共享state-dir/model locks，不重启旧父。
 - [x] **实际在训**：新子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0、best-val协议；旧per-base与LR父未中断。
 - [x] **资源记录**：核查时used/free=16061/16051MiB，下一格16GiB及650M full 28GiB均不强行启动；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
-- [ ] **后续**：同步本记录；等待新格完整proof后再更新台账和图，不把在训当完成。
+- [x] **同步**：v124调度记录三地一致，`831bd60`已推送；等待新格完整proof后再更新台账和图，不把在训当完成。
+
+## N122. 2026-11-02 v126–v127 staging 与历史图件归档
+
+- [x] **台账**：v126/v127新增0，仍1565 accepted、0 rejected；展示版保持v123。
+- [x] **依赖审查**：20261028包仍含当前PPT机制图、正式图CSV与分类组合图机制坐标，不整体归档；保留11个现役图件/数据文件。
+- [x] **可逆归档**：30个历史图件先复制验哈希再移出current，移动前manifest保留；moved manifest SHA256=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`。
+- [x] **现役清单**：20261028包81文件重新登记，manifest SHA256=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`；v14=374、分类组合=53逐哈希通过，PPT哈希不变。
+- [ ] **后续**：上传归档副本和清单、同步五文档并提交；远端历史权威包不删改。

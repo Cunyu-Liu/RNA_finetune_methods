@@ -1323,3 +1323,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 未完成任务审计显示per-base有34个need≤7GiB的未完成小格。为利用空闲显存且不重启旧父3431052，新增补位父63074，使用**同一per-base state-dir**共享模型锁；注册表仅含34个canonical未完成格，workers=2，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`。
 3. 已确认新子63193运行RNA-FM degradation full-random/seed17/lr1e-5，`--device 0`、best-val收敛协议；旧per-base父3431052与LR父45383未中断。核查时GPU total/used/free=32607/16061/16051MiB，空闲约15.67GiB，不足以安全启动下一格16GiB或650M full的28GiB，不强行补位。
 4. 在训证据=`status/queue_actions/perbase_small_fill_20261102.json`，SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。该记录不是完成证明；后续仍需result、plateau、checkpoint和独立proof验收。
+
+### 10.122 v126–v127 staging 与历史图件归档（2026-11-02）
+
+1. v126/v127均新增0，保持 **1565 accepted、0 rejected**；没有新独立proof，PPT与v103源包继续采用v123科学结果。
+2. `figure_source_data_20261028` 不能整体归档：当前PPT的ncRNA shuffle诊断、正式图脚本的CSV和分类组合图机制坐标仍引用它。仅将30个不再进入当前PPT的历史图件归档至 `交接文档/archive_20261102/绘图数据/figure_source_data_20261028_legacy_figures/`，现役11个图件/数据文件保留。
+3. 归档采用先复制验哈希再移出current；`moved_files.json` SHA256=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`，移动前manifest完整保留。现役包重新登记81个文件，revision=`20261102_active_inputs_split_from_20261030_v13`，manifest SHA256=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`。
+4. 复核通过：归档30文件、现役81文件、v14源包374文件、分类组合图53文件逐哈希一致；当前PPT SHA256仍为`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，ZIP CRC正常。远端历史权威包不删改，归档副本另行上传。

@@ -604,5 +604,13 @@
 - [x] BN2 防重：补位父63074与旧per-base父3431052共享state-dir/model locks；34格注册表SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`，旧父不重启。
 - [x] BN3 在训：子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0；LR父45383与旧训练均未中断。
 - [x] BN4 资源：used/free=16061/16051MiB，不强行启动16/28GiB格；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
-- [ ] BN5 后续：同步并提交记录，等待真实完成格和独立proof。
+- [x] BN5 同步：v124记录已三地同步，`831bd60`已推送；等待真实完成格和独立proof。
+
+## BO 组：v126–v127 staging 与历史图件归档验收
+
+- [x] BO1 数据：v126/v127新增0，1565 accepted、0 rejected；PPT保持v123。
+- [x] BO2 引用：20261028包的shuffle诊断、正式图CSV和机制坐标仍现役，不整体移动；30个无现役引用历史图件才归档。
+- [x] BO3 哈希：归档30文件与moved manifest=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`一致；移动前manifest保留。
+- [x] BO4 回归：现役81文件manifest=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`；v14=374、组合图=53逐哈希通过，PPT SHA与ZIP CRC不变。
+- [ ] BO5 后续：上传归档副本和清单，三地同步文档并提交；不删远端历史证据。
 
