@@ -771,3 +771,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. mega SpliceAI LoRA-family 为 **2/3**（seed17=0.528533981、seed29=0.526534173），仍缺seed43；第9页保留n<3斜线，第28页该格由1改为2，SpliceAI三种子覆盖仍20/30，不提前写闭合。
 3. 当前 per-base=154/270、complementary=306/324、LR=186/320（45/80组，20/14/9/2）、rank=96/96、equiv=420/420、650M frozen=25/25；ncRNA性能总览/机制双页和其他用户手调内容保持。
 4. 当前源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，374个登记文件，manifest SHA256=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`。33页lint/layout/CRC、11张关键嵌图SHA和第9/28/29/30页实际渲染通过；成本图源与说明一致。
+
+## 78. 2026-11-02 v124 staging：共享锁小格补位，展示版保持v123
+
+1. v124新增0，仍为 **1565 accepted、0 rejected**；当前33页PPT/PDF及374文件源包均保持v123，不重写图片或科学结论。
+2. 新补位父63074与旧per-base父3431052共享state-dir/model locks，仅处理34个need≤7GiB未完成格；注册表SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`。旧per-base与LR父45383不重启。
+3. 新子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0、best-val协议。核查时GPU used/free=16061/16051MiB，下一格16GiB和650M full 28GiB均不强行启动。
+4. 在训证据=`status/queue_actions/perbase_small_fill_20261102.json`，SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`；不是完成证明，后续完整proof通过才改图。

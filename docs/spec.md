@@ -1316,3 +1316,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. mega SpliceAI LoRA-family 已有 seed17=0.528533981、seed29=0.526534173，当前 **2/3**，仍缺seed43；SpliceAI 三种子覆盖保持 **20/30**，不写成闭合。per-base=154/270、complementary=306/324、LR=186/320（45/80组，选档20/14/9/2）、rank4/16=96/96、equiv canonical=420/420、650M frozen=25/25；其他科学结论不变。
 3. 源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，**374个登记文件**，manifest SHA256=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；本地 data/figures/scripts 逐哈希一致。PPT保持33页与ncRNA双页结构，SHA256=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF SHA256=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
 4. lint/layout、ZIP CRC、11张关键嵌图SHA通过；第9/28/29/30页实际渲染复核通过：第9页n=2斜线保留，第28页覆盖数与六柱一致，成本图来源和说明匹配，未闭合项不补零。
+
+### 10.121 v124 无新增完成格与共享锁小格补位（2026-11-02）
+
+1. v124 从v123逐字段保留，**1565 accepted、0 rejected、新增0**；没有新的独立proof，故PPT与v103源包保持v123，不把在训过程写成科学结论。
+2. 未完成任务审计显示per-base有34个need≤7GiB的未完成小格。为利用空闲显存且不重启旧父3431052，新增补位父63074，使用**同一per-base state-dir**共享模型锁；注册表仅含34个canonical未完成格，workers=2，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`。
+3. 已确认新子63193运行RNA-FM degradation full-random/seed17/lr1e-5，`--device 0`、best-val收敛协议；旧per-base父3431052与LR父45383未中断。核查时GPU total/used/free=32607/16061/16051MiB，空闲约15.67GiB，不足以安全启动下一格16GiB或650M full的28GiB，不强行补位。
+4. 在训证据=`status/queue_actions/perbase_small_fill_20261102.json`，SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。该记录不是完成证明；后续仍需result、plateau、checkpoint和独立proof验收。

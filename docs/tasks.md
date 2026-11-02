@@ -2192,4 +2192,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **科学边界**：该组seed17/29=0.528533981/0.526534173，仅2/3，仍缺seed43；SpliceAI覆盖20/30，不写成闭合。LR 186/320（45/80组）、rank96/96、equiv420/420，其余结论不变。
 - [x] **交付**：源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，374文件，manifest=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；PPT=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
 - [x] **渲染验收**：33页lint/layout/CRC与11张嵌图SHA通过；第9/28/29/30页放大复核，n=2斜线、覆盖计数、成本图源及说明一致。
-- [ ] **后续**：完成三地同步并补推60e9eb6、ddf6cfa、1eca490与本批提交；继续等待seed43和其他真实科学缺口。
+- [x] **三地同步与提交**：v123源包、PPT/PDF和五文档逐哈希一致，提交`e9618af`已推送；继续等待seed43和其他真实科学缺口。
+
+## N121. 2026-11-02 v124 staging 与共享锁小格补位
+
+- [x] **台账边界**：v124新增0，仍1565 accepted、0 rejected；PPT与v103源包保持v123。
+- [x] **安全补位**：34个need≤7GiB未完成格生成独立注册表，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`；新父63074与旧per-base父共享state-dir/model locks，不重启旧父。
+- [x] **实际在训**：新子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0、best-val协议；旧per-base与LR父未中断。
+- [x] **资源记录**：核查时used/free=16061/16051MiB，下一格16GiB及650M full 28GiB均不强行启动；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
+- [ ] **后续**：同步本记录；等待新格完整proof后再更新台账和图，不把在训当完成。

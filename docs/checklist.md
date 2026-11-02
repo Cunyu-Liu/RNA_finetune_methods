@@ -596,5 +596,13 @@
 - [x] BM2 边界：seed17/29仅2/3，仍缺seed43；SpliceAI覆盖20/30，不提前写成闭合或更新三种子均值。
 - [x] BM3 交付：374文件 manifest=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；PPT=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
 - [x] BM4 展示：33页lint/layout/CRC与11张嵌图SHA通过；第9/28/29/30页实际渲染通过，n=2斜线和覆盖计数一致，未闭合项不补零。
-- [ ] BM5 后续：三地逐哈希同步并推送；继续其他真实科学缺口。
+- [x] BM5 同步：v123三地逐哈希一致，`e9618af`已推送；继续其他真实科学缺口。
+
+## BN 组：v124 staging 与共享锁补位验收
+
+- [x] BN1 台账：v124新增0，1565 accepted、0 rejected；无新proof，展示版保持v123。
+- [x] BN2 防重：补位父63074与旧per-base父3431052共享state-dir/model locks；34格注册表SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`，旧父不重启。
+- [x] BN3 在训：子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0；LR父45383与旧训练均未中断。
+- [x] BN4 资源：used/free=16061/16051MiB，不强行启动16/28GiB格；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
+- [ ] BN5 后续：同步并提交记录，等待真实完成格和独立proof。
 
