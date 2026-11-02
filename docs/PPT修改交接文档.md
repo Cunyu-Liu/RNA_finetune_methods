@@ -751,3 +751,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v118 为 **1563 accepted、0 rejected**；ERNIE SSP full-random 的1e-4格 pair-F1=0.3052、best_val=0.439936，proof=complete、CUDA 收敛。
 2. 该组已有三档、缺 default，LR 185/320、完整组仍44/80，不提前选档。无新三种子单元，PPT 与 v101 源包保持 v117。
 3. 当前 PPT/PDF SHA256 仍为 `bad37b10d3fdfe5c421788452aec8fe200b257e30b7de0a48b39fb0e793d0e9d` / `d6430dc92cc0dbf32ea9e3abd324b56e161219a38e2a5cf536a74f08426bfe08`。
+
+## 75. 2026-11-02 当前 v119：ERNIE SSP random LR 第45组
+
+1. 当前 PPT 为33页，SHA256=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`；PDF SHA256=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`。输入 **1564 accepted、0 rejected**，新增格 proof=complete。
+2. 第20页 LR 更新为 **45/80组**，分布3e-5二十组、1e-4十四组、1e-5九组、3e-4两组。ERNIE SSP full-random 四档闭合，validation 选1e-4（best_val=0.439936），test pair-F1=0.3052仅报告。
+3. 当前 per-base 154/270、complementary 306/324、rank 96/96、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和默认档反例结论不变。
+4. 当前源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 个登记文件，manifest SHA256=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`。11张关键嵌图 SHA、33页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。

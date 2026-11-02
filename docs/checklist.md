@@ -576,3 +576,10 @@
 - [x] BJ3 展示：无新科学单元，PPT 与 v101 源包保持 v117。
 - [ ] BJ4 后续：同步并提交，等待 default 和真实科学缺口。
 
+## BK 组：v119 LR 第45组验收
+
+- [x] BK1 数据：1564 accepted、0 rejected；新增 ERNIE SSP random default 格 proof=complete、CUDA 收敛。
+- [x] BK2 选档：四档闭合，validation 选1e-4（best_val=0.439936），test 不参与；LR 186/320、45/80组，分布20/14/9/2。
+- [x] BK3 交付：364 文件 manifest=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`；PPT=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
+- [ ] BK4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
+

@@ -1296,3 +1296,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v118 为 1562+1=**1563 accepted、0 rejected**，v117 行逐字段保留。新增 ERNIE SSP full-random 的1e-4 tuning 格 pair-F1=0.3052，best_val=0.439936，best_epoch=1、5 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v118_new_proof.json`，SHA256=`02bf13d0c34c1ef497d7c52f0d83f61d3f863fc9a11af42a012cb5d74256e831`。
 2. 该组已有1e-4/3e-5/1e-5三档，仍缺 default，LR=185/320、完整组仍44/80，不提前选档。per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；其他结论不变。
 3. 无新三种子单元或完整 LR 组，PPT 和 v101 源包保持 v117；台账与证明在 teams 留存，待下一次可见更新纳入。
+
+### 10.118 v119 ERNIE SSP random LR 第45组（2026-11-02）
+
+1. v119 为 1563+1=**1564 accepted、0 rejected**，v118 行逐字段保留。新增 ERNIE SSP full-random default tuning 格 pair-F1=0.0060，best_val=1.305029，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v119_new_proof.json`，SHA256=`60de4d59ebd60b944b33017412b72f00184b274102755fc2c0d3af7f663e8971`。
+2. 该组四档 best_val 为3e-4=1.305029、1e-4=0.439936、3e-5=0.490757、1e-5=0.559111，validation 选 **1e-4**，test pair-F1=0.3052仅报告。LR 升至 **186/320、45/80组完整**，选档分布为3e-5二十组、1e-4十四组、1e-5九组、3e-4两组。证据=`status/lr_validation_interim_20261101_v119.json`，SHA256=`3d4a17d2fa407c4f28e11e16b41bbeb3fa27469256a79172b388121eb70be0fc`。
+3. 当前 per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和默认档反例结论不变。
+4. 源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 个登记文件，manifest SHA256=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`。PPT SHA256=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF SHA256=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`；33页 lint/layout/CRC、11张关键嵌图与 LR 页实际渲染通过。

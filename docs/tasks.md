@@ -2170,3 +2170,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **选档边界**：该组已有三档、缺 default，LR 185/320、完整组仍44/80，不提前选档；其他矩阵计数不变。
 - [x] **展示边界**：无新科学单元，PPT 与 v101 源包保持 v117。
 - [ ] **后续**：同步并提交文档，等待 default 和真实科学缺口。
+
+## N118. 2026-11-02 v119 ERNIE SSP random LR 第45组
+
+- [x] **单格验收**：v119 为 1564 accepted、0 rejected；default格 pair-F1=0.0060、best_val=1.305029，proof=complete、CUDA 收敛，证据 SHA256=`60de4d59ebd60b944b33017412b72f00184b274102755fc2c0d3af7f663e8971`。
+- [x] **四档选档**：best_val=1.305029/0.439936/0.490757/0.559111，validation 选1e-4，test pair-F1=0.3052仅报告。LR 186/320、45/80组，分布20/14/9/2。证据 SHA256=`3d4a17d2fa407c4f28e11e16b41bbeb3fa27469256a79172b388121eb70be0fc`。
+- [x] **其他边界**：per-base 154/270、complementary 306/324、rank 96/96、equiv 420/420、650M frozen 25/25；其他结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 文件，manifest=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`；PPT=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`。嵌图、33页 lint/layout/CRC 与 LR 页渲染通过。
+- [ ] **后续**：三地同步并补推60e9eb6及本批提交，继续主矩阵和其余 LR 真实缺口。
