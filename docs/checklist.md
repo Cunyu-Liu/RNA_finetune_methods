@@ -620,5 +620,12 @@
 - [x] BP2 纠偏：PID63193/58794/54448按manifest确认均为SpliceAI，旧degradation推断已从五文档更正；无重复训练。
 - [x] BP3 进度：mega与ERNIE seed17有epoch0，ERNIE seed101两轮stale=1/3，RNA-FM pre-plateau；均不记完成。
 - [x] BP4 OOM：历史degradation PID49138与当前SpliceAI PID54448不同RID；证据SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`。
-- [ ] BP5 后续：三地同步纠偏并提交，待真实proof与GitHub网络恢复。
+- [x] BP5 交付：纠偏证据与五文档三地一致，`d22895b`已提交；待真实proof与GitHub网络恢复。
+
+## BQ 组：v132 staging 与 GPU 进程实证验收
+
+- [x] BQ1 台账：v132新增0，1565 accepted、0 rejected；PPT保持v123。
+- [x] BQ2 设备：4个训练PID均在nvidia-smi compute-apps中，显存3926/3312/3312/3482MiB，无CPU降级。
+- [x] BQ3 证据：SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`，不代替收敛proof。
+- [ ] BQ4 后续：三地同步并提交，等待真实完成格与网络恢复。
 

@@ -2216,4 +2216,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **任务纠偏**：PID63193/58794/54448经manifest确认均为SpliceAI，不是此前推断的degradation；五文档旧描述已更正，无同RID重复训练。
 - [x] **真实进度**：mega seed43与ERNIE seed17已有epoch0，ERNIE seed101已有2轮、stale=1/3，RNA-FM seed17 pre-plateau；均不记完成。
 - [x] **OOM边界**：历史degradation PID49138 OOM失败，与当前SpliceAI PID54448不同RID；纠偏证据SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代v128错误映射。
-- [ ] **后续**：同步纠偏记录并提交，网络恢复后连同`24df2ce`推送；后续一律按PID/manifest识别任务。
+- [x] **纠偏交付**：证据与五文档三地一致，`d22895b`已提交；网络恢复后连同`24df2ce`推送，后续一律按PID/manifest识别任务。
+
+## N124. 2026-11-02 v132 staging 与 GPU 进程实证
+
+- [x] **台账**：v132新增0，仍1565 accepted、0 rejected；PPT保持v123。
+- [x] **GPU实证**：nvidia-smi确认58793/58794/54448/63193分别占用3926/3312/3312/3482MiB，无CPU静默降级。
+- [x] **证据边界**：`inflight_gpu_processes_20261102.json` SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`，只证明运行设备，不代替收敛proof。
+- [ ] **后续**：三地同步并提交；等待真实完成格与GitHub网络恢复。

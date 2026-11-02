@@ -1337,3 +1337,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. `finetune_spl`命令行不显示task，不能按model/strategy/seed/split相似度推断RID。PID/manifest反查确认：63193=`ft_rnafm_spliceai_full_s17_random_b20fix_lr1e-05_bestval_v1`，58794=`ft_ernierna_spliceai_full_s17_family_b20fix_lr1e-05_bestval_v1`，54448=`ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1`；此前误写为degradation的文字已更正为SpliceAI，未发生同RID重复训练。
 3. mega SpliceAI seed43已有epoch0 val_loss=0.001160；ERNIE seed17已有epoch0 val_loss=0.003248；ERNIE seed101已有两轮val_loss=0.003269/0.006670、stale=1/3；RNA-FM seed17仍pre-plateau。全部仅在训，不写成完成或科学结论。
 4. 历史degradation LR格PID49138曾OOM失败，与当前SpliceAI PID54448不是同一RID，不记完成，后续只在安全显存窗口重试。纠偏与OOM证据=`status/inflight_progress_20261101_v130.json`，SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代此前错误的v128任务映射。
+
+### 10.124 v132 staging 与 GPU 进程实证（2026-11-02）
+
+1. v132新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
+2. `nvidia-smi --query-compute-apps`确认4个在训PID均实际占用GPU：58793=3926MiB、58794=3312MiB、54448=3312MiB、63193=3482MiB，无CPU静默降级。
+3. 证据=`status/inflight_gpu_processes_20261102.json`，SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`。该证据只证明运行设备，不代替收敛proof；未闭合格不改图。

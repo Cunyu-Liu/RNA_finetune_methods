@@ -792,3 +792,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. `finetune_spl`命令行不含task，后续以PID/manifest为唯一映射依据。PID63193/58794/54448实际均为SpliceAI，不是degradation；此前交接文字已更正，无同RID重复训练。
 3. mega seed43与ERNIE seed17已有epoch0，ERNIE seed101两轮stale=1/3，RNA-FM seed17 pre-plateau；均不修改性能图。历史degradation PID49138 OOM与当前SpliceAI PID54448不同RID。
 4. 纠偏证据=`status/inflight_progress_20261101_v130.json`，SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代v128错误任务映射。
+
+## 81. 2026-11-02 v132 staging：GPU 进程实证，PPT不变
+
+1. v132新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
+2. nvidia-smi确认4个训练PID均实际占用GPU，显存分别为3926/3312/3312/3482MiB，无CPU静默降级。
+3. 证据=`status/inflight_gpu_processes_20261102.json`，SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`；只证明运行设备，不修改性能图或完成计数。
