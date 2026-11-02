@@ -2138,3 +2138,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **注册表重排**：全部320格、原RID/result_dir/need_gb不变，按need升序生成 small-first 注册表，原表备份；SHA256=`f9fdc348314be90a0a9c1de8e61d8efc582de3ba2557e8c31daea208c2bd9a9e`。
 - [x] **恢复调度**：原state-dir新父45383，旧子继续，central ledger防重；新父正在proof扫描，不记训练完成。证据 SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
 - [ ] **后续**：核验新子进程、唯一RID和实际显存占用，继续小格补位与自然大模型窗口；同步并提交调度记录。
+
+## N114. 2026-11-02 v115 rank 95/96 与 LR staging
+
+- [x] **四格验收**：v115 为 1553 accepted、0 rejected；4格均 proof=complete、CUDA 收敛，证据 SHA256=`132bc8a51758019fb5f0ac395fc89b855280b727e281e954d624a1f4edb62145`。
+- [x] **rank进度**：SSI family rank16 为2/3，rank4/16=95/96、三种子组仍31/32，仅剩1格。证据 SHA256=`9c06a79a9d5eec61a8e20b80231660492820ca8e9ebbd3813dfa9579bc1cf4f2`。
+- [x] **LR边界**：RNA-FM SSP random 已有三档、缺1e-5，LR 177/320、完整组仍42/80；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
+- [x] **交付**：源包 revision=`20261102_refresh_v99_v115ledger_rank95_ssi_family_r16_n2`，348 文件，manifest=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`；PPT=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`。嵌图、33页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] **后续**：三地同步并补推待推提交，继续最后1个rank格和其他真实科学缺口。

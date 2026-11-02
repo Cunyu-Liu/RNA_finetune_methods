@@ -724,3 +724,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. 本项为资源调度，不改变PPT内容。发现650M full队首阻塞后，先暂停旧父3431054并确认唯一子进程43189已 ledger=running，再仅终止父调度，训练不中断。
 2. 全部320个 canonical 格按need_gb升序重排，RID/result_dir/need_gb不变，原表备份；以原state-dir启动新父45383，旧子继续，central ledger防重。
 3. 新父正在proof扫描，不记训练完成。证据=`status/queue_actions/lr_small_first_rebalance_20261102.json`，SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
+
+## 71. 2026-11-02 当前 v115：rank 95/96
+
+1. 当前 PPT 为33页，SHA256=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`；PDF SHA256=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`。输入 **1553 accepted、0 rejected**，4个新增格均 proof=complete。
+2. 第21页 rank 更新为 **95/96、31/32组三种子闭合、剩余1格**。SSI family rank16 为2/3，仍缺seed43；现有图仍标legacy，其他阶段均值不变。
+3. RNA-FM SSP random 已有三档、缺1e-5，LR 177/320、完整组仍42/80；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
+4. 当前源包 revision=`20261102_refresh_v99_v115ledger_rank95_ssi_family_r16_n2`，348 个登记文件，manifest SHA256=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`。11张关键嵌图 SHA、33页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。

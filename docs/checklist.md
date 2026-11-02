@@ -545,3 +545,11 @@
 - [x] BF3 恢复：原state-dir新父45383，旧子43189继续；新父proof扫描不记完成，证据 SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
 - [ ] BF4 后续：核验新子进程、唯一RID与实际显存，不为占显存制造OOM；同步并提交记录。
 
+## BG 组：v115 rank 95/96 验收
+
+- [x] BG1 数据：1553 accepted、0 rejected；4格 proof=complete、CUDA 收敛。
+- [x] BG2 rank：SSI family rank16 为2/3，95/96、31/32组闭合，仅剩1格，不提前写成闭合。
+- [x] BG3 LR：RNA-FM SSP random 已有三档、缺1e-5，LR 177/320、完整组仍42/80。
+- [x] BG4 交付：348 文件 manifest=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`；PPT=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`；嵌图、33页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] BG5 后续：三地同步并补推，继续最后1个rank格和其他真实科学缺口。
+

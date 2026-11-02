@@ -1267,3 +1267,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 全部320个 canonical LR 格保持原 RID/result_dir/need_gb，按 need_gb 升序生成 `lr_tuning_jobs_20261030_small_first_20261102.json`，registry SHA256=`f9fdc348314be90a0a9c1de8e61d8efc582de3ba2557e8c31daea208c2bd9a9e`。原注册表备份为 `lr_tuning_jobs_20261030.pre_small_first_20261102.json`，不修改实验设计。
 3. 以原 state-dir 启动新父 PID=45383，避免650M full队首阻塞；旧子进程43189继续训练，central ledger防止重复派发。当前新父仍在proof扫描，未将调度动作记为完成结果。证据=`status/queue_actions/lr_small_first_rebalance_20261102.json`，SHA256=`f2261b6177f9f4ba85aff54ae7279d6a91fae6f43bdab3b0663956f75514882a`。
 4. 当前 PPT 保持33页ncRNA双页版，无新增科学结果。后续按新子进程、RID、显存和完整proof核验，不为占显存制造OOM。
+
+### 10.114 v115 rank 95/96 与 LR staging（2026-11-02）
+
+1. v115 为 1549+4=**1553 accepted、0 rejected**，v114 行逐字段保留；4 个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v115_new_proof.json`，SHA256=`132bc8a51758019fb5f0ac395fc89b855280b727e281e954d624a1f4edb62145`。
+2. SSI family rank16 的 seed17/29 PCC=0.597834476/0.598052527，与已有结果组成2/3，仍缺seed43；rank4/16升至 **95/96**，三种子组仍31/32，仅剩1格。证据=`status/rank_progress_20261101_v115.json`，SHA256=`9c06a79a9d5eec61a8e20b80231660492820ca8e9ebbd3813dfa9579bc1cf4f2`。
+3. RNA-FM SSP full-random 新增1e-4/3e-5两档，best_val=0.595991/0.601495，当前default/1e-4/3e-5三档，仍缺1e-5；LR=177/320、完整组仍42/80。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；其他结论不变。
+4. 源包 revision=`20261102_refresh_v99_v115ledger_rank95_ssi_family_r16_n2`，348 个登记文件，manifest SHA256=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`。PPT SHA256=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF SHA256=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`；33页 lint/layout/CRC、11张关键嵌图与 rank 页实际渲染通过。
