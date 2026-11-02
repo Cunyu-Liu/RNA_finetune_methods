@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-11-02T10:01:10.525456+00:00",
+  "action": "OOM recovery waits for both free memory and model lock",
+  "code_git_sha": "87d1c28",
+  "parent": 71153,
+  "existing_lr_parent": 45383,
+  "registry": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_oom_recovery_20261102.json",
+  "registry_sha256": "14cb904f637d82f29ffa2a9d06518117585e68ea07a903927375bfe0ace8650c",
+  "rids": [
+    "ft_ernierna_degradation_full_s101_random_b20fix_bestval_v1"
+  ],
+  "state_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030",
+  "workers": 1,
+  "free_gib": 14.67742919921875,
+  "total_gib": 31.35833740234375,
+  "children": "",
+  "completion_claim": false,
+  "note": "No duplicate or forced launch. Fixed scheduler keeps the job pending when the model lock is externally held."
+}

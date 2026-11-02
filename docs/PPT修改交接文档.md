@@ -798,3 +798,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v132新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
 2. nvidia-smi确认4个训练PID均实际占用GPU，显存分别为3926/3312/3312/3482MiB，无CPU静默降级。
 3. 证据=`status/inflight_gpu_processes_20261102.json`，SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`；只证明运行设备，不修改性能图或完成计数。
+
+## 82. 2026-11-02 调度修复与 OOM 恢复，PPT不变
+
+1. v133新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
+2. `expansion_queue.py`已改为外部模型锁占用时保留pending、跨模型继续、下轮重试；旧代码回归失败，修复后完整调度测试连续两次51 passed。提交`87d1c28`已推送。
+3. OOM恢复父71153仅登记原degradation失败RID，共享LR state-dir/model locks；启动时free=14.677GiB、无子进程，等待显存和模型锁，不强行启动。注册表SHA256=`14cb904f637d82f29ffa2a9d06518117585e68ea07a903927375bfe0ace8650c`。
+4. 在训证据=`status/queue_actions/lr_oom_recovery_20261102.json`，SHA256=`4dee861cb3fd11714aca9efb107f42d7ea3630b5985ff70dd12890b9efb6e383`；不改变任何性能图或完成计数。

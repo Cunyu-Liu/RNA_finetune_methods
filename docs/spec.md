@@ -1343,3 +1343,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v132新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
 2. `nvidia-smi --query-compute-apps`确认4个在训PID均实际占用GPU：58793=3926MiB、58794=3312MiB、54448=3312MiB、63193=3482MiB，无CPU静默降级。
 3. 证据=`status/inflight_gpu_processes_20261102.json`，SHA256=`a517e11fab1d71c08e73bc0c656711b34aa50a0cc266007760a93dd904b686fa`。该证据只证明运行设备，不代替收敛proof；未闭合格不改图。
+
+### 10.125 模型外锁等待修复与 OOM 恢复队列（2026-11-02）
+
+1. v133新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
+2. 修复 `scripts/expansion_queue.py`：其他父进程持有模型锁时，不再把该模型任务写skipped并移出本轮，而是保留pending、允许其他模型继续，下一轮重试。新增回归测试覆盖“外锁等待+跨模型补位”；旧代码目标测试失败，修复后目标测试通过，完整 `test_expansion_queue.py` 连续两次 **51 passed**。
+3. 代码提交 **`87d1c28`已推送GitHub**，当前既有训练进程未中断。恢复队列只含原OOM格 `ft_ernierna_degradation_full_s101_random_b20fix_bestval_v1`，注册表SHA256=`14cb904f637d82f29ffa2a9d06518117585e68ea07a903927375bfe0ace8650c`。
+4. 新恢复父71153与原LR父45383共享state-dir/model locks，workers=1；启动核查free=14.677GiB、无子进程，任务等待显存和模型锁，不强行启动、不记完成。证据=`status/queue_actions/lr_oom_recovery_20261102.json`，SHA256=`4dee861cb3fd11714aca9efb107f42d7ea3630b5985ff70dd12890b9efb6e383`。
