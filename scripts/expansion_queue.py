@@ -597,6 +597,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
         outcomes.append(outcome)
 
     while pending or running:
+        busy_models = set()
         for job in list(running.values()):
             rc = job["process"].poll()
             if rc is not None:
@@ -612,6 +613,7 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                     pass
             job = next((candidate for candidate in pending
                         if candidate.need_gb <= budget_gb
+                        and candidate.model not in busy_models
                         and all(item["job"].model != candidate.model
                                 for item in running.values())), None)
             if job is None:
@@ -637,9 +639,8 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
             lock = None
             try:
                 model_lock.__enter__()
-            except ModelBusy as exc:
-                outcomes.append(_finish(store, record, "skipped", str(exc)))
-                pending.remove(job)
+            except ModelBusy:
+                busy_models.add(job.model)
                 continue
             try:
                 lock = store.run_locks(job)

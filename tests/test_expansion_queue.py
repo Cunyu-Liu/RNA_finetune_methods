@@ -325,6 +325,40 @@ def test_same_model_jobs_wait_for_own_inflight_process(proof_env, monkeypatch):
     assert [row["status"] for row in rows].count("skipped") == 2
 
 
+def test_external_model_lock_waits_and_other_models_continue(proof_env, monkeypatch):
+    root = Path(proof_env.job.result_dir).parents[1]
+    second = make_job(root, model="ERNIE-RNA", rid="ft_test_second",
+                      result_dir=str(root / "artifacts" / "second"))
+    state_dir = root / "external-model-state"
+    external = q.ManifestStore(state_dir).model_lock(proof_env.job.model)
+    external.__enter__()
+    released = False
+    started = []
+
+    def fake_popen(command, **kwargs):
+        started.append(command)
+        return FakeProcess(pid=6000 + len(started), rc=75)
+
+    def release_lock(seconds):
+        nonlocal released
+        external.__exit__(None, None, None)
+        released = True
+
+    monkeypatch.setattr(q.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(q.time, "sleep", release_lock)
+    try:
+        assert q.dispatch([proof_env.job, second], workers=2,
+                          state_dir=state_dir, poll_s=0.01) == 0
+        models = [command[command.index("--model") + 1] for command in started]
+        assert models == ["ERNIE-RNA", "RNA-FM"]
+        rows = [json.loads(line) for line in
+                (state_dir / "manifest.jsonl").read_text().splitlines()]
+        assert not any(row["reason"] == "model run lock is held" for row in rows)
+    finally:
+        if not released:
+            external.__exit__(None, None, None)
+
+
 def test_other_models_bypass_same_model_head_of_line_wait(proof_env, monkeypatch):
     root = Path(proof_env.job.result_dir).parents[1]
     second = make_job(root, seed=29, rid="ft_test_second",
