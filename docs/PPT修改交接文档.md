@@ -663,3 +663,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v107 为 **1540 accepted、0 rejected**；ERNIE SSP full-family default tuning pair-F1=0.2127、best_val=0.500993，best_epoch=12、16 epochs，proof=complete、CUDA 收敛。
 2. 该组仅一档，LR 171/320、完整组仍41/80，不提前选档。无新三种子单元，PPT 和 v91 源包保持 v104。
 3. 当前 PPT/PDF SHA256 仍为 `9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d` / `28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`。
+
+## 62. 2026-11-02 当前 v108：SSI family rank4 闭合
+
+1. 当前 PPT 为32页，SHA256=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`；PDF SHA256=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`。输入 **1541 accepted、0 rejected**，新增格 proof=complete。
+2. 第20页 rank 更新为 **90/96、30/32组三种子闭合、剩余6格**。SSI family rank4 三种子 mean=0.597495111，已加入阶段文字；现有图仍标legacy，不与rank8直接排名。
+3. 当前 per-base 153/270、complementary 306/324、LR 171/320（41组）、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和 LR 选档不变。
+4. 当前源包 revision=`20261102_refresh_v92_v108ledger_rank90_ssi_family_r4`，316 个登记文件，manifest SHA256=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。

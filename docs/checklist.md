@@ -479,3 +479,10 @@
 - [x] AW3 展示：无新科学单元，PPT 与 v91 源包保持 v104。
 - [ ] AW4 后续：同步并提交，等待其余三档和真实科学缺口。
 
+## AX 组：v108 SSI family rank4 验收
+
+- [x] AX1 数据：1541 accepted、0 rejected；新增seed43 proof=complete、CUDA 收敛。
+- [x] AX2 rank：SSI family rank4 三种子 mean=0.597495111；90/96、30/32组闭合，剩余6格，不与rank8直接排名。
+- [x] AX3 交付：316 文件 manifest=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`；PPT=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
+- [ ] AX4 后续：三地同步并推送，继续剩余6格和其他真实科学缺口。
+

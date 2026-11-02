@@ -2068,3 +2068,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **选档边界**：该组仅一档，LR 171/320、完整组仍41/80，不提前选档；其他矩阵计数不变。
 - [x] **展示边界**：无新科学单元，PPT 与 v91 源包保持 v104；训练按 validation 早停，不设固定步数。
 - [ ] **后续**：同步并提交文档，等待其余三档和真实科学缺口。
+
+## N105. 2026-11-02 v108 SSI family rank4 闭合
+
+- [x] **单格验收**：v108 为 1541 accepted、0 rejected；seed43 PCC=0.596056711，proof=complete、CUDA 收敛，证据 SHA256=`9ddcde475dc0a8c1beda31f9b8cb1a971d30896e8ad7643de43c1a88da5fe39b`。
+- [x] **rank新组**：SSI family rank4 三种子 mean=0.597495111；rank4/16=90/96、30/32组闭合，剩余6格。证据 SHA256=`1572cbaa84d5dd27d49c74a169dfe387911729c477db94c9612023c15abcce24`。
+- [x] **其他边界**：per-base 153/270、complementary 306/324、LR 171/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v92_v108ledger_rank90_ssi_family_r4`，316 文件，manifest=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`；PPT=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 rank 剩余6格和其他真实科学缺口。

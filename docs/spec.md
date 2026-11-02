@@ -1204,3 +1204,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v107 为 1539+1=**1540 accepted、0 rejected**，v106 行逐字段保留。新增 ERNIE SSP full-family default tuning 格 pair-F1=0.2127，best_val=0.500993，best_epoch=12、16 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过；再次确认按 validation 早停而非固定步数训练。证据=`status/bestval_v107_new_proof.json`，SHA256=`a9838fc791096e4bb1062a1c4f49f4db254565ba2443c2b3ea4ab954ee6c964c`。
 2. 该组目前只有 default 一档，仍缺1e-4/3e-5/1e-5，LR=171/320，完整组仍41/80，不提前选档。per-base=153/270、complementary=306/324、rank4/16=89/96、equiv=420/420、650M frozen=25/25；其他结论不变。
 3. 无新三种子单元或完整 LR 组，PPT 和 v91 源包保持 v104；台账与证明在 teams 留存，待下一次可见更新纳入。
+
+### 10.105 v108 SSI family rank4 闭合与 rank 90/96（2026-11-02）
+
+1. v108 为 1540+1=**1541 accepted、0 rejected**，v107 行逐字段保留。新增 SSI family rank4/seed43 PCC=0.596056711，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v108_new_proof.json`，SHA256=`9ddcde475dc0a8c1beda31f9b8cb1a971d30896e8ad7643de43c1a88da5fe39b`。
+2. SSI family rank4 三种子 PCC=0.598239051/0.598189570/0.596056711，mean=0.597495111，正式闭合；rank4/16升至 **90/96、30/32组三种子闭合**，仅剩6格。证据=`status/rank_progress_20261101_v108.json`，SHA256=`1572cbaa84d5dd27d49c74a169dfe387911729c477db94c9612023c15abcce24`。
+3. 当前 per-base=153/270、complementary=306/324、LR=171/320（41/80组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档不变。rank 页加入 SSI family rank4 均值，仍不与 rank8 直接排名。
+4. 源包 revision=`20261102_refresh_v92_v108ledger_rank90_ssi_family_r4`，316 个登记文件，manifest SHA256=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`。PPT SHA256=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF SHA256=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
