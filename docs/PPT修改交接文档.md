@@ -636,3 +636,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第19页 LR 更新为 **29/80组**，分布3e-5十四组、1e-4九组、1e-5六组、3e-4为0。micro SpliceAI full-family 四档闭合，validation 选3e-5（best_val=0.001168），test macro-F1=0.338468501仅报告。
 3. micro degradation random default 仅1/4档；per-base 150/270、complementary 304/324、rank 69/96、equiv 420/420、650M frozen 25/25。650M CRISPR LoRA 在训，不修改其覆盖或性能图。
 4. 当前源包 revision=`20261102_refresh_v89_v102ledger_lr29_micro_spliceai_family`，296 个登记文件，manifest SHA256=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。
+
+## 58. 2026-11-02 当前 v103：主矩阵、rank 与 LR 批量更新
+
+1. 当前 PPT 为32页，SHA256=`9274ee5e25f812e50beefbc60428e83944a74e8851826e231de178e04fcd0291`；PDF SHA256=`f3fd759639c84ef4e839aee0019ccccc10e05a81ceb9cc4a696c46a8ef080285`。输入 **1537 accepted、0 rejected**，69 个新增格均 proof=complete。
+2. 第8页①a-4为 **28/28/20/17/18**：650M CRISPR LoRA-family 和 mega SpliceAI LoRA-random 三种子闭合。第27页同步覆盖，第28/29页成本图使用v103。per-base 153/270、complementary 306/324。
+3. 第19页 LR 更新为 **41/80组**，分布3e-5十九、1e-4十二、1e-5九、3e-4一组。RNA-FM modification family 默认档最优，页面明确“必须逐组validation”，不再沿用旧的“默认未被选择”表述；test 不参与。
+4. 第20页 rank 更新为 **88/96、29/32组三种子闭合**，写入 degradation 双split、SpliceAI family rank16 和 SSI random rank4 的阶段均值；现有图仍标 legacy，不与rank8直接排名。
+5. 当前源包 revision=`20261102_refresh_v90_v103ledger_lr41_main_rank_closure`，301 个登记文件，manifest SHA256=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与第8/19/20/27/28/29页实际渲染通过。

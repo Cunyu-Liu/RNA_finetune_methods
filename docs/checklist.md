@@ -448,3 +448,12 @@
 - [x] AS3 交付：296 文件 manifest=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`；PPT=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`，PDF=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
 - [ ] AS4 后续：三地同步并推送，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
 
+## AT 组：v103 主矩阵、rank 与 LR 验收
+
+- [x] AT1 数据：1537 accepted、0 rejected；69格 proof=complete、CUDA 收敛。
+- [x] AT2 主矩阵：CRISPR/SpliceAI 覆盖28/20，①a-4为28/28/20/17/18；per-base 153/270、complementary 306/324。
+- [x] AT3 LR：168/320、41/80组，分布19/12/9/1；RNA-FM modification family 默认档最优，旧表述已纠正，test 不参与。
+- [x] AT4 rank：88/96、29/32组三种子闭合；只写同模型同split阶段结果，不与rank8直接排名。
+- [x] AT5 交付：301 文件 manifest=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`；PPT=`9274ee5e25f812e50beefbc60428e83944a74e8851826e231de178e04fcd0291`，PDF=`f3fd759639c84ef4e839aee0019ccccc10e05a81ceb9cc4a696c46a8ef080285`；嵌图、lint/layout/CRC 与六页渲染通过。
+- [ ] AT6 后续：三地同步并推送，继续真实科学缺口，不宣称全实验完成。
+

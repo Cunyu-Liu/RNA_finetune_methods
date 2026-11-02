@@ -2037,3 +2037,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：micro degradation random 仅1/4档；per-base 150/270、complementary 304/324、rank 69/96、equiv 420/420、650M frozen 25/25，650M LoRA 在训不记完成。
 - [x] **交付**：源包 revision=`20261102_refresh_v89_v102ledger_lr29_micro_spliceai_family`，296 文件，manifest=`46728646ba0b8d54ded25b38ed04a1c517d5fc5d1a410af57b0921bf3308ff73`；PPT=`e545b825f661ea8b93a3c551a0515ec9544305ef573a12114d57f719e5f2b15e`，PDF=`285d7aecd13fa50f21e6c3d4f84c9ca12d6206d6e87ff765598e4ba3501028bf`。嵌图、32页 lint/layout/CRC 与 LR 页渲染通过。
 - [ ] **后续**：三地同步并推送，继续主矩阵、LR/rank 和大格自然窗口。
+
+## N101. 2026-11-02 v103 主矩阵、rank 与12组 LR 闭合
+
+- [x] **69格完整证明**：v103 为 1537 accepted、0 rejected；69格均 proof=complete、CUDA 收敛，证据 SHA256=`73025a4c92ea856b0ef2e8536ba74382a4a25104553c8363dffac576e8430afe`。
+- [x] **主矩阵**：650M CRISPR LoRA-family 与 mega SpliceAI LoRA-random 三种子闭合，①a-4为28/28/20/17/18；per-base 153/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
+- [x] **LR 41组**：168/320、41/80组，分布19/12/9/1。RNA-FM modification family 默认3e-4最优，旧“均未选默认”表述已纠正；test 不参与。证据 SHA256=`6f9f1f230f82e8bbf0c24c50e2164dc9e77b5e1f448ed5990700c23c01e35910`。
+- [x] **rank**：88/96、29/32组三种子闭合；新增 degradation 双split、SpliceAI family rank16、SSI random rank4，保留同口径边界。证据 SHA256=`3009603411378b8f31f35ae0b22b74d87fa45b35245021b993ea6466303d32f5`。
+- [x] **交付**：源包 revision=`20261102_refresh_v90_v103ledger_lr41_main_rank_closure`，301 文件，manifest=`fcd8022436870149f0a5c97d4d429a3fc240e9462436479390dd09d011244fc3`；PPT=`9274ee5e25f812e50beefbc60428e83944a74e8851826e231de178e04fcd0291`，PDF=`f3fd759639c84ef4e839aee0019ccccc10e05a81ceb9cc4a696c46a8ef080285`。嵌图、32页 lint/layout/CRC 与六个更新页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 rank 剩余8格、主矩阵、LR和后续阶段门，不宣称全实验完成。

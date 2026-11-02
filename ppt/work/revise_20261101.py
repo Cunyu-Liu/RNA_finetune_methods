@@ -171,19 +171,19 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 27/28/19/17/18 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/20/17/18 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是最优。全参 tuning 已闭合 29/80 组，validation 选档均未选 3e-4（3e-5 十四组、1e-4 九组、1e-5 六组）；待全量 80 组与正式种子复测。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错；mega full-random 选 3e-5 后 r=0.799。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 41/80 组：3e-5 十九组、1e-4 十二组、1e-5 九组、3e-4 一组。RNA-FM modification family 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
-             "rank 需按任务与架构评估；ncRNA rank8 复核 random=0.918、family=0.900。新增 SpliceAI random rank16 三种子 macro-F1=0.482；rank4/16 矩阵为 69/96，尚未闭合。")
+             "rank4/16 已 88/96，29/32 组三种子闭合。degradation 双 split、SpliceAI family rank16、SSI random rank4 新增闭合；ncRNA rank8 复核不变。")
     set_text(slide, "TextBox 5",
-             "读图：现有面板为 legacy 对照；新增 rank16 只作同模型同 split 阶段结果，不与 rank8 直接排名。rank8 ncRNA 复核6/6：random=0.918±0.009、family=0.900±0.005；完整 PEFT/rank 矩阵待后续阶段门。")
+             "读图：新增均值 SpliceAI family rank16=0.450、SSI random rank4=0.634、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；剩余 8 格补齐后再冻结结论。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")
