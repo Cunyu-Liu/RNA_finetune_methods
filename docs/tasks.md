@@ -2245,4 +2245,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **台账**：v136/v137新增0，仍1565 accepted、0 rejected；展示版保持v123。
 - [x] **真实进展**：ERNIE seed17第二轮loss降至0.003239；seed101三轮后stale=2/3，尚未收敛；mega与RNA-FM继续长epoch。
 - [x] **证据边界**：`inflight_progress_20261101_v136.json` SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`，stale=2/3不记完成。
-- [ ] **后续**：同步并提交，等待完整收敛proof。
+- [x] **交付**：v136–v137记录三地一致，`5f0208d`已推送；等待完整收敛proof。
+
+## N128. 2026-11-02 v140 日志与 plateau 分离验收
+
+- [x] **台账**：v140新增0，仍1565 accepted、0 rejected；展示版保持v123。
+- [x] **真实进度**：mega epoch1 loss=0.001070；RNA-FM日志有epoch0/1，但plateau尚未更新；ERNIE继续训练。
+- [x] **证据边界**：`inflight_progress_20261101_v140.json` SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，日志有epoch不等于收敛。
+- [ ] **后续**：同步并提交，等待plateau与完整proof。

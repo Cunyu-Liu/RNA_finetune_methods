@@ -817,3 +817,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v136/v137新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
 2. ERNIE seed17第二轮loss降至0.003239；seed101三轮后stale=2/3，尚未收敛；mega与RNA-FM继续长epoch训练，不更新性能图。
 3. 证据=`status/inflight_progress_20261101_v136.json`，SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`；stale=2/3不等于完成。
+
+## 85. 2026-11-02 v140：日志与 plateau 分离验收，PPT不变
+
+1. v140新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
+2. mega epoch1 loss=0.001070；RNA-FM日志有epoch0/1，但plateau尚未更新，不能记收敛；ERNIE继续训练。
+3. 证据=`status/inflight_progress_20261101_v140.json`，SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`；日志进展不修改性能图或完成计数。

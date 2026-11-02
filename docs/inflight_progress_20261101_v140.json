@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-11-02T10:24:00.115319+00:00",
+  "ledger": "bestval_ledger_export_20261101_v140.csv",
+  "accepted": 1565,
+  "rejected": 0,
+  "note": "inflight only; log progress is not convergence proof",
+  "runs": [
+    {
+      "rid": "ft_rinalmomega_spliceai_lora_s43_family_b20fix_bestval_v1",
+      "pid": 58793,
+      "plateau_status": "RUNNING",
+      "plateau_best_epoch": 0,
+      "plateau_stale_epochs": 1,
+      "plateau_val_losses": [
+        0.00116,
+        0.00107
+      ],
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/3707ccb8112ea77d0ccb.log",
+      "log_sha256": "43578b0f3437675790c1270a4cc5fda4fa699f3d88d3572d653bd6dda9d07615",
+      "log_tail": "k/architecture; not ok if you expect identical arch.\n- MISSING\t:those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.\n/root/rnaft/pypath/transformers/tokenization_utils_base.py:2402: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.\n  warnings.warn(\nepoch 0 loss 0.0029\nepoch 0 val_loss 0.001160\nepoch 1 loss 0.0010\nepoch 1 val_loss 0.001070\n",
+      "result_exists": false
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s17_family_b20fix_lr1e-05_bestval_v1",
+      "pid": 58794,
+      "plateau_status": "RUNNING",
+      "plateau_best_epoch": 0,
+      "plateau_stale_epochs": 1,
+      "plateau_val_losses": [
+        0.003248,
+        0.003239
+      ],
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/bfd2fabb88572db15cd4.log",
+      "log_sha256": "9d691b46e4888494f2cc03a5b10c81def73d6f2bcf3972aee26213bb71d202a3",
+      "log_tail": " | \nlm_head.transform.layer_norm.bias   | UNEXPECTED |  | \n\nNotes:\n- UNEXPECTED\t:can be ignored when loading from different task/architecture; not ok if you expect identical arch.\n/root/rnaft/pypath/transformers/tokenization_utils_base.py:2402: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.\n  warnings.warn(\nepoch 0 loss 0.0113\nepoch 0 val_loss 0.003248\nepoch 1 loss 0.0032\nepoch 1 val_loss 0.003239\n",
+      "result_exists": false
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1",
+      "pid": 54448,
+      "plateau_status": "RUNNING",
+      "plateau_best_epoch": 0,
+      "plateau_stale_epochs": 2,
+      "plateau_val_losses": [
+        0.003269,
+        0.00667,
+        0.003239
+      ],
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030/logs/16e6ae39c3100a4490f8.log",
+      "log_sha256": "504491092d220d40853c6b51ecd63e081c0ec72e442c9199d1062188fd3e0208",
+      "log_tail": "PECTED |  | \n\nNotes:\n- UNEXPECTED\t:can be ignored when loading from different task/architecture; not ok if you expect identical arch.\n/root/rnaft/pypath/transformers/tokenization_utils_base.py:2402: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.\n  warnings.warn(\nepoch 0 loss 0.0036\nepoch 0 val_loss 0.003269\nepoch 1 loss 0.0469\nepoch 1 val_loss 0.006670\nepoch 2 loss 0.0038\nepoch 2 val_loss 0.003239\n",
+      "result_exists": false
+    },
+    {
+      "rid": "ft_rnafm_spliceai_full_s17_random_b20fix_lr1e-05_bestval_v1",
+      "pid": 63193,
+      "plateau_status": "PRE_PLATEAU",
+      "plateau_best_epoch": null,
+      "plateau_stale_epochs": null,
+      "plateau_val_losses": null,
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/a90ad1ecc80c87295195.log",
+      "log_sha256": "7db7d3edc51b9e503324ae5b3247e0249abeaaac0e20cc7d0f3050ce817a1166",
+      "log_tail": "k/architecture; not ok if you expect identical arch.\n- MISSING\t:those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.\n/root/rnaft/pypath/transformers/tokenization_utils_base.py:2402: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.\n  warnings.warn(\nepoch 0 loss 0.0112\nepoch 0 val_loss 0.001635\nepoch 1 loss 0.0016\nepoch 1 val_loss 0.001143\n",
+      "result_exists": false
+    }
+  ]
+}

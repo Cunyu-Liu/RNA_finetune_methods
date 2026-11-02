@@ -649,5 +649,12 @@
 - [x] BT1 台账：v136/v137新增0，1565 accepted、0 rejected；PPT保持v123。
 - [x] BT2 进度：ERNIE seed17有新最佳loss；seed101三轮stale=2/3，未收敛；其他两格继续长epoch。
 - [x] BT3 证据：SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`，不把stale=2/3写成完成。
-- [ ] BT4 后续：三地同步并提交，等待完整proof。
+- [x] BT4 交付：v136–v137三地同步，`5f0208d`已推送；等待完整proof。
+
+## BU 组：v140 日志与 plateau 分离验收
+
+- [x] BU1 台账：v140新增0，1565 accepted、0 rejected；PPT保持v123。
+- [x] BU2 进度：mega有epoch1；RNA-FM日志有两轮但plateau未更新，ERNIE继续训练。
+- [x] BU3 证据：SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，日志epoch不代替收敛proof。
+- [ ] BU4 后续：同步并提交，等待plateau与完整proof。
 

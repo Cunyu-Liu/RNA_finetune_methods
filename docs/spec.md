@@ -1362,3 +1362,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v136/v137均新增0，保持 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
 2. ERNIE SpliceAI seed17第2轮val_loss由0.003248降至0.003239；ERNIE seed101已有3轮0.003269/0.006670/0.003239、stale=2/3，仍未达到最终收敛验收。mega seed43与RNA-FM seed17继续长epoch训练。
 3. 证据=`status/inflight_progress_20261101_v136.json`，SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`。stale=2/3不等于收敛，所有在训格均不更新完成计数或性能图。
+
+### 10.128 v140 日志与 plateau 分离验收（2026-11-02）
+
+1. v140新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
+2. mega SpliceAI seed43日志已有epoch1 val_loss=0.001070；RNA-FM SpliceAI seed17日志已有epoch0/1 val_loss=0.001635/0.001143，但plateau文件尚未更新，不能记收敛。ERNIE seed17与seed101继续按既有plateau训练。
+3. 证据=`status/inflight_progress_20261101_v140.json`，SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，保存PID、plateau、日志哈希与result存在性；日志进展不代替完成proof。
