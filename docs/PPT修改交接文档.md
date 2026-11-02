@@ -711,3 +711,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 rank 更新为 **93/96、31/32组三种子闭合、剩余3格**。SSI random rank16 三种子 mean=0.634602631，已加入阶段文字；仅剩 family rank16，现有图仍标legacy，不与rank8直接排名。
 3. RNA-FM SSP random default 仅1/4档，LR 175/320、完整组仍42/80；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25；其他结论不变。
 4. 当前源包 revision=`20261102_refresh_v97_v114ledger_rank93_ssi_random_r16_closure`，338 个登记文件，manifest SHA256=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。
+
+## 69. 2026-11-02 新增 ncRNA 性能总览页（33页）
+
+1. 用户指出原结构只保留机制诊断、缺少修正后的 ncRNA 性能总览。现以 v114 正式台账补图：ncRNA **28/30** 个三种子单元，固定 LR 六柱、mean±SD、斜线=n<3、空白=NA；不是不能形成柱状结论，而是此前漏放。
+2. 新增第5页“结论①a-1 ncRNA 性能总览”，原 shuffle/no-shuffle 机制页保留为第6页。双页分别回答“修正后性能如何”和“旧 family 崩溃为何隔离”，不再用机制页代替性能页。后续页顺延：①a-4第9页、LR第20页、rank第21页、覆盖第28页、成本第29/30页。
+3. `build_8task_sixbar.py` 复用原六柱聚合与绘图逻辑生成单面板，源包 revision=`20261102_refresh_v98_v114ledger_ncrna_sixbar_overview`，344 个登记文件，manifest SHA256=`4498127752f24a2932529585a98fa43dc383d8ab8cfca8e82948beb4681f3d44`。
+4. 克隆顺序导致的 slide33 重名已修复。最终 **33页**，ZIP无重复、CRC正常，lint/layout、Microsoft YaHei、正文1.5倍行距、11张关键嵌图 SHA 与双页实际渲染通过。PPT SHA256=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF SHA256=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。其他用户手调内容未改。

@@ -303,6 +303,18 @@ def main():
                  "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation requested 2000–3000 同为 cap=1680，SSI 148M-LoRA 五档。等价配对见④ family 页。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
 
+    ncrna_overview = clone_slide(prs, 4)
+    set_text(ncrna_overview, "TextBox 1", "01a")
+    set_text(ncrna_overview, "TextBox 2", "结论①a-1  ncRNA 性能总览：修正后的六柱对照")
+    set_text(ncrna_overview, "TextBox 3",
+             "Frozen/LoRA/Full × random/family 的三种子均值±SD；28/30 单元闭合，固定 LR 对照，NA=未闭合。")
+    set_text(ncrna_overview, "TextBox 5",
+             "读图：柱高为 ACC，误差线为 SD；斜线=n<3，空白=NA。本页回答修正后 ncRNA 的性能，下一页解释旧 family 崩溃为何被隔离；不把训练顺序伪影当作分布证据。")
+    replace_picture(ncrna_overview, "Picture 6",
+                    ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/ncrna_bestval_official_sixbar.png")
+    ncrna_overview_id = prs.slides._sldIdLst[-1]
+    prs.slides._sldIdLst.remove(ncrna_overview_id)
+
     slide_ids = prs.slides._sldIdLst
     obsolete = slide_ids[20 + int(multiseed_ready)]
     prs.part.drop_rel(obsolete.rId)
@@ -321,6 +333,9 @@ def main():
         slide_ids.insert(21, family_equiv_id)
         slide_ids.insert(25, family_scaling_id)
     assert len(prs.slides) == 29 + int(multiseed_ready) + 2 * int(family_ready)
+
+    slide_ids.insert(4, ncrna_overview_id)
+    assert len(prs.slides) == 30 + int(multiseed_ready) + 2 * int(family_ready)
 
     removed = remove_answered_annotations(prs)
     prs.save(str(OUT))

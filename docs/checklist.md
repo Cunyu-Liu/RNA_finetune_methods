@@ -530,3 +530,11 @@
 - [x] BD4 交付：338 文件 manifest=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`；PPT=`2064f15759c017dd664dace4230cf1de7e0a1bbdcab124d4c3c3350a971eb492`，PDF=`2d9a0f8693d92e7c754bd10d77b5bdb44eaf9680218afd377c0b734ab3c212fb`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
 - [ ] BD5 后续：三地同步并补推，继续剩余3格和其他真实科学缺口。
 
+## BE 组：ncRNA 性能总览页验收
+
+- [x] BE1 数据：ncRNA 28/30 个三种子单元，沿用 v114，不重跑实验。
+- [x] BE2 图源：固定 LR 六柱、mean±SD、斜线=n<3、空白=NA；源包344文件，manifest=`4498127752f24a2932529585a98fa43dc383d8ab8cfca8e82948beb4681f3d44`。
+- [x] BE3 结构：第5页性能总览与第6页机制诊断并存，后续页顺延；slide33重名已修复。
+- [x] BE4 交付：33页 lint/layout/CRC、字体行距、11张嵌图与双页渲染通过；PPT=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。
+- [ ] BE5 后续：三地同步并推送，继续在安全预算内补位和完成真实科学缺口。
+

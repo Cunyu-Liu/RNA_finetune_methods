@@ -2123,3 +2123,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR与其他矩阵**：RNA-FM SSP random default 仅1/4档，LR 175/320、完整组仍42/80；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
 - [x] **交付**：源包 revision=`20261102_refresh_v97_v114ledger_rank93_ssi_random_r16_closure`，338 文件，manifest=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`；PPT=`2064f15759c017dd664dace4230cf1de7e0a1bbdcab124d4c3c3350a971eb492`，PDF=`2d9a0f8693d92e7c754bd10d77b5bdb44eaf9680218afd377c0b734ab3c212fb`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并补推待推提交，继续 family rank16 和其他真实科学缺口。
+
+## N112. 2026-11-02 补入 ncRNA 六柱性能总览页
+
+- [x] **数据口径**：沿用 v114，ncRNA 正式闭合 **28/30** 个三种子单元；不重跑实验，不用旧 family 崩溃结果代替修正后性能。
+- [x] **单面板图源**：复用六柱聚合与绘图函数，新增 PNG/PDF/meta，固定 LR、mean±SD、n<3斜线、NA空白。源包 revision=`20261102_refresh_v98_v114ledger_ncrna_sixbar_overview`，344 文件，manifest=`4498127752f24a2932529585a98fa43dc383d8ab8cfca8e82948beb4681f3d44`。
+- [x] **双页结构**：新增第5页性能总览，原机制页保留为第6页；后续页顺延，其他手调内容不改。克隆顺序导致的 slide33 重名已修复，ZIP无重复。
+- [x] **验收**：33页 lint/layout/CRC、字体行距、11张关键嵌图与双页渲染通过。PPT=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。
+- [ ] **后续**：三地同步并推送；继续在安全预算内补满可用显存，完成 rank16 和其他真实缺口，不为占显存制造 OOM。

@@ -1252,3 +1252,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. SSI random rank16 三种子 PCC=0.634591544/0.635330892/0.633885457，mean=0.634602631，正式闭合；rank4/16升至 **93/96、31/32组三种子闭合**，仅剩 family rank16 的3格。证据=`status/rank_progress_20261101_v114.json`，SHA256=`ec16c3675b7924ee439949f31d878d4d2227b41a50c11d6a02a7e86bd502965f`。
 3. RNA-FM SSP full-random default tuning pair-F1=0.1679、best_val=0.571500，仅1/4档；LR=175/320、完整组仍42/80。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。
 4. 源包 revision=`20261102_refresh_v97_v114ledger_rank93_ssi_random_r16_closure`，338 个登记文件，manifest SHA256=`711969fb0eeb7eb7534f1f2068b3c823242755d3f9adc75e21f82d163454a895`。PPT SHA256=`2064f15759c017dd664dace4230cf1de7e0a1bbdcab124d4c3c3350a971eb492`，PDF SHA256=`2d9a0f8693d92e7c754bd10d77b5bdb44eaf9680218afd377c0b734ab3c212fb`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
+
+### 10.112 补入 ncRNA 修正后六柱性能总览页（2026-11-02）
+
+1. 不新增或重跑实验，沿用 v114 正式 best-val 台账（1549 accepted、0 rejected）。ncRNA 已有 **28/30 个三种子单元**，具备与其他任务一致的六柱性能总览证据；不是“ncRNA不能形成柱状结论”，而是此前 PPT 漏放修正后的总览图。
+2. `build_8task_sixbar.py` 复用同一聚合与绘图函数，新增 `ncrna_bestval_official_sixbar.png/.pdf/_meta.json`：Frozen/LoRA/Full × random/family，三种子 mean±SD，斜线=n<3、空白=NA，固定 LR 对照。源包 revision=`20261102_refresh_v98_v114ledger_ncrna_sixbar_overview`，344 个登记文件，manifest SHA256=`4498127752f24a2932529585a98fa43dc383d8ab8cfca8e82948beb4681f3d44`。
+3. PPT 新增第5页“结论①a-1 ncRNA 性能总览”，原 shuffle/no-shuffle 机制页保留为第6页，形成“性能结论+机制解释”的双页结构。后续页顺延：①a-4第9页、LR第20页、rank第21页、覆盖第28页、成本第29/30页；其他用户手调内容不改。
+4. 克隆顺序曾产生 slide33 重名，已改为先创建部件、暂时移出顺序表，再插入第5页。最终 **33页**，ZIP无重复条目、CRC正常，lint/layout、Microsoft YaHei、正文1.5倍行距、11张关键嵌图 SHA 和双页实际渲染通过。PPT SHA256=`15dfbef9ffb10fd3776a9d969dbe96bcd18b31584d1e64cadd7c87d52c65cae9`，PDF SHA256=`70f5dfe1a1b00cba8fe92aedb3311f48e0454999b3ab5d1ee3c6cad6c786a0c4`。
+5. 资源核查时有3个实际训练进程、空闲22.375GiB，未达到650M full的28GiB安全预算，故不强行启动大格；现有 per-base/LR/rank 队列继续在安全预算内补位，不重复派发。
