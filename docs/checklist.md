@@ -508,3 +508,10 @@
 - [x] BA3 展示：无新科学单元，PPT 与 v94 源包保持 v110。
 - [ ] BA4 后续：同步并提交，等待第四档和真实科学缺口。
 
+## BB 组：v112 SSI random rank16 第二种子验收
+
+- [x] BB1 数据：1546 accepted、0 rejected；新增seed29 proof=complete、CUDA 收敛。
+- [x] BB2 rank：SSI random rank16 为2/3，92/96、30/32组闭合，剩余4格，不写成三种子闭合。
+- [x] BB3 交付：330 文件 manifest=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`；PPT=`417c5b50358cef089baa6d598103c6e0dd0a1704f5dede02c47042a790b9095e`，PDF=`90f2f0b7424a5e7b5a11907680c138b15d573ece1ea970d752044281332bc468`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
+- [ ] BB4 后续：三地同步并补推，继续剩余4格和其他真实科学缺口。
+

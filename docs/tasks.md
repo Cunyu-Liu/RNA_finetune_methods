@@ -2099,3 +2099,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **选档边界**：该组已有三档、缺1e-5，LR 173/320、完整组仍41/80，不提前选档；其他矩阵计数不变。
 - [x] **展示边界**：无新科学单元，PPT 与 v94 源包保持 v110。
 - [ ] **后续**：同步并提交文档，等待第四档和真实科学缺口。
+
+## N109. 2026-11-02 v112 SSI random rank16 第二种子
+
+- [x] **单格验收**：v112 为 1546 accepted、0 rejected；seed29 PCC=0.635330892，proof=complete、CUDA 收敛，证据 SHA256=`3dd82e5774df8207921195d396c26b2028bea815f52088e090c1582ce22903b9`。
+- [x] **rank边界**：SSI random rank16 为2/3，rank4/16=92/96、三种子组仍30/32，剩余4格。证据 SHA256=`08699d2963f087fb5daea6f1820c2fd32e77f99b8367a2c23b844a67bd20e593`。
+- [x] **其他边界**：per-base 154/270、complementary 306/324、LR 173/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v95_v112ledger_rank92_ssi_random_r16_n2`，330 文件，manifest=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`；PPT=`417c5b50358cef089baa6d598103c6e0dd0a1704f5dede02c47042a790b9095e`，PDF=`90f2f0b7424a5e7b5a11907680c138b15d573ece1ea970d752044281332bc468`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
+- [ ] **后续**：三地同步并补推 c49b92d 与本批提交，继续 rank 剩余4格和其他真实科学缺口。

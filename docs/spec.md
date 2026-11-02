@@ -1231,3 +1231,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v111 为 1544+1=**1545 accepted、0 rejected**，v110 行逐字段保留。新增 ERNIE SSP full-family 的3e-5 tuning 格 pair-F1=0.2438，best_val=0.445255，best_epoch=2、6 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v111_new_proof.json`，SHA256=`a2f311d1b6793a6b18561ab4fbbae14c83af11d3acd5c4441e1b3a6aeb6417ef`。
 2. 该组已有 default/1e-4/3e-5 三档，仍缺1e-5，LR=173/320、完整组仍41/80，不提前选档。per-base=154/270、complementary=306/324、rank4/16=91/96、equiv=420/420、650M frozen=25/25；其他结论不变。
 3. 无新三种子单元或完整 LR 组，PPT 和 v94 源包保持 v110；台账与证明在 teams 留存，待下一次可见更新纳入。
+
+### 10.109 v112 SSI random rank16 第二种子与 rank 92/96（2026-11-02）
+
+1. v112 为 1545+1=**1546 accepted、0 rejected**，v111 行逐字段保留。新增 SSI random rank16/seed29 PCC=0.635330892，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v112_new_proof.json`，SHA256=`3dd82e5774df8207921195d396c26b2028bea815f52088e090c1582ce22903b9`。
+2. 该组 seed17/29=0.634591544/0.635330892，当前2/3，不形成新三种子组；rank4/16升至 **92/96**，三种子组仍30/32，剩余4格。证据=`status/rank_progress_20261101_v112.json`，SHA256=`08699d2963f087fb5daea6f1820c2fd32e77f99b8367a2c23b844a67bd20e593`。
+3. 当前 per-base=154/270、complementary=306/324、LR=173/320（41/80组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。rank 页只更新进度。
+4. 源包 revision=`20261102_refresh_v95_v112ledger_rank92_ssi_random_r16_n2`，330 个登记文件，manifest SHA256=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`。PPT SHA256=`417c5b50358cef089baa6d598103c6e0dd0a1704f5dede02c47042a790b9095e`，PDF SHA256=`90f2f0b7424a5e7b5a11907680c138b15d573ece1ea970d752044281332bc468`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
