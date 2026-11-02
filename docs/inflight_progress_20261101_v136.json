@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-11-02T10:11:08.255215+00:00",
+  "ledger": "bestval_ledger_export_20261101_v136.csv",
+  "accepted": 1565,
+  "rejected": 0,
+  "note": "inflight only; PID/manifest mapping; not completion evidence",
+  "runs": [
+    {
+      "rid": "ft_rinalmomega_spliceai_lora_s43_family_b20fix_bestval_v1",
+      "pid": 58793,
+      "status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 0,
+      "epoch_val_losses": [
+        0.00116
+      ]
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s17_family_b20fix_lr1e-05_bestval_v1",
+      "pid": 58794,
+      "status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 1,
+      "epoch_val_losses": [
+        0.003248,
+        0.003239
+      ]
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1",
+      "pid": 54448,
+      "status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 2,
+      "epoch_val_losses": [
+        0.003269,
+        0.00667,
+        0.003239
+      ]
+    },
+    {
+      "rid": "ft_rnafm_spliceai_full_s17_random_b20fix_lr1e-05_bestval_v1",
+      "pid": 63193,
+      "status": "PRE_PLATEAU",
+      "best_epoch": null,
+      "stale_epochs": null,
+      "epoch_val_losses": null
+    }
+  ]
+}

@@ -2238,4 +2238,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **台账**：v134/v135新增0，仍1565 accepted、0 rejected；展示版保持v123。
 - [x] **生产验证**：恢复父71153正常，原OOM RID无新增manifest记录、无子进程，pending等待未再被错误跳过。
 - [x] **证据**：`lr_oom_recovery_wait_check_20261102.json` SHA256=`99218d3f9cb6274327042e40d89f7e4629b14f98563e0877e5d548964682dbde`，只验证调度，不代替训练proof。
-- [ ] **后续**：三地同步并提交；等待安全启动与真实完成格。
+- [x] **交付**：生产等待验证三地一致，`9f16018`已推送；等待安全启动与真实完成格。
+
+## N127. 2026-11-02 v136–v137 在训 plateau 进展
+
+- [x] **台账**：v136/v137新增0，仍1565 accepted、0 rejected；展示版保持v123。
+- [x] **真实进展**：ERNIE seed17第二轮loss降至0.003239；seed101三轮后stale=2/3，尚未收敛；mega与RNA-FM继续长epoch。
+- [x] **证据边界**：`inflight_progress_20261101_v136.json` SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`，stale=2/3不记完成。
+- [ ] **后续**：同步并提交，等待完整收敛proof。

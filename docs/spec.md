@@ -1356,3 +1356,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v134/v135均新增0，保持 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
 2. 生产环境复核恢复父71153仍运行，原OOM RID自恢复启动以来没有新增manifest完成/跳过记录、没有子进程，状态为pending_wait_preserved；证明修复后的调度器未再错误跳过外锁模型。
 3. 证据=`status/queue_actions/lr_oom_recovery_wait_check_20261102.json`，SHA256=`99218d3f9cb6274327042e40d89f7e4629b14f98563e0877e5d548964682dbde`。该记录只验证调度行为，不是训练完成proof。
+
+### 10.127 v136–v137 在训 plateau 进展（2026-11-02）
+
+1. v136/v137均新增0，保持 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
+2. ERNIE SpliceAI seed17第2轮val_loss由0.003248降至0.003239；ERNIE seed101已有3轮0.003269/0.006670/0.003239、stale=2/3，仍未达到最终收敛验收。mega seed43与RNA-FM seed17继续长epoch训练。
+3. 证据=`status/inflight_progress_20261101_v136.json`，SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`。stale=2/3不等于收敛，所有在训格均不更新完成计数或性能图。

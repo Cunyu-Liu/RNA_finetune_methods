@@ -642,5 +642,12 @@
 - [x] BS1 台账：v134/v135新增0，1565 accepted、0 rejected；PPT保持v123。
 - [x] BS2 生产行为：恢复父71153正常，原RID无新manifest记录、无子进程，pending未被错误跳过。
 - [x] BS3 证据：SHA256=`99218d3f9cb6274327042e40d89f7e4629b14f98563e0877e5d548964682dbde`，不代替训练proof。
-- [ ] BS4 后续：同步并提交，等待安全启动与真实完成格。
+- [x] BS4 交付：生产等待验证三地同步，`9f16018`已推送；等待安全启动与真实完成格。
+
+## BT 组：v136–v137 在训 plateau 验收
+
+- [x] BT1 台账：v136/v137新增0，1565 accepted、0 rejected；PPT保持v123。
+- [x] BT2 进度：ERNIE seed17有新最佳loss；seed101三轮stale=2/3，未收敛；其他两格继续长epoch。
+- [x] BT3 证据：SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`，不把stale=2/3写成完成。
+- [ ] BT4 后续：三地同步并提交，等待完整proof。
 

@@ -811,3 +811,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v134/v135新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
 2. 恢复父71153正常，原OOM RID无新增manifest记录、无子进程，pending等待未被错误跳过，生产环境验证模型锁修复生效。
 3. 证据=`status/queue_actions/lr_oom_recovery_wait_check_20261102.json`，SHA256=`99218d3f9cb6274327042e40d89f7e4629b14f98563e0877e5d548964682dbde`；只验证调度行为，不改变性能图。
+
+## 84. 2026-11-02 v136–v137：在训 plateau 进展，PPT不变
+
+1. v136/v137新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF与v103源包保持v123。
+2. ERNIE seed17第二轮loss降至0.003239；seed101三轮后stale=2/3，尚未收敛；mega与RNA-FM继续长epoch训练，不更新性能图。
+3. 证据=`status/inflight_progress_20261101_v136.json`，SHA256=`d14c2e0e11bf67279740dcf17cfbb6342ef89cbedf62dae3b477023dbdf12d78`；stale=2/3不等于完成。
