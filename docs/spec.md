@@ -1198,3 +1198,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v105/v106 均无新增完成格，仍为 **1539 accepted、0 rejected**。当前 per-base=153/270、complementary=306/324、LR=170/320（41/80组）、rank4/16=89/96（29/32组）、equiv=420/420、650M frozen=25/25；PPT 和 v91 源包保持 v104。
 2. rank 剩余7格全部属于 SSI：family rank4 缺seed43，random/family rank16各缺三种子。已做120秒有界结果等待，未把未生成 result 的格写成完成。
 3. 资源核查时有3个实际训练进程，GPU约9.67/32.61GiB、空闲22.45GiB，低于650M full的28GiB安全预算，故未强行启动大格；现有 per-base/LR/rank 父队列继续运行，待自然窗口再补大格。
+
+### 10.104 v107 ERNIE SSP family default tuning（2026-11-02）
+
+1. v107 为 1539+1=**1540 accepted、0 rejected**，v106 行逐字段保留。新增 ERNIE SSP full-family default tuning 格 pair-F1=0.2127，best_val=0.500993，best_epoch=12、16 epochs，proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过；再次确认按 validation 早停而非固定步数训练。证据=`status/bestval_v107_new_proof.json`，SHA256=`a9838fc791096e4bb1062a1c4f49f4db254565ba2443c2b3ea4ab954ee6c964c`。
+2. 该组目前只有 default 一档，仍缺1e-4/3e-5/1e-5，LR=171/320，完整组仍41/80，不提前选档。per-base=153/270、complementary=306/324、rank4/16=89/96、equiv=420/420、650M frozen=25/25；其他结论不变。
+3. 无新三种子单元或完整 LR 组，PPT 和 v91 源包保持 v104；台账与证明在 teams 留存，待下一次可见更新纳入。

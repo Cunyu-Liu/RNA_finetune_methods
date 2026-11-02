@@ -472,3 +472,10 @@
 - [x] AV3 资源：空闲22.45GiB低于650M full预算28GiB，未强行启动大格；现有队列继续。
 - [ ] AV4 后续：同步并提交记录，等待完整证明和自然资源窗口。
 
+## AW 组：v107 ERNIE SSP family tuning 验收
+
+- [x] AW1 数据：1540 accepted、0 rejected；default格 proof=complete、CUDA 收敛，best_epoch=12、16 epochs。
+- [x] AW2 边界：该组仅一档，LR 171/320、完整组仍41/80，不提前选档；其他矩阵计数不变。
+- [x] AW3 展示：无新科学单元，PPT 与 v91 源包保持 v104。
+- [ ] AW4 后续：同步并提交，等待其余三档和真实科学缺口。
+

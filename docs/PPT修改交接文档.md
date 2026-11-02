@@ -657,3 +657,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v105/v106 均无新增完成格，仍为 **1539 accepted、0 rejected**，PPT 和 v91 源包保持 v104。
 2. rank 剩余7格全部属于SSI；有界等待未生成result，不修改页面。资源核查时空闲22.45GiB，低于650M full的28GiB预算，未强行启动大格。
 3. 当前仍有 per-base/LR/rank 的真实训练在运行，待完整证明或自然大模型窗口后再更新。
+
+## 61. 2026-11-02 v107 staging：展示版保持 v104
+
+1. v107 为 **1540 accepted、0 rejected**；ERNIE SSP full-family default tuning pair-F1=0.2127、best_val=0.500993，best_epoch=12、16 epochs，proof=complete、CUDA 收敛。
+2. 该组仅一档，LR 171/320、完整组仍41/80，不提前选档。无新三种子单元，PPT 和 v91 源包保持 v104。
+3. 当前 PPT/PDF SHA256 仍为 `9c1b76dd2fa9cbc8a2621aa54af8d0df9cee2e4beaffdea2d159027800341f5d` / `28b25d044d13d09c80de1e45f343ccd0c84146b3ce8075429a61e7e54f49e07d`。
