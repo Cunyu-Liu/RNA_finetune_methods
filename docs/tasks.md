@@ -2107,3 +2107,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：per-base 154/270、complementary 306/324、LR 173/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
 - [x] **交付**：源包 revision=`20261102_refresh_v95_v112ledger_rank92_ssi_random_r16_n2`，330 文件，manifest=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`；PPT=`417c5b50358cef089baa6d598103c6e0dd0a1704f5dede02c47042a790b9095e`，PDF=`90f2f0b7424a5e7b5a11907680c138b15d573ece1ea970d752044281332bc468`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并补推 c49b92d 与本批提交，继续 rank 剩余4格和其他真实科学缺口。
+
+## N110. 2026-11-02 v113 ERNIE SSP family LR 第42组
+
+- [x] **单格验收**：v113 为 1547 accepted、0 rejected；1e-5格 pair-F1=0.2192、best_val=0.516688、best_epoch=3、7 epochs，proof=complete、CUDA 收敛。证据 SHA256=`dcb650f2eda1d38dd77fe662176ed4744f57f669db7ac62b8a1ed35afb2925b9`。
+- [x] **四档选档**：best_val=0.500993/0.388270/0.445255/0.516688，validation 选1e-4，test pair-F1=0.2975仅报告。LR 174/320、42/80组，分布19/13/9/1。证据 SHA256=`7a10ac5358f6ee80101111c5b831717984c68a97bbbdc030ac0b7a079f4074f7`。
+- [x] **其他边界**：per-base 154/270、complementary 306/324、rank 92/96、equiv 420/420、650M frozen 25/25；其他结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v96_v113ledger_lr42_ernie_ssp_family`，334 文件，manifest=`eb7a3065eef5fba25eb025a4f931075396189de33f6c94251fa9fa6d512c78d2`；PPT=`3e5c3b95c440293d203f5262d94e6bb156738e7c0e84ab8b39cd7e3e58e803a4`，PDF=`9e4c0be9e0d1e8d51b6efbca3332bece0b8c10a6a720174132aed75e5be22500`。嵌图、32页 lint/layout/CRC 与 LR 页渲染通过。
+- [ ] **后续**：三地同步并补推待推提交，继续 rank 剩余4格和其他真实科学缺口。

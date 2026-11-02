@@ -515,3 +515,10 @@
 - [x] BB3 交付：330 文件 manifest=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`；PPT=`417c5b50358cef089baa6d598103c6e0dd0a1704f5dede02c47042a790b9095e`，PDF=`90f2f0b7424a5e7b5a11907680c138b15d573ece1ea970d752044281332bc468`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
 - [ ] BB4 后续：三地同步并补推，继续剩余4格和其他真实科学缺口。
 
+## BC 组：v113 LR 第42组验收
+
+- [x] BC1 数据：1547 accepted、0 rejected；新增 ERNIE SSP family 1e-5格 proof=complete、CUDA 收敛。
+- [x] BC2 选档：四档闭合，validation 选1e-4（best_val=0.388270），test 不参与；LR 174/320、42/80组，分布19/13/9/1。
+- [x] BC3 交付：334 文件 manifest=`eb7a3065eef5fba25eb025a4f931075396189de33f6c94251fa9fa6d512c78d2`；PPT=`3e5c3b95c440293d203f5262d94e6bb156738e7c0e84ab8b39cd7e3e58e803a4`，PDF=`9e4c0be9e0d1e8d51b6efbca3332bece0b8c10a6a720174132aed75e5be22500`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
+- [ ] BC4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
+

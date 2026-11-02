@@ -697,3 +697,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 rank 更新为 **92/96、30/32组三种子闭合、剩余4格**。SSI random rank16 的 seed17/29=0.634591544/0.635330892，当前2/3，不写成闭合；现有图仍标legacy，其他阶段均值不变。
 3. 当前 per-base 154/270、complementary 306/324、LR 173/320（41组）、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和 LR 选档不变。
 4. 当前源包 revision=`20261102_refresh_v95_v112ledger_rank92_ssi_random_r16_n2`，330 个登记文件，manifest SHA256=`fb9ee5b869877e551e1327acff1dfb615f870a35a4e68adb93ad7b07149b8b16`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 rank 页实际渲染通过。
+
+## 67. 2026-11-02 当前 v113：ERNIE SSP family LR 第42组
+
+1. 当前 PPT 为32页，SHA256=`3e5c3b95c440293d203f5262d94e6bb156738e7c0e84ab8b39cd7e3e58e803a4`；PDF SHA256=`9e4c0be9e0d1e8d51b6efbca3332bece0b8c10a6a720174132aed75e5be22500`。输入 **1547 accepted、0 rejected**，新增格 proof=complete。
+2. 第19页 LR 更新为 **42/80组**，分布3e-5十九组、1e-4十三组、1e-5九组、3e-4一组。ERNIE SSP full-family 四档闭合，validation 选1e-4（best_val=0.388270），test pair-F1=0.2975仅报告。
+3. 当前 per-base 154/270、complementary 306/324、rank 92/96、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和默认档反例结论不变。
+4. 当前源包 revision=`20261102_refresh_v96_v113ledger_lr42_ernie_ssp_family`，334 个登记文件，manifest SHA256=`eb7a3065eef5fba25eb025a4f931075396189de33f6c94251fa9fa6d512c78d2`。十张关键嵌图 SHA、32页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。
