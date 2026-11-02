@@ -776,7 +776,7 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 
 1. v124新增0，仍为 **1565 accepted、0 rejected**；当前33页PPT/PDF及374文件源包均保持v123，不重写图片或科学结论。
 2. 新补位父63074与旧per-base父3431052共享state-dir/model locks，仅处理34个need≤7GiB未完成格；注册表SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`。旧per-base与LR父45383不重启。
-3. 新子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0、best-val协议。核查时GPU used/free=16061/16051MiB，下一格16GiB和650M full 28GiB均不强行启动。
+3. 新子63193为RNA-FM SpliceAI full-random/seed17/lr1e-5，device0、best-val协议。核查时GPU used/free=16061/16051MiB，下一格16GiB和650M full 28GiB均不强行启动。
 4. 在训证据=`status/queue_actions/perbase_small_fill_20261102.json`，SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`；不是完成证明，后续完整proof通过才改图。
 
 ## 79. 2026-11-02 v126–v127 staging：历史图件归档，PPT不变
@@ -785,3 +785,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 20261028源包仍被第6页ncRNA shuffle诊断、正式图CSV及分类组合图机制坐标引用，因此不整体归档。仅30个无现役引用的历史图件移至 `archive_20261102/绘图数据/figure_source_data_20261028_legacy_figures/`，11个现役图件/数据文件保留。
 3. 移动前manifest和30文件哈希保留，moved manifest SHA256=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`；现役81文件manifest SHA256=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`。
 4. v14源包374文件、分类组合图53文件及归档30文件逐哈希通过；当前PPT ZIP CRC正常，页面、嵌图和用户手调内容均未改变。
+
+## 80. 2026-11-02 v130 staging：在训 PID 映射纠偏，PPT不变
+
+1. v130新增0，仍为 **1565 accepted、0 rejected**；33页PPT/PDF和v103源包保持v123。
+2. `finetune_spl`命令行不含task，后续以PID/manifest为唯一映射依据。PID63193/58794/54448实际均为SpliceAI，不是degradation；此前交接文字已更正，无同RID重复训练。
+3. mega seed43与ERNIE seed17已有epoch0，ERNIE seed101两轮stale=1/3，RNA-FM seed17 pre-plateau；均不修改性能图。历史degradation PID49138 OOM与当前SpliceAI PID54448不同RID。
+4. 纠偏证据=`status/inflight_progress_20261101_v130.json`，SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代v128错误任务映射。

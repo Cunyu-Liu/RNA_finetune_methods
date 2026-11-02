@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-11-02T09:38:04.295915+00:00",
+  "ledger": "bestval_ledger_export_20261101_v130.csv",
+  "accepted": 1565,
+  "rejected": 0,
+  "note": "PID/manifest authoritative mapping; inflight only, not completion evidence",
+  "supersedes": "inflight_progress_20261101_v128.json",
+  "correction": "Three processes were previously inferred as degradation from an incomplete finetune_spl command line. PID/manifest proves they are SpliceAI. No duplicate run was launched.",
+  "runs": [
+    {
+      "rid": "ft_rinalmomega_spliceai_lora_s43_family_b20fix_bestval_v1",
+      "pid": 58793,
+      "manifest": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/manifest.jsonl",
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/3707ccb8112ea77d0ccb.log",
+      "plateau_status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 0,
+      "patience": 3,
+      "epoch_val_losses": [
+        0.00116
+      ],
+      "result_exists": false
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s17_family_b20fix_lr1e-05_bestval_v1",
+      "pid": 58794,
+      "manifest": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/manifest.jsonl",
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/bfd2fabb88572db15cd4.log",
+      "plateau_status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 0,
+      "patience": 3,
+      "epoch_val_losses": [
+        0.003248
+      ],
+      "result_exists": false
+    },
+    {
+      "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1",
+      "pid": 54448,
+      "manifest": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030/manifest.jsonl",
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030/logs/16e6ae39c3100a4490f8.log",
+      "plateau_status": "RUNNING",
+      "best_epoch": 0,
+      "stale_epochs": 1,
+      "patience": 3,
+      "epoch_val_losses": [
+        0.003269,
+        0.00667
+      ],
+      "result_exists": false
+    },
+    {
+      "rid": "ft_rnafm_spliceai_full_s17_random_b20fix_lr1e-05_bestval_v1",
+      "pid": 63193,
+      "manifest": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/manifest.jsonl",
+      "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval/logs/a90ad1ecc80c87295195.log",
+      "plateau_status": "PRE_PLATEAU",
+      "best_epoch": null,
+      "stale_epochs": null,
+      "patience": null,
+      "epoch_val_losses": null,
+      "result_exists": false
+    }
+  ],
+  "historical_oom": {
+    "rid": "ft_ernierna_degradation_full_s101_random_b20fix_bestval_v1",
+    "pid": 49138,
+    "start": "2026-11-02T07:28:01.038028+00:00",
+    "end": "2026-11-02T07:28:31.096796+00:00",
+    "rc": 1,
+    "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030/logs/3b6910449355d12e0088.log",
+    "log_sha256": "6d64fd6a25a9f8c05ffde2d82baedafb24255a6eb9b578defb4e5f785ec92797",
+    "evidence": "CUDA error: out of memory",
+    "relation_to_active": "Different RID from active PID54448; no completion credit; retry only in a safe memory window."
+  },
+  "process_mapping_rule": "Resolve PID to RID through manifest records; never infer task from finetune_spl flags alone."
+}

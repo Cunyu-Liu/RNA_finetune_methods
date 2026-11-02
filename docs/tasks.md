@@ -2198,7 +2198,7 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 
 - [x] **台账边界**：v124新增0，仍1565 accepted、0 rejected；PPT与v103源包保持v123。
 - [x] **安全补位**：34个need≤7GiB未完成格生成独立注册表，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`；新父63074与旧per-base父共享state-dir/model locks，不重启旧父。
-- [x] **实际在训**：新子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0、best-val协议；旧per-base与LR父未中断。
+- [x] **实际在训**：新子63193为RNA-FM SpliceAI full-random/seed17/lr1e-5，device0、best-val协议；旧per-base与LR父未中断。
 - [x] **资源记录**：核查时used/free=16061/16051MiB，下一格16GiB及650M full 28GiB均不强行启动；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
 - [x] **同步**：v124调度记录三地一致，`831bd60`已推送；等待新格完整proof后再更新台账和图，不把在训当完成。
 
@@ -2208,4 +2208,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **依赖审查**：20261028包仍含当前PPT机制图、正式图CSV与分类组合图机制坐标，不整体归档；保留11个现役图件/数据文件。
 - [x] **可逆归档**：30个历史图件先复制验哈希再移出current，移动前manifest保留；moved manifest SHA256=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`。
 - [x] **现役清单**：20261028包81文件重新登记，manifest SHA256=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`；v14=374、分类组合=53逐哈希通过，PPT哈希不变。
-- [ ] **后续**：上传归档副本和清单、同步五文档并提交；远端历史权威包不删改。
+- [x] **归档交付**：两处teams归档副本与清单验哈希通过，五文档三地一致，提交`24df2ce`；远端历史权威包不删改。GitHub网络超时，推送待重试。
+
+## N123. 2026-11-02 v130 在训 PID 映射纠偏
+
+- [x] **台账**：v130新增0，仍1565 accepted、0 rejected；展示版保持v123。
+- [x] **任务纠偏**：PID63193/58794/54448经manifest确认均为SpliceAI，不是此前推断的degradation；五文档旧描述已更正，无同RID重复训练。
+- [x] **真实进度**：mega seed43与ERNIE seed17已有epoch0，ERNIE seed101已有2轮、stale=1/3，RNA-FM seed17 pre-plateau；均不记完成。
+- [x] **OOM边界**：历史degradation PID49138 OOM失败，与当前SpliceAI PID54448不同RID；纠偏证据SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代v128错误映射。
+- [ ] **后续**：同步纠偏记录并提交，网络恢复后连同`24df2ce`推送；后续一律按PID/manifest识别任务。

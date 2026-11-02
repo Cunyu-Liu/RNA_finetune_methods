@@ -602,7 +602,7 @@
 
 - [x] BN1 台账：v124新增0，1565 accepted、0 rejected；无新proof，展示版保持v123。
 - [x] BN2 防重：补位父63074与旧per-base父3431052共享state-dir/model locks；34格注册表SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`，旧父不重启。
-- [x] BN3 在训：子63193为RNA-FM degradation full-random/seed17/lr1e-5，device0；LR父45383与旧训练均未中断。
+- [x] BN3 在训：子63193为RNA-FM SpliceAI full-random/seed17/lr1e-5，device0；LR父45383与旧训练均未中断。
 - [x] BN4 资源：used/free=16061/16051MiB，不强行启动16/28GiB格；证据SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。
 - [x] BN5 同步：v124记录已三地同步，`831bd60`已推送；等待真实完成格和独立proof。
 
@@ -612,5 +612,13 @@
 - [x] BO2 引用：20261028包的shuffle诊断、正式图CSV和机制坐标仍现役，不整体移动；30个无现役引用历史图件才归档。
 - [x] BO3 哈希：归档30文件与moved manifest=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`一致；移动前manifest保留。
 - [x] BO4 回归：现役81文件manifest=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`；v14=374、组合图=53逐哈希通过，PPT SHA与ZIP CRC不变。
-- [ ] BO5 后续：上传归档副本和清单，三地同步文档并提交；不删远端历史证据。
+- [x] BO5 交付：归档副本、清单和五文档三地一致，`24df2ce`已提交；不删远端历史证据，GitHub推送待网络恢复。
+
+## BP 组：v130 在训 PID 映射纠偏验收
+
+- [x] BP1 台账：v130新增0，1565 accepted、0 rejected；PPT保持v123。
+- [x] BP2 纠偏：PID63193/58794/54448按manifest确认均为SpliceAI，旧degradation推断已从五文档更正；无重复训练。
+- [x] BP3 进度：mega与ERNIE seed17有epoch0，ERNIE seed101两轮stale=1/3，RNA-FM pre-plateau；均不记完成。
+- [x] BP4 OOM：历史degradation PID49138与当前SpliceAI PID54448不同RID；证据SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`。
+- [ ] BP5 后续：三地同步纠偏并提交，待真实proof与GitHub网络恢复。
 

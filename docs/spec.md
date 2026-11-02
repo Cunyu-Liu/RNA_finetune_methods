@@ -1321,7 +1321,7 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 
 1. v124 从v123逐字段保留，**1565 accepted、0 rejected、新增0**；没有新的独立proof，故PPT与v103源包保持v123，不把在训过程写成科学结论。
 2. 未完成任务审计显示per-base有34个need≤7GiB的未完成小格。为利用空闲显存且不重启旧父3431052，新增补位父63074，使用**同一per-base state-dir**共享模型锁；注册表仅含34个canonical未完成格，workers=2，SHA256=`2031be076eae1908ea8e591b7c37e3d9d0f3b70f08f9953e8ec542d869788f35`。
-3. 已确认新子63193运行RNA-FM degradation full-random/seed17/lr1e-5，`--device 0`、best-val收敛协议；旧per-base父3431052与LR父45383未中断。核查时GPU total/used/free=32607/16061/16051MiB，空闲约15.67GiB，不足以安全启动下一格16GiB或650M full的28GiB，不强行补位。
+3. 已确认新子63193运行RNA-FM SpliceAI full-random/seed17/lr1e-5，`--device 0`、best-val收敛协议；旧per-base父3431052与LR父45383未中断。核查时GPU total/used/free=32607/16061/16051MiB，空闲约15.67GiB，不足以安全启动下一格16GiB或650M full的28GiB，不强行补位。
 4. 在训证据=`status/queue_actions/perbase_small_fill_20261102.json`，SHA256=`ef12ad58578a7067934422aaf11b2854fcf4e2e2deb66a8314d83c7091aa2cb7`。该记录不是完成证明；后续仍需result、plateau、checkpoint和独立proof验收。
 
 ### 10.122 v126–v127 staging 与历史图件归档（2026-11-02）
@@ -1330,3 +1330,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. `figure_source_data_20261028` 不能整体归档：当前PPT的ncRNA shuffle诊断、正式图脚本的CSV和分类组合图机制坐标仍引用它。仅将30个不再进入当前PPT的历史图件归档至 `交接文档/archive_20261102/绘图数据/figure_source_data_20261028_legacy_figures/`，现役11个图件/数据文件保留。
 3. 归档采用先复制验哈希再移出current；`moved_files.json` SHA256=`b762d3af8cd038dece84a9d01f572a0ba403961f58fa7c0193db6359bb24280e`，移动前manifest完整保留。现役包重新登记81个文件，revision=`20261102_active_inputs_split_from_20261030_v13`，manifest SHA256=`45fa55e9057eff66d19c2104991212114e10cf9b60ecc067e7ceaf4657177bc9`。
 4. 复核通过：归档30文件、现役81文件、v14源包374文件、分类组合图53文件逐哈希一致；当前PPT SHA256仍为`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，ZIP CRC正常。远端历史权威包不删改，归档副本另行上传。
+
+### 10.123 v130 在训任务 PID 映射纠偏（2026-11-02）
+
+1. v130新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
+2. `finetune_spl`命令行不显示task，不能按model/strategy/seed/split相似度推断RID。PID/manifest反查确认：63193=`ft_rnafm_spliceai_full_s17_random_b20fix_lr1e-05_bestval_v1`，58794=`ft_ernierna_spliceai_full_s17_family_b20fix_lr1e-05_bestval_v1`，54448=`ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1`；此前误写为degradation的文字已更正为SpliceAI，未发生同RID重复训练。
+3. mega SpliceAI seed43已有epoch0 val_loss=0.001160；ERNIE seed17已有epoch0 val_loss=0.003248；ERNIE seed101已有两轮val_loss=0.003269/0.006670、stale=1/3；RNA-FM seed17仍pre-plateau。全部仅在训，不写成完成或科学结论。
+4. 历史degradation LR格PID49138曾OOM失败，与当前SpliceAI PID54448不是同一RID，不记完成，后续只在安全显存窗口重试。纠偏与OOM证据=`status/inflight_progress_20261101_v130.json`，SHA256=`7f29abe189eb26cbfceaff7b7c6119258cdf1ffff77b7ba9926aa1f538163c94`，替代此前错误的v128任务映射。
