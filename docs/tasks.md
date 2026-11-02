@@ -2146,3 +2146,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR边界**：RNA-FM SSP random 已有三档、缺1e-5，LR 177/320、完整组仍42/80；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
 - [x] **交付**：源包 revision=`20261102_refresh_v99_v115ledger_rank95_ssi_family_r16_n2`，348 文件，manifest=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`；PPT=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`。嵌图、33页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并补推待推提交，继续最后1个rank格和其他真实科学缺口。
+
+## N115. 2026-11-02 v116 rank 全闭合与 LR 第43组
+
+- [x] **五格验收**：v116 为 1558 accepted、0 rejected；5格均 proof=complete、CUDA 收敛，证据 SHA256=`09d67bef2191d82cd3bbc3173096caa65009d1aca8c26eaba42c52087e228fe9`。
+- [x] **rank全闭合**：SSI family rank16 三种子 mean=0.597398120；rank4/16=96/96、32/32组全部闭合。证据 SHA256=`5cef4b36c317b36816b6aec5de5714cfd4ad9487c50b41b1a3cad87d88d542a7`。
+- [x] **LR第43组**：RNA-FM SSP random 默认3e-4最优（best_val=0.571500），test 不参与；LR 181/320、43/80组，分布19/13/9/2。证据 SHA256=`fba8d10a5851de238883ad3af2a47513a7fa8825dc8099f3ea8a58dcc5fe2e4a`。
+- [x] **其他边界**：ERNIE degradation family 仍缺3e-5；per-base 154/270、complementary 306/324、equiv 420/420、650M frozen 25/25。
+- [x] **交付**：源包 revision=`20261102_refresh_v100_v116ledger_rank96_lr43`，353 文件，manifest=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`；PPT=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`。嵌图、33页 lint/layout/CRC 与第20/21页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 LR、主矩阵和后续阶段门，rank闭合不等于全实验完成。

@@ -177,13 +177,13 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 42/80 组：3e-5 十九组、1e-4 十三组、1e-5 九组、3e-4 一组。RNA-FM modification family 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 43/80 组：3e-5 十九组、1e-4 十三组、1e-5 九组、3e-4 两组。RNA-FM modification family 与 SSP random 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
-             "rank4/16 已 95/96，31/32 组三种子闭合。degradation 双 split、SpliceAI family rank16、SSI random/family rank4 与 random rank16 新增闭合；ncRNA rank8 复核不变。")
+             "rank4/16 已 96/96，32/32 组三种子闭合。degradation 双 split、SpliceAI family rank16、SSI random/family rank4 与 random rank16 新增闭合；ncRNA rank8 复核不变。")
     set_text(slide, "TextBox 5",
-             "读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、SSI random rank16=0.635、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；剩余 1 格补齐后再冻结结论。")
+             "读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、SSI random/family rank16=0.635/0.597、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；96 格已完成。")
 
     slide = prs.slides[19]
     set_text(slide, "TextBox 2", "结论 ④  数据量等价：small-full(n) vs large-LoRA(m)")

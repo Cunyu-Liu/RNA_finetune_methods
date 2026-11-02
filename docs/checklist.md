@@ -553,3 +553,11 @@
 - [x] BG4 交付：348 文件 manifest=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`；PPT=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`；嵌图、33页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] BG5 后续：三地同步并补推，继续最后1个rank格和其他真实科学缺口。
 
+## BH 组：v116 rank 全闭合与 LR 第43组验收
+
+- [x] BH1 数据：1558 accepted、0 rejected；5格 proof=complete、CUDA 收敛。
+- [x] BH2 rank：96/96、32/32组三种子全部闭合；SSI family rank16 均值0.597398120。
+- [x] BH3 LR：RNA-FM SSP random 默认3e-4最优，test 不参与；181/320、43/80组，分布19/13/9/2。
+- [x] BH4 交付：353 文件 manifest=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`；PPT=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`；嵌图、lint/layout/CRC 与第20/21页渲染通过。
+- [ ] BH5 后续：三地同步并推送，继续真实科学缺口，不宣称全实验完成。
+

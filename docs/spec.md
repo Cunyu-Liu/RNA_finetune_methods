@@ -1274,3 +1274,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. SSI family rank16 的 seed17/29 PCC=0.597834476/0.598052527，与已有结果组成2/3，仍缺seed43；rank4/16升至 **95/96**，三种子组仍31/32，仅剩1格。证据=`status/rank_progress_20261101_v115.json`，SHA256=`9c06a79a9d5eec61a8e20b80231660492820ca8e9ebbd3813dfa9579bc1cf4f2`。
 3. RNA-FM SSP full-random 新增1e-4/3e-5两档，best_val=0.595991/0.601495，当前default/1e-4/3e-5三档，仍缺1e-5；LR=177/320、完整组仍42/80。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；其他结论不变。
 4. 源包 revision=`20261102_refresh_v99_v115ledger_rank95_ssi_family_r16_n2`，348 个登记文件，manifest SHA256=`2a48336dd0d650e82a11c0548c59affe4b0cec17851e08c7109b2f11ac3663b0`。PPT SHA256=`eb957ab8c154c555d2b71be1135196038ee18ad3f0e5ff693cf565c1cd98d0e5`，PDF SHA256=`b4d04ecf675779911e10ab2758a53c7a2aede081f6a6dbc2fb1101082c4243ba`；33页 lint/layout/CRC、11张关键嵌图与 rank 页实际渲染通过。
+
+### 10.115 v116 rank 96/96 与 RNA-FM SSP random LR 第43组（2026-11-02）
+
+1. v116 为 1553+5=**1558 accepted、0 rejected**，v115 行逐字段保留；5 个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v116_new_proof.json`，SHA256=`09d67bef2191d82cd3bbc3173096caa65009d1aca8c26eaba42c52087e228fe9`。
+2. SSI family rank16 三种子 PCC=0.597834476/0.598052527/0.596307358，mean=0.597398120，正式闭合。**rank4/16 达96/96、32/32组三种子全部闭合**。证据=`status/rank_progress_20261101_v116.json`，SHA256=`5cef4b36c317b36816b6aec5de5714cfd4ad9487c50b41b1a3cad87d88d542a7`。
+3. RNA-FM SSP full-random 四档 best_val 为3e-4=0.571500、1e-4=0.595991、3e-5=0.601495、1e-5=0.612157，validation 选默认 **3e-4**，test pair-F1=0.1679仅报告。LR 升至 **181/320、43/80组完整**，选档分布为3e-5十九组、1e-4十三组、1e-5九组、3e-4两组。证据=`status/lr_validation_interim_20261101_v116.json`，SHA256=`fba8d10a5851de238883ad3af2a47513a7fa8825dc8099f3ea8a58dcc5fe2e4a`。
+4. ERNIE degradation full-family 已有 default/1e-4/1e-5 三档，仍缺3e-5，不新增完整组。per-base=154/270、complementary=306/324、equiv=420/420、650M frozen=25/25；其他结论不变。
+5. 源包 revision=`20261102_refresh_v100_v116ledger_rank96_lr43`，353 个登记文件，manifest SHA256=`9d0c18b2b209a411ebb5d93c48125218debd4b7d75cba24254a0e87eae6ec341`。PPT SHA256=`f23c69ad533b139409c93c29e9eea52c0687937d3abca68a8635166a8fd27d3e`，PDF SHA256=`b90f166d5f71795917908dcc2aad104bd278bbfd2ffabf8b44bcca38dd190c32`；33页 lint/layout/CRC、11张关键嵌图与第20/21页实际渲染通过。
