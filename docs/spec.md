@@ -1211,3 +1211,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. SSI family rank4 三种子 PCC=0.598239051/0.598189570/0.596056711，mean=0.597495111，正式闭合；rank4/16升至 **90/96、30/32组三种子闭合**，仅剩6格。证据=`status/rank_progress_20261101_v108.json`，SHA256=`1572cbaa84d5dd27d49c74a169dfe387911729c477db94c9612023c15abcce24`。
 3. 当前 per-base=153/270、complementary=306/324、LR=171/320（41/80组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档不变。rank 页加入 SSI family rank4 均值，仍不与 rank8 直接排名。
 4. 源包 revision=`20261102_refresh_v92_v108ledger_rank90_ssi_family_r4`，316 个登记文件，manifest SHA256=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`。PPT SHA256=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF SHA256=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`；32页 lint/layout/CRC、十张嵌图与 rank 页实际渲染通过。
+
+### 10.106 v109 mega SpliceAI LoRA-family 首点与 LR staging（2026-11-02）
+
+1. v109 为 1541+2=**1543 accepted、0 rejected**，v108 行逐字段保留；两个新增格均 proof=complete，CUDA、checkpoint 与 plateau=CONVERGED 复核通过。证据=`status/bestval_v109_new_proof.json`，SHA256=`3eb791a767cd56b8fc484f087da5febd0928f232e7c25c4f9d6848e0e17173bf`。
+2. mega SpliceAI LoRA-family/seed17 macro-F1=0.528533981，仅1/3；覆盖热图由0改为1，主矩阵保留 n<3 斜线，SpliceAI 三种子覆盖仍20/30。ERNIE SSP full-family 的1e-4格 pair-F1=0.2975、best_val=0.388270，当前2/4档，LR=172/320、完整组仍41/80。
+3. 当前 per-base=154/270、complementary=306/324、rank4/16=90/96（30/32组）、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和 LR 选档结论不变。
+4. 源包 revision=`20261102_refresh_v93_v109ledger_mega_spliceai_family_n1`，319 个登记文件，manifest SHA256=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`。PPT SHA256=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF SHA256=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`；32页 lint/layout/CRC、十张嵌图与第8/27/28/29页实际渲染通过。

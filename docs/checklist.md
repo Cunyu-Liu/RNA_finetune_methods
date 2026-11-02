@@ -486,3 +486,11 @@
 - [x] AX3 交付：316 文件 manifest=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`；PPT=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`；嵌图、lint/layout/CRC 与 rank 页渲染通过。
 - [ ] AX4 后续：三地同步并推送，继续剩余6格和其他真实科学缺口。
 
+## AY 组：v109 SpliceAI family 首点验收
+
+- [x] AY1 数据：1543 accepted、0 rejected；两格 proof=complete、CUDA 收敛。
+- [x] AY2 主矩阵：mega SpliceAI LoRA-family 仅1/3，覆盖由0改1，三种子单元仍20/30，保留斜线。
+- [x] AY3 边界：ERNIE SSP family 为2/4档，LR 172/320、完整组仍41/80；per-base 154/270、complementary 306/324、rank 90/96。
+- [x] AY4 交付：319 文件 manifest=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`；PPT=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`；嵌图、lint/layout/CRC 与四页渲染通过。
+- [ ] AY5 后续：三地同步并推送，继续真实科学缺口。
+

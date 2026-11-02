@@ -2076,3 +2076,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：per-base 153/270、complementary 306/324、LR 171/320（41组）、equiv 420/420、650M frozen 25/25；其他结论不变。
 - [x] **交付**：源包 revision=`20261102_refresh_v92_v108ledger_rank90_ssi_family_r4`，316 文件，manifest=`e79a4715075160608f825f5d81cd28e4140b05a69edf48af111d9f4847564676`；PPT=`bbd35c8f9b5fc6b4d795a98c226f956b741036ced8c83cee20239d7a4eace0c8`，PDF=`610ebaa27e446e08ed7c407ac43d5f577f6e80d3e953f5ff76b2fd69d7eee6e4`。嵌图、32页 lint/layout/CRC 与 rank 页渲染通过。
 - [ ] **后续**：三地同步并推送，继续 rank 剩余6格和其他真实科学缺口。
+
+## N106. 2026-11-02 v109 SpliceAI family 首点与 LR staging
+
+- [x] **两格验收**：v109 为 1543 accepted、0 rejected；两格均 proof=complete、CUDA 收敛，证据 SHA256=`3eb791a767cd56b8fc484f087da5febd0928f232e7c25c4f9d6848e0e17173bf`。
+- [x] **主矩阵**：mega SpliceAI LoRA-family/seed17=0.528533981，仅1/3；覆盖由0改1，保留斜线，SpliceAI三种子覆盖仍20/30。
+- [x] **LR与其他矩阵**：ERNIE SSP family 为2/4档，LR 172/320、完整组仍41/80；per-base 154/270、complementary 306/324、rank 90/96、equiv 420/420、650M frozen 25/25。
+- [x] **交付**：源包 revision=`20261102_refresh_v93_v109ledger_mega_spliceai_family_n1`，319 文件，manifest=`25dcc3bea404cb05b8daaf51f7edcbb4301c387a6d5077062c98ee953ef8ea88`；PPT=`bed1e634abd53e58c0bcc415740c4d03a3e2da762701b4af3962983de68f716e`，PDF=`be6a6481d5d996e06a5801a9be0903ef96b6196a5753608bbc4e4dadfe787bd2`。嵌图、32页 lint/layout/CRC 与四个更新页渲染通过。
+- [ ] **后续**：三地同步并推送，继续 SpliceAI 其余种子、rank和 LR 真实缺口。
