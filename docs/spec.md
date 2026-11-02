@@ -1303,3 +1303,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 该组四档 best_val 为3e-4=1.305029、1e-4=0.439936、3e-5=0.490757、1e-5=0.559111，validation 选 **1e-4**，test pair-F1=0.3052仅报告。LR 升至 **186/320、45/80组完整**，选档分布为3e-5二十组、1e-4十四组、1e-5九组、3e-4两组。证据=`status/lr_validation_interim_20261101_v119.json`，SHA256=`3d4a17d2fa407c4f28e11e16b41bbeb3fa27469256a79172b388121eb70be0fc`。
 3. 当前 per-base=154/270、complementary=306/324、rank4/16=96/96、equiv=420/420、650M frozen=25/25；①a-4、④/⑤和默认档反例结论不变。
 4. 源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 个登记文件，manifest SHA256=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`。PPT SHA256=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF SHA256=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`；33页 lint/layout/CRC、11张关键嵌图与 LR 页实际渲染通过。
+
+### 10.119 v120–v121 长训与资源复核（2026-11-02）
+
+1. v120/v121 均无新增完成格，仍为 **1564 accepted、0 rejected**。当前 per-base=154/270、complementary=306/324、LR=186/320（45/80组）、rank4/16=96/96、equiv=420/420、650M frozen=25/25；PPT 和 v102 源包保持 v119。
+2. mega SpliceAI LoRA-family/seed29 的 plateau 为 RUNNING，best_epoch=0、stale_epochs=2、patience=3，已有3个epoch记录，属于正常长训而非卡死；seed43 和 degradation random default 仍为 pre-plateau，均不能记完成。
+3. 资源核查时有2个实际项目训练进程，空闲23.36GiB，低于650M full的28GiB预算，故未强行启动大格。证据=`status/inflight_progress_20261101_v121.json`，SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。

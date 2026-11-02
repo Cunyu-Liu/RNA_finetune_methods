@@ -2178,3 +2178,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **其他边界**：per-base 154/270、complementary 306/324、rank 96/96、equiv 420/420、650M frozen 25/25；其他结论不变。
 - [x] **交付**：源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 文件，manifest=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`；PPT=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`。嵌图、33页 lint/layout/CRC 与 LR 页渲染通过。
 - [ ] **后续**：三地同步并补推60e9eb6及本批提交，继续主矩阵和其余 LR 真实缺口。
+
+## N119. 2026-11-02 v120–v121 长训与资源复核
+
+- [x] **台账**：v120/v121 新增0，仍1564 accepted、0 rejected；PPT 与 v102 源包保持 v119。
+- [x] **在训证据**：SpliceAI seed29 的 plateau 正常推进、stale=2/3，不是卡死；seed43与degradation default为pre-plateau，不记完成。
+- [x] **资源边界**：核查时2个项目训练进程、空闲23.36GiB，低于650M full预算28GiB，未强行启动。证据 SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
+- [ ] **后续**：同步并提交记录，等待真实完成格和自然大模型窗口。

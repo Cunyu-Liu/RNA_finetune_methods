@@ -583,3 +583,10 @@
 - [x] BK3 交付：364 文件 manifest=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`；PPT=`fd8908ae4071913292b4d177c22114d00cf87f83499eb92de599ad9377788eb6`，PDF=`8ed95f15f868db550dcd9322f3313b89d00ce481a88ddde981fb49da851e85d0`；嵌图、lint/layout/CRC 与 LR 页渲染通过。
 - [ ] BK4 后续：三地同步并补推，继续真实科学缺口，80组全闭合前不冻结 tuned 正式矩阵。
 
+## BL 组：v120–v121 长训与资源复核
+
+- [x] BL1 台账：两版新增0，仍1564 accepted、0 rejected；展示版保持v119。
+- [x] BL2 在训：SpliceAI seed29 的 plateau 正常推进，其他目标为pre-plateau，不把长训写成卡死或收敛。
+- [x] BL3 资源：空闲23.36GiB低于650M full预算28GiB，未强行启动；证据 SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
+- [ ] BL4 后续：同步并提交记录，等待完整证明和自然窗口。
+

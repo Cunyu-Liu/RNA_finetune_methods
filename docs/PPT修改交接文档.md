@@ -758,3 +758,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页 LR 更新为 **45/80组**，分布3e-5二十组、1e-4十四组、1e-5九组、3e-4两组。ERNIE SSP full-random 四档闭合，validation 选1e-4（best_val=0.439936），test pair-F1=0.3052仅报告。
 3. 当前 per-base 154/270、complementary 306/324、rank 96/96、equiv 420/420、650M frozen 25/25；①a-4、④/⑤和默认档反例结论不变。
 4. 当前源包 revision=`20261102_refresh_v102_v119ledger_lr45_ernie_ssp_random`，364 个登记文件，manifest SHA256=`f52c318385550b1bd0227a1ee23f1eaa243553c05096af9c16fbd0eb9a6bfde0`。11张关键嵌图 SHA、33页 lint/layout/CRC、Microsoft YaHei、正文1.5倍行距与 LR 页实际渲染通过。
+
+## 76. 2026-11-02 v120–v121：长训与资源复核
+
+1. v120/v121 均无新增完成格，仍为 **1564 accepted、0 rejected**，PPT 和 v102 源包保持 v119。
+2. SpliceAI seed29 的 plateau 为 RUNNING，best_epoch=0、stale=2/3，已有3个epoch记录；seed43和degradation random default 为pre-plateau，均不修改页面。
+3. 资源核查时空闲23.36GiB，低于650M full的28GiB预算，未强行启动。证据=`status/inflight_progress_20261101_v121.json`，SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
