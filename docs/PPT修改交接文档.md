@@ -764,3 +764,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v120/v121 均无新增完成格，仍为 **1564 accepted、0 rejected**，PPT 和 v102 源包保持 v119。
 2. SpliceAI seed29 的 plateau 为 RUNNING，best_epoch=0、stale=2/3，已有3个epoch记录；seed43和degradation random default 为pre-plateau，均不修改页面。
 3. 资源核查时空闲23.36GiB，低于650M full的28GiB预算，未强行启动。证据=`status/inflight_progress_20261101_v121.json`，SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
+
+## 77. 2026-11-02 当前 v123：mega SpliceAI LoRA-family 第二种子
+
+1. 当前 PPT 为 **33页**，SHA256=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`；PDF SHA256=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。输入 **1565 accepted、0 rejected**，新增seed29 proof=complete，macro-F1=0.5265341727629625、best_epoch=0、4 epochs；独立证明 SHA256=`1bac2265fa7d309a5b284b51611004cc299d6c4ac3f2b38201ac4ccbe89ff534`。
+2. mega SpliceAI LoRA-family 为 **2/3**（seed17=0.528533981、seed29=0.526534173），仍缺seed43；第9页保留n<3斜线，第28页该格由1改为2，SpliceAI三种子覆盖仍20/30，不提前写闭合。
+3. 当前 per-base=154/270、complementary=306/324、LR=186/320（45/80组，20/14/9/2）、rank=96/96、equiv=420/420、650M frozen=25/25；ncRNA性能总览/机制双页和其他用户手调内容保持。
+4. 当前源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，374个登记文件，manifest SHA256=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`。33页lint/layout/CRC、11张关键嵌图SHA和第9/28/29/30页实际渲染通过；成本图源与说明一致。

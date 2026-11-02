@@ -2185,3 +2185,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **在训证据**：SpliceAI seed29 的 plateau 正常推进、stale=2/3，不是卡死；seed43与degradation default为pre-plateau，不记完成。
 - [x] **资源边界**：核查时2个项目训练进程、空闲23.36GiB，低于650M full预算28GiB，未强行启动。证据 SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
 - [ ] **后续**：同步并提交记录，等待真实完成格和自然大模型窗口。
+
+## N120. 2026-11-02 v123 mega SpliceAI LoRA-family 第二种子
+
+- [x] **单格验收**：1565 accepted、0 rejected；seed29 macro-F1=0.5265341727629625、best_epoch=0、4 epochs，proof=complete、CUDA收敛；证明 SHA256=`1bac2265fa7d309a5b284b51611004cc299d6c4ac3f2b38201ac4ccbe89ff534`。
+- [x] **科学边界**：该组seed17/29=0.528533981/0.526534173，仅2/3，仍缺seed43；SpliceAI覆盖20/30，不写成闭合。LR 186/320（45/80组）、rank96/96、equiv420/420，其余结论不变。
+- [x] **交付**：源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，374文件，manifest=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；PPT=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
+- [x] **渲染验收**：33页lint/layout/CRC与11张嵌图SHA通过；第9/28/29/30页放大复核，n=2斜线、覆盖计数、成本图源及说明一致。
+- [ ] **后续**：完成三地同步并补推60e9eb6、ddf6cfa、1eca490与本批提交；继续等待seed43和其他真实科学缺口。

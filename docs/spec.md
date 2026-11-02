@@ -1309,3 +1309,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v120/v121 均无新增完成格，仍为 **1564 accepted、0 rejected**。当前 per-base=154/270、complementary=306/324、LR=186/320（45/80组）、rank4/16=96/96、equiv=420/420、650M frozen=25/25；PPT 和 v102 源包保持 v119。
 2. mega SpliceAI LoRA-family/seed29 的 plateau 为 RUNNING，best_epoch=0、stale_epochs=2、patience=3，已有3个epoch记录，属于正常长训而非卡死；seed43 和 degradation random default 仍为 pre-plateau，均不能记完成。
 3. 资源核查时有2个实际项目训练进程，空闲23.36GiB，低于650M full的28GiB预算，故未强行启动大格。证据=`status/inflight_progress_20261101_v121.json`，SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
+
+### 10.120 v123 mega SpliceAI LoRA-family 第二种子（2026-11-02）
+
+1. v123 为 1564+1=**1565 accepted、0 rejected**，v122 行逐字段保留。新增格 `ft_rinalmomega_spliceai_lora_s29_family_b20fix_bestval_v1` 的 macro-F1=0.5265341727629625、best_epoch=0、4 epochs，独立逐格 proof=complete，CUDA/checkpoint 与 plateau=CONVERGED 验收通过。证据=`status/bestval_v123_new_proof.json`，SHA256=`1bac2265fa7d309a5b284b51611004cc299d6c4ac3f2b38201ac4ccbe89ff534`。
+2. mega SpliceAI LoRA-family 已有 seed17=0.528533981、seed29=0.526534173，当前 **2/3**，仍缺seed43；SpliceAI 三种子覆盖保持 **20/30**，不写成闭合。per-base=154/270、complementary=306/324、LR=186/320（45/80组，选档20/14/9/2）、rank4/16=96/96、equiv canonical=420/420、650M frozen=25/25；其他科学结论不变。
+3. 源包 revision=`20261102_refresh_v103_v123ledger_mega_spliceai_family_n2`，**374个登记文件**，manifest SHA256=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；本地 data/figures/scripts 逐哈希一致。PPT保持33页与ncRNA双页结构，SHA256=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF SHA256=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
+4. lint/layout、ZIP CRC、11张关键嵌图SHA通过；第9/28/29/30页实际渲染复核通过：第9页n=2斜线保留，第28页覆盖数与六柱一致，成本图来源和说明匹配，未闭合项不补零。

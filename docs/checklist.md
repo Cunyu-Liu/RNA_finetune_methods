@@ -590,3 +590,11 @@
 - [x] BL3 资源：空闲23.36GiB低于650M full预算28GiB，未强行启动；证据 SHA256=`f475ef816c2c0b2f6a34a5545ffe2bfb184ac661cbfbb7217d87d47b7883ea21`。
 - [ ] BL4 后续：同步并提交记录，等待完整证明和自然窗口。
 
+## BM 组：v123 mega SpliceAI LoRA-family 第二种子验收
+
+- [x] BM1 数据：1565 accepted、0 rejected；seed29 macro-F1=0.5265341727629625，proof=complete、CUDA收敛，独立证明SHA256=`1bac2265fa7d309a5b284b51611004cc299d6c4ac3f2b38201ac4ccbe89ff534`。
+- [x] BM2 边界：seed17/29仅2/3，仍缺seed43；SpliceAI覆盖20/30，不提前写成闭合或更新三种子均值。
+- [x] BM3 交付：374文件 manifest=`8e50aa4789314dac72f50e6d3b2da99db37f50d02e69f63f030d98598f3116a6`；PPT=`d942e4ff8442f0afd748dd9ceaa74894b685246206dc67c2c550bcbb1ddbaaa5`，PDF=`b2f4351c7b499ce21c294ab161f49547138601ffad02e1ef462cb509e4ec2413`。
+- [x] BM4 展示：33页lint/layout/CRC与11张嵌图SHA通过；第9/28/29/30页实际渲染通过，n=2斜线和覆盖计数一致，未闭合项不补零。
+- [ ] BM5 后续：三地逐哈希同步并推送；继续其他真实科学缺口。
+
