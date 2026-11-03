@@ -2252,4 +2252,13 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **台账**：v140新增0，仍1565 accepted、0 rejected；展示版保持v123。
 - [x] **真实进度**：mega epoch1 loss=0.001070；RNA-FM日志有epoch0/1，但plateau尚未更新；ERNIE继续训练。
 - [x] **证据边界**：`inflight_progress_20261101_v140.json` SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，日志有epoch不等于收敛。
-- [ ] **后续**：同步并提交，等待plateau与完整proof。
+- [x] **交付**：v140证据三地同步，`7528361`已推送；等待plateau与完整proof。
+
+## N129. 2026-11-03 v144–v145 集中闭合 68 格
+
+- [x] **独立验收**：1633 accepted、0 rejected；68格proof=complete，证明SHA256=`d9c6596e6db3bedf4673ea58c768f57f49eba3c511a48abe93ac545c56b86043`与`f121890bef77c00fb832e8d62e1c235c7ca56a782ce1b79acfe9df50bd55b50d`。
+- [x] **矩阵**：per-base=215/270、complementary=306/324、LR=194/320；SpliceAI/degradation/SSI覆盖25/24/25，148M八任务全闭合，mega LoRA-family均值0.505213649。
+- [x] **LR选档**：47/80组，分布20/14/11/2；ERNIE SpliceAI双split均选1e-5，test不参与。证据SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
+- [x] **展示交付**：429文件manifest=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`；PPT=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`，PDF=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。33页lint/layout/CRC与更新页渲染通过。
+- [x] **渲染修复**：LibreOffice对原始PPT也缺中文，改用原生PowerPoint导出；第28页同步改为148M八任务全闭合。
+- [ ] **后续**：完成三地同步与GitHub提交，继续其余真实缺口。

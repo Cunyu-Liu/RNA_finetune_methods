@@ -656,5 +656,14 @@
 - [x] BU1 台账：v140新增0，1565 accepted、0 rejected；PPT保持v123。
 - [x] BU2 进度：mega有epoch1；RNA-FM日志有两轮但plateau未更新，ERNIE继续训练。
 - [x] BU3 证据：SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，日志epoch不代替收敛proof。
-- [ ] BU4 后续：同步并提交，等待plateau与完整proof。
+- [x] BU4 交付：v140三地同步，`7528361`已推送；等待plateau与完整proof。
+
+## BV 组：v144–v145 集中闭合与展示验收
+
+- [x] BV1 数据：1633 accepted、0 rejected；68格独立proof、CUDA与收敛通过。
+- [x] BV2 矩阵：per-base 215/270、LR 194/320；SpliceAI/degradation/SSI=25/24/25，148M八任务全闭合，未闭合格不补零。
+- [x] BV3 LR：47/80组，分布20/14/11/2；SpliceAI双split选1e-5，test不参与，证据SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
+- [x] BV4 交付：429文件manifest=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`；PPT=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`，PDF=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。
+- [x] BV5 渲染：原生PowerPoint中文PDF正常，33页lint/layout/CRC、嵌图与第9/20/28/29/30页通过；第28页旧文案已纠正。
+- [ ] BV6 后续：三地逐哈希同步并推送，继续真实科学缺口。
 

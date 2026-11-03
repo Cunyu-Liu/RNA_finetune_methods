@@ -1368,3 +1368,12 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v140新增0，仍为 **1565 accepted、0 rejected**；PPT与v103源包保持v123。
 2. mega SpliceAI seed43日志已有epoch1 val_loss=0.001070；RNA-FM SpliceAI seed17日志已有epoch0/1 val_loss=0.001635/0.001143，但plateau文件尚未更新，不能记收敛。ERNIE seed17与seed101继续按既有plateau训练。
 3. 证据=`status/inflight_progress_20261101_v140.json`，SHA256=`a84327420499adebc68aa5812855cee9a9402a607348ef2d036dc1b397b53f89`，保存PID、plateau、日志哈希与result存在性；日志进展不代替完成proof。
+
+### 10.129 v144–v145 集中闭合 68 格与八任务扩展（2026-11-03）
+
+1. v144新增67格、v145新增1格，合计 **1565+68=1633 accepted、0 rejected**；所有新增格独立proof=complete，CUDA/checkpoint与plateau=CONVERGED通过。证明SHA256分别为`d9c6596e6db3bedf4673ea58c768f57f49eba3c511a48abe93ac545c56b86043`、`f121890bef77c00fb832e8d62e1c235c7ca56a782ce1b79acfe9df50bd55b50d`。
+2. 注册表精确对账：per-base **215/270**（+60）、complementary306/324、LR **194/320**（+8）；rank4/16=96/96、equiv canonical=420/420、650M frozen=25/25不变。对账证据SHA256=`9167c21e3fd283ba64dec3cd1b21cb8ae18f93b58e4bb2da32abf52823149730`。
+3. 正式三种子覆盖：SpliceAI **20→25**、degradation **17→24**、SSI **18→25**。mega SpliceAI LoRA-family三种子闭合，seed43 macro-F1=0.460572793，均值=0.505213649；148M八任务六臂均三种子闭合，其他模型未闭合格不补零。
+4. LR为 **194/320、47/80组**，选档分布3e-5二十组、1e-4十四组、1e-5十一组、3e-4两组。ERNIE SpliceAI family/random新增完整组均选1e-5（best_val=0.001802/0.001841），test macro-F1仅报告不参与选档。证据=`status/lr_validation_interim_20261101_v145.json`，SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
+5. 源包revision=`20261103_refresh_v104_v145ledger_spliceai25_degradation24_ssi25_lr47`，**429个登记文件**，manifest SHA256=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`。PPT为33页，SHA256=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`；PDF SHA256=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。
+6. lint/layout/ZIP CRC与关键嵌图SHA通过，第9/20/28/29/30页实际渲染通过；第28页文案已纠正为148M八任务全闭合。LibreOffice对原始PPT也缺中文，故改用原生PowerPoint导出33页PDF，中文与布局验收正常。
