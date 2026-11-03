@@ -1424,3 +1424,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. per-base仅余1个need≤7GiB小格，已以共享state-dir/model locks启动补位父845090和子845112：ERNIE degradation frozen-family/seed17/default LR，device0、best-val协议。注册表SHA256=`ef199af5c8cb368aa60acede0e7985d0242f86573138d183647cfe7d0f0a07a8`，启动证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
 3. 后续预算审计：per-base未完成need分布为3GiB×1（即上述在训格）、20GiB×15、28GiB×36，无12GiB候选；当前free=15.177GiB，不能安全追加16/20/28GiB格，不强行制造OOM。证据=`status/queue_actions/perbase_budget_20261104.json`，SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
 4. 当前科学结果仍为1654 accepted、0 rejected，PPT与v107源包保持v150；大格在自然显存窗口和统一core阶段补入。
+
+### 10.137 v151 650M SpliceAI LoRA-family 首点与 degradation 25/30（2026-11-03）
+
+1. v151新增3格，**1654+3=1657 accepted、0 rejected**；全部proof=complete、CUDA收敛。证明=`status/bestval_v151_new_proof.json`，SHA256=`ed0ae03ca1b9f281efa49dbee520f92eae33f856866e6929d031176e09df1acc`。
+2. 650M SpliceAI LoRA-family/seed17 macro-F1=0.590600117，仅n=1；ERNIE degradation frozen-family/seed17 PCC=0.367971215，degradation覆盖24→25。per-base=220/270、complementary=306/324、LR=213/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v151.json`，SHA256=`2ddd7f60aa7a974737bd9b1167f5932d33ba9e28eb53b6f352c125917c95be8f`。
+3. 源包revision=`20261103_refresh_v108_v151ledger_650m_spliceai_family_n1_degradation25`，**445个登记文件**，manifest SHA256=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`。PPT SHA256=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`，PDF SHA256=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。

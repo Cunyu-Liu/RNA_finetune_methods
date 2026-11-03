@@ -879,3 +879,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 新增ERNIE degradation frozen-family/seed17（父845090/子845112），共享per-base state-dir/model locks，device0、best-val协议；启动证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
 3. 剩余per-base need=3/20/28GiB，无12GiB候选；当前free=15.177GiB，不能安全追加16GiB以上任务。预算证据=`status/queue_actions/perbase_budget_20261104.json`，SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
 4. 科学结果仍为1654 accepted、0 rejected，33页PPT/PDF与v107源包保持v150；大格在自然窗口补入。
+
+## 94. 2026-11-03 当前 v151：650M SpliceAI LoRA-family 首点
+
+1. 当前PPT为 **33页**，SHA256=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`；PDF SHA256=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`。输入 **1657 accepted、0 rejected**，3格proof=complete。
+2. 650M SpliceAI LoRA-family/seed17=0.590600117，仅n=1；第9页斜线保留，第28页由0改1。ERNIE degradation frozen-family/seed17使degradation覆盖升至25/30。
+3. per-base=220/270、complementary=306/324、LR=213/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v151.json`，SHA256=`2ddd7f60aa7a974737bd9b1167f5932d33ba9e28eb53b6f352c125917c95be8f`。
+4. 源包revision=`20261103_refresh_v108_v151ledger_650m_spliceai_family_n1_degradation25`，445个登记文件，manifest SHA256=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过。

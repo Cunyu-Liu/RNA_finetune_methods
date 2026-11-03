@@ -720,5 +720,13 @@
 - [x] CC1 安全：旧父3431054停止态、子僵尸，仅终止父调度，未中断训练；PID761383健康。
 - [x] CC2 补位：ERNIE degradation frozen-family/seed17实际在训，父845090/子845112，共享per-base锁；证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
 - [x] CC3 预算：剩余need=3/20/28GiB，free=15.177GiB，无12GiB候选，不强行追加；证据SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
-- [ ] CC4 后续：同步记录，等待自然窗口与真实proof。
+- [x] CC4 交付：显存调整记录三地一致，`06ed429`已推送；等待自然窗口与真实proof。
+
+## CD 组：v151 650M SpliceAI LoRA-family 首点验收
+
+- [x] CD1 数据：1657 accepted、0 rejected；3格proof=complete，证明SHA256=`ed0ae03ca1b9f281efa49dbee520f92eae33f856866e6929d031176e09df1acc`。
+- [x] CD2 边界：650M该格仅n=1；degradation 25/30，per-base 220/270、LR 213/320，52组与选档不变。
+- [x] CD3 交付：445文件manifest=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`；PPT=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`，PDF=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`。
+- [x] CD4 渲染：33页lint/layout/CRC与第9/28/29/30页通过，n=1和覆盖数一致。
+- [ ] CD5 后续：三地同步并推送，继续官方真实科学缺口。
 

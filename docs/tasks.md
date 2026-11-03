@@ -2315,4 +2315,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全清理**：旧LR父3431054停止态、唯一子僵尸，TERM无效后仅KILL父调度，无训练中断；监控PID761383保持。
 - [x] **实际补位**：父845090/子845112启动ERNIE degradation frozen-family/seed17，共享per-base锁，device0；证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
 - [x] **预算边界**：剩余per-base need=3/20/28GiB，无12GiB候选；free=15.177GiB，不强行追加16GiB以上任务。证据SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
-- [ ] **后续**：同步记录，等待自然大格窗口与真实完成结果。
+- [x] **交付**：显存调整记录三地一致，`06ed429`已推送；等待自然大格窗口与真实完成结果。
+
+## N137. 2026-11-03 v151 650M SpliceAI LoRA-family 首点
+
+- [x] **三格验收**：1657 accepted、0 rejected；证明SHA256=`ed0ae03ca1b9f281efa49dbee520f92eae33f856866e6929d031176e09df1acc`。
+- [x] **结果边界**：650M SpliceAI LoRA-family/seed17=0.590600117，仅n=1；degradation覆盖25/30，per-base 220/270、LR 213/320，52组与选档不变。
+- [x] **交付**：445文件manifest=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`；PPT=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`，PDF=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`。33页lint/layout/CRC与四页渲染通过。
+- [ ] **后续**：三地同步并推送，继续官方核心缺口与自然大格窗口。
