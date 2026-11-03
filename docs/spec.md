@@ -1377,3 +1377,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 4. LR为 **194/320、47/80组**，选档分布3e-5二十组、1e-4十四组、1e-5十一组、3e-4两组。ERNIE SpliceAI family/random新增完整组均选1e-5（best_val=0.001802/0.001841），test macro-F1仅报告不参与选档。证据=`status/lr_validation_interim_20261101_v145.json`，SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
 5. 源包revision=`20261103_refresh_v104_v145ledger_spliceai25_degradation24_ssi25_lr47`，**429个登记文件**，manifest SHA256=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`。PPT为33页，SHA256=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`；PDF SHA256=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。
 6. lint/layout/ZIP CRC与关键嵌图SHA通过，第9/20/28/29/30页实际渲染通过；第28页文案已纠正为148M八任务全闭合。LibreOffice对原始PPT也缺中文，故改用原生PowerPoint导出33页PDF，中文与布局验收正常。
+
+### 10.130 v146 650M SpliceAI LoRA-random 首点（2026-11-03）
+
+1. v146新增3格，**1633+3=1636 accepted、0 rejected**；3格均proof=complete、CUDA收敛。证明=`status/bestval_v146_new_proof.json`，SHA256=`bdd04fa1025d2ba8bf938ae17f2e40d215915618eeabfe3bf4158eec4a89ef55`。
+2. per-base=216/270、complementary=306/324、LR=196/320；完整LR组仍47/80，选档分布20/14/11/2不变。ERNIE SSI default tuning PCC=-0.014488927仅作诊断，不改正式性能或选档结论。
+3. 650M SpliceAI LoRA-random/seed17 macro-F1=0.548525955，当前n=1，六柱保留斜线，覆盖图由0改1，不形成三种子结论。证据=`status/lr_validation_interim_20261101_v146.json`，SHA256=`b76bf0a03deed31081be88419cdfd38f4d50414c1b69c6b08dc3817376059a1e`。
+4. 源包revision=`20261103_refresh_v105_v146ledger_650m_spliceai_lora_random_n1_lr196`，**433个登记文件**，manifest SHA256=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`。PPT SHA256=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF SHA256=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。

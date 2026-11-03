@@ -2261,4 +2261,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR选档**：47/80组，分布20/14/11/2；ERNIE SpliceAI双split均选1e-5，test不参与。证据SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
 - [x] **展示交付**：429文件manifest=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`；PPT=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`，PDF=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。33页lint/layout/CRC与更新页渲染通过。
 - [x] **渲染修复**：LibreOffice对原始PPT也缺中文，改用原生PowerPoint导出；第28页同步改为148M八任务全闭合。
-- [ ] **后续**：完成三地同步与GitHub提交，继续其余真实缺口。
+- [x] **交付**：v145三地同步，`df915f1`已推送；继续其余真实缺口。
+
+## N130. 2026-11-03 v146 650M SpliceAI LoRA-random 首点
+
+- [x] **三格验收**：1636 accepted、0 rejected；独立证明SHA256=`bdd04fa1025d2ba8bf938ae17f2e40d215915618eeabfe3bf4158eec4a89ef55`。
+- [x] **矩阵与LR**：per-base 216/270、LR 196/320，完整组47/80与选档不变；ERNIE SSI负PCC仅tuning诊断。
+- [x] **650M边界**：SpliceAI LoRA-random/seed17=0.548525955，仅n=1，斜线保留、覆盖由0改1，不写三种子闭合。LR证据SHA256=`b76bf0a03deed31081be88419cdfd38f4d50414c1b69c6b08dc3817376059a1e`。
+- [x] **交付**：433文件manifest=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`；PPT=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`。33页lint/layout/CRC与四页渲染通过。
+- [ ] **后续**：三地同步并推送，继续650M其余种子和真实缺口。

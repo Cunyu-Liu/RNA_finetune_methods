@@ -831,3 +831,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 第20页LR更新为 **194/320、47/80组**，选档20/14/11/2；ERNIE SpliceAI family/random均选1e-5，test不参与。第28页同步改为“148M八任务六臂均三种子闭合”，第29/30页图源更新至v145。
 4. 源包revision=`20261103_refresh_v104_v145ledger_spliceai25_degradation24_ssi25_lr47`，429个登记文件，manifest SHA256=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`。
 5. lint/layout/ZIP CRC与嵌图SHA通过；第9/20/28/29/30页实际渲染通过。LibreOffice对原始PPT也缺中文，不是PPT内容故障；最终PDF由原生PowerPoint导出，中文、字号与布局正常。
+
+## 87. 2026-11-03 当前 v146：650M SpliceAI LoRA-random 首点
+
+1. 当前PPT为 **33页**，SHA256=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`；PDF SHA256=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`。输入 **1636 accepted、0 rejected**，3格proof=complete。
+2. 650M SpliceAI LoRA-random/seed17 macro-F1=0.548525955，仅n=1；第9页斜线保留，第28页覆盖由0改1，不写三种子闭合。148M八任务全闭合说明保持。
+3. per-base=216/270、complementary=306/324、LR=196/320；完整LR组47/80与选档20/14/11/2不变。ERNIE SSI负PCC只作tuning诊断。
+4. 源包revision=`20261103_refresh_v105_v146ledger_650m_spliceai_lora_random_n1_lr196`，433个登记文件，manifest SHA256=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过。

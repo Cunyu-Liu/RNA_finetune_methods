@@ -665,5 +665,13 @@
 - [x] BV3 LR：47/80组，分布20/14/11/2；SpliceAI双split选1e-5，test不参与，证据SHA256=`9947decc342e65c3191e7b3a1e4cdff76b44b74ffb13f16ee3cf358a5527031b`。
 - [x] BV4 交付：429文件manifest=`792db6e9cef61eaf238b88d3aa82b76cb956f1421ca3d6bb5bc18c28ffd3ad98`；PPT=`c8987fb49f832dea90b4a1938884127c44dc1a08aae863f7f493d7bdbd8e19a5`，PDF=`fd6125244ba2eef2fcaac0bd3e37c7e28215ef4be6cc78cbbd0c84ff8b4b601f`。
 - [x] BV5 渲染：原生PowerPoint中文PDF正常，33页lint/layout/CRC、嵌图与第9/20/28/29/30页通过；第28页旧文案已纠正。
-- [ ] BV6 后续：三地逐哈希同步并推送，继续真实科学缺口。
+- [x] BV6 交付：v145三地逐哈希一致，`df915f1`已推送；继续真实科学缺口。
+
+## BW 组：v146 650M SpliceAI LoRA-random 首点验收
+
+- [x] BW1 数据：1636 accepted、0 rejected；3格proof=complete，证明SHA256=`bdd04fa1025d2ba8bf938ae17f2e40d215915618eeabfe3bf4158eec4a89ef55`。
+- [x] BW2 边界：per-base 216/270、LR 196/320，47组与选档不变；650M该格仅n=1，不写成闭合。
+- [x] BW3 交付：433文件manifest=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`；PPT=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`。
+- [x] BW4 渲染：33页lint/layout/CRC与第9/28/29/30页通过，n=1斜线与覆盖数一致。
+- [ ] BW5 后续：三地同步并推送，继续真实科学缺口。
 
