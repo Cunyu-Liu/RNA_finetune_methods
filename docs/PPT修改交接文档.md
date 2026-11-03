@@ -872,3 +872,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 650M SpliceAI LoRA-random三种子mean=0.501479636、SD=0.150308697，正式闭合并注明变异；第9页去除该格斜线，第28页由2改3，SpliceAI总覆盖26/30。
 3. per-base=218/270、complementary=306/324、LR=212/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v150.json`，SHA256=`9f6647b245526601f6334f58342dce0c8fc3895f37ce91da299b7e52631670c4`。
 4. 源包revision=`20261103_refresh_v107_v150ledger_650m_spliceai_lora_random_closure`，441个登记文件，manifest SHA256=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过；RNA-Sc继续暂缓。
+
+## 93. 2026-11-03 显存利用调整，PPT不变
+
+1. 旧LR父3431054停止态、唯一子僵尸，TERM无效后仅终止父调度，未中断真实训练；长期监控PID761383继续运行。
+2. 新增ERNIE degradation frozen-family/seed17（父845090/子845112），共享per-base state-dir/model locks，device0、best-val协议；启动证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
+3. 剩余per-base need=3/20/28GiB，无12GiB候选；当前free=15.177GiB，不能安全追加16GiB以上任务。预算证据=`status/queue_actions/perbase_budget_20261104.json`，SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
+4. 科学结果仍为1654 accepted、0 rejected，33页PPT/PDF与v107源包保持v150；大格在自然窗口补入。

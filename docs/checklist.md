@@ -713,5 +713,12 @@
 - [x] CB2 结论：三种子mean=0.501479636、SD=0.150308697，正式闭合并注明种子变异；per-base 218/270、LR 212/320。
 - [x] CB3 交付：441文件manifest=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`；PPT=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`，PDF=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`。
 - [x] CB4 渲染与监控：33页lint/layout/CRC与第9/28/29/30页通过；PID761383健康，RNA-Sc继续暂缓。
-- [ ] CB5 后续：三地同步并推送，继续官方真实科学缺口。
+- [x] CB5 交付：v150三地同步，`42b09c2`已推送；继续官方真实科学缺口。
+
+## CC 组：显存利用调整与父调度清理验收
+
+- [x] CC1 安全：旧父3431054停止态、子僵尸，仅终止父调度，未中断训练；PID761383健康。
+- [x] CC2 补位：ERNIE degradation frozen-family/seed17实际在训，父845090/子845112，共享per-base锁；证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
+- [x] CC3 预算：剩余need=3/20/28GiB，free=15.177GiB，无12GiB候选，不强行追加；证据SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
+- [ ] CC4 后续：同步记录，等待自然窗口与真实proof。
 

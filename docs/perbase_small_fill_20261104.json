@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-11-03T17:59:15.986313+00:00",
+  "terminated_stopped_parent": 3431054,
+  "termination": "SIGKILL parent only after TERM did not take effect; sole child was zombie",
+  "small_fill_parent": 845090,
+  "registry": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_small_fill_20261104.json",
+  "registry_sha256": "ef199af5c8cb368aa60acede0e7985d0242f86573138d183647cfe7d0f0a07a8",
+  "state_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/perbase_main_bestval",
+  "workers": 2,
+  "margin_gb_per_job": 1,
+  "children": "845112  845090 Rl   /root/miniconda3/envs/llr_env/bin/python -m rnafteval.finetune_regbase --model ERNIE-RNA --strategy frozen --seed 17 --device 0 --split family --task degradation --converge --convergence-mode bestval --batch-size 8 --rank 8 --n-train 0 --lr 3e-4",
+  "free_gib_after_launch": 15.23602294921875,
+  "total_gib": 31.35833740234375,
+  "completion_claim": false
+}

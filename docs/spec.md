@@ -1417,3 +1417,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 650M SpliceAI LoRA-random三种子 macro-F1=0.548525955/0.333275146/0.622637807，mean=0.501479636、SD=0.150308697，正式闭合但种子差异明显，不以单种子推断。per-base=218/270、complementary=306/324、LR=212/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v150.json`，SHA256=`9f6647b245526601f6334f58342dce0c8fc3895f37ce91da299b7e52631670c4`。
 3. 源包revision=`20261103_refresh_v107_v150ledger_650m_spliceai_lora_random_closure`，**441个登记文件**，manifest SHA256=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`。PPT SHA256=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`，PDF SHA256=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
 4. 长期监控PID761383健康，仍为waiting_existing；RNA-Sc继续暂缓，官方模型新结果不改变阶段门。
+
+### 10.136 显存利用调整与停止态父调度清理（2026-11-03）
+
+1. 用户要求提高显存利用。核查发现旧LR父3431054处于T停止态且唯一子43189为僵尸，导致长期监控持续等待；TERM无效后仅对父调度发送KILL，未中断任何真实训练。监控PID761383继续运行。
+2. per-base仅余1个need≤7GiB小格，已以共享state-dir/model locks启动补位父845090和子845112：ERNIE degradation frozen-family/seed17/default LR，device0、best-val协议。注册表SHA256=`ef199af5c8cb368aa60acede0e7985d0242f86573138d183647cfe7d0f0a07a8`，启动证据SHA256=`57df33aa6176890c5ab9a7b5947e72aa6c3d03573651c7dbda0d1fc0a60374a5`。
+3. 后续预算审计：per-base未完成need分布为3GiB×1（即上述在训格）、20GiB×15、28GiB×36，无12GiB候选；当前free=15.177GiB，不能安全追加16/20/28GiB格，不强行制造OOM。证据=`status/queue_actions/perbase_budget_20261104.json`，SHA256=`a5ce4aec7e70d8280d9385a6a93577e82a9ebc3f895a67a42d4dd20b9a8fe026`。
+4. 当前科学结果仍为1654 accepted、0 rejected，PPT与v107源包保持v150；大格在自然显存窗口和统一core阶段补入。
