@@ -1410,3 +1410,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 调度器等待现有父队列自然退出，不杀训练、不重复RID；统一state-dir下同模型串行，workers=6，父队列等待检查每120秒、queue每60秒。每阶段结束后逐格result/plateau/checkpoint/CUDA proof，失败即blocked且不进入下一阶段。回归测试共56 passed，代码提交`ccdae6b`与RNA-Sc暂缓修订`5518866`均已推送。
 3. 长期监控已启动：PID **761383**，状态=`waiting_existing`，当前等待父3431052/3431054/45383自然收尾，未启动新训练。启动证据=`status/queue_actions/remaining_pipeline_launch_20261103.json`，SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
 4. 监控命令：`tail -f /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/remaining_pipeline_20261103.log`；状态文件=`status/remaining_pipeline_20261103_state.json`；进程检查=`ps -p 761383 -o pid,stat,args`。PPT与v106源包保持v149，流水线启动本身不写成科学结果。
+
+### 10.135 v150 650M SpliceAI LoRA-random 三种子闭合（2026-11-03）
+
+1. v150新增2格，**1652+2=1654 accepted、0 rejected**；两格proof=complete、CUDA收敛。证明=`status/bestval_v150_new_proof.json`，SHA256=`b4e9edcd8784c5269a1806d46aed8e93369fc5ced521bfd58f06193463f8f06b`。
+2. 650M SpliceAI LoRA-random三种子 macro-F1=0.548525955/0.333275146/0.622637807，mean=0.501479636、SD=0.150308697，正式闭合但种子差异明显，不以单种子推断。per-base=218/270、complementary=306/324、LR=212/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v150.json`，SHA256=`9f6647b245526601f6334f58342dce0c8fc3895f37ce91da299b7e52631670c4`。
+3. 源包revision=`20261103_refresh_v107_v150ledger_650m_spliceai_lora_random_closure`，**441个登记文件**，manifest SHA256=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`。PPT SHA256=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`，PDF SHA256=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
+4. 长期监控PID761383健康，仍为waiting_existing；RNA-Sc继续暂缓，官方模型新结果不改变阶段门。

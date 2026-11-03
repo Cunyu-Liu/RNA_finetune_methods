@@ -705,5 +705,13 @@
 - [x] CA2 安全：动态排除accepted，need+1GiB，同模型串行，现有父不中断，阶段proof失败即停止后续。
 - [x] CA3 验证：56 passed，`ccdae6b`与`5518866`已推送；prepare-only未启动训练。
 - [x] CA4 在途：监控PID761383，waiting_existing；证据SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
-- [ ] CA5 后续：同步记录，等待真实完成格；不得将启动状态写成科学结论。
+- [x] CA5 交付：监控记录三地一致，`725db0a`已推送；等待真实完成格，不将启动状态写成科学结论。
+
+## CB 组：v150 650M SpliceAI LoRA-random 闭合验收
+
+- [x] CB1 数据：1654 accepted、0 rejected；两格proof=complete，证明SHA256=`b4e9edcd8784c5269a1806d46aed8e93369fc5ced521bfd58f06193463f8f06b`。
+- [x] CB2 结论：三种子mean=0.501479636、SD=0.150308697，正式闭合并注明种子变异；per-base 218/270、LR 212/320。
+- [x] CB3 交付：441文件manifest=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`；PPT=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`，PDF=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`。
+- [x] CB4 渲染与监控：33页lint/layout/CRC与第9/28/29/30页通过；PID761383健康，RNA-Sc继续暂缓。
+- [ ] CB5 后续：三地同步并推送，继续官方真实科学缺口。
 

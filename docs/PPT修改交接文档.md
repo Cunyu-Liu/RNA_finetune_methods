@@ -865,3 +865,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 派生注册表每格need+1GiB，统一state-dir同模型串行，workers=6；现有父自然退出后才启动core，每阶段proof通过才进入下一阶段。回归56 passed，`ccdae6b`和`5518866`已推送。
 3. 长期监控PID761383，当前waiting_existing。启动证据=`status/queue_actions/remaining_pipeline_launch_20261103.json`，SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
 4. 监控：`tail -f /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/remaining_pipeline_20261103.log`；状态=`status/remaining_pipeline_20261103_state.json`。启动不修改任何科学图。
+
+## 92. 2026-11-03 当前 v150：650M SpliceAI LoRA-random 闭合
+
+1. 当前PPT为 **33页**，SHA256=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`；PDF SHA256=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`。输入 **1654 accepted、0 rejected**，两格proof=complete。
+2. 650M SpliceAI LoRA-random三种子mean=0.501479636、SD=0.150308697，正式闭合并注明变异；第9页去除该格斜线，第28页由2改3，SpliceAI总覆盖26/30。
+3. per-base=218/270、complementary=306/324、LR=212/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v150.json`，SHA256=`9f6647b245526601f6334f58342dce0c8fc3895f37ce91da299b7e52631670c4`。
+4. 源包revision=`20261103_refresh_v107_v150ledger_650m_spliceai_lora_random_closure`，441个登记文件，manifest SHA256=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过；RNA-Sc继续暂缓。

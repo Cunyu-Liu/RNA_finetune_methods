@@ -2300,4 +2300,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全调度**：动态排除accepted，派生need+1GiB，统一state-dir同模型串行，workers=6；等待现有父自然退出，每阶段独立proof门，失败不进入下一阶段。
 - [x] **验证与提交**：回归56 passed，`ccdae6b`和`5518866`均已推送；prepare-only无训练启动。
 - [x] **长期监控**：PID761383，waiting_existing；启动证据SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。日志=`status/remaining_pipeline_20261103.log`，状态=`status/remaining_pipeline_20261103_state.json`。
-- [ ] **后续**：同步监控记录；等待core真实完成并滚动更新图和PPT，RNA-Sc不抢跑。
+- [x] **交付**：监控记录三地一致，`725db0a`已推送；等待core真实完成并滚动更新图和PPT，RNA-Sc不抢跑。
+
+## N135. 2026-11-03 v150 650M SpliceAI LoRA-random 闭合
+
+- [x] **两格验收**：1654 accepted、0 rejected；证明SHA256=`b4e9edcd8784c5269a1806d46aed8e93369fc5ced521bfd58f06193463f8f06b`。
+- [x] **三种子结论**：seed17/29/43=0.548525955/0.333275146/0.622637807，mean=0.501479636、SD=0.150308697，正式闭合并注明变异。
+- [x] **矩阵与LR**：per-base 218/270、LR 212/320，52组与选档不变；证据SHA256=`9f6647b245526601f6334f58342dce0c8fc3895f37ce91da299b7e52631670c4`。
+- [x] **交付**：441文件manifest=`1a9c8db34f3077dc9e58a18cc6379024e79995b226789eda63f7015cb2254a62`；PPT=`cad8627a298055d4da16b3ddf52a302b0bb75313fc9f76696b2689f0c7ce7b2d`，PDF=`b426adb6c0ef9ab95ddeca07b64d586b12b2434121e436a72b8511d53d84965a`。33页lint/layout/CRC与四页渲染通过。
+- [ ] **后续**：三地同步并推送，继续官方核心缺口；RNA-Sc不抢跑。
