@@ -688,5 +688,14 @@
 - [x] BY1 数据：1637 accepted、0 rejected；新增格proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
 - [x] BY2 边界：LR=197/320，47组与选档不变；tuning不进正式均值，证据SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
 - [x] BY3 展示：无新科学单元，PPT与v105源包保持v146。
-- [ ] BY4 后续：同步并提交，等待真实可见更新。
+- [x] BY4 交付：v148 staging三地一致，`0815a48`已推送；等待真实可见更新。
+
+## BZ 组：v149 五个 LR 组与 650M 第二种子验收
+
+- [x] BZ1 数据：1652 accepted、0 rejected；15格proof=complete，证明SHA256=`5d940382fc8d8d87e336c466fb4019c74365403a37b91e8ce45cbf2d129231f1`。
+- [x] BZ2 边界：per-base 217/270、LR 211/320；650M仅n=2，不写成闭合。
+- [x] BZ3 LR：52/80组，分布23/16/11/2；五个新组均按best_val选档，test不参与，证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
+- [x] BZ4 交付：437文件manifest=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`；PPT=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`。
+- [x] BZ5 渲染：33页lint/layout/CRC与第9/20/28/29/30页通过，n=2和52组图文一致。
+- [ ] BZ6 后续：三地同步并推送，继续真实科学缺口。
 

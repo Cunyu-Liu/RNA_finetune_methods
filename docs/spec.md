@@ -1396,3 +1396,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v148新增1格，**1636+1=1637 accepted、0 rejected**；`ft_rinalmomega_degradation_full_s101_family_b20fix_bestval_v1` proof=complete，PCC=0.259112580、best_val=0.281956、best_epoch=0、4 epochs。证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
 2. LR=197/320，完整组仍47/80，选档分布20/14/11/2不变；per-base=216/270。该格仅seed101 tuning，不进正式三种子均值。证据=`status/lr_validation_interim_20261101_v148.json`，SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
 3. 无新完整LR组、选档或三种子单元，PPT与v105源包保持v146，不做无意义重绘。
+
+### 10.133 v149 五个 LR 组闭合与 650M 第二种子（2026-11-03）
+
+1. v149新增15格，**1637+15=1652 accepted、0 rejected**；全部独立proof=complete、CUDA收敛。证明=`status/bestval_v149_new_proof.json`，SHA256=`5d940382fc8d8d87e336c466fb4019c74365403a37b91e8ce45cbf2d129231f1`。
+2. per-base=217/270、complementary=306/324、LR=211/320。650M SpliceAI LoRA-random/seed29 macro-F1=0.333275146，与seed17=0.548525955组成n=2，变异较大，仍不形成三种子闭合或规模规律。
+3. LR完整组由47增至 **52/80**：ERNIE degradation random选1e-4，mega degradation family选1e-4、random选3e-5，ERNIE SSI family/random均选3e-5；选档分布为3e-5二十三组、1e-4十六组、1e-5十一组、3e-4两组。test仅报告，validation best_val选档。证据=`status/lr_validation_interim_20261101_v149.json`，SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
+4. 源包revision=`20261103_refresh_v106_v149ledger_650m_spliceai_lora_random_n2_lr52`，**437个登记文件**，manifest SHA256=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`。PPT SHA256=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF SHA256=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`；33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。

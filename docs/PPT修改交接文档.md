@@ -851,3 +851,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v148新增1格，合计 **1637 accepted、0 rejected**；mega degradation default tuning PCC=0.259112580，proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
 2. LR=197/320，完整组47/80与选档20/14/11/2不变；该格仅seed101 tuning，不进正式三种子均值。
 3. 无新科学单元，33页PPT/PDF与v105源包保持v146。LR证据=`status/lr_validation_interim_20261101_v148.json`，SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
+
+## 90. 2026-11-03 当前 v149：五个 LR 组与 650M 第二种子
+
+1. 当前PPT为 **33页**，SHA256=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`；PDF SHA256=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`。输入 **1652 accepted、0 rejected**，15格proof=complete。
+2. 650M SpliceAI LoRA-random/seed29=0.333275146，与seed17组成n=2；第9页保留斜线，第28页由1改2，不写三种子闭合或规模规律。
+3. 第20页更新为 **211/320、52/80组**，选档23/16/11/2。新增五组为ERNIE degradation random与mega degradation family选1e-4，mega degradation random及ERNIE SSI双split选3e-5；test不参与。证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
+4. 源包revision=`20261103_refresh_v106_v149ledger_650m_spliceai_lora_random_n2_lr52`，437个登记文件，manifest SHA256=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`。33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。

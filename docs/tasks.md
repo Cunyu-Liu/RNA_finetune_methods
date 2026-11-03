@@ -2284,4 +2284,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：1637 accepted、0 rejected；PCC=0.259112580、best_val=0.281956，proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
 - [x] **LR边界**：LR=197/320，47组与选档不变；seed101 tuning不进正式均值。证据SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
 - [x] **展示边界**：无新科学单元，PPT与v105源包保持v146。
-- [ ] **后续**：同步并提交staging证据，等待下一真实可见更新。
+- [x] **交付**：v148 staging三地一致，`0815a48`已推送；等待下一真实可见更新。
+
+## N133. 2026-11-03 v149 五个 LR 组闭合与 650M 第二种子
+
+- [x] **15格验收**：1652 accepted、0 rejected；证明SHA256=`5d940382fc8d8d87e336c466fb4019c74365403a37b91e8ce45cbf2d129231f1`。
+- [x] **矩阵**：per-base 217/270、LR 211/320；650M SpliceAI LoRA-random为n=2，不提前写规模规律。
+- [x] **LR新组**：52/80组，分布23/16/11/2；degradation两组选1e-4、mega random与ERNIE SSI双split选3e-5，test不参与。证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
+- [x] **交付**：437文件manifest=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`；PPT=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`。33页lint/layout/CRC与五页渲染通过。
+- [ ] **后续**：三地同步并推送，继续其余种子和LR格。
