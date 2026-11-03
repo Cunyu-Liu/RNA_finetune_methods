@@ -30,7 +30,6 @@ STAGES = {
     ],
     'frozen': ['c5c_frozen_jobs_20261101.json'],
     'crispr': ['crispr_signal_jobs_20261101.json'],
-    'rnasc': ['equivalence_rnasc_jobs_20261030.json'],
 }
 MARGIN_GB = 1.0
 
