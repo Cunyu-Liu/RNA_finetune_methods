@@ -838,3 +838,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 650M SpliceAI LoRA-random/seed17 macro-F1=0.548525955，仅n=1；第9页斜线保留，第28页覆盖由0改1，不写三种子闭合。148M八任务全闭合说明保持。
 3. per-base=216/270、complementary=306/324、LR=196/320；完整LR组47/80与选档20/14/11/2不变。ERNIE SSI负PCC只作tuning诊断。
 4. 源包revision=`20261103_refresh_v105_v146ledger_650m_spliceai_lora_random_n1_lr196`，433个登记文件，manifest SHA256=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
+
+## 88. 2026-11-03 v147 staging：mega LR 补位，PPT不变
+
+1. v147新增0，仍为 **1636 accepted、0 rejected**；33页PPT/PDF与v105源包保持v146。
+2. 新补位父655319共享LR state-dir/model locks，workers=1；25个mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
+3. 新子655372为mega degradation full-family/seed101/default LR，device0；启动后free=14.985GiB，不强行启动28GiB full。
+4. 在训证据=`status/queue_actions/lr_mega_fill_20261103.json`，SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不改变性能图或完成计数。

@@ -1,0 +1,15 @@
+{
+  "created_at": "2026-11-03T05:57:59.996976+00:00",
+  "action": "safe mega LR fill with shared model locks",
+  "parent": 655319,
+  "existing_lr_parent": 45383,
+  "registry": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_mega_fill_20261103.json",
+  "registry_sha256": "8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098",
+  "state_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030",
+  "workers": 1,
+  "need_gb": 16,
+  "free_gib_after_launch": 14.98541259765625,
+  "total_gib": 31.35833740234375,
+  "children": "655372  655319 Rl   /root/miniconda3/envs/llr_env/bin/python -m rnafteval.finetune_regbase --model RiNALMo-mega --strategy full --seed 101 --device 0 --split family --task degradation --converge --convergence-mode bestval --batch-size 8 --rank 8 --n-train 0 --lr 3e-4",
+  "completion_claim": false
+}

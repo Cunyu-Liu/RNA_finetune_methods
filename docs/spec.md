@@ -1384,3 +1384,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. per-base=216/270、complementary=306/324、LR=196/320；完整LR组仍47/80，选档分布20/14/11/2不变。ERNIE SSI default tuning PCC=-0.014488927仅作诊断，不改正式性能或选档结论。
 3. 650M SpliceAI LoRA-random/seed17 macro-F1=0.548525955，当前n=1，六柱保留斜线，覆盖图由0改1，不形成三种子结论。证据=`status/lr_validation_interim_20261101_v146.json`，SHA256=`b76bf0a03deed31081be88419cdfd38f4d50414c1b69c6b08dc3817376059a1e`。
 4. 源包revision=`20261103_refresh_v105_v146ledger_650m_spliceai_lora_random_n1_lr196`，**433个登记文件**，manifest SHA256=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`。PPT SHA256=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF SHA256=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
+
+### 10.131 v147 staging 与 mega LR 安全补位（2026-11-03）
+
+1. v147新增0，仍为 **1636 accepted、0 rejected**；PPT与v105源包保持v146。
+2. 资源核查时有650M LoRA seed29与ERNIE LR在训，空闲约18GiB，不能启动28GiB full。以共享LR state-dir/model locks新增mega补位父655319，workers=1；25个未完成mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
+3. 新子655372为RiNALMo-mega degradation full-family/seed101/default LR，device0、best-val协议；启动后free=14.985GiB，不强行启动650M full。证据=`status/queue_actions/lr_mega_fill_20261103.json`，SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不记完成。

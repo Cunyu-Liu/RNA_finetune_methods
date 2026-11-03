@@ -673,5 +673,13 @@
 - [x] BW2 边界：per-base 216/270、LR 196/320，47组与选档不变；650M该格仅n=1，不写成闭合。
 - [x] BW3 交付：433文件manifest=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`；PPT=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`。
 - [x] BW4 渲染：33页lint/layout/CRC与第9/28/29/30页通过，n=1斜线与覆盖数一致。
-- [ ] BW5 后续：三地同步并推送，继续真实科学缺口。
+- [x] BW5 交付：v146三地同步，`a06f718`已推送；继续真实科学缺口。
+
+## BX 组：v147 staging 与 mega LR 补位验收
+
+- [x] BX1 台账：v147新增0，1636 accepted、0 rejected；PPT保持v146。
+- [x] BX2 防重：父655319共享LR state-dir/model locks，25格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
+- [x] BX3 在训：子655372为mega degradation full-family/seed101/default LR，device0；free=14.985GiB，不启动28GiB full。
+- [x] BX4 证据：SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不代替完成proof。
+- [ ] BX5 后续：三地同步并提交，等待真实完成格。
 

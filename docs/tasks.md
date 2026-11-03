@@ -2269,4 +2269,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **矩阵与LR**：per-base 216/270、LR 196/320，完整组47/80与选档不变；ERNIE SSI负PCC仅tuning诊断。
 - [x] **650M边界**：SpliceAI LoRA-random/seed17=0.548525955，仅n=1，斜线保留、覆盖由0改1，不写三种子闭合。LR证据SHA256=`b76bf0a03deed31081be88419cdfd38f4d50414c1b69c6b08dc3817376059a1e`。
 - [x] **交付**：433文件manifest=`6c6457d748f277cb094232a4cc8a02d84573537ad951bb7ba841184d626c5f6b`；PPT=`176a32ccc9b5517016c66546b226270ccdc0a827bca0b41c2d4b2adbfbe520a2`，PDF=`0188c6d005153949bfa6a723f8965cea362a80eebf116a1b8fe419f576f6d505`。33页lint/layout/CRC与四页渲染通过。
-- [ ] **后续**：三地同步并推送，继续650M其余种子和真实缺口。
+- [x] **交付**：v146三地同步，`a06f718`已推送；继续650M其余种子和真实缺口。
+
+## N131. 2026-11-03 v147 staging 与 mega LR 补位
+
+- [x] **台账**：v147新增0，仍1636 accepted、0 rejected；展示版保持v146。
+- [x] **安全补位**：25个mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`；父655319共享LR state-dir/model locks，workers=1。
+- [x] **实际在训**：子655372为mega degradation full-family/seed101/default LR，device0；启动后free=14.985GiB，不启动28GiB full。
+- [x] **证据**：`lr_mega_fill_20261103.json` SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不记完成。
+- [ ] **后续**：三地同步并提交，等待真实完成格。
