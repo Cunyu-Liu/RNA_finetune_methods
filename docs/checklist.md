@@ -681,5 +681,12 @@
 - [x] BX2 防重：父655319共享LR state-dir/model locks，25格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
 - [x] BX3 在训：子655372为mega degradation full-family/seed101/default LR，device0；free=14.985GiB，不启动28GiB full。
 - [x] BX4 证据：SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不代替完成proof。
-- [ ] BX5 后续：三地同步并提交，等待真实完成格。
+- [x] BX5 交付：mega补位记录三地一致，`aa5be4d`已推送；等待真实完成格。
+
+## BY 组：v148 mega degradation default LR staging 验收
+
+- [x] BY1 数据：1637 accepted、0 rejected；新增格proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
+- [x] BY2 边界：LR=197/320，47组与选档不变；tuning不进正式均值，证据SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
+- [x] BY3 展示：无新科学单元，PPT与v105源包保持v146。
+- [ ] BY4 后续：同步并提交，等待真实可见更新。
 

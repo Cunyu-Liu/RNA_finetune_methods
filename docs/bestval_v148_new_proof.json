@@ -1,0 +1,31 @@
+[
+  {
+    "run_id": "ft_rinalmomega_degradation_full_s101_family_b20fix_bestval_v1",
+    "proof_state": "complete",
+    "proof_reason": "",
+    "task": "degradation",
+    "model": "RiNALMo-mega",
+    "strategy": "full",
+    "split": "family",
+    "seed": "101",
+    "lr": "0.0003",
+    "metric": "PCC",
+    "value": "0.2591125795972278",
+    "best_val": "0.281956",
+    "best_epoch": "0",
+    "epochs": "4",
+    "stop_reason": "validation_no_improvement_patience",
+    "cuda_device": "cuda:0",
+    "cuda_device_name": "NVIDIA GeForce RTX 5090",
+    "plateau_status": "CONVERGED",
+    "checkpoint_bytes": 592447947,
+    "checkpoint_sha256": "5464f8468f5b44919f9e0888940cdb2547481a133dc13864c79782d2bd94b5d1",
+    "out_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rinalmomega_degradation_full_s101_family_b20fix_bestval_v1",
+    "epoch_val_losses": [
+      0.281956,
+      0.288763,
+      0.280256,
+      0.290039
+    ]
+  }
+]

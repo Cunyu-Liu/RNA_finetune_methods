@@ -1390,3 +1390,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v147新增0，仍为 **1636 accepted、0 rejected**；PPT与v105源包保持v146。
 2. 资源核查时有650M LoRA seed29与ERNIE LR在训，空闲约18GiB，不能启动28GiB full。以共享LR state-dir/model locks新增mega补位父655319，workers=1；25个未完成mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
 3. 新子655372为RiNALMo-mega degradation full-family/seed101/default LR，device0、best-val协议；启动后free=14.985GiB，不强行启动650M full。证据=`status/queue_actions/lr_mega_fill_20261103.json`，SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不记完成。
+
+### 10.132 v148 mega degradation default LR staging（2026-11-03）
+
+1. v148新增1格，**1636+1=1637 accepted、0 rejected**；`ft_rinalmomega_degradation_full_s101_family_b20fix_bestval_v1` proof=complete，PCC=0.259112580、best_val=0.281956、best_epoch=0、4 epochs。证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
+2. LR=197/320，完整组仍47/80，选档分布20/14/11/2不变；per-base=216/270。该格仅seed101 tuning，不进正式三种子均值。证据=`status/lr_validation_interim_20261101_v148.json`，SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
+3. 无新完整LR组、选档或三种子单元，PPT与v105源包保持v146，不做无意义重绘。

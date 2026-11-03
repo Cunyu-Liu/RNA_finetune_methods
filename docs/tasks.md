@@ -2277,4 +2277,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全补位**：25个mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`；父655319共享LR state-dir/model locks，workers=1。
 - [x] **实际在训**：子655372为mega degradation full-family/seed101/default LR，device0；启动后free=14.985GiB，不启动28GiB full。
 - [x] **证据**：`lr_mega_fill_20261103.json` SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不记完成。
-- [ ] **后续**：三地同步并提交，等待真实完成格。
+- [x] **交付**：mega补位记录三地一致，`aa5be4d`已推送；等待真实完成格。
+
+## N132. 2026-11-03 v148 mega degradation default LR staging
+
+- [x] **单格验收**：1637 accepted、0 rejected；PCC=0.259112580、best_val=0.281956，proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
+- [x] **LR边界**：LR=197/320，47组与选档不变；seed101 tuning不进正式均值。证据SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
+- [x] **展示边界**：无新科学单元，PPT与v105源包保持v146。
+- [ ] **后续**：同步并提交staging证据，等待下一真实可见更新。

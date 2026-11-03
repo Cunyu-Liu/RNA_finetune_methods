@@ -845,3 +845,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 新补位父655319共享LR state-dir/model locks，workers=1；25个mega候选格注册表SHA256=`8a156cbbd8d9664167358f8461154a44f1b833a2855e3f76592c678beead5098`。
 3. 新子655372为mega degradation full-family/seed101/default LR，device0；启动后free=14.985GiB，不强行启动28GiB full。
 4. 在训证据=`status/queue_actions/lr_mega_fill_20261103.json`，SHA256=`3af6f1d79d14e7dc89416eb062890f13ee7ad4e8ff796d29f0e65d3580fa68f8`，不改变性能图或完成计数。
+
+## 89. 2026-11-03 v148 staging：展示版保持 v146
+
+1. v148新增1格，合计 **1637 accepted、0 rejected**；mega degradation default tuning PCC=0.259112580，proof=complete，证明SHA256=`d669b90289396d481d042a15ae224ac0396f7557957bb86be9651e85e9f0fdf0`。
+2. LR=197/320，完整组47/80与选档20/14/11/2不变；该格仅seed101 tuning，不进正式三种子均值。
+3. 无新科学单元，33页PPT/PDF与v105源包保持v146。LR证据=`status/lr_validation_interim_20261101_v148.json`，SHA256=`8113b629d6d1ea075c0db603f10e773d5793f85671c5817fa04f77581e044fa6`。
