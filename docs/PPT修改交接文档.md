@@ -858,3 +858,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 650M SpliceAI LoRA-random/seed29=0.333275146，与seed17组成n=2；第9页保留斜线，第28页由1改2，不写三种子闭合或规模规律。
 3. 第20页更新为 **211/320、52/80组**，选档23/16/11/2。新增五组为ERNIE degradation random与mega degradation family选1e-4，mega degradation random及ERNIE SSI双split选3e-5；test不参与。证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
 4. 源包revision=`20261103_refresh_v106_v149ledger_650m_spliceai_lora_random_n2_lr52`，437个登记文件，manifest SHA256=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`。33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。
+
+## 91. 2026-11-03 官方模型后台流水线，PPT不变
+
+1. 用户决定RNA-Sc等价线672格暂缓，优先官方模型；流水线仅core/frozen/crispr，pending=180/990/108，共1278个唯一RID。33页PPT/PDF与v106源包保持v149。
+2. 派生注册表每格need+1GiB，统一state-dir同模型串行，workers=6；现有父自然退出后才启动core，每阶段proof通过才进入下一阶段。回归56 passed，`ccdae6b`和`5518866`已推送。
+3. 长期监控PID761383，当前waiting_existing。启动证据=`status/queue_actions/remaining_pipeline_launch_20261103.json`，SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
+4. 监控：`tail -f /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/remaining_pipeline_20261103.log`；状态=`status/remaining_pipeline_20261103_state.json`。启动不修改任何科学图。

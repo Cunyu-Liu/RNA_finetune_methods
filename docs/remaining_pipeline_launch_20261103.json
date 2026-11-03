@@ -1,0 +1,31 @@
+{
+  "created_at": "2026-11-03T15:11:47.156653+00:00",
+  "monitor_pid": 761383,
+  "code_git_sha": "5518866",
+  "command": "/root/miniconda3/envs/llr_env/bin/python scripts/remaining_pipeline.py --wait-pids 3431052,3431054,45383,655319,71153 --workers 6 --wait-poll-s 120 --queue-poll-s 60",
+  "stages": [
+    "core",
+    "frozen",
+    "crispr"
+  ],
+  "deferred": [
+    "rnasc"
+  ],
+  "pending": {
+    "core": 180,
+    "frozen": 990,
+    "crispr": 108
+  },
+  "state": {
+    "stage": "waiting_existing",
+    "updated_at": "2026-11-03T15:11:37.131077+00:00",
+    "pid": 761383,
+    "waiting_pids": [
+      45383,
+      3431052,
+      3431054
+    ],
+    "note": "Existing parents own their runners; no kill or duplicate launch."
+  },
+  "completion_claim": false
+}

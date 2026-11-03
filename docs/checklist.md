@@ -697,5 +697,13 @@
 - [x] BZ3 LR：52/80组，分布23/16/11/2；五个新组均按best_val选档，test不参与，证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
 - [x] BZ4 交付：437文件manifest=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`；PPT=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`。
 - [x] BZ5 渲染：33页lint/layout/CRC与第9/20/28/29/30页通过，n=2和52组图文一致。
-- [ ] BZ6 后续：三地同步并推送，继续真实科学缺口。
+- [x] BZ6 交付：v149三地同步，`9272936`已推送；继续真实科学缺口。
+
+## CA 组：官方模型全阶段后台流水线验收
+
+- [x] CA1 范围：RNA-Sc 672格暂缓；core/frozen/crispr=180/990/108，1278个唯一RID。
+- [x] CA2 安全：动态排除accepted，need+1GiB，同模型串行，现有父不中断，阶段proof失败即停止后续。
+- [x] CA3 验证：56 passed，`ccdae6b`与`5518866`已推送；prepare-only未启动训练。
+- [x] CA4 在途：监控PID761383，waiting_existing；证据SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
+- [ ] CA5 后续：同步记录，等待真实完成格；不得将启动状态写成科学结论。
 

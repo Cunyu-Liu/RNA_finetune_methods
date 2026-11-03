@@ -1403,3 +1403,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. per-base=217/270、complementary=306/324、LR=211/320。650M SpliceAI LoRA-random/seed29 macro-F1=0.333275146，与seed17=0.548525955组成n=2，变异较大，仍不形成三种子闭合或规模规律。
 3. LR完整组由47增至 **52/80**：ERNIE degradation random选1e-4，mega degradation family选1e-4、random选3e-5，ERNIE SSI family/random均选3e-5；选档分布为3e-5二十三组、1e-4十六组、1e-5十一组、3e-4两组。test仅报告，validation best_val选档。证据=`status/lr_validation_interim_20261101_v149.json`，SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
 4. 源包revision=`20261103_refresh_v106_v149ledger_650m_spliceai_lora_random_n2_lr52`，**437个登记文件**，manifest SHA256=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`。PPT SHA256=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF SHA256=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`；33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。
+
+### 10.134 官方模型全阶段后台补跑流水线（2026-11-03）
+
+1. 用户明确 **RNA-Sc等价线672格暂缓**，优先已发表官方模型。`remaining_pipeline.py`阶段固定为 **core→frozen→crispr**；RNA-Sc注册表保留但不进入运行列表。prepare-only动态排除已完成项后：core 180格、frozen 990格（18格已完成）、CRISPR 108格，合计1278个唯一RID；原注册表参数不改，派生注册表每格need_gb加1GiB安全余量。
+2. 调度器等待现有父队列自然退出，不杀训练、不重复RID；统一state-dir下同模型串行，workers=6，父队列等待检查每120秒、queue每60秒。每阶段结束后逐格result/plateau/checkpoint/CUDA proof，失败即blocked且不进入下一阶段。回归测试共56 passed，代码提交`ccdae6b`与RNA-Sc暂缓修订`5518866`均已推送。
+3. 长期监控已启动：PID **761383**，状态=`waiting_existing`，当前等待父3431052/3431054/45383自然收尾，未启动新训练。启动证据=`status/queue_actions/remaining_pipeline_launch_20261103.json`，SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。
+4. 监控命令：`tail -f /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/remaining_pipeline_20261103.log`；状态文件=`status/remaining_pipeline_20261103_state.json`；进程检查=`ps -p 761383 -o pid,stat,args`。PPT与v106源包保持v149，流水线启动本身不写成科学结果。

@@ -2292,4 +2292,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **矩阵**：per-base 217/270、LR 211/320；650M SpliceAI LoRA-random为n=2，不提前写规模规律。
 - [x] **LR新组**：52/80组，分布23/16/11/2；degradation两组选1e-4、mega random与ERNIE SSI双split选3e-5，test不参与。证据SHA256=`da7361bcbf0f0589377d0c70dd8cf17a03326fdc254ff7ab49a75aee683220c0`。
 - [x] **交付**：437文件manifest=`8f815649dbe1a70be29686121e3548cc10ab2cccaf5a4f0c6709653edecf4079`；PPT=`237a1330708b4e0a290b2dc5562cf0971ebb1e7a0cae2c32893f1fcc1e40f341`，PDF=`d3af3dfdd5412525e0d600514e104e8592a02b01a6ac84496c19308663dcca3f`。33页lint/layout/CRC与五页渲染通过。
-- [ ] **后续**：三地同步并推送，继续其余种子和LR格。
+- [x] **交付**：v149三地同步，`9272936`已推送；继续其余种子和LR格。
+
+## N134. 2026-11-03 官方模型全阶段后台流水线
+
+- [x] **范围调整**：RNA-Sc等价线672格暂缓；只运行core/frozen/crispr，pending=180/990/108，共1278个唯一RID。
+- [x] **安全调度**：动态排除accepted，派生need+1GiB，统一state-dir同模型串行，workers=6；等待现有父自然退出，每阶段独立proof门，失败不进入下一阶段。
+- [x] **验证与提交**：回归56 passed，`ccdae6b`和`5518866`均已推送；prepare-only无训练启动。
+- [x] **长期监控**：PID761383，waiting_existing；启动证据SHA256=`3152defedf7b20ab6c4179b6242caa57a3aa26964914884c54bb3678cd01b94a`。日志=`status/remaining_pipeline_20261103.log`，状态=`status/remaining_pipeline_20261103_state.json`。
+- [ ] **后续**：同步监控记录；等待core真实完成并滚动更新图和PPT，RNA-Sc不抢跑。
