@@ -957,3 +957,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v169新增1格，合计 **1692 accepted、0 rejected**；micro ncRNA Frozen n=100/seed43 ACC=0.5885780885780886、best_val=1.506475、best_epoch=32、36 epochs，proof=complete。证明SHA256=`d8477590ef0efed334e354cd8d53906877c8286e17806239da6ce1d126172000`。
 2. n=100三种子mean=0.6184926184926185、SD=0.030931560682770833，正式闭合低预算单元；当前主图预算为1000–3000，不把单点写成完整scaling趋势。
 3. 主矩阵、LR=228/320与56组选档不变；证据SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。n=1000/seed17已在途，33页PPT/PDF与v112源包保持v167。
+
+## 106. 2026-11-04 八任务收益分层与后续队列，PPT保持 v167
+
+1. 八任务用于发现结论的适用边界与反例，不是八倍数量或八个独立统计重复。主矩阵与LR继续八任务宽筛查；rank/DoRA、全量scaling与第二家族按边际收益分层，不让低收益全因子实验阻塞汇报。
+2. 当前优先per-base余36、complementary余18、LR余92及24组；tuned 240须等80组全部选档，C5c只补真实proof缺口，CRISPR先判断能否脱离基线，E6三格沿用corrected队列。
+3. ④从⑤同源曲线计算，⑥复用runtime；近随机任务不制造等价点，RNA-Sc 672继续暂停。范围分层不降低CUDA、validation收敛、checkpoint与三种子验收，不改变现有PPT科学图。
+4. 实时proof：Frozen=29/1008（余979）、PEFT/rank=324/960（余636）、C5c=689/2016（余1327）、CRISPR=0/108；LR余92含1 running，E6三格pending。审计SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。这是队列对账，不改变当前PPT展示版。

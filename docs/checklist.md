@@ -800,7 +800,16 @@
 - [x] CO2 闭合：n=100 mean=0.6184926184926185、SD=0.030931560682770833；CUDA/checkpoint/plateau通过。
 - [x] CO3 边界：该点低于主图1000–3000预算，不将单点写成scaling趋势；主矩阵与56组选档不变。
 - [x] CO4 展示：PPT与v112源包保持v167，n=1000/seed17仅在途。
-- [ ] CO5 后续：同步并提交staging，等待更多Frozen档位形成曲线。
+- [x] CO5 交付：v169三地同步，`463518e`已推送；等待更多Frozen档位形成曲线。
+
+## CP 组：八任务收益分层与队列验收
+
+- [x] CP1 科学性：八任务用于异质性与反例，不当作n=8独立重复；主矩阵/LR高收益，其他结论按边际收益分层。
+- [x] CP2 当前缺口：per-base 36、complementary 18、LR 92及24组，替代v166旧计数96格/25组。
+- [x] CP3 队列：core→frozen→crispr不变，29GiB核心窗口；E6三格pending不双开，tuned 240未达生成门不提前派发。
+- [x] CP4 减负：PEFT全量与C5c全量不阻塞汇报，④复用⑤、⑥复用runtime，RNA-Sc 672继续暂停。
+- [x] CP5 审计：Frozen 29/1008、PEFT 324/960、C5c 689/2016、CRISPR 0/108；LR余92含1 running，E6三格pending。证据SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。
+- [x] CP6 验收边界：accepted复用+未接受格实时proof，不重复加载全部checkpoint；不删注册表、不降低CUDA/收敛/三种子验收。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

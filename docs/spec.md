@@ -1502,3 +1502,14 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. n=100三种子ACC=0.6165501165501166/0.6503496503496503/0.5885780885780886，mean=0.6184926184926185、sample SD=0.030931560682770833，正式闭合该低预算单元。当前主图预算为1000–3000，不能把n=100单点解释为完整scaling趋势；待同系列更多档位形成曲线后更新结论⑤。
 3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v169.json`，SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。
 4. 监控已接续n=1000/seed17，仅launching不记完成；PPT与v112源包保持v167，原始新台账和proof在teams保留。
+
+### 10.149 后续实验总账与八任务减负原则（2026-11-04）
+
+1. **核心判断**：八任务购买的是结论的适用边界，不是八倍实验数量，也不是八个独立统计重复。它用于检验任务粒度、分类/回归、类别不平衡、信号强度和split是否改变规律，防止把ncRNA或MRL的单任务经验误推为通用配方。结论①主矩阵与结论②LR宽筛查收益高；rank/DoRA、全量scaling和第二家族等价线按边际收益分层，不机械地让每个结论都做八任务全因子。
+2. **范围分层不降低科学门槛**：已注册矩阵保留，不擅自删实验、不以工作量为由提前停止训练；区分“本次汇报必需、条件触发扩展、当前暂缓”。所有实际训练仍须CUDA、held-out validation收敛、恢复best checkpoint、逐格proof和三种子统计。分层只决定调度先后与结论范围，不把smoke、proxy或单种子结果写成最终结论。
+3. **当前执行A：汇报优先闭合**：per-base **234/270，余36**；complementary **306/324，余18**，均为650M Full的ncRNA/CRISPR/SSP双split三种子；LR **228/320，余92**，完整组 **56/80，余24组**。核心顺序仍为core→frozen→crispr；micro Frozen仅作9GiB小格补位，free≥29GiB让位核心。650M corrected E6 LoRA三格仍pending，沿用corrected队列，不双开、不降为最后才检查。
+4. **条件触发B**：80个LR组全闭合后冻结validation选档并生成80×3=240个tuned正式格，default同RID去重；tuned未生成前不提前排队。Frozen 1008格按动态proof推进，低预算点不冒充完整趋势；CRISPR 108个6000/10000档先回答是否脱离基线，再判断scaling。PEFT/rank 960格保留注册，rank4/16已96/96、rank8同RID复用，DoRA/rank扩展不得阻塞当前汇报。C5c LoRA/Full 2016格只按完整注册表proof补真实缺口，420/420 canonical等价格和全量主矩阵结果直接复用。
+5. **收益边界**：结论④从⑤的同源曲线计算逐seed最近对、|Δ|≤0.02且配对95%CI覆盖0，并要求两臂有效学习信号；近随机SpliceAI、近基线CRISPR数值接近不能称等价，不为了寻找交点定向加实验。结论⑥时间与显存复用runtime，不重复训练；分类机制、SpliceAI多种子、shuffle A/B和MRL负值复核均已完成，不重复抽取。
+6. **当前暂缓C**：RNA-Sc等价线672格继续暂停，优先官方模型，不抢核心、Frozen、CRISPR或E6显存。PEFT全量、C5c无差别全量和第二家族扩展是后续论文增强，不作为本次汇报前置条件。degradation等requested大于actual cap的档位不得伪装成新增数据点。
+7. **审计口径**：v169为1692 accepted、0 rejected；原始格数不等于待跑数，后续以注册表、ledger和`proof_state`为准。全注册表优化审计写入`status/contract_priority_audit_20261104.json`，真实剩余数与证据哈希见下条；本节的调度调整不改变现有合法在训进程，也不取消验收阶段门。
+8. **2026-11-04实时审计结果**：per-base=234 complete+36 runnable；complementary=306+18；LR=228 complete+91 runnable+1 running（合计余92）；Frozen=29 complete+978 runnable+1 running（剩余979）；PEFT/rank=324 complete+636 runnable；C5c LoRA/Full=689 complete+1327 runnable；CRISPR=108 runnable。650M corrected E6三行仍pending且result不存在。审计SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。审计复用已独立验收的v169 accepted行，仅对未接受格加载实时proof，避免重复读取全部checkpoint，不降低验收标准。

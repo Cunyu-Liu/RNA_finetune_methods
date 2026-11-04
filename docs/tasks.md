@@ -2368,6 +2368,22 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **展示交付**：462文件manifest=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`；PPT=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`，PDF=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。33页lint/layout/CRC及第20页原生渲染通过。
 - [x] **交付**：v166三地一致，`f793e1c`已推送；继续官方核心缺口。
 
+## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
+
+- [x] **安全补位**：官方micro Frozen原始need=8、派生need=9GiB，共享模型锁；650M/full 28GiB不强行启动。
+- [x] **路径纠偏**：首父遗漏`RNAFT_ARTIFACT_ROOT`导致3格落盘root；逐哈希迁至teams并保留原错位目录，3格proof=complete。证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`与`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
+- [x] **有界接续**：首父在子进程自然结束后退出，未中断训练；后续单格显式使用teams环境，避免309个小格挤占核心窗口。
+- [x] **实际在训**：父1273621/子1273646为micro ncRNA Frozen random/n=100/seed17，CUDA、need=9GiB；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
+- [x] **首格验收**：修正环境后的n=100/seed17已在teams形成完整proof；后续按实时余量接续，不把调度记录写成科学结果。
+
+## N145. 2026-11-04 长期显存补位监控
+
+- [x] **代码与验证**：新增idle Frozen监控，产物环境固定teams、共享模型锁、need+1GiB、异常即停止；回归60 passed，`3b7c7b5`已推送。
+- [x] **窗口纠偏**：核心窗口由保守19GiB改为符合实际需求的29GiB，避免核心无法启动时仍闲置显存。
+- [x] **实际接续**：监控PID1276604已启动micro ncRNA Frozen n=100/seed29，registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`。
+- [x] **监控路径**：`status/idle_frozen_fill_20261104_state.json`与`status/idle_frozen_fill_20261104_monitor.log`；PPT保持v166。
+- [x] **后续**：n=100三种子已完成并记录v169，监控继续core优先与逐格验收。
+
 ## N146. 2026-11-04 v167 RNA-FM SSP family LR 闭合与 Frozen 新增格
 
 - [x] **八格验收**：1690 accepted、0 rejected；全部proof=complete，证明SHA256=`d43f4048f099ca89829df694e74c6b4a5692c9888dcfe0b45fe29575bcac3733`。
@@ -2389,20 +2405,13 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **三种子闭合**：n=100 mean=0.6184926184926185、SD=0.030931560682770833；该点低于主图1000–3000预算，不将单点写成完整趋势。
 - [x] **矩阵边界**：主矩阵与LR=228/320、56组选档不变，证据SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。
 - [x] **在途**：监控已接续n=1000/seed17，不记完成；PPT与v112源包保持v167。
-- [ ] **后续**：同步并提交staging，待更多Frozen档位形成曲线后更新结论⑤。
+- [x] **交付**：v169 staging三地一致，`463518e`已推送；待更多Frozen档位形成曲线后更新结论⑤。
 
-## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
+## N149. 2026-11-04 八任务收益分层与实验队列重排
 
-- [x] **安全补位**：官方micro Frozen原始need=8、派生need=9GiB，共享模型锁；650M/full 28GiB不强行启动。
-- [x] **路径纠偏**：首父遗漏`RNAFT_ARTIFACT_ROOT`导致3格落盘root；逐哈希迁至teams并保留原错位目录，3格proof=complete。证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`与`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
-- [x] **有界接续**：首父在子进程自然结束后退出，未中断训练；后续单格显式使用teams环境，避免309个小格挤占核心窗口。
-- [x] **实际在训**：父1273621/子1273646为micro ncRNA Frozen random/n=100/seed17，CUDA、need=9GiB；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
-- [x] **首格验收**：修正环境后的n=100/seed17已在teams形成完整proof；后续按实时余量接续，不把调度记录写成科学结果。
-
-## N145. 2026-11-04 长期显存补位监控
-
-- [x] **代码与验证**：新增idle Frozen监控，产物环境固定teams、共享模型锁、need+1GiB、异常即停止；回归60 passed，`3b7c7b5`已推送。
-- [x] **窗口纠偏**：核心窗口由保守19GiB改为符合实际需求的29GiB，避免核心无法启动时仍闲置显存。
-- [x] **实际接续**：监控PID1276604已启动micro ncRNA Frozen n=100/seed29，registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`。
-- [x] **监控路径**：`status/idle_frozen_fill_20261104_state.json`与`status/idle_frozen_fill_20261104_monitor.log`；PPT保持v166。
-- [ ] **后续**：当前格完成proof后再记完成，保持core优先与逐格验收。
+- [x] **原则**：八任务用于检验规律边界，不作为八个独立统计重复；主矩阵/LR宽筛查优先，rank、DoRA、全量scaling和第二家族按边际收益推进。
+- [x] **当前执行**：per-base余36、complementary余18、LR余92及24组；core→frozen→crispr不变，micro小格补位，650M corrected E6三格沿用原队列。
+- [x] **条件触发**：80组选档后才生成tuned 240；CRISPR先查信号再谈scaling；PEFT 960不阻塞汇报；C5c只补真实proof缺口；④复用⑤，⑥复用runtime。
+- [x] **暂缓**：RNA-Sc 672继续暂停；近随机任务不寻找无意义等价点；已完成机制与诊断不重跑。
+- [x] **审计**：Frozen余979、PEFT/rank余636、C5c余1327、CRISPR余108；LR余92含1 running。证据SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`，不删除已注册合同或降低收敛标准。
+- [ ] **执行**：维持core→frozen→crispr与E6 corrected队列，条件满足后再生成tuned或扩展PEFT/C5c；RNA-Sc不启动。
