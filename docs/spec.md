@@ -1430,3 +1430,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v151新增3格，**1654+3=1657 accepted、0 rejected**；全部proof=complete、CUDA收敛。证明=`status/bestval_v151_new_proof.json`，SHA256=`ed0ae03ca1b9f281efa49dbee520f92eae33f856866e6929d031176e09df1acc`。
 2. 650M SpliceAI LoRA-family/seed17 macro-F1=0.590600117，仅n=1；ERNIE degradation frozen-family/seed17 PCC=0.367971215，degradation覆盖24→25。per-base=220/270、complementary=306/324、LR=213/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v151.json`，SHA256=`2ddd7f60aa7a974737bd9b1167f5932d33ba9e28eb53b6f352c125917c95be8f`。
 3. 源包revision=`20261103_refresh_v108_v151ledger_650m_spliceai_family_n1_degradation25`，**445个登记文件**，manifest SHA256=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`。PPT SHA256=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`，PDF SHA256=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`；33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
+
+### 10.138 v158 650M 三个 LoRA 任务闭合与 LR 53 组（2026-11-04）
+
+1. v158新增16格，**1657+16=1673 accepted、0 rejected**；全部独立proof=complete、CUDA/checkpoint与plateau=CONVERGED通过。证明=`status/bestval_v158_new_proof.json`，SHA256=`3cd5417f8ce62a4ebbf223fd2aff73c85ca6f4b20cdca4bd4203f8d736f48c61`。
+2. 650M degradation、SpliceAI、SSI LoRA 均完成random/family三种子六臂闭合，覆盖分别27/27/26；per-base=234/270、complementary=306/324、LR=215/320。650M不再以这些任务的单种子高低点写规模规律。
+3. LR完整组由52增至 **53/80**：mega SpliceAI full-family四档闭合，validation选1e-5（best_val=0.001095）；test macro-F1=0.534050348仅报告。选档分布为3e-5二十三组、1e-4十六组、1e-5十二组、3e-4两组。证据=`status/lr_validation_interim_20261101_v158.json`，SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
+4. 源包revision=`20261104_refresh_v109_v158ledger_650m_three_lora_tasks_closure_lr53`，**449个登记文件**，manifest SHA256=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`。PPT SHA256=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`，PDF SHA256=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`；33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。

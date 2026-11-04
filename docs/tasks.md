@@ -2322,4 +2322,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **三格验收**：1657 accepted、0 rejected；证明SHA256=`ed0ae03ca1b9f281efa49dbee520f92eae33f856866e6929d031176e09df1acc`。
 - [x] **结果边界**：650M SpliceAI LoRA-family/seed17=0.590600117，仅n=1；degradation覆盖25/30，per-base 220/270、LR 213/320，52组与选档不变。
 - [x] **交付**：445文件manifest=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`；PPT=`be36d5f3da62377f216e57f5203b622d0bd54889d6729a816fd54e5da866d840`，PDF=`03401896560c312d044bef4f51d4aac2e283924bf70e06aac3b1c3730b426cf5`。33页lint/layout/CRC与四页渲染通过。
-- [ ] **后续**：三地同步并推送，继续官方核心缺口与自然大格窗口。
+- [x] **交付**：v151三地同步，`89b0cfb`已推送；继续官方核心缺口与自然大格窗口。
+
+## N138. 2026-11-04 v158 650M 三个 LoRA 任务闭合
+
+- [x] **16格验收**：1673 accepted、0 rejected；证明SHA256=`3cd5417f8ce62a4ebbf223fd2aff73c85ca6f4b20cdca4bd4203f8d736f48c61`。
+- [x] **三种子闭合**：650M degradation/SpliceAI/SSI LoRA均六臂闭合，覆盖27/27/26；per-base 234/270、LR 215/320。
+- [x] **LR新组**：53/80组，分布23/16/12/2；mega SpliceAI family选1e-5（best_val=0.001095），test不参与。证据SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
+- [x] **交付**：449文件manifest=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`；PPT=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`，PDF=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`。33页lint/layout/CRC与五页渲染通过。
+- [ ] **后续**：三地同步并推送，继续官方核心缺口。

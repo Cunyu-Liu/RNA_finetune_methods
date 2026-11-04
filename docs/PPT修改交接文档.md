@@ -886,3 +886,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 650M SpliceAI LoRA-family/seed17=0.590600117，仅n=1；第9页斜线保留，第28页由0改1。ERNIE degradation frozen-family/seed17使degradation覆盖升至25/30。
 3. per-base=220/270、complementary=306/324、LR=213/320；完整组52/80与选档不变。证据=`status/lr_validation_interim_20261101_v151.json`，SHA256=`2ddd7f60aa7a974737bd9b1167f5932d33ba9e28eb53b6f352c125917c95be8f`。
 4. 源包revision=`20261103_refresh_v108_v151ledger_650m_spliceai_family_n1_degradation25`，445个登记文件，manifest SHA256=`32196c399038ca114cd6dc5248cd7165b87caf620a3873d6274829ae744a59fa`。33页lint/layout/CRC与第9/28/29/30页原生渲染通过。
+
+## 95. 2026-11-04 当前 v158：650M 三个 LoRA 任务闭合与 LR 53 组
+
+1. 当前PPT为 **33页**，SHA256=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`；PDF SHA256=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`。输入 **1673 accepted、0 rejected**，16格proof=complete。
+2. 650M degradation/SpliceAI/SSI LoRA均六臂闭合，覆盖27/27/26；第9页去除相应斜线，第28页三任务均显示3。per-base=234/270、complementary=306/324、LR=215/320。
+3. 第20页更新为 **53/80组**，分布23/16/12/2；mega SpliceAI full-family四档闭合，validation选1e-5（best_val=0.001095），test macro-F1仅报告。证据SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
+4. 源包revision=`20261104_refresh_v109_v158ledger_650m_three_lora_tasks_closure_lr53`，449个登记文件，manifest SHA256=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`。33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。
