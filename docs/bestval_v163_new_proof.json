@@ -1,0 +1,60 @@
+[
+  {
+    "run_id": "ft_rnafm_degradation_full_s101_family_b20fix_bestval_v1",
+    "proof_state": "complete",
+    "proof_reason": "",
+    "task": "degradation",
+    "model": "RNA-FM",
+    "strategy": "full",
+    "split": "family",
+    "seed": "101",
+    "lr": "0.0003",
+    "metric": "PCC",
+    "value": "0.3603743665060675",
+    "best_val": "0.23048",
+    "best_epoch": "0",
+    "epochs": "4",
+    "stop_reason": "validation_no_improvement_patience",
+    "cuda_device": "cuda:0",
+    "cuda_device_name": "NVIDIA GeForce RTX 5090",
+    "plateau_status": "CONVERGED",
+    "checkpoint_bytes": 398250571,
+    "checkpoint_sha256": "c12137a0eb39e384d5d6ff8ada0d69f7af910cb8a2e55d3223e200d62e063ef0",
+    "out_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rnafm_degradation_full_s101_family_b20fix_bestval_v1",
+    "epoch_val_losses": [
+      0.23048,
+      0.23347,
+      0.222661,
+      0.229398
+    ]
+  },
+  {
+    "run_id": "ft_rnafm_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+    "proof_state": "complete",
+    "proof_reason": "",
+    "task": "degradation",
+    "model": "RNA-FM",
+    "strategy": "full",
+    "split": "family",
+    "seed": "101",
+    "lr": "0.0001",
+    "metric": "PCC",
+    "value": "0.38290065357469744",
+    "best_val": "0.224629",
+    "best_epoch": "0",
+    "epochs": "4",
+    "stop_reason": "validation_no_improvement_patience",
+    "cuda_device": "cuda:0",
+    "cuda_device_name": "NVIDIA GeForce RTX 5090",
+    "plateau_status": "CONVERGED",
+    "checkpoint_bytes": 398250571,
+    "checkpoint_sha256": "bb18d981acd2a1746ad3f03200b1f961f7f167b478cacc99d2c48b6f33845f59",
+    "out_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rnafm_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+    "epoch_val_losses": [
+      0.224629,
+      0.2287,
+      0.22753,
+      0.219506
+    ]
+  }
+]

@@ -2337,4 +2337,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **安全调度**：per-base need20已清零，改选非mega LR 16+1GiB，父1190497共享LR state-dir/model locks，workers=1。
 - [x] **实际在训**：子1190658为RNA-FM degradation full-family/seed101/default LR，device0；28个候选注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`。
 - [x] **预算边界**：启动后free=18.662GiB，不重复开同模型任务；证据SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`，不记完成。
-- [ ] **后续**：同步记录，等待自然完成结果和下一窗口。
+- [x] **交付**：补位记录三地一致，`759a908`已推送；等待自然完成结果和下一窗口。
+
+## N140. 2026-11-04 v163 RNA-FM degradation family LR staging
+
+- [x] **两格验收**：1675 accepted、0 rejected；default与1e-4格proof=complete，证明SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
+- [x] **LR边界**：LR=217/320，53组与选档不变；仅seed101 tuning，不进正式均值。证据SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
+- [x] **展示边界**：无新科学单元，PPT与v109源包保持v158。
+- [ ] **后续**：同步并提交staging证据，等待下一真实可见更新。

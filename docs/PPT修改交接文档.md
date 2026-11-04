@@ -900,3 +900,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 新父1190497/子1190658启动RNA-FM degradation full-family/seed101/default LR，device0、best-val协议；启动后free=18.662GiB，不重复开同模型任务。
 3. 28个RNA-FM候选注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`；启动证据=`status/queue_actions/lr_official_fill_20261104.json`，SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`。
 4. 科学结果仍为1673 accepted、0 rejected，33页PPT/PDF与v109源包保持v158。
+
+## 97. 2026-11-04 v163 staging：展示版保持 v158
+
+1. v163新增2格，合计 **1675 accepted、0 rejected**；RNA-FM degradation family default/1e-4 tuning PCC=0.360374367/0.382900654，proof=complete。证明SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
+2. LR=217/320，完整组53/80与选档不变；仅seed101 tuning，不进正式三种子均值。
+3. 无新科学单元，33页PPT/PDF与v109源包保持v158。LR证据=`status/lr_validation_interim_20261101_v163.json`，SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。

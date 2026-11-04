@@ -1443,3 +1443,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. 用户指出显存未占满。核查时free=26.095GiB，per-base need20候选已清零，仅剩28GiB大格；改从LR选择非mega的16+1GiB候选，使用共享LR state-dir/model locks，workers=1。
 2. 新父1190497/子1190658启动RNA-FM degradation full-family/seed101/default LR，device0、best-val协议。28个RNA-FM候选注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`，启动后free=18.662GiB，不重复开同模型任务。
 3. 证据=`status/queue_actions/lr_official_fill_20261104.json`，SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`，不记完成。科学结果仍为1673 accepted、0 rejected，PPT与v109源包保持v158。
+
+### 10.140 v163 RNA-FM degradation family LR staging（2026-11-04）
+
+1. v163新增2格，**1673+2=1675 accepted、0 rejected**；default与1e-4 tuning均proof=complete、CUDA收敛。证明=`status/bestval_v163_new_proof.json`，SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
+2. RNA-FM degradation family default PCC=0.360374367、1e-4 PCC=0.382900654；仅seed101 tuning，不进正式三种子均值。per-base=234/270、complementary=306/324、LR=217/320；完整组53/80与选档不变。证据=`status/lr_validation_interim_20261101_v163.json`，SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
+3. 无新完整组、选档或三种子单元，PPT与v109源包保持v158，不做无意义重绘。
