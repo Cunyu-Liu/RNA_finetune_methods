@@ -1449,3 +1449,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v163新增2格，**1673+2=1675 accepted、0 rejected**；default与1e-4 tuning均proof=complete、CUDA收敛。证明=`status/bestval_v163_new_proof.json`，SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
 2. RNA-FM degradation family default PCC=0.360374367、1e-4 PCC=0.382900654；仅seed101 tuning，不进正式三种子均值。per-base=234/270、complementary=306/324、LR=217/320；完整组53/80与选档不变。证据=`status/lr_validation_interim_20261101_v163.json`，SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
 3. 无新完整组、选档或三种子单元，PPT与v109源包保持v158，不做无意义重绘。
+
+### 10.141 v164 RNA-FM degradation family 第四档前置 staging（2026-11-04）
+
+1. v164新增1格，**1675+1=1676 accepted、0 rejected**；`ft_rnafm_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1` proof=complete，PCC=0.38693849945802145、best_val=0.227363、best_epoch=4、8 epochs，CUDA/checkpoint与plateau=CONVERGED通过。证明=`status/bestval_v164_new_proof.json`，SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
+2. per-base=234/270、complementary=306/324、LR=218/320；完整组53/80，选档分布3e-5二十三组、1e-4十六组、1e-5十二组、3e-4两组。该组已有default/1e-4/1e-5三档，仍缺3e-5；test不参与选档。证据=`status/lr_validation_interim_20261101_v164.json`，SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
+3. 仅seed101 tuning，不进正式三种子均值；无新完整LR组或三种子单元，PPT与v109源包保持v158。

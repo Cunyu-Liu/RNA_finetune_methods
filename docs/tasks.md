@@ -2344,4 +2344,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **两格验收**：1675 accepted、0 rejected；default与1e-4格proof=complete，证明SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
 - [x] **LR边界**：LR=217/320，53组与选档不变；仅seed101 tuning，不进正式均值。证据SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
 - [x] **展示边界**：无新科学单元，PPT与v109源包保持v158。
+- [x] **交付**：v163 staging三地一致，`8c54186`已推送；等待下一真实可见更新。
+
+## N141. 2026-11-04 v164 RNA-FM degradation family 第四档前置 staging
+
+- [x] **单格验收**：1676 accepted、0 rejected；1e-5格PCC=0.38693849945802145、best_val=0.227363，proof=complete，证明SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
+- [x] **LR边界**：LR=218/320，53组与选档23/16/12/2不变；仍缺3e-5，tuning不进正式均值。证据SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
+- [x] **展示边界**：无新科学单元，PPT与v109源包保持v158。
 - [ ] **后续**：同步并提交staging证据，等待下一真实可见更新。

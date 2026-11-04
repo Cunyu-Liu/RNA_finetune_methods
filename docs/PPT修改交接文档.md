@@ -906,3 +906,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v163新增2格，合计 **1675 accepted、0 rejected**；RNA-FM degradation family default/1e-4 tuning PCC=0.360374367/0.382900654，proof=complete。证明SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
 2. LR=217/320，完整组53/80与选档不变；仅seed101 tuning，不进正式三种子均值。
 3. 无新科学单元，33页PPT/PDF与v109源包保持v158。LR证据=`status/lr_validation_interim_20261101_v163.json`，SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
+
+## 98. 2026-11-04 v164 staging：展示版保持 v158
+
+1. v164新增1格，合计 **1676 accepted、0 rejected**；RNA-FM degradation full-family/seed101的1e-5 tuning PCC=0.38693849945802145、best_val=0.227363、best_epoch=4、8 epochs，proof=complete。证明SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
+2. LR=218/320，完整组53/80与选档23/16/12/2不变；该组已有三档，仍缺3e-5，tuning不进正式三种子均值。
+3. 无新科学单元，33页PPT/PDF与v109源包保持v158。LR证据=`status/lr_validation_interim_20261101_v164.json`，SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。

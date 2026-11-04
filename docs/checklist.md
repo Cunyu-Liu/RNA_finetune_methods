@@ -751,5 +751,13 @@
 - [x] CG1 数据：1675 accepted、0 rejected；两格proof=complete，证明SHA256=`ffcf6a33a15296373f80012d9735b0424a510bd2f2a7551770596d3102c3fffe`。
 - [x] CG2 边界：LR=217/320，53组与选档不变；tuning不进正式均值，证据SHA256=`cac6c077b1cacdb18979a295081e538c3b0d659247326bd7dd29f2f9fec62991`。
 - [x] CG3 展示：无新科学单元，PPT与v109源包保持v158。
-- [ ] CG4 后续：同步并提交，等待真实可见更新。
+- [x] CG4 交付：v163三地同步，`8c54186`已推送；等待真实可见更新。
+
+## CH 组：v164 RNA-FM degradation family LR staging 验收
+
+- [x] CH1 数据：1676 accepted、0 rejected；新增1e-5格proof=complete，证明SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
+- [x] CH2 结果：PCC=0.38693849945802145、best_val=0.227363、best_epoch=4、8 epochs，CUDA/checkpoint/plateau通过。
+- [x] CH3 边界：LR=218/320，53组与选档23/16/12/2不变，仍缺3e-5；证据SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
+- [x] CH4 展示：仅tuning，无新科学单元，PPT与v109源包保持v158。
+- [ ] CH5 后续：同步并提交，等待真实可见更新。
 
