@@ -2374,4 +2374,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **路径纠偏**：首父遗漏`RNAFT_ARTIFACT_ROOT`导致3格落盘root；逐哈希迁至teams并保留原错位目录，3格proof=complete。证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`与`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
 - [x] **有界接续**：首父在子进程自然结束后退出，未中断训练；后续单格显式使用teams环境，避免309个小格挤占核心窗口。
 - [x] **实际在训**：父1273621/子1273646为micro ncRNA Frozen random/n=100/seed17，CUDA、need=9GiB；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
-- [ ] **后续**：每格完整proof后再记完成，按实时余量接续，不把调度记录写成科学结果。
+- [x] **首格验收**：修正环境后的n=100/seed17已在teams形成完整proof；后续按实时余量接续，不把调度记录写成科学结果。
+
+## N145. 2026-11-04 长期显存补位监控
+
+- [x] **代码与验证**：新增idle Frozen监控，产物环境固定teams、共享模型锁、need+1GiB、异常即停止；回归60 passed，`3b7c7b5`已推送。
+- [x] **窗口纠偏**：核心窗口由保守19GiB改为符合实际需求的29GiB，避免核心无法启动时仍闲置显存。
+- [x] **实际接续**：监控PID1276604已启动micro ncRNA Frozen n=100/seed29，registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`。
+- [x] **监控路径**：`status/idle_frozen_fill_20261104_state.json`与`status/idle_frozen_fill_20261104_monitor.log`；PPT保持v166。
+- [ ] **后续**：当前格完成proof后再记完成，保持core优先与逐格验收。

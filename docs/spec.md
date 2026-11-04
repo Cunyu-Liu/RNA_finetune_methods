@@ -1475,3 +1475,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 首父1271175的启动环境遗漏`RNAFT_ARTIFACT_ROOT`，导致3个n=10格写入`/root/rna-ft-eval/artifacts`。没有删除或覆盖实验证据：逐文件验哈希后迁至teams对应RID目录，修正ledger产物路径，原错位目录保留于`/root/rna-ft-eval/artifacts_misplaced_20261104/`；3格独立proof均为complete。首格证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`，其余两格批次证据SHA256=`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
 3. 调度器同模型串行，workers=2不等于两个同模型训练并发；首父已在自有子进程自然结束后退出，未向训练发送终止信号。后续单格父1273621显式继承teams产物环境，子1273646为ncRNA Frozen random/n=100/seed17，CUDA实际在训，need=9GiB；启动证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。核查时GPU used/free=15367/16745MiB，下一核心大格28GiB仍不强行启动。
 4. 补位启动、在训与路径修复只作调度证据，不写成scaling科学结论；后续每格仍需result/plateau/checkpoint/CUDA独立验收。
+
+### 10.145 长期显存补位监控（2026-11-04）
+
+1. 新增 `scripts/idle_frozen_fill.py`：只选择官方micro canonical Frozen，不含dense；共享`remaining_pipeline_20261103`状态与模型锁，每格need+1GiB，显式固定`RNAFT_ARTIFACT_ROOT`为teams。任何running/conflict/proof异常即blocked，不跳过错误继续。
+2. 核心窗口阈值最初19GiB过于保守，已按实际核心need=28GiB改为 **29GiB**：free<29且≥9GiB才启动单格，free≥29GiB时为完整核心任务让位；同模型串行，不用多父进程绕过锁。
+3. 回归测试 **60 passed**，提交`3b7c7b5`已推送。当前监控PID **1276604**，已启动`ft_rinalmomicro_noncodingrnafamily_frozen_s29_random_e3100_bestval_v1`，派生need=9GiB、registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`。状态=`status/idle_frozen_fill_20261104_state.json`，监控日志=`status/idle_frozen_fill_20261104_monitor.log`。
+4. 修正环境后的n=100/seed17已在teams形成完整proof；当前n=100/seed29仅launching，不记完成。PPT与v111源包保持v166，长期监控启动不改变科学结论。

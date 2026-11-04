@@ -932,3 +932,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. 核心剩余大格需28GiB，补入官方micro Frozen小格，原始need=8、派生need=9GiB，共享模型锁；同模型串行，正式core→frozen→crispr阶段门不变。
 2. 首父遗漏`RNAFT_ARTIFACT_ROOT`，3个n=10格落盘root。已逐哈希迁至teams、修正ledger产物路径并保留原错位目录，3格proof=complete；没有覆盖或删除实验证据。
 3. 首父已在子进程自然结束后退出；后续父1273621/子1273646显式使用teams环境，实际运行ncRNA Frozen random/n=100/seed17。该调度与路径修复不改变PPT中的性能或scaling结论。
+
+## 102. 2026-11-04 长期显存补位监控，PPT保持 v166
+
+1. `idle_frozen_fill.py`固定teams产物环境、共享模型锁、每格need+1GiB，异常即停止；目标与调度回归60 passed，`3b7c7b5`已推送。
+2. 核心窗口按实际28GiB需求加1GiB余量设为29GiB；free<29且≥9GiB才补入单格，避免此前19GiB阈值造成不必要空闲。
+3. 当前监控PID1276604已启动micro ncRNA Frozen n=100/seed29；状态=`status/idle_frozen_fill_20261104_state.json`。启动不记完成，33页PPT/PDF及v111源包保持v166。

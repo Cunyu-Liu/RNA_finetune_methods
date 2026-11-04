@@ -783,5 +783,13 @@
 - [x] CK2 路径：3个错位产物逐哈希迁至teams，ledger路径修正，原目录保留，独立proof=complete；无覆盖或删除实验数据。
 - [x] CK3 防重：同模型串行、共享state-dir；首父仅在自有子进程自然结束后退出，后续单格显式继承产物环境。
 - [x] CK4 在训：父1273621/子1273646为micro ncRNA Frozen n=100/seed17，CUDA在训；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
-- [ ] CK5 后续：完成格独立proof后再记完成，按窗口接续，不把补位记录当科学结论。
+- [x] CK5 验收：n=100/seed17完整proof通过；按窗口接续，不把补位记录当科学结论。
+
+## CL 组：长期显存补位监控验收
+
+- [x] CL1 环境：脚本显式固定teams产物根目录，共享模型锁、每格need+1GiB，dense不进入补位。
+- [x] CL2 门禁：free<29且≥9GiB才补位，free≥29GiB让位核心；running/conflict/proof异常停止。
+- [x] CL3 测试：目标与调度回归共60 passed，`3b7c7b5`已推送。
+- [x] CL4 生产：PID1276604已启动n=100/seed29，registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`，状态与日志文件留存。
+- [ ] CL5 后续：当前格proof后再记完成，PPT保持v166，继续核心优先。
 
