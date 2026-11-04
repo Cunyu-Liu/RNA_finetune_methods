@@ -1482,3 +1482,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 核心窗口阈值最初19GiB过于保守，已按实际核心need=28GiB改为 **29GiB**：free<29且≥9GiB才启动单格，free≥29GiB时为完整核心任务让位；同模型串行，不用多父进程绕过锁。
 3. 回归测试 **60 passed**，提交`3b7c7b5`已推送。当前监控PID **1276604**，已启动`ft_rinalmomicro_noncodingrnafamily_frozen_s29_random_e3100_bestval_v1`，派生need=9GiB、registry SHA256=`4b801bba70029c266a98cc3fbe47293f32d683319964958dda6738946b2a73b3`。状态=`status/idle_frozen_fill_20261104_state.json`，监控日志=`status/idle_frozen_fill_20261104_monitor.log`。
 4. 修正环境后的n=100/seed17已在teams形成完整proof；当前n=100/seed29仅launching，不记完成。PPT与v111源包保持v166，长期监控启动不改变科学结论。
+
+### 10.146 v167 RNA-FM SSP family LR 闭合与 Frozen 新增格（2026-11-04）
+
+1. v167新增8格，**1682+8=1690 accepted、0 rejected**，全部独立proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v167_new_proof.json`，SHA256=`d43f4048f099ca89829df694e74c6b4a5692c9888dcfe0b45fe29575bcac3733`。注册表同RID别名必须完整实验键和产物目录一致才可共用证明。
+2. RNA-FM SSP full-family四档闭合，validation选1e-4（best_val=0.552411，test F1=0.1797仅报告）；LR=228/320，完整组 **56/80**，分布3e-5二十四组、1e-4十八组、1e-5十二组、3e-4两组。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。per-base=234/270、complementary=306/324不变。
+3. 本版新增4个C5C Frozen格：micro ncRNA random/n=10三种子ACC=0.0675990676/0.0652680653/0.0675990676；n=100/seed17 ACC=0.6165501165501166、best_epoch=41、45 epochs。n=100仅一个种子，不提前写scaling规律；流水线原审计已有格保持不变，不以新增4格宣称Frozen阶段完成。
+4. 源包revision=`20261104_refresh_v112_v167ledger_rnafm_ssp_family_lr56_frozen4`，**466个登记文件**，manifest SHA256=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`。PPT33页仅更新第20页，SHA256=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`；PDF SHA256=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。lint/layout/CRC与原生渲染通过，其余图与用户手调内容不变。

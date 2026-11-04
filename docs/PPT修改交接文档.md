@@ -938,3 +938,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. `idle_frozen_fill.py`固定teams产物环境、共享模型锁、每格need+1GiB，异常即停止；目标与调度回归60 passed，`3b7c7b5`已推送。
 2. 核心窗口按实际28GiB需求加1GiB余量设为29GiB；free<29且≥9GiB才补入单格，避免此前19GiB阈值造成不必要空闲。
 3. 当前监控PID1276604已启动micro ncRNA Frozen n=100/seed29；状态=`status/idle_frozen_fill_20261104_state.json`。启动不记完成，33页PPT/PDF及v111源包保持v166。
+
+## 103. 2026-11-04 当前 v167：RNA-FM SSP family LR 闭合
+
+1. 当前PPT **33页**，SHA256=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`；PDF SHA256=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。输入 **1690 accepted、0 rejected**，八格proof=complete，证明SHA256=`d43f4048f099ca89829df694e74c6b4a5692c9888dcfe0b45fe29575bcac3733`。
+2. 第20页更新为LR=228/320、完整组 **56/80**、选档24/18/12/2；RNA-FM SSP family选1e-4（best_val=0.552411），test F1=0.1797仅报告。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。
+3. 新增micro ncRNA Frozen n=10三种子和n=100/seed17；后者ACC=0.6165501165501166、best_epoch=41、45 epochs，仅单种子，不改scaling图。
+4. 源包revision=`20261104_refresh_v112_v167ledger_rnafm_ssp_family_lr56_frozen4`，466个登记文件，manifest SHA256=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`。仅更新学习率页，33页lint/layout/CRC与第20页原生渲染通过。

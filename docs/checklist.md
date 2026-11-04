@@ -775,7 +775,16 @@
 - [x] CJ2 LR：224/320，55/80组，分布24/17/12/2；random按best_val选1e-4，证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
 - [x] CJ3 交付：462文件manifest=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`；PPT=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`，PDF=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。
 - [x] CJ4 渲染：33页lint/layout/CRC与第20页原生渲染通过，55组与双split选档图文一致。
-- [ ] CJ5 后续：三地同步并提交，继续官方核心缺口。
+- [x] CJ5 交付：v166三地同步，`f793e1c`已推送；继续官方核心缺口。
+
+## CM 组：v167 RNA-FM SSP family LR 与 Frozen 验收
+
+- [x] CM1 数据：1690 accepted、0 rejected；八格proof=complete，证明SHA256=`d43f4048f099ca89829df694e74c6b4a5692c9888dcfe0b45fe29575bcac3733`。
+- [x] CM2 LR：228/320，56/80组，分布24/18/12/2；SSP family选1e-4，证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。
+- [x] CM3 Frozen：n=10三种子完成；n=100/seed17=0.6165501165501166、45 epochs，仅单种子，不提前推广。
+- [x] CM4 交付：466文件manifest=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`；PPT=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`，PDF=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。
+- [x] CM5 渲染：33页lint/layout/CRC及第20页原生渲染通过，56组与SSP family选档一致。
+- [ ] CM6 后续：三地同步并提交，继续核心优先与补位格验收。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

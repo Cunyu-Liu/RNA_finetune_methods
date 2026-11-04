@@ -2366,7 +2366,15 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **四格验收**：1682 accepted、0 rejected；四格proof=complete，证明SHA256=`da64c73fe6d79fe025a865cb7f17cef322998cb19ef40a16b2d17d1866ac0686`。
 - [x] **LR选档**：LR=224/320，55/80组，分布24/17/12/2；RNA-FM degradation random选1e-4，test不参与。证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
 - [x] **展示交付**：462文件manifest=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`；PPT=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`，PDF=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。33页lint/layout/CRC及第20页原生渲染通过。
-- [ ] **后续**：三地同步并提交，继续官方核心缺口。
+- [x] **交付**：v166三地一致，`f793e1c`已推送；继续官方核心缺口。
+
+## N146. 2026-11-04 v167 RNA-FM SSP family LR 闭合与 Frozen 新增格
+
+- [x] **八格验收**：1690 accepted、0 rejected；全部proof=complete，证明SHA256=`d43f4048f099ca89829df694e74c6b4a5692c9888dcfe0b45fe29575bcac3733`。
+- [x] **LR选档**：LR=228/320，56/80组，分布24/18/12/2；RNA-FM SSP family选1e-4，test不参与。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。
+- [x] **Frozen边界**：n=10三种子完成，n=100/seed17历经45轮收敛；n=100仅单种子，不写scaling结论。
+- [x] **展示交付**：466文件manifest=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`；PPT=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`，PDF=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。33页lint/layout/CRC及第20页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续当前补位格与官方核心缺口。
 
 ## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
 

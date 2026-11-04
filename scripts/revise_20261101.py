@@ -177,7 +177,7 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 55/80 组：3e-5 二十四组、1e-4 十七组、1e-5 十二组、3e-4 两组。RNA-FM degradation family/random 分别选 3e-5/1e-4；RNA-FM modification family 与 SSP random 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 56/80 组：3e-5 二十四组、1e-4 十八组、1e-5 十二组、3e-4 两组。RNA-FM degradation family/random 分别选 3e-5/1e-4，SSP family 新增选 1e-4；RNA-FM modification family 与 SSP random 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
