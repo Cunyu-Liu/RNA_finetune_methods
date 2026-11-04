@@ -1489,3 +1489,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. RNA-FM SSP full-family四档闭合，validation选1e-4（best_val=0.552411，test F1=0.1797仅报告）；LR=228/320，完整组 **56/80**，分布3e-5二十四组、1e-4十八组、1e-5十二组、3e-4两组。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。per-base=234/270、complementary=306/324不变。
 3. 本版新增4个C5C Frozen格：micro ncRNA random/n=10三种子ACC=0.0675990676/0.0652680653/0.0675990676；n=100/seed17 ACC=0.6165501165501166、best_epoch=41、45 epochs。n=100仅一个种子，不提前写scaling规律；流水线原审计已有格保持不变，不以新增4格宣称Frozen阶段完成。
 4. 源包revision=`20261104_refresh_v112_v167ledger_rnafm_ssp_family_lr56_frozen4`，**466个登记文件**，manifest SHA256=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`。PPT33页仅更新第20页，SHA256=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`；PDF SHA256=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。lint/layout/CRC与原生渲染通过，其余图与用户手调内容不变。
+
+### 10.147 v168 micro ncRNA Frozen n=100 第二种子（2026-11-04）
+
+1. v168新增1格，**1690+1=1691 accepted、0 rejected**；`ft_rinalmomicro_noncodingrnafamily_frozen_s29_random_e3100_bestval_v1` ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v168_new_proof.json`，SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
+2. n=100已有seed17=0.6165501165501166与seed29=0.6503496503496503，当前2/3，仍缺seed43；不提前写三种子均值或scaling规律。per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v168.json`，SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
+3. 监控已接续n=100/seed43，仅launching不记完成；无新完整科学单元，PPT与v112源包保持v167。

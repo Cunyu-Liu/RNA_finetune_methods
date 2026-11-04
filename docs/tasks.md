@@ -2374,7 +2374,14 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR选档**：LR=228/320，56/80组，分布24/18/12/2；RNA-FM SSP family选1e-4，test不参与。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。
 - [x] **Frozen边界**：n=10三种子完成，n=100/seed17历经45轮收敛；n=100仅单种子，不写scaling结论。
 - [x] **展示交付**：466文件manifest=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`；PPT=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`，PDF=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。33页lint/layout/CRC及第20页原生渲染通过。
-- [ ] **后续**：三地同步并提交，继续当前补位格与官方核心缺口。
+- [x] **交付**：v167三地一致，`51a6e9e`已推送；继续当前补位格与官方核心缺口。
+
+## N147. 2026-11-04 v168 micro ncRNA Frozen n=100 第二种子
+
+- [x] **单格验收**：1691 accepted、0 rejected；seed29 ACC=0.6503496503496503、best_epoch=55、59 epochs，proof=complete，证明SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
+- [x] **科学边界**：n=100为2/3，仍缺seed43；LR=228/320，56组与选档不变，证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
+- [x] **展示边界**：无新完整科学单元，PPT与v112源包保持v167。
+- [ ] **后续**：同步并提交staging，等待seed43完整proof。
 
 ## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
 

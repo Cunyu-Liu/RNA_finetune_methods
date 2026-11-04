@@ -945,3 +945,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页更新为LR=228/320、完整组 **56/80**、选档24/18/12/2；RNA-FM SSP family选1e-4（best_val=0.552411），test F1=0.1797仅报告。证据SHA256=`6a323cf9eea13278620cce6f175c3c560bcf638da30bf42d837db53dfa8e8396`。
 3. 新增micro ncRNA Frozen n=10三种子和n=100/seed17；后者ACC=0.6165501165501166、best_epoch=41、45 epochs，仅单种子，不改scaling图。
 4. 源包revision=`20261104_refresh_v112_v167ledger_rnafm_ssp_family_lr56_frozen4`，466个登记文件，manifest SHA256=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`。仅更新学习率页，33页lint/layout/CRC与第20页原生渲染通过。
+
+## 104. 2026-11-04 v168 staging：展示版保持 v167
+
+1. v168新增1格，合计 **1691 accepted、0 rejected**；micro ncRNA Frozen n=100/seed29 ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，proof=complete。证明SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
+2. n=100目前seed17/29为0.6165501165501166/0.6503496503496503，仅2/3，仍缺seed43；不写三种子均值或scaling规律。
+3. 主矩阵、LR=228/320与56组选档不变；证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。33页PPT/PDF与v112源包保持v167。

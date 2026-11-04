@@ -784,7 +784,15 @@
 - [x] CM3 Frozen：n=10三种子完成；n=100/seed17=0.6165501165501166、45 epochs，仅单种子，不提前推广。
 - [x] CM4 交付：466文件manifest=`dfe447b3cce8ec4fe1facea0b71a16a8c6b303f058c44e141f53fd79956ec9eb`；PPT=`bcf0f81377afe9e74615754fad3783fad323a5fea2c5033b073a8084bdcad314`，PDF=`07e987a7d30c42ecdaaad3563afd9c7ca41b61d3d70623782fea7447bf42c908`。
 - [x] CM5 渲染：33页lint/layout/CRC及第20页原生渲染通过，56组与SSP family选档一致。
-- [ ] CM6 后续：三地同步并提交，继续核心优先与补位格验收。
+- [x] CM6 交付：v167三地同步，`51a6e9e`已推送；继续核心优先与补位格验收。
+
+## CN 组：v168 micro ncRNA Frozen n=100 第二种子验收
+
+- [x] CN1 数据：1691 accepted、0 rejected；seed29 proof=complete，证明SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
+- [x] CN2 结果：ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，CUDA/checkpoint/plateau通过。
+- [x] CN3 边界：n=100为2/3，仍缺seed43；主矩阵与56组选档不变，证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
+- [x] CN4 展示：无新完整科学单元，PPT与v112源包保持v167。
+- [ ] CN5 后续：同步并提交staging，等待seed43完整proof。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 
