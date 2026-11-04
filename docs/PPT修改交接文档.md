@@ -978,3 +978,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第26页Frozen random已有n=1000/1500/2000三个闭合点，mean=0.742424/0.763403/0.7808857808857809；n=2000 SD=0.01323754859160902。三点上升不宣称平台或通用规律，n=2500在训不画入。
 3. 主矩阵与LR=228/320、56组选档不变，证据SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
 4. 源包revision=`20261104_refresh_v114_v171ledger_micro_frozen_n2000_closure`，483个登记文件，manifest SHA256=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`。33页lint/layout/CRC与第26页原生渲染通过。
+
+## 109. 2026-11-04 v172 staging：展示版保持 v171
+
+1. v172新增1格，合计 **1702 accepted、0 rejected**；micro Frozen n=2500/seed17 ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，proof=complete。证明SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
+2. n=2500仅1/3，单种子下降不解释为平台或趋势反转；主矩阵与56组LR不变，证据SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
+3. 无新完整三种子单元，33页PPT/PDF与v114源包保持v171。

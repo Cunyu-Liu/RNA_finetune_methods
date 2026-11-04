@@ -827,7 +827,15 @@
 - [x] CR3 边界：n=2500仅在训；主矩阵与56组LR不变，证据SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
 - [x] CR4 交付：483文件manifest=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`；PPT=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`，PDF=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。
 - [x] CR5 渲染：33页lint/layout/CRC与第26页原生渲染通过，三点与正文一致。
-- [ ] CR6 后续：三地同步并提交，继续n=2500与核心队列。
+- [x] CR6 交付：v171三地同步，`0a9235e`已推送；继续n=2500与核心队列。
+
+## CS 组：v172 micro Frozen n=2500 首点验收
+
+- [x] CS1 数据：1702 accepted、0 rejected；seed17 proof=complete，证明SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
+- [x] CS2 结果：ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，CUDA/checkpoint/plateau通过。
+- [x] CS3 边界：仅1/3，不推断平台或趋势反转；主矩阵与56组LR不变，证据SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
+- [x] CS4 展示：PPT与v114源包保持v171。
+- [ ] CS5 后续：同步并提交staging，等待其余种子。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

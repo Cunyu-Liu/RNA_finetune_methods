@@ -1528,3 +1528,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. n=2000三种子mean=0.7808857808857809、SD=0.01323754859160902，与n=1000/1500形成三个闭合点。仅描述该模型/任务/split的上升，不推断平台或通用规律；n=2500/seed17在训不画入。
 3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v171.json`，SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
 4. 源包revision=`20261104_refresh_v114_v171ledger_micro_frozen_n2000_closure`，**483个登记文件**，manifest SHA256=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`；random ncRNA曲线数[3,5,5,5]。PPT33页更新第26页，SHA256=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`；PDF SHA256=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。lint/layout/CRC与第26页原生渲染通过。
+
+### 10.152 v172 micro Frozen n=2500 首点（2026-11-04）
+
+1. v172新增1格，**1701+1=1702 accepted、0 rejected**；n=2500/seed17 ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v172_new_proof.json`，SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
+2. n=2500仅1/3，seed29已在训；单种子低于n=2000均值不解释为平台或趋势反转，须等三种子闭合。主矩阵与LR=228/320、56组选档不变，证据=`status/lr_validation_interim_20261101_v172.json`，SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
+3. 无新完整三种子单元，PPT与v114源包保持v171；原始台账和proof在teams保存。
