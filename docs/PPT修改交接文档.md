@@ -964,3 +964,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 当前优先per-base余36、complementary余18、LR余92及24组；tuned 240须等80组全部选档，C5c只补真实proof缺口，CRISPR先判断能否脱离基线，E6三格沿用corrected队列。
 3. ④从⑤同源曲线计算，⑥复用runtime；近随机任务不制造等价点，RNA-Sc 672继续暂停。范围分层不降低CUDA、validation收敛、checkpoint与三种子验收，不改变现有PPT科学图。
 4. 实时proof：Frozen=29/1008（余979）、PEFT/rank=324/960（余636）、C5c=689/2016（余1327）、CRISPR=0/108；LR余92含1 running，E6三格pending。审计SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。这是队列对账，不改变当前PPT展示版。
+
+## 107. 2026-11-04 当前 v170：micro Frozen n=1000/1500 三种子曲线
+
+1. 当前PPT **33页**，SHA256=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`；PDF SHA256=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。输入 **1699 accepted、0 rejected**，七格proof=complete，证明SHA256=`6aa919fdd47de731db4ff81f9e2d5b70b123182162c3263d5d62446ea389ec16`。
+2. 第26页新增33M Frozen random，n=1000/1500 mean=0.742424/0.763403；n=2000仅seed17=0.7750582750582751，不画点。两点上升不宣称平台或通用规律。
+3. 第27页改为多策略数据量曲线，SSP Frozen n=2000标为全量三种子参照而非五档曲线；其余图沿用同源v170更新。主矩阵与LR=228/320、56组选档不变。
+4. 源包revision=`20261104_refresh_v113_v170ledger_micro_frozen_n1000_n1500_closure`，479个登记文件，manifest SHA256=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`。33页lint/layout/CRC与第26/27/29/30页原生PowerPoint渲染通过。

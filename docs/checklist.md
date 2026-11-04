@@ -811,6 +811,15 @@
 - [x] CP5 审计：Frozen 29/1008、PEFT 324/960、C5c 689/2016、CRISPR 0/108；LR余92含1 running，E6三格pending。证据SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。
 - [x] CP6 验收边界：accepted复用+未接受格实时proof，不重复加载全部checkpoint；不删注册表、不降低CUDA/收敛/三种子验收。
 
+## CQ 组：v170 micro Frozen 曲线与展示验收
+
+- [x] CQ1 数据：1699 accepted、0 rejected；七格proof=complete，证明SHA256=`6aa919fdd47de731db4ff81f9e2d5b70b123182162c3263d5d62446ea389ec16`。
+- [x] CQ2 曲线：n=1000/1500三种子mean=0.742424/0.763403，n=2000单种子不画点；family SSP Frozen为全量参照。
+- [x] CQ3 图源：33M Frozen加入曲线，random[2,5,5,5]、family SSP[1,5,5,5]；v170台账、图、CSV和正文一致。
+- [x] CQ4 交付：479文件manifest=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`；PPT=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`，PDF=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。
+- [x] CQ5 渲染：33页lint/layout/CRC与第26/27/29/30页原生渲染通过，family旧“三臂”措辞已纠正。
+- [ ] CQ6 后续：三地同步并提交，继续n=2000种子与核心队列。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

@@ -1513,3 +1513,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 6. **当前暂缓C**：RNA-Sc等价线672格继续暂停，优先官方模型，不抢核心、Frozen、CRISPR或E6显存。PEFT全量、C5c无差别全量和第二家族扩展是后续论文增强，不作为本次汇报前置条件。degradation等requested大于actual cap的档位不得伪装成新增数据点。
 7. **审计口径**：v169为1692 accepted、0 rejected；原始格数不等于待跑数，后续以注册表、ledger和`proof_state`为准。全注册表优化审计写入`status/contract_priority_audit_20261104.json`，真实剩余数与证据哈希见下条；本节的调度调整不改变现有合法在训进程，也不取消验收阶段门。
 8. **2026-11-04实时审计结果**：per-base=234 complete+36 runnable；complementary=306+18；LR=228 complete+91 runnable+1 running（合计余92）；Frozen=29 complete+978 runnable+1 running（剩余979）；PEFT/rank=324 complete+636 runnable；C5c LoRA/Full=689 complete+1327 runnable；CRISPR=108 runnable。650M corrected E6三行仍pending且result不存在。审计SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`。审计复用已独立验收的v169 accepted行，仅对未接受格加载实时proof，避免重复读取全部checkpoint，不降低验收标准。
+
+### 10.150 v170 micro Frozen n=1000/1500 闭合与结论⑤更新（2026-11-04）
+
+1. v170新增7格，**1692+7=1699 accepted、0 rejected**，均proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v170_new_proof.json`，SHA256=`6aa919fdd47de731db4ff81f9e2d5b70b123182162c3263d5d62446ea389ec16`。
+2. micro ncRNA Frozen random/n=1000三种子mean=0.742424、SD=0.007279；n=1500 mean=0.763403、SD=0.008159，两点上升但不足以推断平台或通用规律。n=2000仅seed17=0.7750582750582751，保持空缺不画点。family SSP Frozen n=2000为全量三种子参照，不是五档Frozen曲线。
+3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v170.json`，SHA256=`2431b3ce8b7e29631ad5c865b18c9c19ae73e9f82e7e7e24dbe85ddb1f62b21d`。Frozen总完成数以动态proof为准，不能把总设计1008当待跑数。
+4. `build_data_volume_8task.py`新增33M Frozen臂；random metadata确认ncRNA曲线数[2,5,5,5]，family SSP为[1,5,5,5]。源包revision=`20261104_refresh_v113_v170ledger_micro_frozen_n1000_n1500_closure`，**479个登记文件**，manifest SHA256=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`。
+5. PPT33页更新第26页Frozen两点和第27页多策略说明，SHA256=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`；PDF SHA256=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。lint/layout/CRC与第26/27/29/30页原生PowerPoint渲染通过，其他科学结论和用户手调内容不变。

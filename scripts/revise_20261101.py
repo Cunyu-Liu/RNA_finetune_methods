@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。degradation 与 SSI 的三臂均已五档闭合。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro Frozen random 的 n=1000/1500 已三种子闭合，n=2000 仍单种子。")
     set_text(slide, "TextBox 5",
-             "读图：SSI 三臂五档的 PCC 整体上升；④现有三组等价候选，非唯一交点。degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
+             "读图：33M Frozen random 在 n=1000/1500 的 ACC mean=0.742/0.763，两点上升但不足以宣称平台或通用规律。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 
@@ -296,11 +296,11 @@ def main():
 
         family_scaling = clone_slide(prs, 22)
         set_text(family_scaling, "TextBox 1", "05F")
-        set_text(family_scaling, "TextBox 2", "结论⑤补充  family：三臂数据量曲线")
+        set_text(family_scaling, "TextBox 2", "结论⑤补充  family：多策略数据量曲线")
         set_text(family_scaling, "TextBox 3",
-                 "family split；5/8 任务可判。modification/MRL/SSP/degradation/SSI 三臂均五档；ncRNA 待补。")
+                 "family split；5/8 任务可判。modification/MRL/SSP/degradation/SSI 的 full/LoRA 均五档；SSP Frozen 仅全量参照。")
         set_text(family_scaling, "TextBox 5",
-                 "读图：family 只用于检验 split 边界，不与 random 合并均值。CRISPR/SpliceAI 低信号不判趋势；degradation requested 2000–3000 同为 cap=1680，SSI 148M-LoRA 五档。等价配对见④ family 页。")
+                 "读图：family 只用于检验 split 边界，不与 random 合并均值。SSP Frozen 的 n=2000 是全量三种子参照，不是五档曲线；CRISPR/SpliceAI 低信号不判趋势，degradation requested 2000–3000 同为 cap=1680。等价配对见④ family 页。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
 
     ncrna_overview = clone_slide(prs, 4)

@@ -1,4 +1,4 @@
-"""结论⑤c 8 任务数据量曲线：同一任务内比较 33M-full / 33M-LoRA / 148M-LoRA。
+"""结论⑤c 8 任务数据量曲线：同一任务内比较 33M-frozen/full/LoRA / 148M-LoRA。
 
 Only cells with >=3 formal seeds are plotted (mean ± 95% CI over seeds);
 tasks without tiers stay as explicit "待补" tiles. No interpolation, no zeros.
@@ -37,6 +37,7 @@ TASKS = [
 BUDGETS = [1000, 1500, 2000, 2500, 3000]
 MIN_SIGNAL = {"crispr-off-target": 0.2, "spliceai": 1 / 3 + 0.02}
 ARMS = [
+    ("RiNALMo-micro", "frozen", "33M Frozen", "#8064a2", "D"),
     ("RiNALMo-micro", "full", "33M full-FT", "#1f4e79", "o"),
     ("RiNALMo-micro", "lora", "33M LoRA", "#4c9f70", "^"),
     ("RiNALMo-mega", "lora", "148M LoRA", "#e07b39", "s"),
@@ -129,10 +130,10 @@ def main(split="random"):
                       "curves": [len(g) for _c, g in curves]})
     handles, labels = axes.flat[0].get_legend_handles_labels()
     if handles:
-        fig.legend(handles, labels, loc="upper center", ncol=3, frameon=False,
+        fig.legend(handles, labels, loc="upper center", ncol=4, frameon=False,
                    fontsize=9.5, bbox_to_anchor=(0.5, 0.965))
     fig.suptitle("Data-volume effect by task | official RiNALMo family | %s split | " % split +
-                 "33M full@1e-5 / 33M LoRA@3e-4 / 148M LoRA@3e-4 | 3-seed mean ± 95% CI",
+                 "33M Frozen@3e-4 / 33M full@1e-5 / 33M LoRA@3e-4 / 148M LoRA@3e-4 | 3-seed mean ± 95% CI",
                  fontsize=10.5, y=1.02)
     caps = df[df.requested_n_train != df.actual_n_train][[
         "run_id", "task", "split", "model", "strategy",

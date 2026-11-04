@@ -2414,4 +2414,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **条件触发**：80组选档后才生成tuned 240；CRISPR先查信号再谈scaling；PEFT 960不阻塞汇报；C5c只补真实proof缺口；④复用⑤，⑥复用runtime。
 - [x] **暂缓**：RNA-Sc 672继续暂停；近随机任务不寻找无意义等价点；已完成机制与诊断不重跑。
 - [x] **审计**：Frozen余979、PEFT/rank余636、C5c余1327、CRISPR余108；LR余92含1 running。证据SHA256=`6c01ea96fdc0fd24e6f333c26787bbb1524280bc6a92971632b37a488135e820`，不删除已注册合同或降低收敛标准。
-- [ ] **执行**：维持core→frozen→crispr与E6 corrected队列，条件满足后再生成tuned或扩展PEFT/C5c；RNA-Sc不启动。
+- [x] **执行**：维持core→frozen→crispr与E6 corrected队列，条件满足后再生成tuned或扩展PEFT/C5c；RNA-Sc不启动。
+
+## N150. 2026-11-04 v170 micro Frozen n=1000/1500 闭合与结论⑤更新
+
+- [x] **七格验收**：1699 accepted、0 rejected；全部proof=complete，证明SHA256=`6aa919fdd47de731db4ff81f9e2d5b70b123182162c3263d5d62446ea389ec16`。
+- [x] **曲线边界**：n=1000/1500 mean=0.742424/0.763403，两点上升不宣称平台；n=2000仅seed17，不画点。family SSP Frozen仅全量参照。
+- [x] **图源**：33M Frozen加入数据量图，random曲线[2,5,5,5]、family SSP[1,5,5,5]；主矩阵与56组LR不变，证据SHA256=`2431b3ce8b7e29631ad5c865b18c9c19ae73e9f82e7e7e24dbe85ddb1f62b21d`。
+- [x] **交付**：479文件manifest=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`；PPT=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`，PDF=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。33页lint/layout/CRC与第26/27/29/30页原生渲染通过。
+- [ ] **后续**：三地同步并提交图脚本与文档，继续n=2000其余种子及核心队列。
