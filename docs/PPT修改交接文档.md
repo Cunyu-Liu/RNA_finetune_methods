@@ -912,3 +912,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v164新增1格，合计 **1676 accepted、0 rejected**；RNA-FM degradation full-family/seed101的1e-5 tuning PCC=0.38693849945802145、best_val=0.227363、best_epoch=4、8 epochs，proof=complete。证明SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
 2. LR=218/320，完整组53/80与选档23/16/12/2不变；该组已有三档，仍缺3e-5，tuning不进正式三种子均值。
 3. 无新科学单元，33页PPT/PDF与v109源包保持v158。LR证据=`status/lr_validation_interim_20261101_v164.json`，SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
+
+## 99. 2026-11-04 当前 v165：RNA-FM degradation family 四档闭合
+
+1. 当前PPT **33页**，SHA256=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`；PDF SHA256=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。输入 **1678 accepted、0 rejected**，两格proof=complete，证明SHA256=`1ee8fcdb9fc99b798cee9ee8a6f0c4268547121080e0f9eb5cb76bf0a72e96b1`。
+2. 第20页更新为LR=220/320、完整组 **54/80**、选档24/16/12/2；RNA-FM degradation full-family选3e-5（best_val=0.220595、test PCC=0.39069210011908仅报告）。证据SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
+3. 源包revision=`20261104_refresh_v110_v165ledger_rnafm_degradation_family_lr54`，453个登记文件，manifest SHA256=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`。仅更新学习率页，其余图、页面与用户手调内容不变。
+4. lint/layout/ZIP CRC和第20页原生PowerPoint实际渲染通过，中文、字号、行距正常；无新三种子单元，性能图保持。

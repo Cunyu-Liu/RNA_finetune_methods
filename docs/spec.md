@@ -1455,3 +1455,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v164新增1格，**1675+1=1676 accepted、0 rejected**；`ft_rnafm_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1` proof=complete，PCC=0.38693849945802145、best_val=0.227363、best_epoch=4、8 epochs，CUDA/checkpoint与plateau=CONVERGED通过。证明=`status/bestval_v164_new_proof.json`，SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
 2. per-base=234/270、complementary=306/324、LR=218/320；完整组53/80，选档分布3e-5二十三组、1e-4十六组、1e-5十二组、3e-4两组。该组已有default/1e-4/1e-5三档，仍缺3e-5；test不参与选档。证据=`status/lr_validation_interim_20261101_v164.json`，SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
 3. 仅seed101 tuning，不进正式三种子均值；无新完整LR组或三种子单元，PPT与v109源包保持v158。
+
+### 10.142 v165 RNA-FM degradation family 四档闭合（2026-11-04）
+
+1. v165新增2格，**1676+2=1678 accepted、0 rejected**；family/3e-5 PCC=0.39069210011908、best_val=0.220595、best_epoch=3、7 epochs；random/default PCC=0.5283815541796529、best_val=0.340377、best_epoch=1、5 epochs。两格proof=complete，CUDA/checkpoint与plateau=CONVERGED通过，证明=`status/bestval_v165_new_proof.json`，SHA256=`1ee8fcdb9fc99b798cee9ee8a6f0c4268547121080e0f9eb5cb76bf0a72e96b1`。
+2. per-base=234/270、complementary=306/324、LR=220/320。RNA-FM degradation full-family四档闭合，validation选3e-5（best_val=0.220595），test PCC仅报告；完整组 **54/80**，分布3e-5二十四组、1e-4十六组、1e-5十二组、3e-4两组。证据=`status/lr_validation_interim_20261101_v165.json`，SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
+3. 源包revision=`20261104_refresh_v110_v165ledger_rnafm_degradation_family_lr54`，**453个登记文件**，manifest SHA256=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`。PPT33页仅更新第20页LR计数与新增选档，SHA256=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`；PDF SHA256=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。
+4. lint/layout/ZIP CRC与第20页原生PowerPoint实际渲染通过，中文、字号与1.5倍行距正常；其余科学图与用户手调内容不变。两格均seed101 tuning，不进正式三种子均值。

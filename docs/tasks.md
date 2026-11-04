@@ -2351,4 +2351,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：1676 accepted、0 rejected；1e-5格PCC=0.38693849945802145、best_val=0.227363，proof=complete，证明SHA256=`ad46fe5503138196c52f88ca1c5d5c6321e1fea631354f972fc1a594efb71905`。
 - [x] **LR边界**：LR=218/320，53组与选档23/16/12/2不变；仍缺3e-5，tuning不进正式均值。证据SHA256=`7b8d86e7bb360b45dbcc1de699e4ff29a59cbaf443538e1426cfdb0a4418de2c`。
 - [x] **展示边界**：无新科学单元，PPT与v109源包保持v158。
-- [ ] **后续**：同步并提交staging证据，等待下一真实可见更新。
+- [x] **交付**：v164 staging三地一致，`a85fc34`已推送；等待下一真实可见更新。
+
+## N142. 2026-11-04 v165 RNA-FM degradation family 四档闭合
+
+- [x] **两格验收**：1678 accepted、0 rejected；family/3e-5 PCC=0.39069210011908、best_val=0.220595；random/default PCC=0.5283815541796529，均proof=complete，证明SHA256=`1ee8fcdb9fc99b798cee9ee8a6f0c4268547121080e0f9eb5cb76bf0a72e96b1`。
+- [x] **LR选档**：LR=220/320，54/80组，分布24/16/12/2；family选3e-5，test不参与。证据SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
+- [x] **展示交付**：453文件manifest=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`；PPT=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`，PDF=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。
+- [x] **验收**：33页lint/layout/CRC与第20页原生渲染通过，其他页面与tuning边界不变。
+- [ ] **后续**：三地同步并提交，继续官方核心缺口与自然大格窗口。
