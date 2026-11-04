@@ -1495,3 +1495,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v168新增1格，**1690+1=1691 accepted、0 rejected**；`ft_rinalmomicro_noncodingrnafamily_frozen_s29_random_e3100_bestval_v1` ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v168_new_proof.json`，SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
 2. n=100已有seed17=0.6165501165501166与seed29=0.6503496503496503，当前2/3，仍缺seed43；不提前写三种子均值或scaling规律。per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v168.json`，SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
 3. 监控已接续n=100/seed43，仅launching不记完成；无新完整科学单元，PPT与v112源包保持v167。
+
+### 10.148 v169 micro ncRNA Frozen n=100 三种子闭合（2026-11-04）
+
+1. v169新增1格，**1691+1=1692 accepted、0 rejected**；seed43 ACC=0.5885780885780886、best_val=1.506475、best_epoch=32、36 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v169_new_proof.json`，SHA256=`d8477590ef0efed334e354cd8d53906877c8286e17806239da6ce1d126172000`。
+2. n=100三种子ACC=0.6165501165501166/0.6503496503496503/0.5885780885780886，mean=0.6184926184926185、sample SD=0.030931560682770833，正式闭合该低预算单元。当前主图预算为1000–3000，不能把n=100单点解释为完整scaling趋势；待同系列更多档位形成曲线后更新结论⑤。
+3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v169.json`，SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。
+4. 监控已接续n=1000/seed17，仅launching不记完成；PPT与v112源包保持v167，原始新台账和proof在teams保留。

@@ -2381,7 +2381,15 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：1691 accepted、0 rejected；seed29 ACC=0.6503496503496503、best_epoch=55、59 epochs，proof=complete，证明SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
 - [x] **科学边界**：n=100为2/3，仍缺seed43；LR=228/320，56组与选档不变，证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
 - [x] **展示边界**：无新完整科学单元，PPT与v112源包保持v167。
-- [ ] **后续**：同步并提交staging，等待seed43完整proof。
+- [x] **交付**：v168 staging三地一致，`94da36d`已推送；等待seed43完整proof。
+
+## N148. 2026-11-04 v169 micro ncRNA Frozen n=100 三种子闭合
+
+- [x] **单格验收**：1692 accepted、0 rejected；seed43 ACC=0.5885780885780886、best_epoch=32、36 epochs，proof=complete，证明SHA256=`d8477590ef0efed334e354cd8d53906877c8286e17806239da6ce1d126172000`。
+- [x] **三种子闭合**：n=100 mean=0.6184926184926185、SD=0.030931560682770833；该点低于主图1000–3000预算，不将单点写成完整趋势。
+- [x] **矩阵边界**：主矩阵与LR=228/320、56组选档不变，证据SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。
+- [x] **在途**：监控已接续n=1000/seed17，不记完成；PPT与v112源包保持v167。
+- [ ] **后续**：同步并提交staging，待更多Frozen档位形成曲线后更新结论⑤。
 
 ## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
 

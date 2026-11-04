@@ -792,7 +792,15 @@
 - [x] CN2 结果：ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，CUDA/checkpoint/plateau通过。
 - [x] CN3 边界：n=100为2/3，仍缺seed43；主矩阵与56组选档不变，证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。
 - [x] CN4 展示：无新完整科学单元，PPT与v112源包保持v167。
-- [ ] CN5 后续：同步并提交staging，等待seed43完整proof。
+- [x] CN5 交付：v168三地同步，`94da36d`已推送；等待seed43完整proof。
+
+## CO 组：v169 micro ncRNA Frozen n=100 闭合验收
+
+- [x] CO1 数据：1692 accepted、0 rejected；seed43 proof=complete，证明SHA256=`d8477590ef0efed334e354cd8d53906877c8286e17806239da6ce1d126172000`。
+- [x] CO2 闭合：n=100 mean=0.6184926184926185、SD=0.030931560682770833；CUDA/checkpoint/plateau通过。
+- [x] CO3 边界：该点低于主图1000–3000预算，不将单点写成scaling趋势；主矩阵与56组选档不变。
+- [x] CO4 展示：PPT与v112源包保持v167，n=1000/seed17仅在途。
+- [ ] CO5 后续：同步并提交staging，等待更多Frozen档位形成曲线。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

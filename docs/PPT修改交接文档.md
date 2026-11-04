@@ -951,3 +951,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v168新增1格，合计 **1691 accepted、0 rejected**；micro ncRNA Frozen n=100/seed29 ACC=0.6503496503496503、best_val=1.225773、best_epoch=55、59 epochs，proof=complete。证明SHA256=`c6fdac8fbd2010a4efac055b9c4f888fff747167e0e36cc3ad09760c154a6910`。
 2. n=100目前seed17/29为0.6165501165501166/0.6503496503496503，仅2/3，仍缺seed43；不写三种子均值或scaling规律。
 3. 主矩阵、LR=228/320与56组选档不变；证据SHA256=`df3b66091df075994869a250c88bfc8c7901479161eb78e44b29705b051fa75e`。33页PPT/PDF与v112源包保持v167。
+
+## 105. 2026-11-04 v169 staging：n=100 三种子闭合，展示版保持 v167
+
+1. v169新增1格，合计 **1692 accepted、0 rejected**；micro ncRNA Frozen n=100/seed43 ACC=0.5885780885780886、best_val=1.506475、best_epoch=32、36 epochs，proof=complete。证明SHA256=`d8477590ef0efed334e354cd8d53906877c8286e17806239da6ce1d126172000`。
+2. n=100三种子mean=0.6184926184926185、SD=0.030931560682770833，正式闭合低预算单元；当前主图预算为1000–3000，不把单点写成完整scaling趋势。
+3. 主矩阵、LR=228/320与56组选档不变；证据SHA256=`fccfadafc1f1367dfa80b9a7fdf3a28ae9e9563e417376151903b511454283e6`。n=1000/seed17已在途，33页PPT/PDF与v112源包保持v167。
