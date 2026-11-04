@@ -1437,3 +1437,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 650M degradation、SpliceAI、SSI LoRA 均完成random/family三种子六臂闭合，覆盖分别27/27/26；per-base=234/270、complementary=306/324、LR=215/320。650M不再以这些任务的单种子高低点写规模规律。
 3. LR完整组由52增至 **53/80**：mega SpliceAI full-family四档闭合，validation选1e-5（best_val=0.001095）；test macro-F1=0.534050348仅报告。选档分布为3e-5二十三组、1e-4十六组、1e-5十二组、3e-4两组。证据=`status/lr_validation_interim_20261101_v158.json`，SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
 4. 源包revision=`20261104_refresh_v109_v158ledger_650m_three_lora_tasks_closure_lr53`，**449个登记文件**，manifest SHA256=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`。PPT SHA256=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`，PDF SHA256=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`；33页lint/layout/CRC与第9/20/28/29/30页原生渲染通过。
+
+### 10.139 空闲窗口补入 RNA-FM LR 大格（2026-11-04）
+
+1. 用户指出显存未占满。核查时free=26.095GiB，per-base need20候选已清零，仅剩28GiB大格；改从LR选择非mega的16+1GiB候选，使用共享LR state-dir/model locks，workers=1。
+2. 新父1190497/子1190658启动RNA-FM degradation full-family/seed101/default LR，device0、best-val协议。28个RNA-FM候选注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`，启动后free=18.662GiB，不重复开同模型任务。
+3. 证据=`status/queue_actions/lr_official_fill_20261104.json`，SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`，不记完成。科学结果仍为1673 accepted、0 rejected，PPT与v109源包保持v158。

@@ -737,5 +737,12 @@
 - [x] CE3 LR：53/80组，分布23/16/12/2；mega SpliceAI family选1e-5，test不参与，证据SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
 - [x] CE4 交付：449文件manifest=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`；PPT=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`，PDF=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`。
 - [x] CE5 渲染：33页lint/layout/CRC与第9/20/28/29/30页通过，三任务闭合与53组图文一致。
-- [ ] CE6 后续：三地同步并推送，继续官方真实科学缺口。
+- [x] CE6 交付：v158三地同步，`59caf70`已推送；继续官方真实科学缺口。
+
+## CF 组：空闲窗口 RNA-FM LR 补位验收
+
+- [x] CF1 调度：per-base need20清零，选择非mega LR 16+1GiB，父1190497共享LR锁，workers=1。
+- [x] CF2 在训：子1190658为RNA-FM degradation full-family/seed101/default LR，device0；注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`。
+- [x] CF3 边界：启动后free=18.662GiB，不重复开同模型任务；证据SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`，不记完成。
+- [ ] CF4 后续：同步记录，等待真实proof与下一自然窗口。
 

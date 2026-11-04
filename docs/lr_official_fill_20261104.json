@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-11-04T05:17:00.916346+00:00",
+  "action": "LR official fill with shared locks and 1GiB margin",
+  "parent": 1190497,
+  "registry": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_official_fill_20261104.json",
+  "registry_sha256": "00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205",
+  "state_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030",
+  "workers": 1,
+  "children": "1190658 1190497 Dl   /root/miniconda3/envs/llr_env/bin/python -m rnafteval.finetune_regbase --model RNA-FM --strategy full --seed 101 --device 0 --split family --task degradation --converge --convergence-mode bestval --batch-size 8 --rank 8 --n-train 0 --lr 3e-4",
+  "free_gib_after_launch": 18.6624755859375,
+  "total_gib": 31.35833740234375,
+  "completion_claim": false
+}

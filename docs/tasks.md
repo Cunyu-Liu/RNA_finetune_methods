@@ -2330,4 +2330,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **三种子闭合**：650M degradation/SpliceAI/SSI LoRA均六臂闭合，覆盖27/27/26；per-base 234/270、LR 215/320。
 - [x] **LR新组**：53/80组，分布23/16/12/2；mega SpliceAI family选1e-5（best_val=0.001095），test不参与。证据SHA256=`d4d756e5a27c9e613ccd486945b7c78c1526f4884c50818f53f8db5d4c2ca251`。
 - [x] **交付**：449文件manifest=`68e3e35ab72c7658b425bb96e90d3c59cba0337ff37025578563380718ea9794`；PPT=`3f458b659c414c275322dabe57fc6dc04539892e2d3073aaf4591771c4212f2b`，PDF=`840abaf7b332ab4dd31e37083a557da28d6ca89f105724d4dbaaafb15948fb8d`。33页lint/layout/CRC与五页渲染通过。
-- [ ] **后续**：三地同步并推送，继续官方核心缺口。
+- [x] **交付**：v158三地同步，`59caf70`已推送；继续官方核心缺口。
+
+## N139. 2026-11-04 空闲窗口补入 RNA-FM LR 大格
+
+- [x] **安全调度**：per-base need20已清零，改选非mega LR 16+1GiB，父1190497共享LR state-dir/model locks，workers=1。
+- [x] **实际在训**：子1190658为RNA-FM degradation full-family/seed101/default LR，device0；28个候选注册表SHA256=`00f3c39e77eca4cb2d9c6c9219cffd975d0f573c4552d189e0fcaa9a92d7c205`。
+- [x] **预算边界**：启动后free=18.662GiB，不重复开同模型任务；证据SHA256=`0940337567c2058be96413e0399a0a2cd2c74a4965228ed4551475b7e4b2abe5`，不记完成。
+- [ ] **后续**：同步记录，等待自然完成结果和下一窗口。
