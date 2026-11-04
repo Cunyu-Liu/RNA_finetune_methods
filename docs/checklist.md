@@ -818,7 +818,16 @@
 - [x] CQ3 图源：33M Frozen加入曲线，random[2,5,5,5]、family SSP[1,5,5,5]；v170台账、图、CSV和正文一致。
 - [x] CQ4 交付：479文件manifest=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`；PPT=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`，PDF=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。
 - [x] CQ5 渲染：33页lint/layout/CRC与第26/27/29/30页原生渲染通过，family旧“三臂”措辞已纠正。
-- [ ] CQ6 后续：三地同步并提交，继续n=2000种子与核心队列。
+- [x] CQ6 交付：v170三地同步，`f6d61eb`已推送；继续n=2000种子与核心队列。
+
+## CR 组：v171 micro Frozen n=2000 闭合验收
+
+- [x] CR1 数据：1701 accepted、0 rejected；两格proof=complete，证明SHA256=`ab443224008c66d024fa3c944acd6a14c0736215837c980bf6687e2720247d57`。
+- [x] CR2 闭合：n=2000 mean=0.7808857808857809、SD=0.01323754859160902；三点上升不宣称平台。
+- [x] CR3 边界：n=2500仅在训；主矩阵与56组LR不变，证据SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
+- [x] CR4 交付：483文件manifest=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`；PPT=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`，PDF=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。
+- [x] CR5 渲染：33页lint/layout/CRC与第26页原生渲染通过，三点与正文一致。
+- [ ] CR6 后续：三地同步并提交，继续n=2500与核心队列。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

@@ -971,3 +971,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第26页新增33M Frozen random，n=1000/1500 mean=0.742424/0.763403；n=2000仅seed17=0.7750582750582751，不画点。两点上升不宣称平台或通用规律。
 3. 第27页改为多策略数据量曲线，SSP Frozen n=2000标为全量三种子参照而非五档曲线；其余图沿用同源v170更新。主矩阵与LR=228/320、56组选档不变。
 4. 源包revision=`20261104_refresh_v113_v170ledger_micro_frozen_n1000_n1500_closure`，479个登记文件，manifest SHA256=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`。33页lint/layout/CRC与第26/27/29/30页原生PowerPoint渲染通过。
+
+## 108. 2026-11-04 当前 v171：micro Frozen n=2000 三种子闭合
+
+1. 当前PPT **33页**，SHA256=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`；PDF SHA256=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。输入 **1701 accepted、0 rejected**，两格proof=complete，证明SHA256=`ab443224008c66d024fa3c944acd6a14c0736215837c980bf6687e2720247d57`。
+2. 第26页Frozen random已有n=1000/1500/2000三个闭合点，mean=0.742424/0.763403/0.7808857808857809；n=2000 SD=0.01323754859160902。三点上升不宣称平台或通用规律，n=2500在训不画入。
+3. 主矩阵与LR=228/320、56组选档不变，证据SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
+4. 源包revision=`20261104_refresh_v114_v171ledger_micro_frozen_n2000_closure`，483个登记文件，manifest SHA256=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`。33页lint/layout/CRC与第26页原生渲染通过。

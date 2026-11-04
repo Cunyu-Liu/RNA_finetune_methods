@@ -1521,3 +1521,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v170.json`，SHA256=`2431b3ce8b7e29631ad5c865b18c9c19ae73e9f82e7e7e24dbe85ddb1f62b21d`。Frozen总完成数以动态proof为准，不能把总设计1008当待跑数。
 4. `build_data_volume_8task.py`新增33M Frozen臂；random metadata确认ncRNA曲线数[2,5,5,5]，family SSP为[1,5,5,5]。源包revision=`20261104_refresh_v113_v170ledger_micro_frozen_n1000_n1500_closure`，**479个登记文件**，manifest SHA256=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`。
 5. PPT33页更新第26页Frozen两点和第27页多策略说明，SHA256=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`；PDF SHA256=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。lint/layout/CRC与第26/27/29/30页原生PowerPoint渲染通过，其他科学结论和用户手调内容不变。
+
+### 10.151 v171 micro Frozen n=2000 三种子闭合（2026-11-04）
+
+1. v171新增2格，**1699+2=1701 accepted、0 rejected**；seed29/43 ACC=0.7715617715617715/0.796037296037296，best_epoch=16/22、20/26 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v171_new_proof.json`，SHA256=`ab443224008c66d024fa3c944acd6a14c0736215837c980bf6687e2720247d57`。
+2. n=2000三种子mean=0.7808857808857809、SD=0.01323754859160902，与n=1000/1500形成三个闭合点。仅描述该模型/任务/split的上升，不推断平台或通用规律；n=2500/seed17在训不画入。
+3. per-base=234/270、complementary=306/324、LR=228/320，完整组56/80与选档24/18/12/2不变。证据=`status/lr_validation_interim_20261101_v171.json`，SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
+4. 源包revision=`20261104_refresh_v114_v171ledger_micro_frozen_n2000_closure`，**483个登记文件**，manifest SHA256=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`；random ncRNA曲线数[3,5,5,5]。PPT33页更新第26页，SHA256=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`；PDF SHA256=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。lint/layout/CRC与第26页原生渲染通过。

@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。micro Frozen random 的 n=1000/1500 已三种子闭合，n=2000 仍单种子。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro Frozen random 的 n=1000/1500/2000 已三种子闭合，n=2500 仍在补。")
     set_text(slide, "TextBox 5",
-             "读图：33M Frozen random 在 n=1000/1500 的 ACC mean=0.742/0.763，两点上升但不足以宣称平台或通用规律。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
+             "读图：33M Frozen random 在 n=1000/1500/2000 的 ACC mean=0.742/0.763/0.781，三点上升但不足以宣称平台或通用规律。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 

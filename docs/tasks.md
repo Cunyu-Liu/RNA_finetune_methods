@@ -2422,4 +2422,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **曲线边界**：n=1000/1500 mean=0.742424/0.763403，两点上升不宣称平台；n=2000仅seed17，不画点。family SSP Frozen仅全量参照。
 - [x] **图源**：33M Frozen加入数据量图，random曲线[2,5,5,5]、family SSP[1,5,5,5]；主矩阵与56组LR不变，证据SHA256=`2431b3ce8b7e29631ad5c865b18c9c19ae73e9f82e7e7e24dbe85ddb1f62b21d`。
 - [x] **交付**：479文件manifest=`90d3ed5757c185a0b3159bb0c3da63fb0f673abf9e1cdbac40fdee45401a4526`；PPT=`cdeabb404271a1ae01a80bccbb5e5d5956de7f9d57c5afc55702c44a3c75b60f`，PDF=`3ee341114f2753463cc4031e62995e58fb025bdc8539b526a7bca14ea6ce818f`。33页lint/layout/CRC与第26/27/29/30页原生渲染通过。
-- [ ] **后续**：三地同步并提交图脚本与文档，继续n=2000其余种子及核心队列。
+- [x] **交付**：v170三地一致，`f6d61eb`已推送；继续n=2000其余种子及核心队列。
+
+## N151. 2026-11-04 v171 micro Frozen n=2000 三种子闭合
+
+- [x] **两格验收**：1701 accepted、0 rejected；seed29/43 proof=complete，证明SHA256=`ab443224008c66d024fa3c944acd6a14c0736215837c980bf6687e2720247d57`。
+- [x] **三种子闭合**：n=2000 mean=0.7808857808857809、SD=0.01323754859160902；三点上升不宣称平台，n=2500在训不画入。
+- [x] **矩阵边界**：主矩阵与LR=228/320、56组选档不变，证据SHA256=`d515d440e111dcf9bab308f201c6bbcc55e432e98fd062d182d48a16ee117d2b`。
+- [x] **交付**：483文件manifest=`0557a1dcf041f76b3d81727e14d1e3901c914cfafecb6b91183491e5a6335893`；PPT=`6e14a8db77dd19e89918a03de7cce45914069b3c6459ab9b28f0e9c9cda582d5`，PDF=`1f7bed83ba9bd90b6483b3f98102eea5219a6e75f94bc964c08a6c48750d4113`。33页lint/layout/CRC与第26页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续n=2500及核心队列。
