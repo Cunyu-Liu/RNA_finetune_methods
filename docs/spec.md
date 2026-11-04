@@ -1534,3 +1534,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v172新增1格，**1701+1=1702 accepted、0 rejected**；n=2500/seed17 ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v172_new_proof.json`，SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
 2. n=2500仅1/3，seed29已在训；单种子低于n=2000均值不解释为平台或趋势反转，须等三种子闭合。主矩阵与LR=228/320、56组选档不变，证据=`status/lr_validation_interim_20261101_v172.json`，SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
 3. 无新完整三种子单元，PPT与v114源包保持v171；原始台账和proof在teams保存。
+
+### 10.153 v173 micro Frozen n=2500 第二种子（2026-11-04）
+
+1. v173新增1格，**1702+1=1703 accepted、0 rejected**；seed29 ACC=0.7925407925407926、best_val=0.591733、best_epoch=23、27 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v173_new_proof.json`，SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
+2. n=2500已有seed17=0.7668997668997669与seed29=0.7925407925407926，当前2/3，仍缺seed43；不以两个点的高低变化推断平台或翻转。主矩阵与LR=228/320、56组选档不变，证据=`status/lr_validation_interim_20261101_v173.json`，SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
+3. PPT与v114源包保持v171，原始新台账和proof在teams保存。v172文档提交`df39380`因GitHub网络超时仍待推送，不影响实验与三地证据。

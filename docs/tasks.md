@@ -2437,4 +2437,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：1702 accepted、0 rejected；seed17 ACC=0.7668997668997669、best_epoch=13、17 epochs，proof=complete，证明SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
 - [x] **科学边界**：n=2500仅1/3，不以单种子下降推断平台或翻转；主矩阵与56组LR不变，证据SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
 - [x] **展示边界**：PPT与v114源包保持v171。
-- [ ] **后续**：同步并提交staging，等待n=2500其余种子。
+- [x] **交付**：v172 staging三地一致，`df39380`已提交，GitHub网络超时待推送；等待n=2500其余种子。
+
+## N153. 2026-11-04 v173 micro Frozen n=2500 第二种子
+
+- [x] **单格验收**：1703 accepted、0 rejected；seed29 ACC=0.7925407925407926、best_epoch=23、27 epochs，proof=complete，证明SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
+- [x] **科学边界**：n=2500为2/3，仍缺seed43；主矩阵与56组LR不变，证据SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
+- [x] **展示边界**：PPT与v114源包保持v171。
+- [ ] **后续**：同步并提交staging，等待seed43完整proof及网络恢复后推送。

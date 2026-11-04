@@ -984,3 +984,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v172新增1格，合计 **1702 accepted、0 rejected**；micro Frozen n=2500/seed17 ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，proof=complete。证明SHA256=`098f5dfa86d4be15622ee9cf88806ed2b0ad1d116db6e404ca91c8d0621fa803`。
 2. n=2500仅1/3，单种子下降不解释为平台或趋势反转；主矩阵与56组LR不变，证据SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
 3. 无新完整三种子单元，33页PPT/PDF与v114源包保持v171。
+
+## 110. 2026-11-04 v173 staging：展示版保持 v171
+
+1. v173新增1格，合计 **1703 accepted、0 rejected**；micro Frozen n=2500/seed29 ACC=0.7925407925407926、best_val=0.591733、best_epoch=23、27 epochs，proof=complete。证明SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
+2. n=2500目前seed17/29为0.7668997668997669/0.7925407925407926，仅2/3，仍缺seed43；不推断平台或翻转。
+3. 主矩阵与56组LR不变，证据SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。33页PPT/PDF与v114源包保持v171。

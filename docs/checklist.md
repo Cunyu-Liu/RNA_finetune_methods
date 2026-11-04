@@ -835,7 +835,15 @@
 - [x] CS2 结果：ACC=0.7668997668997669、best_val=0.682212、best_epoch=13、17 epochs，CUDA/checkpoint/plateau通过。
 - [x] CS3 边界：仅1/3，不推断平台或趋势反转；主矩阵与56组LR不变，证据SHA256=`ee99a60a45f681c82e9fcfe3059a0824b11054e44a512417c69ef20625e38b0f`。
 - [x] CS4 展示：PPT与v114源包保持v171。
-- [ ] CS5 后续：同步并提交staging，等待其余种子。
+- [x] CS5 交付：v172三地同步，`df39380`已提交，推送待网络恢复；等待其余种子。
+
+## CT 组：v173 micro Frozen n=2500 第二种子验收
+
+- [x] CT1 数据：1703 accepted、0 rejected；seed29 proof=complete，证明SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
+- [x] CT2 结果：ACC=0.7925407925407926、best_val=0.591733、best_epoch=23、27 epochs，CUDA/checkpoint/plateau通过。
+- [x] CT3 边界：n=2500为2/3，不推断平台或翻转；主矩阵与56组LR不变，证据SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
+- [x] CT4 展示：PPT与v114源包保持v171。
+- [ ] CT5 后续：同步并提交staging，等待seed43与网络恢复。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 
