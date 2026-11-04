@@ -2359,4 +2359,19 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR选档**：LR=220/320，54/80组，分布24/16/12/2；family选3e-5，test不参与。证据SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
 - [x] **展示交付**：453文件manifest=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`；PPT=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`，PDF=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。
 - [x] **验收**：33页lint/layout/CRC与第20页原生渲染通过，其他页面与tuning边界不变。
-- [ ] **后续**：三地同步并提交，继续官方核心缺口与自然大格窗口。
+- [x] **交付**：v165三地一致，`f15f7ae`已推送；继续官方核心缺口与自然大格窗口。
+
+## N143. 2026-11-04 v166 RNA-FM degradation random 四档闭合
+
+- [x] **四格验收**：1682 accepted、0 rejected；四格proof=complete，证明SHA256=`da64c73fe6d79fe025a865cb7f17cef322998cb19ef40a16b2d17d1866ac0686`。
+- [x] **LR选档**：LR=224/320，55/80组，分布24/17/12/2；RNA-FM degradation random选1e-4，test不参与。证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
+- [x] **展示交付**：462文件manifest=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`；PPT=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`，PDF=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。33页lint/layout/CRC及第20页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续官方核心缺口。
+
+## N144. 2026-11-04 显存补位与 Frozen 产物路径修复
+
+- [x] **安全补位**：官方micro Frozen原始need=8、派生need=9GiB，共享模型锁；650M/full 28GiB不强行启动。
+- [x] **路径纠偏**：首父遗漏`RNAFT_ARTIFACT_ROOT`导致3格落盘root；逐哈希迁至teams并保留原错位目录，3格proof=complete。证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`与`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
+- [x] **有界接续**：首父在子进程自然结束后退出，未中断训练；后续单格显式使用teams环境，避免309个小格挤占核心窗口。
+- [x] **实际在训**：父1273621/子1273646为micro ncRNA Frozen random/n=100/seed17，CUDA、need=9GiB；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
+- [ ] **后续**：每格完整proof后再记完成，按实时余量接续，不把调度记录写成科学结果。

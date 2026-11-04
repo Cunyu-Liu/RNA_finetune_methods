@@ -767,5 +767,21 @@
 - [x] CI2 LR：220/320，54/80组，分布24/16/12/2；family按best_val选3e-5，test不参与，证据SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
 - [x] CI3 交付：453文件manifest=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`；PPT=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`，PDF=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。
 - [x] CI4 渲染：33页lint/layout/CRC及第20页原生渲染通过；54组、24个3e-5和新增选档图文一致。
-- [ ] CI5 后续：三地同步并提交，继续官方真实科学缺口。
+- [x] CI5 交付：v165三地同步，`f15f7ae`已推送；继续官方真实科学缺口。
+
+## CJ 组：v166 RNA-FM degradation random LR 闭合验收
+
+- [x] CJ1 数据：1682 accepted、0 rejected；四格proof=complete，证明SHA256=`da64c73fe6d79fe025a865cb7f17cef322998cb19ef40a16b2d17d1866ac0686`。
+- [x] CJ2 LR：224/320，55/80组，分布24/17/12/2；random按best_val选1e-4，证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
+- [x] CJ3 交付：462文件manifest=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`；PPT=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`，PDF=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。
+- [x] CJ4 渲染：33页lint/layout/CRC与第20页原生渲染通过，55组与双split选档图文一致。
+- [ ] CJ5 后续：三地同步并提交，继续官方核心缺口。
+
+## CK 组：显存补位与 Frozen 路径修复验收
+
+- [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。
+- [x] CK2 路径：3个错位产物逐哈希迁至teams，ledger路径修正，原目录保留，独立proof=complete；无覆盖或删除实验数据。
+- [x] CK3 防重：同模型串行、共享state-dir；首父仅在自有子进程自然结束后退出，后续单格显式继承产物环境。
+- [x] CK4 在训：父1273621/子1273646为micro ncRNA Frozen n=100/seed17，CUDA在训；证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。
+- [ ] CK5 后续：完成格独立proof后再记完成，按窗口接续，不把补位记录当科学结论。
 

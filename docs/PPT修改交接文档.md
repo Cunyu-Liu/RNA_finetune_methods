@@ -919,3 +919,16 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页更新为LR=220/320、完整组 **54/80**、选档24/16/12/2；RNA-FM degradation full-family选3e-5（best_val=0.220595、test PCC=0.39069210011908仅报告）。证据SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
 3. 源包revision=`20261104_refresh_v110_v165ledger_rnafm_degradation_family_lr54`，453个登记文件，manifest SHA256=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`。仅更新学习率页，其余图、页面与用户手调内容不变。
 4. lint/layout/ZIP CRC和第20页原生PowerPoint实际渲染通过，中文、字号、行距正常；无新三种子单元，性能图保持。
+
+## 100. 2026-11-04 当前 v166：RNA-FM degradation random 四档闭合
+
+1. 当前PPT **33页**，SHA256=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`；PDF SHA256=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。输入 **1682 accepted、0 rejected**，四格proof=complete，证明SHA256=`da64c73fe6d79fe025a865cb7f17cef322998cb19ef40a16b2d17d1866ac0686`。
+2. 第20页更新为LR=224/320、完整组 **55/80**、选档24/17/12/2；RNA-FM degradation family/random分别选3e-5/1e-4，test不参与。证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
+3. 源包revision=`20261104_refresh_v111_v166ledger_rnafm_degradation_random_lr55`，462个登记文件，manifest SHA256=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`。仅更新学习率页，其余图、页面和用户手调内容不变。
+4. lint/layout/ZIP CRC和第20页原生PowerPoint实际渲染通过，中文、字号、行距正常；无新三种子单元，性能图保持。
+
+## 101. 2026-11-04 显存补位与 Frozen 产物路径修复，PPT科学图不变
+
+1. 核心剩余大格需28GiB，补入官方micro Frozen小格，原始need=8、派生need=9GiB，共享模型锁；同模型串行，正式core→frozen→crispr阶段门不变。
+2. 首父遗漏`RNAFT_ARTIFACT_ROOT`，3个n=10格落盘root。已逐哈希迁至teams、修正ledger产物路径并保留原错位目录，3格proof=complete；没有覆盖或删除实验证据。
+3. 首父已在子进程自然结束后退出；后续父1273621/子1273646显式使用teams环境，实际运行ncRNA Frozen random/n=100/seed17。该调度与路径修复不改变PPT中的性能或scaling结论。

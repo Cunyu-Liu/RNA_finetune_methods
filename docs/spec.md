@@ -1462,3 +1462,16 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. per-base=234/270、complementary=306/324、LR=220/320。RNA-FM degradation full-family四档闭合，validation选3e-5（best_val=0.220595），test PCC仅报告；完整组 **54/80**，分布3e-5二十四组、1e-4十六组、1e-5十二组、3e-4两组。证据=`status/lr_validation_interim_20261101_v165.json`，SHA256=`3435b554c401bb337de86ff6d46075d44a4a2254dc1466c34d23f8682b9855da`。
 3. 源包revision=`20261104_refresh_v110_v165ledger_rnafm_degradation_family_lr54`，**453个登记文件**，manifest SHA256=`2efd7200776c9d8f1931045e035757ac3ac1064beb7240694691b0fe2fc6500c`。PPT33页仅更新第20页LR计数与新增选档，SHA256=`c5356b63c0d5fd18f0a3ea4ddb321948a895972ebac896503810f288fcbed101`；PDF SHA256=`354486bde1f0c3f059274c6d84ff2661eb55ccfe64307dcb5b0dc44821f07521`。
 4. lint/layout/ZIP CRC与第20页原生PowerPoint实际渲染通过，中文、字号与1.5倍行距正常；其余科学图与用户手调内容不变。两格均seed101 tuning，不进正式三种子均值。
+
+### 10.143 v166 RNA-FM degradation random 四档闭合（2026-11-04）
+
+1. v166新增4格，**1678+4=1682 accepted、0 rejected**，均proof=complete、CUDA/checkpoint与plateau=CONVERGED通过。RNA-FM degradation random的default/1e-4/1e-5/3e-5 PCC=0.5283815541796529/0.538578859826727/0.5317884387992492/0.5175345902322624；mega SpliceAI random default macro-F1=0.333275146474228。证明=`status/bestval_v166_new_proof.json`，SHA256=`da64c73fe6d79fe025a865cb7f17cef322998cb19ef40a16b2d17d1866ac0686`。
+2. per-base=234/270、complementary=306/324、LR=224/320。RNA-FM degradation random按held-out best_val选1e-4（0.334589），test仅报告；完整组 **55/80**，分布3e-5二十四组、1e-4十七组、1e-5十二组、3e-4两组。证据SHA256=`9ed542978f6736071f01531cb56418e4b7da88c4dcb5fb52999a88dbdeeb1655`。
+3. 源包revision=`20261104_refresh_v111_v166ledger_rnafm_degradation_random_lr55`，**462个登记文件**，manifest SHA256=`9e3d6f5e7984fd23a25431ba945cd31ec7320ef5fed1503d21b79eba74e2f6e4`。PPT33页仅更新第20页，SHA256=`9bed0d665050e5369df1ca54b16cff1b72e97770a0e1ec01b6ea82204f27a272`；PDF SHA256=`832de2ae99f6a4ca2aa01688ff9e7eda5fb144cdd7c8497c82ab7caa5b7deb68`。lint/layout/CRC与原生渲染通过，其他图与用户手调内容不变。
+
+### 10.144 显存补位与 Frozen 产物路径修复（2026-11-04）
+
+1. 核心剩余大格need=28GiB，LR小格仅剩在训mega/RNA-FM，无法安全追加。独立补位队列只选官方RiNALMo-micro canonical Frozen（不含dense），原始need=8GiB、派生need=9GiB；共享`remaining_pipeline_20261103`模型锁，正式core→frozen→crispr阶段门不变。
+2. 首父1271175的启动环境遗漏`RNAFT_ARTIFACT_ROOT`，导致3个n=10格写入`/root/rna-ft-eval/artifacts`。没有删除或覆盖实验证据：逐文件验哈希后迁至teams对应RID目录，修正ledger产物路径，原错位目录保留于`/root/rna-ft-eval/artifacts_misplaced_20261104/`；3格独立proof均为complete。首格证据SHA256=`62603d42abce490fa502cc6a4175b213bc02e71f09f42d454c1b4155cf54d55e`，其余两格批次证据SHA256=`24f1795750a21ec0eba6761f8a7d5d4b51418da6218432cf6c2017bbaddefe8d`。
+3. 调度器同模型串行，workers=2不等于两个同模型训练并发；首父已在自有子进程自然结束后退出，未向训练发送终止信号。后续单格父1273621显式继承teams产物环境，子1273646为ncRNA Frozen random/n=100/seed17，CUDA实际在训，need=9GiB；启动证据SHA256=`f9092a2b8aad2e18d5a487c6a7592e7ce7ec1cb45cd83025c01fd32d293401be`。核查时GPU used/free=15367/16745MiB，下一核心大格28GiB仍不强行启动。
+4. 补位启动、在训与路径修复只作调度证据，不写成scaling科学结论；后续每格仍需result/plateau/checkpoint/CUDA独立验收。
