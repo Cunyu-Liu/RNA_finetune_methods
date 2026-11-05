@@ -843,7 +843,23 @@
 - [x] CT2 结果：ACC=0.7925407925407926、best_val=0.591733、best_epoch=23、27 epochs，CUDA/checkpoint/plateau通过。
 - [x] CT3 边界：n=2500为2/3，不推断平台或翻转；主矩阵与56组LR不变，证据SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
 - [x] CT4 展示：PPT与v114源包保持v171。
-- [ ] CT5 后续：同步并提交staging，等待seed43与网络恢复。
+- [x] CT5 交付：v173三地同步，`51ad298`已提交，推送待网络恢复；等待seed43。
+
+## CU 组：v175 Frozen 五档与 LR 验收
+
+- [x] CU1 数据：1752 accepted、0 rejected；49格proof=complete，证明SHA256=`d43881c0fec873af983d4ae049b729d49c5b52b6a84c18c3890433bedfc14548`。
+- [x] CU2 LR：252/320，61/80组，分布28/18/13/2；五组均按validation选档，证据SHA256=`2603c4019f1101f7a376331494c3f8358f11e529d43429d2ea50a968d3923bf6`。
+- [x] CU3 Frozen：ncRNA五档闭合，2000→2500基本持平；CRISPR七档低信号不判趋势。
+- [x] CU4 交付：498文件manifest=`c9c6a3630612697d5444afa1036a8650978bdf73e1078a9b7502e7ea2fde0533`；PPT=`c6535ca7c392cd570625f4e5fcd6ae29933cfcb18e72c69688ced8a8eb114b86`，PDF=`a812c7226e659145d39f20e81567d4c79df83e5dc5c7955d64416462d829552b`。
+- [x] CU5 渲染：33页lint/layout/CRC与第20/26页原生渲染通过。
+- [ ] CU6 后续：三地同步并提交，继续核心与Frozen任务。
+
+## CV 组：CRISPR OOM 与补位门禁验收
+
+- [x] CV1 证据：真实CUDA OOM、rc=1、无result，日志与manifest保留，证据SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
+- [x] CV2 修复：≥12000MiB大进程禁止补位，61 passed，`07827da`；推送待网络恢复。
+- [x] CV3 生产：PID1502704在大格结束后恢复，当前seed29在途，不记完成。
+- [ ] CV4 后续：恢复格独立proof后再记完成，继续核心优先。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

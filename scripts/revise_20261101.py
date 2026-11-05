@@ -177,7 +177,7 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 56/80 组：3e-5 二十四组、1e-4 十八组、1e-5 十二组、3e-4 两组。RNA-FM degradation family/random 分别选 3e-5/1e-4，SSP family 新增选 1e-4；RNA-FM modification family 与 SSP random 默认档最优，说明必须逐组 validation；其余格继续补齐。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 61/80 组：3e-5 二十八组、1e-4 十八组、1e-5 十三组、3e-4 两组。新增 RNA-FM SpliceAI 双 split 与 mega SSI 双 split 选 3e-5，mega SpliceAI random 选 1e-5；其余格继续按 validation 补齐，test 不参与选档。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。micro Frozen random 的 n=1000/1500/2000 已三种子闭合，n=2500 仍在补。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA Frozen random 的1000–3000五档均已三种子闭合。")
     set_text(slide, "TextBox 5",
-             "读图：33M Frozen random 在 n=1000/1500/2000 的 ACC mean=0.742/0.763/0.781，三点上升但不足以宣称平台或通用规律。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
+             "读图：33M Frozen 五档 ACC mean=0.742/0.763/0.781/0.780/0.787；2000→2500基本持平，不能宣称持续增益或平台。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 

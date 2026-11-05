@@ -1540,3 +1540,16 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v173新增1格，**1702+1=1703 accepted、0 rejected**；seed29 ACC=0.7925407925407926、best_val=0.591733、best_epoch=23、27 epochs，proof=complete，CUDA/checkpoint/plateau通过。证明=`status/bestval_v173_new_proof.json`，SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
 2. n=2500已有seed17=0.7668997668997669与seed29=0.7925407925407926，当前2/3，仍缺seed43；不以两个点的高低变化推断平台或翻转。主矩阵与LR=228/320、56组选档不变，证据=`status/lr_validation_interim_20261101_v173.json`，SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
 3. PPT与v114源包保持v171，原始新台账和proof在teams保存。v172文档提交`df39380`因GitHub网络超时仍待推送，不影响实验与三地证据。
+
+### 10.154 v175 Frozen 五档闭合与五个 LR 新组（2026-11-05）
+
+1. v175新增49格，**1703+49=1752 accepted、0 rejected**，全部独立proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v175_new_proof.json`，SHA256=`d43881c0fec873af983d4ae049b729d49c5b52b6a84c18c3890433bedfc14548`。v174新增0，故无该版proof/LR interim文件，不伪造空证明。
+2. LR=252/320，完整组 **61/80**，分布3e-5二十八组、1e-4十八组、1e-5十三组、3e-4两组。新增RNA-FM SpliceAI双split与mega SSI双split均选3e-5，mega SpliceAI random选1e-5；test不参与。证据SHA256=`2603c4019f1101f7a376331494c3f8358f11e529d43429d2ea50a968d3923bf6`。
+3. micro ncRNA Frozen random五档mean=0.742424/0.763403/0.780886/0.780109/0.787101，n=2000→2500基本持平，不宣称持续增益或平台。micro CRISPR Frozen random七档三种子均完成，但PR-AUC仍低信号，不形成有效scaling或等价结论。
+4. 源包revision=`20261105_refresh_v115_v175ledger_frozen_five_tiers_lr61`，**498个登记文件**，manifest SHA256=`c9c6a3630612697d5444afa1036a8650978bdf73e1078a9b7502e7ea2fde0533`。PPT33页更新第20/26页，SHA256=`c6535ca7c392cd570625f4e5fcd6ae29933cfcb18e72c69688ced8a8eb114b86`；PDF SHA256=`a812c7226e659145d39f20e81567d4c79df83e5dc5c7955d64416462d829552b`。lint/layout/CRC与两页原生渲染通过。
+
+### 10.155 CRISPR Frozen OOM 证据与大进程门禁（2026-11-05）
+
+1. `ft_rinalmomicro_crisprofftarget_frozen_s17_family_e310_bestval_v1`在模型加载时真实CUDA OOM，rc=1、无result，不记完成。当时已有核心大格占约20.67GiB，其他任务继续分配导致free=1.06MiB。证据=`status/queue_actions/frozen_crispr_oom_20261104.json`，SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
+2. `idle_frozen_fill.py`新增`large_gpu_processes()`：任何进程显存≥12000MiB时进入`waiting_core_process`，禁止启动补位格；保留29GiB核心窗口、9GiB小格预算、共享锁与teams产物路径。目标与调度回归 **61 passed**，提交`07827da`；当前GitHub网络仍待恢复，未宣称已推送。
+3. 新监控PID **1502704**，在大格结束后恢复补位，已接续CRISPR family/n=10/seed29。启动不等于完成，首格须在下版台账独立验收；OOM原日志不删除、不改写。

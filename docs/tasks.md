@@ -2444,4 +2444,19 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **单格验收**：1703 accepted、0 rejected；seed29 ACC=0.7925407925407926、best_epoch=23、27 epochs，proof=complete，证明SHA256=`0ad9884c3107e96532ed18a8bc7b00ac456090bfc8231a407a19e067d7e5b4c9`。
 - [x] **科学边界**：n=2500为2/3，仍缺seed43；主矩阵与56组LR不变，证据SHA256=`e9cbd0e7f063c201a321ba53eefd5556af4a2849f31779b5658c9526ac505bcf`。
 - [x] **展示边界**：PPT与v114源包保持v171。
-- [ ] **后续**：同步并提交staging，等待seed43完整proof及网络恢复后推送。
+- [x] **交付**：v173 staging三地一致，`51ad298`已提交，GitHub推送待网络恢复；等待seed43完整proof。
+
+## N154. 2026-11-05 v175 Frozen 五档与五个 LR 新组
+
+- [x] **批量验收**：1752 accepted、0 rejected；49格proof=complete，证明SHA256=`d43881c0fec873af983d4ae049b729d49c5b52b6a84c18c3890433bedfc14548`。
+- [x] **LR**：252/320，61/80组，分布28/18/13/2；五组均按validation选档，test不参与。证据SHA256=`2603c4019f1101f7a376331494c3f8358f11e529d43429d2ea50a968d3923bf6`。
+- [x] **Frozen**：ncRNA五档mean=0.742424/0.763403/0.780886/0.780109/0.787101；2000→2500基本持平。CRISPR七档虽闭合但低信号，不判趋势。
+- [x] **交付**：498文件manifest=`c9c6a3630612697d5444afa1036a8650978bdf73e1078a9b7502e7ea2fde0533`；PPT=`c6535ca7c392cd570625f4e5fcd6ae29933cfcb18e72c69688ced8a8eb114b86`，PDF=`a812c7226e659145d39f20e81567d4c79df83e5dc5c7955d64416462d829552b`。33页lint/layout/CRC与第20/26页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续核心队列与Frozen其他任务。
+
+## N155. 2026-11-05 CRISPR Frozen OOM 与补位门禁
+
+- [x] **失败证据**：family/n=10/seed17模型加载时CUDA OOM，rc=1、无result，证据SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
+- [x] **门禁修复**：大进程≥12000MiB时禁止补位，61 passed，`07827da`已提交，网络恢复后推送。
+- [x] **安全恢复**：新监控PID1502704在大格结束后恢复，当前接续seed29；不把启动当完成。
+- [ ] **后续**：下版台账验收恢复格，保留OOM证据并继续核心优先。
