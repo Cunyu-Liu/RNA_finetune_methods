@@ -1010,3 +1010,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 原OOM格已恢复，PR-AUC=0.0178593390、best_epoch=18、22 epochs；family n=10三种子闭合但低信号，不形成scaling或等价结论。
 3. RNA-FM SSI random新增1e-5 tuning，LR=253/320，61组与选档不变；证据SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
 4. family n=100仅seed17完成，33页PPT/PDF与v115源包保持v175。
+
+## 114. 2026-11-05 当前 v177：RNA-FM SSI random LR 闭合
+
+1. 当前PPT **33页**，SHA256=`710cf13415e1a60fe121a10ec2c482320e227bcf76ab867c41b3e6c1d4290baa`；PDF SHA256=`1ea5691b07caea2a30df7eb9cc35cae1744a1ee4d9038de3ffa64164cd5a30e6`。输入 **1759 accepted、0 rejected**，两格proof=complete，证明SHA256=`c3dfee51740e868023bfe1d3c86bb5739bda0300e9de9eca803ce2ac602f5773`。
+2. 第20页更新为LR=254/320、完整组 **62/80**、选档28/19/13/2；RNA-FM SSI random选1e-4（best_val=0.0468），test PCC仅报告。证据SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
+3. CRISPR family/n=100为2/3，仍缺seed43，低信号不更新趋势图；主矩阵不变。
+4. 源包revision=`20261105_refresh_v116_v177ledger_rnafm_ssi_random_lr62`，502个登记文件，manifest SHA256=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`。33页lint/layout/CRC与第20页原生渲染通过。

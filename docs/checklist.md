@@ -867,7 +867,16 @@
 - [x] CW2 恢复：原OOM格22 epochs收敛；family n=10三种子PR-AUC=0.0178593390/0.0756254090/0.0643944176，低信号不判趋势。
 - [x] CW3 LR：253/320，61组与选档不变，证据SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
 - [x] CW4 展示：family n=100仅单种子，PPT与v115源包保持v175。
-- [ ] CW5 后续：同步并提交staging，继续Frozen与核心任务。
+- [x] CW5 交付：v176三地同步，`527dd4f`已推送；继续Frozen与核心任务。
+
+## CX 组：v177 RNA-FM SSI random LR 验收
+
+- [x] CX1 数据：1759 accepted、0 rejected；两格proof=complete，证明SHA256=`c3dfee51740e868023bfe1d3c86bb5739bda0300e9de9eca803ce2ac602f5773`。
+- [x] CX2 LR：254/320，62/80组，分布28/19/13/2；random按best_val选1e-4，test不参与，证据SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
+- [x] CX3 Frozen：family n=100为2/3，低信号不判趋势。
+- [x] CX4 交付：502文件manifest=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`；PPT=`710cf13415e1a60fe121a10ec2c482320e227bcf76ab867c41b3e6c1d4290baa`，PDF=`1ea5691b07caea2a30df7eb9cc35cae1744a1ee4d9038de3ffa64164cd5a30e6`。
+- [x] CX5 渲染：33页lint/layout/CRC与第20页原生渲染通过。
+- [ ] CX6 后续：三地同步并提交，继续Frozen与核心任务。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

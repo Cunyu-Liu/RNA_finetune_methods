@@ -1560,3 +1560,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 此前OOM的`ft_rinalmomicro_crisprofftarget_frozen_s17_family_e310_bestval_v1`已恢复并收敛，PR-AUC=0.01785933902167685、best_epoch=18、22 epochs；失败日志与成功proof分别保留，不覆盖历史。family n=10三种子PR-AUC=0.0178593390/0.0756254090/0.0643944176，仍低信号，不形成scaling或等价结论。
 3. RNA-FM SSI random新增1e-5 tuning，LR=253/320，完整组61/80与选档28/18/13/2不变；test不参与。证据=`status/lr_validation_interim_20261101_v176.json`，SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
 4. 监控已完成family/n=100/seed17，仅单种子，不更新曲线；PPT与v115源包保持v175，原始新台账和proof在teams保存。
+
+### 10.157 v177 RNA-FM SSI random LR 闭合（2026-11-05）
+
+1. v177新增2格，**1757+2=1759 accepted、0 rejected**；CRISPR family/n=100/seed29 PR-AUC=0.04720922634911037，RNA-FM SSI random/3e-5 PCC=0.6343127153420138，均proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v177_new_proof.json`，SHA256=`c3dfee51740e868023bfe1d3c86bb5739bda0300e9de9eca803ce2ac602f5773`。
+2. RNA-FM SSI full-random四档闭合，validation选1e-4（best_val=0.0468，test PCC=0.636206038437241仅报告）；LR=254/320，完整组 **62/80**，分布3e-5二十八组、1e-4十九组、1e-5十三组、3e-4两组。证据=`status/lr_validation_interim_20261101_v177.json`，SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
+3. CRISPR family/n=100为2/3，仍缺seed43，低信号不形成趋势；per-base=234/270、complementary=306/324不变。
+4. 源包revision=`20261105_refresh_v116_v177ledger_rnafm_ssi_random_lr62`，**502个登记文件**，manifest SHA256=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`。PPT33页仅更新第20页，SHA256=`710cf13415e1a60fe121a10ec2c482320e227bcf76ab867c41b3e6c1d4290baa`；PDF SHA256=`1ea5691b07caea2a30df7eb9cc35cae1744a1ee4d9038de3ffa64164cd5a30e6`。lint/layout/CRC与原生渲染通过。
