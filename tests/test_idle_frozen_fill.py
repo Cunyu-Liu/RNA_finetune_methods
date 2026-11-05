@@ -38,3 +38,12 @@ def test_child_env_pins_artifact_root(monkeypatch):
     monkeypatch.delenv('RNAFT_ARTIFACT_ROOT', raising=False)
     env = fill.child_env()
     assert env['RNAFT_ARTIFACT_ROOT'] == str(fill.ARTIFACTS)
+
+
+def test_large_gpu_process_blocks_fill(monkeypatch):
+    monkeypatch.setattr(fill.subprocess, 'check_output',
+                        lambda *args, **kwargs: '100, 3482\n200, 20670\n')
+    assert fill.large_gpu_processes() == [{'pid': 200, 'used_mb': 20670}]
+    monkeypatch.setattr(fill.subprocess, 'check_output',
+                        lambda *args, **kwargs: '100, 3482\n')
+    assert fill.large_gpu_processes() == []

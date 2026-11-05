@@ -42,6 +42,20 @@ def memory_allows(free_gb, need_gb=9.0, core_window_gb=19.0):
     return need_gb <= free_gb < core_window_gb
 
 
+def large_gpu_processes(threshold_mb=12000):
+    output = subprocess.check_output([
+        'nvidia-smi', '--query-compute-apps=pid,used_memory',
+        '--format=csv,noheader,nounits',
+    ], text=True)
+    processes = []
+    for line in output.splitlines():
+        pid, memory = line.rsplit(',', 1)
+        used_mb = int(memory.strip())
+        if used_mb >= threshold_mb:
+            processes.append({'pid': int(pid), 'used_mb': used_mb})
+    return processes
+
+
 def next_runnable(jobs, proof=proof_state):
     for job in jobs:
         if job.model != 'RiNALMo-micro' or '_dense_' in job.rid:
@@ -124,6 +138,9 @@ def main():
             if not memory_allows(free_gb, need_gb, args.core_window_gb):
                 write_state('waiting_core_window' if free_gb >= args.core_window_gb else 'waiting_memory',
                             free_gb=free_gb, need_gb=need_gb, core_window_gb=args.core_window_gb)
+            elif large_gpu_processes():
+                write_state('waiting_core_process', free_gb=free_gb,
+                            large_processes=large_gpu_processes())
             elif not run_cell(candidate, args.poll_s):
                 return 1
             if args.once:
