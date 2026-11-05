@@ -2459,4 +2459,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **失败证据**：family/n=10/seed17模型加载时CUDA OOM，rc=1、无result，证据SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
 - [x] **门禁修复**：大进程≥12000MiB时禁止补位，61 passed，`07827da`已提交，网络恢复后推送。
 - [x] **安全恢复**：新监控PID1502704在大格结束后恢复，当前接续seed29；不把启动当完成。
-- [ ] **后续**：下版台账验收恢复格，保留OOM证据并继续核心优先。
+- [x] **恢复验收**：OOM格已在v176独立proof=complete，失败与成功证据分别保留；继续核心优先。
+
+## N156. 2026-11-05 v176 OOM 恢复与 CRISPR family n=10 闭合
+
+- [x] **五格验收**：1757 accepted、0 rejected；全部proof=complete，证明SHA256=`cb50acec95dc2d9bbb0657a655baede359ca04db08dd8c8d18d070e91c7d123b`。
+- [x] **恢复与边界**：原OOM格PR-AUC=0.0178593390，22 epochs收敛；family n=10三种子闭合但低信号，不判scaling。
+- [x] **LR边界**：LR=253/320，61组与选档不变；证据SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
+- [x] **展示边界**：family n=100仅seed17，PPT与v115源包保持v175。
+- [ ] **后续**：同步并提交staging，继续其余Frozen与核心任务。

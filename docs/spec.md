@@ -1553,3 +1553,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. `ft_rinalmomicro_crisprofftarget_frozen_s17_family_e310_bestval_v1`在模型加载时真实CUDA OOM，rc=1、无result，不记完成。当时已有核心大格占约20.67GiB，其他任务继续分配导致free=1.06MiB。证据=`status/queue_actions/frozen_crispr_oom_20261104.json`，SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
 2. `idle_frozen_fill.py`新增`large_gpu_processes()`：任何进程显存≥12000MiB时进入`waiting_core_process`，禁止启动补位格；保留29GiB核心窗口、9GiB小格预算、共享锁与teams产物路径。目标与调度回归 **61 passed**，提交`07827da`；当前GitHub网络仍待恢复，未宣称已推送。
 3. 新监控PID **1502704**，在大格结束后恢复补位，已接续CRISPR family/n=10/seed29。启动不等于完成，首格须在下版台账独立验收；OOM原日志不删除、不改写。
+
+### 10.156 v176 OOM 恢复格与 CRISPR family n=10 闭合（2026-11-05）
+
+1. v176新增5格，**1752+5=1757 accepted、0 rejected**，全部proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v176_new_proof.json`，SHA256=`cb50acec95dc2d9bbb0657a655baede359ca04db08dd8c8d18d070e91c7d123b`。
+2. 此前OOM的`ft_rinalmomicro_crisprofftarget_frozen_s17_family_e310_bestval_v1`已恢复并收敛，PR-AUC=0.01785933902167685、best_epoch=18、22 epochs；失败日志与成功proof分别保留，不覆盖历史。family n=10三种子PR-AUC=0.0178593390/0.0756254090/0.0643944176，仍低信号，不形成scaling或等价结论。
+3. RNA-FM SSI random新增1e-5 tuning，LR=253/320，完整组61/80与选档28/18/13/2不变；test不参与。证据=`status/lr_validation_interim_20261101_v176.json`，SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
+4. 监控已完成family/n=100/seed17，仅单种子，不更新曲线；PPT与v115源包保持v175，原始新台账和proof在teams保存。

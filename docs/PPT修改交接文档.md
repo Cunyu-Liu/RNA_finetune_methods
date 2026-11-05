@@ -1003,3 +1003,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. family/n=10/seed17模型加载时真实CUDA OOM，rc=1、无result，不记完成。证据SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
 2. 补位监控新增≥12000MiB大进程禁入门，61 passed，`07827da`已提交；新PID1502704在大格结束后恢复，当前接续seed29。
 3. OOM原日志保留，恢复格需下版独立proof；该调度修复不改变PPT中的性能或scaling结论。
+
+## 113. 2026-11-05 v176 staging：OOM 恢复与 family n=10 闭合，展示版保持 v175
+
+1. v176新增5格，合计 **1757 accepted、0 rejected**；全部proof=complete，证明SHA256=`cb50acec95dc2d9bbb0657a655baede359ca04db08dd8c8d18d070e91c7d123b`。
+2. 原OOM格已恢复，PR-AUC=0.0178593390、best_epoch=18、22 epochs；family n=10三种子闭合但低信号，不形成scaling或等价结论。
+3. RNA-FM SSI random新增1e-5 tuning，LR=253/320，61组与选档不变；证据SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
+4. family n=100仅seed17完成，33页PPT/PDF与v115源包保持v175。

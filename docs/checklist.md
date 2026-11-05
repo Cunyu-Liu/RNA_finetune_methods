@@ -859,7 +859,15 @@
 - [x] CV1 证据：真实CUDA OOM、rc=1、无result，日志与manifest保留，证据SHA256=`dbb49dacef75433adaacac77ffbbc121b87f2f230d53966a578c52ce350effd9`。
 - [x] CV2 修复：≥12000MiB大进程禁止补位，61 passed，`07827da`；推送待网络恢复。
 - [x] CV3 生产：PID1502704在大格结束后恢复，当前seed29在途，不记完成。
-- [ ] CV4 后续：恢复格独立proof后再记完成，继续核心优先。
+- [x] CV4 恢复：原OOM格在v176独立proof通过，失败与成功证据并存；继续核心优先。
+
+## CW 组：v176 OOM 恢复与 CRISPR family n=10 验收
+
+- [x] CW1 数据：1757 accepted、0 rejected；五格proof=complete，证明SHA256=`cb50acec95dc2d9bbb0657a655baede359ca04db08dd8c8d18d070e91c7d123b`。
+- [x] CW2 恢复：原OOM格22 epochs收敛；family n=10三种子PR-AUC=0.0178593390/0.0756254090/0.0643944176，低信号不判趋势。
+- [x] CW3 LR：253/320，61组与选档不变，证据SHA256=`3538b9176f3eaadb551576c8c774cb5ec1c6bb433f0e3c710c16abc35fd13178`。
+- [x] CW4 展示：family n=100仅单种子，PPT与v115源包保持v175。
+- [ ] CW5 后续：同步并提交staging，继续Frozen与核心任务。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 
