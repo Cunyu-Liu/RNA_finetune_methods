@@ -1588,3 +1588,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. `ft_rinalmomicro_mrl_frozen_s43_family_e310_bestval_v1`在epoch0 forward真实CUDA OOM，rc=1、无result；大训练进程在补位启动后继续分配显存，仅检查瞬时free不足以防竞态。证据=`status/queue_actions/frozen_mrl_oom_20261105.json`，SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
 2. 新门禁`competing_training_processes()`：除micro Frozen自身外，任何`rnafteval`训练runner均阻止补位；同时保留≥12000MiB大进程禁入、29GiB核心窗口、共享锁和teams产物路径。目标与调度回归 **62 passed**，提交`e471a3d`已推送；新监控PID **1753917**，不终止现有训练。
 3. 该MRL格仍runnable，须在安全窗口重新完成独立proof后才可记结果；第二次OOM日志不删除、不覆盖。PPT科学结论不受该失败影响。
+
+### 10.161 v181 650M SpliceAI Full-random 三种子闭合（2026-11-06）
+
+1. v181新增2格，**1817+2=1819 accepted、0 rejected**；650M SpliceAI Full-random/seed43 macro-F1=0.6277853569531268、best_val=0.001081、4 epochs，proof=complete。degradation random default tuning PCC=0.008809544198396564，仅seed101，不进正式均值。证明=`status/bestval_v181_new_proof.json`，SHA256=`ebee46cabe3004ee6aeecae8b078e36964360a31b8090b9c174a796bf1461ca6`。
+2. 650M SpliceAI Full-random三种子macro-F1=0.446101/0.539600/0.627785，mean=0.5378287250377286、SD=0.09085523270482387，正式闭合并更新六柱；权威覆盖仍SpliceAI 27、SSI 27，不按accepted直接累加。per-base=242/270、complementary=306/324。
+3. LR=267/320，完整组65/80与选档30/19/14/2不变，degradation random仅default首档。证据=`status/lr_validation_interim_20261101_v181.json`，SHA256=`01247d9c2d941594a5153a02270c2da6b1720d077b3854e3916b826b8dffd19e`。
+4. 源包revision=`20261106_refresh_v118_v181ledger_650m_spliceai_full_random_closure`，**515个登记文件**，manifest SHA256=`5959d4636df9b6f0d897ead59c5d78c06c93f9cbd4e6f93934e7878eb7b3cb2e`。PPT33页更新第9页，SHA256=`644c90489ecd9010a71873b7a8ba07ceb4065b5c0720bbf34eb036244055e144`；PDF SHA256=`ddeb0c930498f5bbf90828086eb313ce06e71839cfe5be25ffdbeb60a98293c9`。lint/layout/CRC与原生渲染通过。

@@ -171,7 +171,7 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/27/27/27 个三种子单元（共30）；650M SpliceAI Frozen-family 已用正式best-val复核；斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/27/27/27 个三种子单元（共30）；650M SpliceAI Full-random 三种子 mean=0.538，斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 

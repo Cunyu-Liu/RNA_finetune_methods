@@ -901,7 +901,16 @@
 - [x] DA1 证据：MRL family/n=10/seed43真实OOM，rc=1、无result，SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
 - [x] DA2 门禁：其他训练runner存在时禁止补位，62 passed，`e471a3d`已推送。
 - [x] DA3 边界：失败格仍runnable，新监控不终止现有训练，不将重试启动写成完成。
-- [ ] DA4 后续：安全窗口独立proof后恢复，继续核心优先。
+- [x] DA4 交付：v179三地同步，`54c1eb7`已推送；runner门禁持续生效，继续核心优先。
+
+## DB 组：v181 650M SpliceAI Full-random 验收
+
+- [x] DB1 数据：1819 accepted、0 rejected；两格proof=complete，证明SHA256=`ebee46cabe3004ee6aeecae8b078e36964360a31b8090b9c174a796bf1461ca6`。
+- [x] DB2 闭合：Full-random mean=0.5378287250377286、SD=0.09085523270482387；SpliceAI/SSI覆盖均27。
+- [x] DB3 LR：267/320，65组与选档不变，degradation default仅tuning，证据SHA256=`01247d9c2d941594a5153a02270c2da6b1720d077b3854e3916b826b8dffd19e`。
+- [x] DB4 交付：515文件manifest=`5959d4636df9b6f0d897ead59c5d78c06c93f9cbd4e6f93934e7878eb7b3cb2e`；PPT=`644c90489ecd9010a71873b7a8ba07ceb4065b5c0720bbf34eb036244055e144`，PDF=`ddeb0c930498f5bbf90828086eb313ce06e71839cfe5be25ffdbeb60a98293c9`。
+- [x] DB5 渲染：33页lint/layout/CRC与第9页原生渲染通过，图文一致。
+- [ ] DB6 后续：三地同步并提交，继续核心与恢复队列。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

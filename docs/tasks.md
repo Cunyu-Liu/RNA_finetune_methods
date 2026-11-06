@@ -2498,4 +2498,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **失败证据**：MRL family/n=10/seed43在epoch0 forward OOM，rc=1、无result，证据SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
 - [x] **门禁升级**：除micro Frozen外的训练runner均禁止补位，保留大进程、显存窗口、共享锁和teams路径；62 passed，`e471a3d`已推送。
 - [x] **生产恢复**：监控PID1753917，不终止其他训练；失败格仍为runnable，不记完成。
-- [ ] **后续**：安全窗口重试并独立验收，继续核心优先。
+- [x] **交付**：v179三地一致，`54c1eb7`已推送；runner门禁持续生效，继续核心优先。
+
+## N161. 2026-11-06 v181 650M SpliceAI Full-random 闭合
+
+- [x] **两格验收**：1819 accepted、0 rejected；两格proof=complete，证明SHA256=`ebee46cabe3004ee6aeecae8b078e36964360a31b8090b9c174a796bf1461ca6`。
+- [x] **三种子结果**：Full-random mean=0.5378287250377286、SD=0.09085523270482387，正式闭合并更新六柱；SpliceAI/SSI覆盖均27。
+- [x] **LR边界**：LR=267/320，65组与选档不变；degradation default仅tuning，证据SHA256=`01247d9c2d941594a5153a02270c2da6b1720d077b3854e3916b826b8dffd19e`。
+- [x] **交付**：515文件manifest=`5959d4636df9b6f0d897ead59c5d78c06c93f9cbd4e6f93934e7878eb7b3cb2e`；PPT=`644c90489ecd9010a71873b7a8ba07ceb4065b5c0720bbf34eb036244055e144`，PDF=`ddeb0c930498f5bbf90828086eb313ce06e71839cfe5be25ffdbeb60a98293c9`。33页lint/layout/CRC与第9页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续核心大格与恢复队列。
