@@ -47,3 +47,15 @@ def test_large_gpu_process_blocks_fill(monkeypatch):
     monkeypatch.setattr(fill.subprocess, 'check_output',
                         lambda *args, **kwargs: '100, 3482\n')
     assert fill.large_gpu_processes() == []
+
+
+def test_competing_training_runner_blocks_fill(monkeypatch):
+    allowed = '/opt/python -m rnafteval.finetune_one --model RiNALMo-micro --strategy frozen'
+    full = '/opt/python -m rnafteval.finetune_one --model RiNALMo-650M --strategy full'
+    e6 = '/opt/python -m rnafteval.e6_forget --model RiNALMo-650M --strategy lora'
+    monkeypatch.setattr(fill.subprocess, 'check_output',
+                        lambda *args, **kwargs: f'101 {allowed}\n102 {full}\n103 {e6}\n')
+    assert [p['pid'] for p in fill.competing_training_processes()] == [102, 103]
+    monkeypatch.setattr(fill.subprocess, 'check_output',
+                        lambda *args, **kwargs: f'101 {allowed}\n')
+    assert fill.competing_training_processes() == []

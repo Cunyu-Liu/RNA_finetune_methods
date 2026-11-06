@@ -56,6 +56,19 @@ def large_gpu_processes(threshold_mb=12000):
     return processes
 
 
+def competing_training_processes():
+    output = subprocess.check_output(['ps', '-eo', 'pid,args'], text=True)
+    processes = []
+    for line in output.splitlines():
+        pid, command = line.strip().split(None, 1)
+        if '-m rnafteval.' not in command:
+            continue
+        if '--strategy frozen' in command and '--model RiNALMo-micro' in command:
+            continue
+        processes.append({'pid': int(pid), 'command': command})
+    return processes
+
+
 def next_runnable(jobs, proof=proof_state):
     for job in jobs:
         if job.model != 'RiNALMo-micro' or '_dense_' in job.rid:
@@ -138,9 +151,10 @@ def main():
             if not memory_allows(free_gb, need_gb, args.core_window_gb):
                 write_state('waiting_core_window' if free_gb >= args.core_window_gb else 'waiting_memory',
                             free_gb=free_gb, need_gb=need_gb, core_window_gb=args.core_window_gb)
-            elif large_gpu_processes():
+            elif large_gpu_processes() or competing_training_processes():
                 write_state('waiting_core_process', free_gb=free_gb,
-                            large_processes=large_gpu_processes())
+                            large_processes=large_gpu_processes(),
+                            training_processes=competing_training_processes())
             elif not run_cell(candidate, args.poll_s):
                 return 1
             if args.once:
