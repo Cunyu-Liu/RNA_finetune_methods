@@ -1574,3 +1574,17 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. CRISPR family/n=100/seed43 PR-AUC=0.05950201580747375，n=100三种子闭合；n=1000三种子PR-AUC=0.1159057235/0.0679177798/0.0846592919，mean=0.0894942652，仍低于当前有效信号阈值0.2，不形成scaling或等价结论，继续等待6000/10000信号档。
 3. 主矩阵与LR=254/320、62组选档不变。证据=`status/lr_validation_interim_20261101_v178.json`，SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。
 4. 补位监控处于`waiting_core_process`，检测到大进程used=13426MiB，证明新增门禁生效，未强行占满或制造OOM。PPT与v116源包保持v177，提交`e765860`已成功推送。
+
+### 10.159 v179 三个 LR 新组与 Frozen/MRL 扩展（2026-11-06）
+
+1. v179新增54格，**1763+54=1817 accepted、0 rejected**；54格均通过独立proof、CUDA/checkpoint/plateau验收。证明=`status/bestval_v179_new_proof.json`，SHA256=`0da9f225cffbdb305c1aeb722a798220841e2e868c7bc83740706aa6fd3fd99b`。深度验证超过5分钟，未以超时降低proof标准。
+2. per-base=241/270、complementary=306/324、LR=266/320，完整组 **65/80**，分布3e-5三十组、1e-4十九组、1e-5十四组、3e-4两组。新增650M CRISPR family选1e-5、random选3e-5、degradation family选3e-5；test不参与。证据SHA256=`e3321dbb04a40485503b3505bda4f356876474799bade7a0e1303e943685d46b`。
+3. 650M SpliceAI Frozen-family三种子macro-F1=0.424180/0.397225/0.408153，mean=0.409853；random为2/3。权威覆盖复核为SpliceAI 27、SSI 27，旧文案中的数量不直接按accepted格数相加，不把阶段计数误写成新增闭合。
+4. micro MRL Frozen random五档mean=0.311619/0.362798/0.383581/0.647679/0.522308，非单调且种子变异大；ncRNA Frozen的2000→2500仍基本持平。CRISPR低信号继续不判趋势。
+5. 源包revision=`20261106_refresh_v117_v179ledger_spliceai_frozen_refresh_mrl_lr65`，**511个登记文件**，manifest SHA256=`10afe7dbf536260d90b661ef2958c2f2d7860068f0798273b91ab77a7204985d`。PPT33页更新第9/20/26页，SHA256=`3505fcd39b979d768414a6cf167a6db9ac1c0285cb91911fb3a51697950ad05d`；PDF SHA256=`8587b9007c8ad85447ba20e0584ed90be8c1b972f89f0b7482bd4acd9b9e35ae`。lint/layout/CRC与三页原生渲染通过。
+
+### 10.160 第二次 OOM 与训练 runner 门禁（2026-11-06）
+
+1. `ft_rinalmomicro_mrl_frozen_s43_family_e310_bestval_v1`在epoch0 forward真实CUDA OOM，rc=1、无result；大训练进程在补位启动后继续分配显存，仅检查瞬时free不足以防竞态。证据=`status/queue_actions/frozen_mrl_oom_20261105.json`，SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
+2. 新门禁`competing_training_processes()`：除micro Frozen自身外，任何`rnafteval`训练runner均阻止补位；同时保留≥12000MiB大进程禁入、29GiB核心窗口、共享锁和teams产物路径。目标与调度回归 **62 passed**，提交`e471a3d`已推送；新监控PID **1753917**，不终止现有训练。
+3. 该MRL格仍runnable，须在安全窗口重新完成独立proof后才可记结果；第二次OOM日志不删除、不覆盖。PPT科学结论不受该失败影响。

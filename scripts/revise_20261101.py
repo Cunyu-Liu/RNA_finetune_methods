@@ -171,13 +171,13 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/27/27/26 个三种子单元（共30）；按正式best-val计数，不用阶段表补齐；斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/27/27/27 个三种子单元（共30）；650M SpliceAI Frozen-family 已用正式best-val复核；斜线=n<3，空白=未完成。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 62/80 组：3e-5 二十八组、1e-4 十九组、1e-5 十三组、3e-4 两组。新增 RNA-FM SSI random 选 1e-4；此前 RNA-FM SpliceAI 双 split 与 mega SSI 双 split 选 3e-5，mega SpliceAI random 选 1e-5。其余格继续按 validation 补齐，test 不参与选档。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 65/80 组：3e-5 三十组、1e-4 十九组、1e-5 十四组、3e-4 两组。新增 650M CRISPR family 选 1e-5、random 选 3e-5，650M degradation family 选 3e-5；其余格继续按 validation 补齐，test 不参与选档。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA Frozen random 的1000–3000五档均已三种子闭合。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA 与 MRL 的 Frozen random 五档均已三种子闭合。")
     set_text(slide, "TextBox 5",
-             "读图：33M Frozen 五档 ACC mean=0.742/0.763/0.781/0.780/0.787；2000→2500基本持平，不能宣称持续增益或平台。④现有三组等价候选；degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
+             "读图：ncRNA Frozen 五档 ACC mean=0.742/0.763/0.781/0.780/0.787，2000→2500基本持平；MRL Frozen 非单调且种子变异大，不宣称统一 scaling。degradation 的 requested≥2000 仍是 cap=1552，不能解释为新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 

@@ -1024,3 +1024,16 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. n=100三种子闭合；n=1000 mean=0.0894942652，仍低于0.2阈值，不形成scaling或等价结论，等待6000/10000信号档。
 3. 主矩阵与62组LR不变，证据SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。补位监控检测到13426MiB大进程并停止启动小格。
 4. 33页PPT/PDF与v116源包保持v177，`e765860`已推送。
+
+## 116. 2026-11-06 当前 v179：LR 65 组与 Frozen/MRL 扩展
+
+1. 当前PPT **33页**，SHA256=`3505fcd39b979d768414a6cf167a6db9ac1c0285cb91911fb3a51697950ad05d`；PDF SHA256=`8587b9007c8ad85447ba20e0584ed90be8c1b972f89f0b7482bd4acd9b9e35ae`。输入 **1817 accepted、0 rejected**，54格proof=complete，证明SHA256=`0da9f225cffbdb305c1aeb722a798220841e2e868c7bc83740706aa6fd3fd99b`。
+2. 第20页更新为LR=266/320、完整组 **65/80**、选档30/19/14/2；650M CRISPR family选1e-5、random选3e-5、degradation family选3e-5。证据SHA256=`e3321dbb04a40485503b3505bda4f356876474799bade7a0e1303e943685d46b`。
+3. 第9页SpliceAI/SSI均为27，650M SpliceAI Frozen-family mean=0.409853，random为2/3；不按accepted格数直接增加闭合数。第26页加入MRL Frozen五档，非单调且种子变异大；ncRNA 2000→2500基本持平。
+4. 源包revision=`20261106_refresh_v117_v179ledger_spliceai_frozen_refresh_mrl_lr65`，511个登记文件，manifest SHA256=`10afe7dbf536260d90b661ef2958c2f2d7860068f0798273b91ab77a7204985d`。第9/20/26页原生渲染通过。
+
+## 117. 2026-11-06 第二次 OOM 与 runner 门禁，PPT科学结论不变
+
+1. MRL family/n=10/seed43在epoch0 forward真实OOM，rc=1、无result；大进程在补位启动后继续分配显存。证据SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
+2. 门禁升级为除micro Frozen外的训练runner均禁止补位，保留大进程和核心窗口限制；回归62 passed，`e471a3d`已推送，监控PID1753917。
+3. 失败格仍为runnable，须在安全窗口重新完成proof；原日志保留，PPT不因此改写科学结论。

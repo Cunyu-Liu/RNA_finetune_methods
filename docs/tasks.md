@@ -2483,4 +2483,19 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **科学边界**：n=100闭合；n=1000 mean=0.0894942652，仍低信号，不判scaling或等价，等待6000/10000档。
 - [x] **LR边界**：LR=254/320，62组与选档不变，证据SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。
 - [x] **门禁实证**：`waiting_core_process`检测到13426MiB大进程，补位未强行启动；PPT保持v177。
-- [ ] **后续**：同步并提交staging，继续核心与Frozen任务。
+- [x] **交付**：v178 staging三地一致，`39cafe0`已推送；继续核心与Frozen任务。
+
+## N159. 2026-11-06 v179 三个 LR 新组与 Frozen/MRL 扩展
+
+- [x] **54格验收**：1817 accepted、0 rejected；深度proof通过，SHA256=`0da9f225cffbdb305c1aeb722a798220841e2e868c7bc83740706aa6fd3fd99b`。
+- [x] **LR**：266/320，65/80组，分布30/19/14/2；650M CRISPR family选1e-5、random选3e-5、degradation family选3e-5。证据SHA256=`e3321dbb04a40485503b3505bda4f356876474799bade7a0e1303e943685d46b`。
+- [x] **覆盖与曲线**：SpliceAI/SSI均27；650M SpliceAI Frozen-family mean=0.409853；MRL Frozen五档非单调且变异大，ncRNA 2000→2500基本持平。
+- [x] **交付**：511文件manifest=`10afe7dbf536260d90b661ef2958c2f2d7860068f0798273b91ab77a7204985d`；PPT=`3505fcd39b979d768414a6cf167a6db9ac1c0285cb91911fb3a51697950ad05d`，PDF=`8587b9007c8ad85447ba20e0584ed90be8c1b972f89f0b7482bd4acd9b9e35ae`。33页lint/layout/CRC与第9/20/26页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续核心与Frozen任务。
+
+## N160. 2026-11-06 第二次 OOM 与 runner 门禁
+
+- [x] **失败证据**：MRL family/n=10/seed43在epoch0 forward OOM，rc=1、无result，证据SHA256=`fc4b8ddf0dd189d16b0e5fcad86b8ab4c5fd29c0abb73b16d81d3d8448caf32e`。
+- [x] **门禁升级**：除micro Frozen外的训练runner均禁止补位，保留大进程、显存窗口、共享锁和teams路径；62 passed，`e471a3d`已推送。
+- [x] **生产恢复**：监控PID1753917，不终止其他训练；失败格仍为runnable，不记完成。
+- [ ] **后续**：安全窗口重试并独立验收，继续核心优先。
