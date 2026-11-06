@@ -2475,4 +2475,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR选档**：RNA-FM SSI random选1e-4，LR=254/320、62/80组、分布28/19/13/2；test不参与，证据SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
 - [x] **Frozen边界**：CRISPR family n=100为2/3，低信号不判趋势。
 - [x] **交付**：502文件manifest=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`；PPT=`710cf13415e1a60fe121a10ec2c482320e227bcf76ab867c41b3e6c1d4290baa`，PDF=`1ea5691b07caea2a30df7eb9cc35cae1744a1ee4d9038de3ffa64164cd5a30e6`。33页lint/layout/CRC与第20页原生渲染通过。
-- [ ] **后续**：三地同步并提交，继续其余Frozen与核心任务。
+- [x] **交付**：v177三地一致，`e765860`已推送；继续其余Frozen与核心任务。
+
+## N158. 2026-11-05 v178 CRISPR family n=1000 闭合与门禁实证
+
+- [x] **四格验收**：1763 accepted、0 rejected；全部proof=complete，证明SHA256=`d125e8f1930ba5944b4eada66d9f218a47cc94adedf895ff0d96fbfcb9f51bd9`。
+- [x] **科学边界**：n=100闭合；n=1000 mean=0.0894942652，仍低信号，不判scaling或等价，等待6000/10000档。
+- [x] **LR边界**：LR=254/320，62组与选档不变，证据SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。
+- [x] **门禁实证**：`waiting_core_process`检测到13426MiB大进程，补位未强行启动；PPT保持v177。
+- [ ] **后续**：同步并提交staging，继续核心与Frozen任务。

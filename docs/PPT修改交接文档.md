@@ -1017,3 +1017,10 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 2. 第20页更新为LR=254/320、完整组 **62/80**、选档28/19/13/2；RNA-FM SSI random选1e-4（best_val=0.0468），test PCC仅报告。证据SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
 3. CRISPR family/n=100为2/3，仍缺seed43，低信号不更新趋势图；主矩阵不变。
 4. 源包revision=`20261105_refresh_v116_v177ledger_rnafm_ssi_random_lr62`，502个登记文件，manifest SHA256=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`。33页lint/layout/CRC与第20页原生渲染通过。
+
+## 115. 2026-11-05 v178 staging：CRISPR family n=1000 与门禁实证，展示版保持 v177
+
+1. v178新增4格，合计 **1763 accepted、0 rejected**；全部proof=complete，证明SHA256=`d125e8f1930ba5944b4eada66d9f218a47cc94adedf895ff0d96fbfcb9f51bd9`。
+2. n=100三种子闭合；n=1000 mean=0.0894942652，仍低于0.2阈值，不形成scaling或等价结论，等待6000/10000信号档。
+3. 主矩阵与62组LR不变，证据SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。补位监控检测到13426MiB大进程并停止启动小格。
+4. 33页PPT/PDF与v116源包保持v177，`e765860`已推送。

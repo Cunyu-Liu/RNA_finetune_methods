@@ -1567,3 +1567,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. RNA-FM SSI full-random四档闭合，validation选1e-4（best_val=0.0468，test PCC=0.636206038437241仅报告）；LR=254/320，完整组 **62/80**，分布3e-5二十八组、1e-4十九组、1e-5十三组、3e-4两组。证据=`status/lr_validation_interim_20261101_v177.json`，SHA256=`2da384ee5ce653066c2adedc259510bc3e60d9ee9b0165e9860abee1181c4dd2`。
 3. CRISPR family/n=100为2/3，仍缺seed43，低信号不形成趋势；per-base=234/270、complementary=306/324不变。
 4. 源包revision=`20261105_refresh_v116_v177ledger_rnafm_ssi_random_lr62`，**502个登记文件**，manifest SHA256=`262436b071d1173dbd62831303baa7ccc756711bc9e938b2b174846ec1aa460b`。PPT33页仅更新第20页，SHA256=`710cf13415e1a60fe121a10ec2c482320e227bcf76ab867c41b3e6c1d4290baa`；PDF SHA256=`1ea5691b07caea2a30df7eb9cc35cae1744a1ee4d9038de3ffa64164cd5a30e6`。lint/layout/CRC与原生渲染通过。
+
+### 10.158 v178 CRISPR family n=1000 闭合与门禁实证（2026-11-05）
+
+1. v178新增4格，**1759+4=1763 accepted、0 rejected**，全部proof=complete、CUDA/checkpoint/plateau通过。证明=`status/bestval_v178_new_proof.json`，SHA256=`d125e8f1930ba5944b4eada66d9f218a47cc94adedf895ff0d96fbfcb9f51bd9`。
+2. CRISPR family/n=100/seed43 PR-AUC=0.05950201580747375，n=100三种子闭合；n=1000三种子PR-AUC=0.1159057235/0.0679177798/0.0846592919，mean=0.0894942652，仍低于当前有效信号阈值0.2，不形成scaling或等价结论，继续等待6000/10000信号档。
+3. 主矩阵与LR=254/320、62组选档不变。证据=`status/lr_validation_interim_20261101_v178.json`，SHA256=`7dcc27731e311b620ccee667742b6613bddf740f4a389ff6b35b4f7df052c22d`。
+4. 补位监控处于`waiting_core_process`，检测到大进程used=13426MiB，证明新增门禁生效，未强行占满或制造OOM。PPT与v116源包保持v177，提交`e765860`已成功推送。
