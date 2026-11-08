@@ -1623,3 +1623,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 实时complete+runnable为：per-base 269+1、complementary 306+18、LR 302+18、Frozen **110+898**、PEFT/rank 324+636、C5c LoRA/Full 689+1327、CRISPR 0+108；无conflict。后续按此动态缺口排队，PEFT与C5c仍不阻塞本次汇报，tuned须等80组全部选档。
 3. 650M corrected E6 LoRA三行仍pending且result不存在。主流水线未含E6，但独立`q_e6_mlm15fix.sh`监控PID **2236933**存活，按650M LoRA 18.5GB门槛等待自然窗口；不得再开同RID。队列证据=`status/e6_lane_progress_20261109_v195.json`，SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
 4. 无新科学单元，PPT与v119源包保持v184；E6固定epoch评估沿用其既有对照协议，不把该协议称作best-val收敛结果。
+
+### 10.166 v196 全33页原生渲染复核（2026-11-09）
+
+1. v196新增0，仍1887 accepted、0 rejected；per-base 269/270、complementary 306/324、LR 302/320、72/80组不变。LR证据SHA256=`41b8997f17442e927adef21957a9730002dd6bd58cab07d1f5f3a2c0ebe2ea8e`，无新科学单元。
+2. 直接对v184原生PowerPoint PDF逐页渲染并检查 **1–33页**，未见空白页、越界图形、中文缺失、图块丢失或明显图文冲突；结构检查180个显式文本run均Microsoft YaHei、178个段落均1.5倍行距。PPT SHA256=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF SHA256=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`，未改写文件。
+3. 33张单页图、6张联系表及验收JSON保存于`handoff/full_deck_review_20261109_v196/`，压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`；报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。v119绘图源包保持，其他手调内容不变。

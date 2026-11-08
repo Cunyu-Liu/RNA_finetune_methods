@@ -1,0 +1,52 @@
+{
+  "ppt_sha256": "99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa",
+  "pdf_sha256": "5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195",
+  "slides": 33,
+  "rendered_pages": 33,
+  "contact_sheets": 6,
+  "reviewed_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ],
+  "visual_issues": [],
+  "out_of_bounds_shapes": [],
+  "empty_pages": [],
+  "explicit_run_fonts": {
+    "Microsoft YaHei": 180
+  },
+  "paragraph_line_spacing": {
+    "1.5": 178
+  },
+  "note": "All 33 pages visually reviewed from the native PowerPoint PDF; no missing Chinese, missing figures, or obvious text/figure mismatch. No PPT edits made."
+}

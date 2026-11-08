@@ -947,6 +947,15 @@
 - [x] DF4 展示：零新增，33页PPT/PDF与519文件v119源包保持v184；E6固定epoch对照不写成best-val收敛。
 - [ ] DF5 后续：三地同步并提交，继续核心、Frozen、CRISPR与独立E6队列。
 
+## DG 组：v196 全33页原生渲染验收
+
+- [x] DG1 数据：v196零新增，1887 accepted、0 rejected，科学结论不变。
+- [x] DG2 全稿：原生PDF第1–33页逐页检查，未见空白、越界、中文/图块缺失或明显图文冲突。
+- [x] DG3 格式：180个显式文本run均Microsoft YaHei，178个段落均1.5倍行距；无越界shape。
+- [x] DG4 交付边界：PPT=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`，未改写。
+- [x] DG5 证据：33张单页图和6张联系表已上传；压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`，报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。
+- [ ] DG6 后续：三地同步并提交，等待新科学单元再更新PPT。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

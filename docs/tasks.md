@@ -2540,3 +2540,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **口径**：复用accepted格的独立proof，未接受格实时proof；跨注册表别名一致，零新增不改PPT。
 - [x] **E6接续**：650M LoRA三格pending，独立监控PID2236933存活，按18.5GB门槛等待；不重复启动、不误称best-val收敛。证据SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
 - [ ] **后续**：三地同步并提交审计，继续core→frozen→crispr和独立E6队列；tuned待80组选档。
+
+## N166. 2026-11-09 v196 全33页原生渲染复核
+
+- [x] **台账**：v196零新增，1887 accepted、0 rejected；核心与LR计数不变，LR证据SHA256=`41b8997f17442e927adef21957a9730002dd6bd58cab07d1f5f3a2c0ebe2ea8e`。
+- [x] **逐页验收**：原生PDF第1–33页均检查，无空白、越界、中文/图块缺失或明显图文冲突；PPT/PDF哈希与v184一致，不改文件。
+- [x] **格式**：180个显式文本run均Microsoft YaHei，178个段落均1.5倍行距。
+- [x] **证据**：33张单页图、6张联系表与JSON已上传，压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`，报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。
+- [ ] **后续**：三地同步并提交，继续等待新完成格独立proof。

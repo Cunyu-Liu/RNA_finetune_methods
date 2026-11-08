@@ -1070,3 +1070,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v195零新增，仍1887 accepted、0 rejected；per-base 269/270、complementary 306/324、LR 302/320、72/80组。Frozen真实进度110/1008，PEFT 324/960、C5c 689/2016、CRISPR 0/108，无conflict。审计SHA256=`848395849be0aa4d37b22fc00efc542f30e52bff13ef2682a15a6cf64ccaa70b`。
 2. 650M corrected E6 LoRA三格仍pending；独立监控PID2236933存活，按18.5GB门槛等待，不重复派发。证据SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
 3. 没有新完整科学单元，33页PPT/PDF与519文件v119源包保持v184，不重绘、不修改用户其他手调内容。
+
+## 123. 2026-11-09 v196：全33页原生渲染复核通过
+
+1. 直接对当前v184原生PowerPoint PDF检查 **第1–33页**，无空白页、越界shape、中文缺失、图块丢失或明显图文冲突；180个显式文本run均Microsoft YaHei、178个段落均1.5倍行距。
+2. PPT SHA256=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`；PDF SHA256=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`，本次不改文件。
+3. 33张单页图、6张联系表及报告保存于`handoff/full_deck_review_20261109_v196/`；压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`，报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。v119源包保持。
