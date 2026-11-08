@@ -1603,3 +1603,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. LR=302/320，完整组 **72/80**，分布3e-5三十一组、1e-4十九组、1e-5十九组、3e-4三组。新增650M七组：degradation random、ncRNA双split、modification family、SSP random选1e-5，SSP family选3e-5，modification random默认3e-4最优。高LR并非一律失效，低LR也不能一刀切；test不参与。证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
 4. 成本页更新为650M Full仅3个任务的实测峰值中位13.4GB、范围13.2–15.5GB，不再写“尚未开跑”，不外推全部任务。其他scaling与等价边界不变。
 5. 源包revision=`20261109_refresh_v119_v184ledger_degradation_ssi30_spliceai29_lr72`，**519个登记文件**，manifest SHA256=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`。PPT33页更新第9/20/29/30页，SHA256=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`；PDF SHA256=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`。lint/layout/CRC与第9/20/26/29/30页原生渲染通过。
+
+### 10.163 v191 长 epoch 实证与禁止固定步数截止（2026-11-09）
+
+1. v191新增0，仍 **1887 accepted、0 rejected**；650M SpliceAI Full-family/seed101日志已到epoch2，val_loss由0.003240小幅升至0.003241，仍在best-val协议内继续训练，不能按固定步数停止或记为收敛。
+2. 当前plateau文件更新滞后于日志，不能只凭plateau未变判断挂起；GPU仍有实际利用，未发生CPU静默降级。结果文件尚不存在，需等patience=3完整收敛证明。
+3. 最后主矩阵格650M SpliceAI Frozen-random/seed17仍待安全显存窗口；PPT与v119源包保持v184。在训证据=`status/inflight_progress_20261109_v191.json`，SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。

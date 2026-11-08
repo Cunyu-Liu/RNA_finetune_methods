@@ -919,7 +919,15 @@
 - [x] DC3 LR：302/320，72/80组，分布31/19/19/3；默认档第三个最优反例，test不参与，证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
 - [x] DC4 成本：650M Full仅3任务，峰值中位13.4GB、范围13.2–15.5GB，未外推全部任务。
 - [x] DC5 交付：519文件manifest=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`；PPT=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`。第9/20/26/29/30页原生渲染通过。
-- [ ] DC6 后续：三地同步并提交，继续最后主矩阵格与恢复队列。
+- [x] DC6 交付：v184三地同步，`8cd89a5`已推送；继续最后主矩阵格与恢复队列。
+
+## DD 组：v191 长 epoch 在训验收
+
+- [x] DD1 台账：新增0，仍1887 accepted、0 rejected，不修改PPT。
+- [x] DD2 进度：日志已到epoch2，val_loss=0.003241，仍RUNNING；plateau未更新不等于挂起。
+- [x] DD3 边界：不按固定步数截止，无CPU降级，需完整patience=3收敛证明。
+- [x] DD4 证据：`inflight_progress_20261109_v191.json` SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。
+- [ ] DD5 后续：同步并提交，等待真实完成结果。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 

@@ -2515,4 +2515,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **LR**：302/320，72/80组，分布31/19/19/3；650M modification random默认档最优，不能一刀切LR，test不参与。证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
 - [x] **成本修正**：650M Full仅3任务，峰值中位13.4GB、范围13.2–15.5GB，不再写尚未开跑。
 - [x] **交付**：519文件manifest=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`；PPT=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`。33页lint/layout/CRC与第9/20/26/29/30页原生渲染通过。
-- [ ] **后续**：三地同步并提交，继续最后主矩阵格、LR与恢复队列。
+- [x] **交付**：v184三地一致，`8cd89a5`已推送；继续最后主矩阵格、LR与恢复队列。
+
+## N163. 2026-11-09 v191 长 epoch 实证
+
+- [x] **台账**：v191新增0，仍1887 accepted、0 rejected；PPT与v119源包保持v184。
+- [x] **在训实证**：650M SpliceAI Full-family/seed101已到epoch2，val_loss=0.003241，未达收敛；不按固定步数截止。
+- [x] **判读边界**：plateau更新滞后不等于挂起，GPU仍有实际利用，无CPU降级；最后Frozen-random/seed17仍待安全窗口。
+- [x] **证据**：`inflight_progress_20261109_v191.json` SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。
+- [ ] **后续**：同步并提交在训记录，等待完整收敛proof。

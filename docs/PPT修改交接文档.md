@@ -1052,3 +1052,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 第20页LR=302/320、完整组 **72/80**、选档31/19/19/3；650M modification random默认档最优，是第三个默认档最优反例，test不参与。证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
 4. 第30页改为650M Full仅3任务，峰值中位13.4GB、范围13.2–15.5GB，不再写尚未开跑。第26/29页同源更新，其他结论边界不变。
 5. 源包revision=`20261109_refresh_v119_v184ledger_degradation_ssi30_spliceai29_lr72`，519个登记文件，manifest SHA256=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`。33页lint/layout/CRC与第9/20/26/29/30页原生渲染通过。
+
+## 120. 2026-11-09 v191 staging：长 epoch 在训，展示版保持 v184
+
+1. v191新增0，仍 **1887 accepted、0 rejected**；650M SpliceAI Full-family/seed101日志已到epoch2，val_loss=0.003241，仍在best-val训练，不按固定步数截止。
+2. plateau更新滞后不等于挂起；GPU仍有实际利用，无CPU降级，结果文件尚不存在。
+3. 在训证据=`status/inflight_progress_20261109_v191.json`，SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。33页PPT/PDF与v119源包保持v184。
