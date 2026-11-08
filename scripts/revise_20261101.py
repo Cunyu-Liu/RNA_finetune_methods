@@ -171,13 +171,13 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/27/27/27 个三种子单元（共30）；650M SpliceAI Full-random 三种子 mean=0.538，斜线=n<3，空白=未完成。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/29/30/30 个三种子单元（共30）；degradation 与 SSI 全闭合，SpliceAI 仅剩650M Frozen-random/seed17。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 65/80 组：3e-5 三十组、1e-4 十九组、1e-5 十四组、3e-4 两组。新增 650M CRISPR family 选 1e-5、random 选 3e-5，650M degradation family 选 3e-5；其余格继续按 validation 补齐，test 不参与选档。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。全参 tuning 已闭合 72/80 组：3e-5 三十一组、1e-4 十九组、1e-5 十九组、3e-4 三组。新增650M七组闭合；modification random 默认档最优，说明高 LR 并非一律失效，低 LR 也不能一刀切。其余格继续按 validation 补齐，test 不参与选档。MRL −0.112 经 CUDA 重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
@@ -232,6 +232,8 @@ def main():
 
     slide = prs.slides[26]
     set_text(slide, "TextBox 2", "结论⑥补充  成本：显存峰值与规模边界")
+    set_text(slide, "TextBox 3",
+             "按当前已完成格统计；650M Full 仅3个任务，峰值中位 13.4GB、范围 13.2–15.5GB，不外推全部任务。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/peak_memory.png")
 

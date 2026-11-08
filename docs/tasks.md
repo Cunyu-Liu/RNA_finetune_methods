@@ -2506,4 +2506,13 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **三种子结果**：Full-random mean=0.5378287250377286、SD=0.09085523270482387，正式闭合并更新六柱；SpliceAI/SSI覆盖均27。
 - [x] **LR边界**：LR=267/320，65组与选档不变；degradation default仅tuning，证据SHA256=`01247d9c2d941594a5153a02270c2da6b1720d077b3854e3916b826b8dffd19e`。
 - [x] **交付**：515文件manifest=`5959d4636df9b6f0d897ead59c5d78c06c93f9cbd4e6f93934e7878eb7b3cb2e`；PPT=`644c90489ecd9010a71873b7a8ba07ceb4065b5c0720bbf34eb036244055e144`，PDF=`ddeb0c930498f5bbf90828086eb313ce06e71839cfe5be25ffdbeb60a98293c9`。33页lint/layout/CRC与第9页原生渲染通过。
-- [ ] **后续**：三地同步并提交，继续核心大格与恢复队列。
+- [x] **交付**：v181三地一致，`9f8d3d8`已推送；继续核心大格与恢复队列。
+
+## N162. 2026-11-09 v184 degradation/SSI 全闭合与 LR 72 组
+
+- [x] **68格验收**：1887 accepted、0 rejected；全部proof=complete，证明SHA256=`ee3409083ccaab33ab30824c7cc9034bfec59abe977b55f14e23b36c4189f152`。
+- [x] **核心闭合**：degradation/SSI均30/30，SpliceAI 29/30，最后缺口650M Frozen-random/seed17；per-base 269/270。
+- [x] **LR**：302/320，72/80组，分布31/19/19/3；650M modification random默认档最优，不能一刀切LR，test不参与。证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
+- [x] **成本修正**：650M Full仅3任务，峰值中位13.4GB、范围13.2–15.5GB，不再写尚未开跑。
+- [x] **交付**：519文件manifest=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`；PPT=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`。33页lint/layout/CRC与第9/20/26/29/30页原生渲染通过。
+- [ ] **后续**：三地同步并提交，继续最后主矩阵格、LR与恢复队列。

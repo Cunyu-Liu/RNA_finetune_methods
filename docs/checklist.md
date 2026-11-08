@@ -910,7 +910,16 @@
 - [x] DB3 LR：267/320，65组与选档不变，degradation default仅tuning，证据SHA256=`01247d9c2d941594a5153a02270c2da6b1720d077b3854e3916b826b8dffd19e`。
 - [x] DB4 交付：515文件manifest=`5959d4636df9b6f0d897ead59c5d78c06c93f9cbd4e6f93934e7878eb7b3cb2e`；PPT=`644c90489ecd9010a71873b7a8ba07ceb4065b5c0720bbf34eb036244055e144`，PDF=`ddeb0c930498f5bbf90828086eb313ce06e71839cfe5be25ffdbeb60a98293c9`。
 - [x] DB5 渲染：33页lint/layout/CRC与第9页原生渲染通过，图文一致。
-- [ ] DB6 后续：三地同步并提交，继续核心与恢复队列。
+- [x] DB6 交付：v181三地同步，`9f8d3d8`已推送；继续核心与恢复队列。
+
+## DC 组：v184 degradation/SSI 全闭合与 LR 验收
+
+- [x] DC1 数据：1887 accepted、0 rejected；68格proof=complete，证明SHA256=`ee3409083ccaab33ab30824c7cc9034bfec59abe977b55f14e23b36c4189f152`。
+- [x] DC2 覆盖：degradation/SSI均30/30，SpliceAI 29/30，仅650M Frozen-random/seed17未闭合。
+- [x] DC3 LR：302/320，72/80组，分布31/19/19/3；默认档第三个最优反例，test不参与，证据SHA256=`ecc3ce08ee3d787ae921d7e0723d070b1064212d2dd79aceedccad0f66c94438`。
+- [x] DC4 成本：650M Full仅3任务，峰值中位13.4GB、范围13.2–15.5GB，未外推全部任务。
+- [x] DC5 交付：519文件manifest=`aba8fe1f3750c355dfb7fc250bf34dc03ee6b220e8280ef787aa5293640c6eea`；PPT=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`。第9/20/26/29/30页原生渲染通过。
+- [ ] DC6 后续：三地同步并提交，继续最后主矩阵格与恢复队列。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 
