@@ -939,6 +939,14 @@
 - [x] DE6 交付：v195三地文档逐哈希一致，`3943036`已推送，原始v194台账与在训证据保存在teams。
 - [ ] DE7 后续：等待完整收敛proof再更新科学结论。
 
+## DF 组：v195 全注册表审计与 E6 队列验收
+
+- [x] DF1 数据：1887 accepted、0 rejected；accepted复用既有proof，其他格实时proof，跨注册表别名一致。
+- [x] DF2 缺口：核心269+1/306+18/302+18，Frozen 110+898，PEFT 324+636，C5c 689+1327，CRISPR 0+108，无conflict。审计SHA256=`848395849be0aa4d37b22fc00efc542f30e52bff13ef2682a15a6cf64ccaa70b`。
+- [x] DF3 E6：三格仍pending，独立PID2236933存活，18.5GB自然窗口门，不重复派发。证据SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
+- [x] DF4 展示：零新增，33页PPT/PDF与519文件v119源包保持v184；E6固定epoch对照不写成best-val收敛。
+- [ ] DF5 后续：三地同步并提交，继续核心、Frozen、CRISPR与独立E6队列。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

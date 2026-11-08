@@ -1064,3 +1064,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v194仍 **1887 accepted、0 rejected**，旧行和注册表别名对账通过；per-base 269/270、complementary 306/324、LR 302/320、72/80组不变。证明SHA256=`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`，LR证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
 2. 650M SpliceAI Full-family/seed101日志仍停在epoch2，但GPU利用率73%、显存14642MiB，属于长epoch在训；无result，不按固定步数截止，也不写成新结论。
 3. 在训证据=`status/inflight_progress_20261109_v195.json`，SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。33页PPT/PDF与519文件v119源包保持v184，其他手调内容不改。
+
+## 122. 2026-11-09 v195 staging：全注册表审计，展示版保持 v184
+
+1. v195零新增，仍1887 accepted、0 rejected；per-base 269/270、complementary 306/324、LR 302/320、72/80组。Frozen真实进度110/1008，PEFT 324/960、C5c 689/2016、CRISPR 0/108，无conflict。审计SHA256=`848395849be0aa4d37b22fc00efc542f30e52bff13ef2682a15a6cf64ccaa70b`。
+2. 650M corrected E6 LoRA三格仍pending；独立监控PID2236933存活，按18.5GB门槛等待，不重复派发。证据SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
+3. 没有新完整科学单元，33页PPT/PDF与519文件v119源包保持v184，不重绘、不修改用户其他手调内容。

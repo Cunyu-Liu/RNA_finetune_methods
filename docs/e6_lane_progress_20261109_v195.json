@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-11-08T18:24:45.421862+00:00",
+  "pid": 2236933,
+  "pid_alive": true,
+  "log": "/root/rna-ft-eval/logs/q_e6_mlm15fix.log",
+  "log_sha256": "0a9434c442acc018b95ef708de9c6ae61e90edb591729e79bac12338497de07b",
+  "last_lines": [
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting"
+  ],
+  "note": "Dedicated corrected E6 lane; do not duplicate. Three 650M LoRA results are absent and pending."
+}

@@ -1,0 +1,275 @@
+{
+  "created_at": "2026-11-08T18:22:36.626861+00:00",
+  "accepted_ledger": "bestval_ledger_export_20261101_v195.csv",
+  "accepted_ledger_sha256": "b5bc81725244f82995387ac3dab81b567b0a60d918958a0cb8aba691ad5c8b85",
+  "accepted_rows": 1887,
+  "selection_baseline": "v195: per-base 269/270; complementary 306/324; LR 302/320, 72/80 complete groups",
+  "audit_rule": "Accepted RIDs reuse prior independent proof; all other RIDs receive live proof_state. Aliases must match full cell and result_dir.",
+  "registries": {
+    "perbase_main_bestval_jobs_20261030.json": {
+      "total": 270,
+      "states": {
+        "complete": 269,
+        "runnable": 1
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-650M|spliceai|frozen": 1
+        }
+      },
+      "conflict_examples": []
+    },
+    "complementary_jobs_20261027_pairalign_teams.json": {
+      "total": 324,
+      "states": {
+        "complete": 306,
+        "runnable": 18
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-650M|noncoding-rna-family|full": 6,
+          "RiNALMo-650M|crispr-off-target|full": 6,
+          "RiNALMo-650M|secondary-structure|full": 6
+        }
+      },
+      "conflict_examples": []
+    },
+    "lr_tuning_jobs_20261030_small_first_20261102.json": {
+      "total": 320,
+      "states": {
+        "complete": 302,
+        "runnable": 18
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-mega|mrl|full": 1,
+          "RNA-FM|ssi|full": 1,
+          "RiNALMo-650M|mrl|full": 2,
+          "RiNALMo-650M|spliceai|full": 6,
+          "RiNALMo-650M|ssi|full": 8
+        }
+      },
+      "conflict_examples": []
+    },
+    "c5c_frozen_jobs_20261101.json": {
+      "total": 1008,
+      "states": {
+        "complete": 110,
+        "runnable": 898
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-micro|noncoding-rna-family|frozen": 21,
+          "RiNALMo-mega|noncoding-rna-family|frozen": 42,
+          "RiNALMo-650M|noncoding-rna-family|frozen": 42,
+          "RiNALMo-mega|crispr-off-target|frozen": 42,
+          "RiNALMo-650M|crispr-off-target|frozen": 42,
+          "RiNALMo-micro|mrl|frozen": 13,
+          "RiNALMo-mega|mrl|frozen": 42,
+          "RiNALMo-650M|mrl|frozen": 42,
+          "RiNALMo-micro|modification|frozen": 42,
+          "RiNALMo-mega|modification|frozen": 42,
+          "RiNALMo-650M|modification|frozen": 42,
+          "RiNALMo-micro|secondary-structure|frozen": 36,
+          "RiNALMo-mega|secondary-structure|frozen": 36,
+          "RiNALMo-650M|secondary-structure|frozen": 36,
+          "RiNALMo-micro|spliceai|frozen": 42,
+          "RiNALMo-mega|spliceai|frozen": 42,
+          "RiNALMo-650M|spliceai|frozen": 42,
+          "RiNALMo-micro|degradation|frozen": 42,
+          "RiNALMo-mega|degradation|frozen": 42,
+          "RiNALMo-650M|degradation|frozen": 42,
+          "RiNALMo-micro|ssi|frozen": 42,
+          "RiNALMo-mega|ssi|frozen": 42,
+          "RiNALMo-650M|ssi|frozen": 42
+        }
+      },
+      "conflict_examples": []
+    },
+    "peft_rank_jobs_20261030.json": {
+      "total": 960,
+      "states": {
+        "complete": 324,
+        "runnable": 636
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-micro|noncoding-rna-family|lora": 6,
+          "RiNALMo-micro|noncoding-rna-family|dora": 6,
+          "RiNALMo-mega|noncoding-rna-family|lora": 12,
+          "RiNALMo-mega|noncoding-rna-family|dora": 6,
+          "RiNALMo-650M|noncoding-rna-family|lora": 12,
+          "RiNALMo-650M|noncoding-rna-family|dora": 6,
+          "ERNIE-RNA|noncoding-rna-family|lora": 12,
+          "ERNIE-RNA|noncoding-rna-family|dora": 6,
+          "RNA-FM|noncoding-rna-family|lora": 12,
+          "RNA-FM|noncoding-rna-family|dora": 6,
+          "RiNALMo-micro|crispr-off-target|dora": 6,
+          "RiNALMo-mega|crispr-off-target|lora": 12,
+          "RiNALMo-mega|crispr-off-target|dora": 6,
+          "RiNALMo-650M|crispr-off-target|lora": 12,
+          "RiNALMo-650M|crispr-off-target|dora": 6,
+          "ERNIE-RNA|crispr-off-target|lora": 12,
+          "ERNIE-RNA|crispr-off-target|dora": 6,
+          "RNA-FM|crispr-off-target|lora": 12,
+          "RNA-FM|crispr-off-target|dora": 6,
+          "RiNALMo-micro|mrl|dora": 6,
+          "RiNALMo-mega|mrl|lora": 12,
+          "RiNALMo-mega|mrl|dora": 6,
+          "RiNALMo-650M|mrl|lora": 12,
+          "RiNALMo-650M|mrl|dora": 6,
+          "ERNIE-RNA|mrl|lora": 12,
+          "ERNIE-RNA|mrl|dora": 6,
+          "RNA-FM|mrl|lora": 12,
+          "RNA-FM|mrl|dora": 6,
+          "RiNALMo-micro|modification|dora": 6,
+          "RiNALMo-mega|modification|lora": 12,
+          "RiNALMo-mega|modification|dora": 6,
+          "RiNALMo-650M|modification|lora": 18,
+          "RiNALMo-650M|modification|dora": 6,
+          "ERNIE-RNA|modification|lora": 12,
+          "ERNIE-RNA|modification|dora": 6,
+          "RNA-FM|modification|lora": 12,
+          "RNA-FM|modification|dora": 6,
+          "RiNALMo-micro|secondary-structure|dora": 6,
+          "RiNALMo-mega|secondary-structure|lora": 12,
+          "RiNALMo-mega|secondary-structure|dora": 6,
+          "RiNALMo-650M|secondary-structure|lora": 12,
+          "RiNALMo-650M|secondary-structure|dora": 6,
+          "ERNIE-RNA|secondary-structure|lora": 12,
+          "ERNIE-RNA|secondary-structure|dora": 6,
+          "RNA-FM|secondary-structure|lora": 12,
+          "RNA-FM|secondary-structure|dora": 6,
+          "RiNALMo-micro|spliceai|dora": 6,
+          "RiNALMo-mega|spliceai|lora": 12,
+          "RiNALMo-mega|spliceai|dora": 6,
+          "RiNALMo-650M|spliceai|lora": 12,
+          "RiNALMo-650M|spliceai|dora": 6,
+          "ERNIE-RNA|spliceai|lora": 12,
+          "ERNIE-RNA|spliceai|dora": 6,
+          "RNA-FM|spliceai|lora": 12,
+          "RNA-FM|spliceai|dora": 6,
+          "RiNALMo-micro|degradation|dora": 6,
+          "RiNALMo-mega|degradation|lora": 12,
+          "RiNALMo-mega|degradation|dora": 6,
+          "RiNALMo-650M|degradation|lora": 12,
+          "RiNALMo-650M|degradation|dora": 6,
+          "ERNIE-RNA|degradation|lora": 12,
+          "ERNIE-RNA|degradation|dora": 6,
+          "RNA-FM|degradation|lora": 12,
+          "RNA-FM|degradation|dora": 6,
+          "RiNALMo-micro|ssi|dora": 6,
+          "RiNALMo-mega|ssi|lora": 12,
+          "RiNALMo-mega|ssi|dora": 6,
+          "RiNALMo-650M|ssi|lora": 12,
+          "RiNALMo-650M|ssi|dora": 6,
+          "ERNIE-RNA|ssi|lora": 12,
+          "ERNIE-RNA|ssi|dora": 6,
+          "RNA-FM|ssi|lora": 12,
+          "RNA-FM|ssi|dora": 6
+        }
+      },
+      "conflict_examples": []
+    },
+    "c5c_all_jobs_20261027_pairalign_teams.json": {
+      "total": 2016,
+      "states": {
+        "runnable": 1327,
+        "complete": 689
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-micro|noncoding-rna-family|lora": 25,
+          "RiNALMo-micro|noncoding-rna-family|full": 27,
+          "RiNALMo-mega|noncoding-rna-family|lora": 27,
+          "RiNALMo-mega|noncoding-rna-family|full": 42,
+          "RiNALMo-650M|noncoding-rna-family|lora": 42,
+          "RiNALMo-650M|noncoding-rna-family|full": 42,
+          "RiNALMo-micro|crispr-off-target|lora": 12,
+          "RiNALMo-micro|crispr-off-target|full": 12,
+          "RiNALMo-mega|crispr-off-target|lora": 12,
+          "RiNALMo-mega|crispr-off-target|full": 42,
+          "RiNALMo-650M|crispr-off-target|lora": 42,
+          "RiNALMo-650M|crispr-off-target|full": 42,
+          "RiNALMo-micro|mrl|lora": 12,
+          "RiNALMo-micro|mrl|full": 12,
+          "RiNALMo-mega|mrl|lora": 12,
+          "RiNALMo-mega|mrl|full": 42,
+          "RiNALMo-650M|mrl|lora": 42,
+          "RiNALMo-650M|mrl|full": 42,
+          "RiNALMo-micro|modification|lora": 12,
+          "RiNALMo-micro|modification|full": 12,
+          "RiNALMo-mega|modification|lora": 12,
+          "RiNALMo-mega|modification|full": 42,
+          "RiNALMo-650M|modification|lora": 42,
+          "RiNALMo-650M|modification|full": 42,
+          "RiNALMo-micro|secondary-structure|lora": 12,
+          "RiNALMo-micro|secondary-structure|full": 12,
+          "RiNALMo-mega|secondary-structure|lora": 12,
+          "RiNALMo-mega|secondary-structure|full": 36,
+          "RiNALMo-650M|secondary-structure|lora": 36,
+          "RiNALMo-650M|secondary-structure|full": 42,
+          "RiNALMo-micro|spliceai|lora": 12,
+          "RiNALMo-micro|spliceai|full": 12,
+          "RiNALMo-mega|spliceai|lora": 12,
+          "RiNALMo-mega|spliceai|full": 42,
+          "RiNALMo-650M|spliceai|lora": 42,
+          "RiNALMo-650M|spliceai|full": 42,
+          "RiNALMo-micro|degradation|lora": 12,
+          "RiNALMo-micro|degradation|full": 12,
+          "RiNALMo-mega|degradation|lora": 12,
+          "RiNALMo-mega|degradation|full": 42,
+          "RiNALMo-650M|degradation|lora": 42,
+          "RiNALMo-650M|degradation|full": 42,
+          "RiNALMo-micro|ssi|lora": 12,
+          "RiNALMo-micro|ssi|full": 12,
+          "RiNALMo-mega|ssi|lora": 12,
+          "RiNALMo-mega|ssi|full": 42,
+          "RiNALMo-650M|ssi|lora": 42,
+          "RiNALMo-650M|ssi|full": 42
+        }
+      },
+      "conflict_examples": []
+    },
+    "crispr_signal_jobs_20261101.json": {
+      "total": 108,
+      "states": {
+        "runnable": 108
+      },
+      "incomplete_by_model_task_strategy": {
+        "runnable": {
+          "RiNALMo-micro|crispr-off-target|frozen": 12,
+          "RiNALMo-micro|crispr-off-target|lora": 12,
+          "RiNALMo-micro|crispr-off-target|full": 12,
+          "RiNALMo-mega|crispr-off-target|frozen": 12,
+          "RiNALMo-mega|crispr-off-target|lora": 12,
+          "RiNALMo-mega|crispr-off-target|full": 12,
+          "RiNALMo-650M|crispr-off-target|frozen": 12,
+          "RiNALMo-650M|crispr-off-target|lora": 12,
+          "RiNALMo-650M|crispr-off-target|full": 12
+        }
+      },
+      "conflict_examples": []
+    }
+  },
+  "e6_650m_lora_corrected": [
+    {
+      "run_id": "ft_rinalmo650m_e6forgetting_lora_s29_s0-heldout_mlm15fix_seedfix",
+      "status": "pending",
+      "updated_utc": "2026-11-07T14:59:54.596540+00:00",
+      "result_exists": false
+    },
+    {
+      "run_id": "ft_rinalmo650m_e6forgetting_lora_s43_s0-heldout_mlm15fix_seedfix",
+      "status": "pending",
+      "updated_utc": "2026-11-07T18:21:55.262983+00:00",
+      "result_exists": false
+    },
+    {
+      "run_id": "ft_rinalmo650m_e6forgetting_lora_s17_s0-heldout_mlm15fix_seedfix",
+      "status": "pending",
+      "updated_utc": "2026-11-07T20:02:51.211287+00:00",
+      "result_exists": false
+    }
+  ]
+}

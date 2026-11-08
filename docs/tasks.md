@@ -2533,3 +2533,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **展示与调度**：PPT/v119源包保持v184，补位为`waiting_core_process`，不强行并行制造OOM。证据SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。
 - [x] **交付**：v195三地文档逐哈希一致，`3943036`已推送，原始v194台账与在训证据保存在teams。
 - [ ] **后续**：等待新结果后独立验收；有完整科学单元才重绘。
+
+## N165. 2026-11-09 v195 全注册表审计与 E6 队列核验
+
+- [x] **动态缺口**：per-base 269+1、complementary 306+18、LR 302+18、Frozen 110+898、PEFT 324+636、C5c 689+1327、CRISPR 0+108；无conflict。审计SHA256=`848395849be0aa4d37b22fc00efc542f30e52bff13ef2682a15a6cf64ccaa70b`。
+- [x] **口径**：复用accepted格的独立proof，未接受格实时proof；跨注册表别名一致，零新增不改PPT。
+- [x] **E6接续**：650M LoRA三格pending，独立监控PID2236933存活，按18.5GB门槛等待；不重复启动、不误称best-val收敛。证据SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
+- [ ] **后续**：三地同步并提交审计，继续core→frozen→crispr和独立E6队列；tuned待80组选档。

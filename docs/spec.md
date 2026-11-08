@@ -1616,3 +1616,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. per-base=269/270、complementary=306/324、LR=302/320，完整组72/80与选档31/19/19/3不变，无新组或选档改变；test不参与。证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
 3. 650M SpliceAI Full-family/seed101仍在epoch2之后的长epoch，日志哈希与v191相同，但进程存活且GPU利用率73%、显存14642MiB，不能仅凭日志未更新判挂起，也不能按固定步数截止。结果文件不存在，继续等完整patience=3证明。
 4. 补位监控为`waiting_core_process`，避免重演训练期间补位OOM；PPT与v119源包保持v184。在训证据=`status/inflight_progress_20261109_v195.json`，SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。
+
+### 10.165 v195 全注册表审计与 E6 独立队列核验（2026-11-09）
+
+1. v195新增0，仍1887 accepted、0 rejected；per-base=269/270、complementary=306/324、LR=302/320、72/80组。本次复用已验收accepted RID，仅对未接受格运行实时proof，跨注册表别名完整实验键与result_dir一致。审计=`status/contract_priority_audit_20261109_v195.json`，SHA256=`848395849be0aa4d37b22fc00efc542f30e52bff13ef2682a15a6cf64ccaa70b`。
+2. 实时complete+runnable为：per-base 269+1、complementary 306+18、LR 302+18、Frozen **110+898**、PEFT/rank 324+636、C5c LoRA/Full 689+1327、CRISPR 0+108；无conflict。后续按此动态缺口排队，PEFT与C5c仍不阻塞本次汇报，tuned须等80组全部选档。
+3. 650M corrected E6 LoRA三行仍pending且result不存在。主流水线未含E6，但独立`q_e6_mlm15fix.sh`监控PID **2236933**存活，按650M LoRA 18.5GB门槛等待自然窗口；不得再开同RID。队列证据=`status/e6_lane_progress_20261109_v195.json`，SHA256=`e161562a935d9442774d0d5d65a0587ce4dc7fba4a2e731427b2b7bb06c00fb0`。
+4. 无新科学单元，PPT与v119源包保持v184；E6固定epoch评估沿用其既有对照协议，不把该协议称作best-val收敛结果。
