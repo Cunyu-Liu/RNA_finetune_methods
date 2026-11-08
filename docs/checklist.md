@@ -936,7 +936,8 @@
 - [x] DE3 训练：epoch2后日志暂未更新，但PID存活且GPU 73%、14642MiB；无CPU降级，无result，继续best-val收敛。
 - [x] DE4 展示：33页PPT/PDF与519文件v119源包保持v184，不为零新增重绘。
 - [x] DE5 调度：补位`waiting_core_process`，不以强行占满为由制造第三次OOM；在训证据SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。
-- [ ] DE6 后续：三地同步、提交，等待完整收敛proof再更新科学结论。
+- [x] DE6 交付：v195三地文档逐哈希一致，`3943036`已推送，原始v194台账与在训证据保存在teams。
+- [ ] DE7 后续：等待完整收敛proof再更新科学结论。
 
 ## CK 组：显存补位与 Frozen 路径修复验收
 
