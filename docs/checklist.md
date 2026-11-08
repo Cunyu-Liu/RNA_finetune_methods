@@ -956,6 +956,15 @@
 - [x] DG5 证据：33张单页图和6张联系表已上传；压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`，报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。
 - [ ] DG6 后续：三地同步并提交，等待新科学单元再更新PPT。
 
+## DH 组：v197 LR split 分析与 v120 验收
+
+- [x] DH1 数据：v197零新增，1887 accepted、0 rejected；72/80组选档不变。
+- [x] DH2 分析：35个双split闭合task×model中20组最优LR不同；分析SHA256=`e8916d9e0aca6744f20294f6ccffff469af1f82def11090669f4432c1534bfb9`，test不参与。
+- [x] DH3 源包：v120共521文件逐哈希通过，manifest=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。
+- [x] DH4 展示：仅第20页变化，其余32页结构对账不变；PPT=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`，PDF=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`。
+- [x] DH5 渲染：原生PowerPoint导出，第20页文字无溢出；无越界shape，Microsoft YaHei、1.5倍行距。
+- [ ] DH6 后续：三地同步并提交，继续补剩余8组LR。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

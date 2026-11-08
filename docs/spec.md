@@ -1629,3 +1629,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v196新增0，仍1887 accepted、0 rejected；per-base 269/270、complementary 306/324、LR 302/320、72/80组不变。LR证据SHA256=`41b8997f17442e927adef21957a9730002dd6bd58cab07d1f5f3a2c0ebe2ea8e`，无新科学单元。
 2. 直接对v184原生PowerPoint PDF逐页渲染并检查 **1–33页**，未见空白页、越界图形、中文缺失、图块丢失或明显图文冲突；结构检查180个显式文本run均Microsoft YaHei、178个段落均1.5倍行距。PPT SHA256=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`，PDF SHA256=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`，未改写文件。
 3. 33张单页图、6张联系表及验收JSON保存于`handoff/full_deck_review_20261109_v196/`，压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`；报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。v119绘图源包保持，其他手调内容不变。
+
+### 10.167 v197 LR split 边界与 v120 第20页更新（2026-11-09）
+
+1. v197新增0，仍1887 accepted、0 rejected；72/80个LR完整组选档31/19/19/3不变。35个双split均闭合的task×model中，**20组validation最优LR不同**，支持按任务、模型和split选档，不设全局统一LR。分析=`status/lr_selection_analysis_20261109_v197.json`，SHA256=`e8916d9e0aca6744f20294f6ccffff469af1f82def11090669f4432c1534bfb9`；CSV SHA256=`83281b1bfdd9ef5d67834bd832fa8c564d97c0c517a0f68609f033d84ef89ca9`。
+2. 其余8组未闭合：650M MRL双split及mega MRL family各缺default，650M SpliceAI family缺1e-5/3e-5，650M SpliceAI random、650M SSI双split各缺四档，RNA-FM SSI family缺default。seed101仅调参，test不参与，正式三种子tuned复测须等80组闭合。
+3. 第20页仅新增20/35 split差异与8组未闭合说明，其余32页内容、图片和位置逐项对账不变。源包revision=`20261109_refresh_v120_v184ledger_lr72_split20_analysis`，**521个登记文件**逐哈希通过，manifest SHA256=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。
+4. PPT33页SHA256=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`，PDF SHA256=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`。原生PowerPoint导出与第20页渲染通过，文字无溢出；全稿无越界shape，显式字体Microsoft YaHei、1.5倍行距。

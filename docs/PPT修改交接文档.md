@@ -1076,3 +1076,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. 直接对当前v184原生PowerPoint PDF检查 **第1–33页**，无空白页、越界shape、中文缺失、图块丢失或明显图文冲突；180个显式文本run均Microsoft YaHei、178个段落均1.5倍行距。
 2. PPT SHA256=`99e1d154060a9580b639a5ac0b01d57c4877bb558173975f894ca228cf62f8aa`；PDF SHA256=`5386b7f673075adb8239217e165a4f38d340adeaf38434e32945ca8aa4081195`，本次不改文件。
 3. 33张单页图、6张联系表及报告保存于`handoff/full_deck_review_20261109_v196/`；压缩包SHA256=`ad7b779045d2707ceb1c29b414e0a8caa55129e178febdd85bd8db30ec9241c3`，报告SHA256=`616223d2764e2bec1aa0b00561b7279111ab9b143b91df75219f6a926ffded46`。v119源包保持。
+
+## 124. 2026-11-09 当前 v120：第20页补入 LR split 边界
+
+1. 72/80个完整LR组中，35个双split均闭合的task×model有 **20组选档不同**。第20页仅新增该统计、其余8组未闭合及tuned三种子复测门，明确seed101 tuning、test不参与。分析SHA256=`e8916d9e0aca6744f20294f6ccffff469af1f82def11090669f4432c1534bfb9`。
+2. 当前PPT **33页**，SHA256=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`；PDF SHA256=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`。其他32页内容、图片和位置逐项不变。
+3. 源包revision=`20261109_refresh_v120_v184ledger_lr72_split20_analysis`，521个登记文件，manifest SHA256=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。原生PowerPoint导出与第20页渲染通过，文字无溢出，Microsoft YaHei、1.5倍行距。
