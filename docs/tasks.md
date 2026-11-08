@@ -2524,3 +2524,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **判读边界**：plateau更新滞后不等于挂起，GPU仍有实际利用，无CPU降级；最后Frozen-random/seed17仍待安全窗口。
 - [x] **证据**：`inflight_progress_20261109_v191.json` SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。
 - [ ] **后续**：同步并提交在训记录，等待完整收敛proof。
+
+## N164. 2026-11-09 v194 零新增与长 epoch 复核
+
+- [x] **台账**：v194仍1887 accepted、0 rejected；旧行、RID与注册表别名对账通过。空新增证明SHA256=`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`。
+- [x] **科学边界**：per-base 269/270、complementary 306/324、LR 302/320、72组选档均不变；证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
+- [x] **在训实证**：日志与v191相同，但PID存活、GPU 73%、显存14642MiB，无CPU降级；结果不存在，不按固定步数截止。
+- [x] **展示与调度**：PPT/v119源包保持v184，补位为`waiting_core_process`，不强行并行制造OOM。证据SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。
+- [ ] **后续**：三地同步并提交，等待新结果后独立验收；有完整科学单元才重绘。

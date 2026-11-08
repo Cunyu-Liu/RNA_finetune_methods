@@ -1058,3 +1058,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v191新增0，仍 **1887 accepted、0 rejected**；650M SpliceAI Full-family/seed101日志已到epoch2，val_loss=0.003241，仍在best-val训练，不按固定步数截止。
 2. plateau更新滞后不等于挂起；GPU仍有实际利用，无CPU降级，结果文件尚不存在。
 3. 在训证据=`status/inflight_progress_20261109_v191.json`，SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。33页PPT/PDF与v119源包保持v184。
+
+## 121. 2026-11-09 v194 staging：零新增，展示版保持 v184
+
+1. v194仍 **1887 accepted、0 rejected**，旧行和注册表别名对账通过；per-base 269/270、complementary 306/324、LR 302/320、72/80组不变。证明SHA256=`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`，LR证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
+2. 650M SpliceAI Full-family/seed101日志仍停在epoch2，但GPU利用率73%、显存14642MiB，属于长epoch在训；无result，不按固定步数截止，也不写成新结论。
+3. 在训证据=`status/inflight_progress_20261109_v195.json`，SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。33页PPT/PDF与519文件v119源包保持v184，其他手调内容不改。

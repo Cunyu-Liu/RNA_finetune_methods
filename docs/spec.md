@@ -1609,3 +1609,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v191新增0，仍 **1887 accepted、0 rejected**；650M SpliceAI Full-family/seed101日志已到epoch2，val_loss由0.003240小幅升至0.003241，仍在best-val协议内继续训练，不能按固定步数停止或记为收敛。
 2. 当前plateau文件更新滞后于日志，不能只凭plateau未变判断挂起；GPU仍有实际利用，未发生CPU静默降级。结果文件尚不存在，需等patience=3完整收敛证明。
 3. 最后主矩阵格650M SpliceAI Frozen-random/seed17仍待安全显存窗口；PPT与v119源包保持v184。在训证据=`status/inflight_progress_20261109_v191.json`，SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。
+
+### 10.164 v194 零新增与长 epoch 复核（2026-11-09）
+
+1. v194新增0，仍 **1887 accepted、0 rejected**；旧行逐字段保留、RID唯一及跨注册表别名一致性均通过。空新增证明=`status/bestval_v194_new_proof.json`，SHA256=`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`。
+2. per-base=269/270、complementary=306/324、LR=302/320，完整组72/80与选档31/19/19/3不变，无新组或选档改变；test不参与。证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
+3. 650M SpliceAI Full-family/seed101仍在epoch2之后的长epoch，日志哈希与v191相同，但进程存活且GPU利用率73%、显存14642MiB，不能仅凭日志未更新判挂起，也不能按固定步数截止。结果文件不存在，继续等完整patience=3证明。
+4. 补位监控为`waiting_core_process`，避免重演训练期间补位OOM；PPT与v119源包保持v184。在训证据=`status/inflight_progress_20261109_v195.json`，SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。

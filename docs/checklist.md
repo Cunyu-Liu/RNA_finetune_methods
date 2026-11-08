@@ -929,6 +929,15 @@
 - [x] DD4 证据：`inflight_progress_20261109_v191.json` SHA256=`99f036c0be998be3c1a7ca1f342ee7a87e8e552576646f9e2b1e1cfe6febc2bf`。
 - [ ] DD5 后续：同步并提交，等待真实完成结果。
 
+## DE 组：v194 零新增与长 epoch 复核
+
+- [x] DE1 数据：1887 accepted、0 rejected；旧行逐字段、RID唯一和注册表别名一致，空证明SHA256=`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`。
+- [x] DE2 对账：per-base 269/270、complementary 306/324、LR 302/320、72/80组；无新组或选档改变，证据SHA256=`11a6f735610407a6f040fadd6b79e2beba9b6e768bfe2c16b0f34417d528807d`。
+- [x] DE3 训练：epoch2后日志暂未更新，但PID存活且GPU 73%、14642MiB；无CPU降级，无result，继续best-val收敛。
+- [x] DE4 展示：33页PPT/PDF与519文件v119源包保持v184，不为零新增重绘。
+- [x] DE5 调度：补位`waiting_core_process`，不以强行占满为由制造第三次OOM；在训证据SHA256=`958feda0819ad2c7fbd016668985c8cdebc2c4eba05cccca8347f45a2a368ebe`。
+- [ ] DE6 后续：三地同步、提交，等待完整收敛proof再更新科学结论。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。
