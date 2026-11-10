@@ -359,6 +359,35 @@ def test_external_model_lock_waits_and_other_models_continue(proof_env, monkeypa
             external.__exit__(None, None, None)
 
 
+def test_same_model_jobs_run_in_parallel_when_enabled(proof_env, monkeypatch):
+    root = Path(proof_env.job.result_dir).parents[1]
+    second = make_job(root, seed=29, rid="ft_test_second",
+                      result_dir=str(root / "artifacts" / "second"))
+    started = []
+
+    class BlockingProcess:
+        def __init__(self, pid):
+            self.pid = pid
+
+        def poll(self):
+            return 75 if len(started) >= 2 else None
+
+    def fake_popen(command, **kwargs):
+        started.append(command)
+        return BlockingProcess(4500 + len(started))
+
+    monkeypatch.setattr(q.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(q.time, "sleep", lambda seconds: None)
+    state_dir = root / "parallel-same-model-state"
+    assert q.dispatch([proof_env.job, second], workers=2,
+                      state_dir=state_dir, poll_s=0.01,
+                      allow_same_model=True) == 0
+    assert len(started) == 2
+    rows = [json.loads(line) for line in
+            (state_dir / "manifest.jsonl").read_text().splitlines()]
+    assert [row["status"] for row in rows].count("skipped") == 2
+
+
 def test_other_models_bypass_same_model_head_of_line_wait(proof_env, monkeypatch):
     root = Path(proof_env.job.result_dir).parents[1]
     second = make_job(root, seed=29, rid="ft_test_second",

@@ -534,7 +534,7 @@ def dry_run(jobs, device):
 
 
 def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
-             poll_s=30.0):
+             poll_s=30.0, allow_same_model=False):
     store = ManifestStore(state_dir)
     git_sha = code_git_sha()
     pending = []
@@ -613,9 +613,10 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                     pass
             job = next((candidate for candidate in pending
                         if candidate.need_gb <= budget_gb
-                        and candidate.model not in busy_models
-                        and all(item["job"].model != candidate.model
-                                for item in running.values())), None)
+                        and (allow_same_model or
+                             (candidate.model not in busy_models
+                              and all(item["job"].model != candidate.model
+                                      for item in running.values())))), None)
             if job is None:
                 # Memory pressure or a same-model in-flight job is a wait state.
                 # Keep every pending cell for a later pass instead of blocking
@@ -635,7 +636,8 @@ def dispatch(jobs, workers=1, device=0, state_dir="/root/rnaft/expansion_queue",
                 outcomes.append(_finish(store, record, "failed", reason))
                 pending.remove(job)
                 continue
-            model_lock = store.model_lock(job.model)
+            model_lock = (contextlib.nullcontext() if allow_same_model
+                          else store.model_lock(job.model))
             lock = None
             try:
                 model_lock.__enter__()
@@ -717,6 +719,8 @@ def main(argv=None):
     parser.add_argument("--state-dir", default="/root/rnaft/expansion_queue")
     parser.add_argument("--poll-s", "--poll-interval", dest="poll_s",
                         type=float, default=30.0)
+    parser.add_argument("--allow-same-model", action="store_true",
+                        help="parallelize distinct cells of one model; cell locks still apply")
     args = parser.parse_args(argv)
     if args.workers < 1:
         parser.error("--workers must be >= 1")
@@ -733,7 +737,8 @@ def main(argv=None):
     if args.verify_only:
         return verify_jobs(jobs)
     return dispatch(jobs, workers=args.workers, device=args.device,
-                    state_dir=args.state_dir, poll_s=args.poll_s)
+                    state_dir=args.state_dir, poll_s=args.poll_s,
+                    allow_same_model=args.allow_same_model)
 
 
 if __name__ == "__main__":
