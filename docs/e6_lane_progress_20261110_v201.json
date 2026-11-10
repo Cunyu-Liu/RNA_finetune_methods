@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-11-10T06:19:00.887073+00:00",
+  "pid": 3000476,
+  "pid_alive": true,
+  "log_sha256": "98f3803a41b691e2f5c37a2d7ba640d5cf838f87ddd5a7c0055cc61b827f9e21",
+  "last_lines": [
+    "[mlm15fix] WAIT_VRAM need=18500MB free=17443MB 12:24",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting",
+    "[mlm15fix] another lane instance holds the lock; exiting"
+  ],
+  "pending_cells": 3,
+  "note": "Replacement dedicated E6 monitor is alive and waiting for 18.5GB; no duplicate launch."
+}

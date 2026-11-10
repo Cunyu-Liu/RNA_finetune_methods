@@ -974,6 +974,15 @@
 - [x] DI5 展示：PPT与v120源包保持，不提前生成tuned。
 - [ ] DI6 后续：三地同步并提交，等待80组闭合。
 
+## DJ 组：v201 第73组 LR 与 v121 验收
+
+- [x] DJ1 数据：1892 accepted、0 rejected；五格proof=complete，证明SHA256=`4e5e688cb3e53bff3ba22d6a108bf5afcfb515492dbe776cccca89d75d097e18`。
+- [x] DJ2 LR：307/320、73组，分布31/19/20/3；SpliceAI family选1e-5但近多数类基线，不解释收益。证据SHA256=`428c25f26f1703e9e52c9c59e5692a2ba9de8b550e36c21310fd38feee20f980`。
+- [x] DJ3 队列：核心random/3e-5在训；E6 PID3000476等待，不双开，证据SHA256=`dd4361c9a9ad0b46cbf08a4e775b101fc3160b43b7e7b31c68af4b8e79cbe423`。
+- [x] DJ4 源包：527文件逐哈希通过，manifest=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`。
+- [x] DJ5 展示：仅第20页变化，其余32页不变；PPT=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`，PDF=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`，原生渲染通过。
+- [ ] DJ6 后续：三地同步并提交，继续核心余13格。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

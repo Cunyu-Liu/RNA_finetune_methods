@@ -1643,3 +1643,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. RNA-FM modification family/seed17的default生成RID与正式default对照同为`ft_rnafm_modification_full_s17_family_bestval_v1`，result_dir一致；80组闭合后可直接复用，不重复训练，非default RID保持区分。
 3. 原深度预检因本地监视超时仍在远端重复读取大checkpoint，已只终止该只读进程并保存I/O证据，未终止训练、未删除产物；改用accepted复用与实时缺格检查，生成器逻辑不变。停止证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`。
 4. 没有新科学单元，PPT与v120源包保持，tuned正式三种子仍待80组全部闭合。
+
+### 10.169 v201 SpliceAI LR 第73组与 v121 更新（2026-11-10）
+
+1. v201新增5格，**1887+5=1892 accepted、0 rejected**，均proof=complete、CUDA/checkpoint/plateau通过。证明SHA256=`4e5e688cb3e53bff3ba22d6a108bf5afcfb515492dbe776cccca89d75d097e18`。LR=307/320、完整组 **73/80**，分布3e-5三十一组、1e-4十九组、1e-5二十组、3e-4三组；per-base=269/270、complementary=306/324不变。
+2. 650M SpliceAI family四档闭合，1e-5与3e-5的best_val同为0.003240，按既定较低LR tie规则选1e-5；test macro-F1=0.3332802382，近多数类基线，不能解释选档收益。random仍缺3e-5。全部剩余13格、7组，tuned仍待80组闭合。LR证据SHA256=`428c25f26f1703e9e52c9c59e5692a2ba9de8b550e36c21310fd38feee20f980`。
+3. 核心LR父队列PID45383正在运行random/3e-5，主顺序不变。E6接续监控PID **3000476**存活，等待18.5GB窗口，三格pending，无双开；证据SHA256=`dd4361c9a9ad0b46cbf08a4e775b101fc3160b43b7e7b31c68af4b8e79cbe423`。
+4. 源包revision=`20261110_refresh_v121_v201ledger_lr73_spliceai_baseline`，**527个登记文件**逐哈希通过，manifest SHA256=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`。仅第20页更新73/80与低信号边界，其余32页不变；PPT SHA256=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`，PDF SHA256=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`。原生PowerPoint渲染通过，文字无溢出。

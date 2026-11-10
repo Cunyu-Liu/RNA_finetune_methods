@@ -177,7 +177,7 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。seed101 tuning 已闭合72/80组：3e-5三十一组、1e-4十九组、1e-5十九组、3e-4三组；35个双split均闭合的task×model中，20组选档不同。其余8组未闭合，test不参与选档，正式三种子tuned复测待80组闭合。MRL −0.112经CUDA重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。seed101 tuning 已闭合73/80组：3e-5三十一组、1e-4十九组、1e-5二十组、3e-4三组；35个双split均闭合的task×model中，20组选档不同。其余7组未闭合，test不参与选档，正式三种子tuned复测待80组闭合；SpliceAI近多数类基线，不解释选档收益。MRL −0.112经CUDA重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",

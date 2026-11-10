@@ -1,0 +1,3463 @@
+{
+  "complete_groups": 73,
+  "total_groups": 80,
+  "selected_lr_counts": {
+    "1e-4": 19,
+    "1e-5": 20,
+    "3e-4": 3,
+    "3e-5": 31
+  },
+  "rows": [
+    {
+      "group": [
+        "crispr-off-target",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.035947,
+        "value": 0.004530349400236913,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.036495,
+          "value": 0.004713448244984069,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.035947,
+          "value": 0.004530349400236913,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.036403,
+          "value": 0.005147556651750453,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.036665,
+          "value": 0.005194953891948143,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.02518,
+        "value": 0.011708812595638565,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.02519,
+          "value": 0.007620842615164982,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.02518,
+          "value": 0.011708812595638565,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.025186,
+          "value": 0.0068983541477505355,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_ernierna_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.025237,
+          "value": 0.0076533079250244275,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.028884,
+        "value": 0.03552169153039682,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.028884,
+          "value": 0.03552169153039682,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.037032,
+          "value": 0.02146184804824912,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.036911,
+          "value": 0.05463301480217823,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.036646,
+          "value": 0.03590330275567586,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.025089,
+        "value": 0.015980805510306412,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.025202,
+          "value": 0.016119383420233866,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.025325,
+          "value": 0.012038948474075602,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.025449,
+          "value": 0.005274712384116425,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rnafm_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.025089,
+          "value": 0.015980805510306412,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.043343,
+        "value": 0.03727175491552233,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.044002,
+          "value": 0.012709780374862248,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.043343,
+          "value": 0.03727175491552233,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.046784,
+          "value": 0.005439121797659113,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.043489,
+          "value": 0.04431617456127439,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.028462,
+        "value": 0.008317748370661904,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.029067,
+          "value": 0.007036493249420189,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.028783,
+          "value": 0.013549724869118913,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.031181,
+          "value": 0.0071943596167854396,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.028462,
+          "value": 0.008317748370661904,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.037837,
+        "value": 0.004742418137928639,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.037917,
+          "value": 0.016611929040162565,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.0384,
+          "value": 0.02328772807344066,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.038884,
+          "value": 0.005107868965661641,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.037837,
+          "value": 0.004742418137928639,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.025342,
+        "value": 0.009132620923893633,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.025342,
+          "value": 0.009132620923893633,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.025672,
+          "value": 0.033198635945855225,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.026272,
+          "value": 0.006989721170456433,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomega_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.025388,
+          "value": 0.012675544561726036,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.037121,
+        "value": 0.01222015981100373,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.037121,
+          "value": 0.01222015981100373,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.037287,
+          "value": 0.03326362259389011,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.037324,
+          "value": 0.008515423543606213,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.037501,
+          "value": 0.003957202578722875,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "crispr-off-target",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.025053,
+        "value": 0.017965616270299842,
+        "metric": "PRAUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.02523,
+          "value": 0.01671846764830653,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.025053,
+          "value": 0.017965616270299842,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.02567,
+          "value": 0.01222895034109259,
+          "metric": "PRAUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_crisprofftarget_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.025259,
+          "value": 0.015621244769682277,
+          "metric": "PRAUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.205632,
+        "value": 0.4149044068023495,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.20866,
+          "value": 0.40026982311532305,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.212614,
+          "value": 0.4091777314101704,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.332811,
+          "value": 0.010346856506216801,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.205632,
+          "value": 0.4149044068023495,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.31722,
+        "value": 0.5639889547287348,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.31722,
+          "value": 0.5639889547287348,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.328399,
+          "value": 0.5567956854807102,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.487779,
+          "value": -0.02546280490967552,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.325307,
+          "value": 0.5637030204040111,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.220595,
+        "value": 0.39069210011908,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.224629,
+          "value": 0.38290065357469744,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.227363,
+          "value": 0.38693849945802145,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.23048,
+          "value": 0.3603743665060675,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.220595,
+          "value": 0.39069210011908,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.334589,
+        "value": 0.538578859826727,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.334589,
+          "value": 0.538578859826727,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.341094,
+          "value": 0.5317884387992492,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.340377,
+          "value": 0.5283815541796529,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.347502,
+          "value": 0.5175345902322624,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.196805,
+        "value": 0.4039586357863241,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.276005,
+          "value": 0.2882315769342107,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.198429,
+          "value": 0.40194410427411525,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.333023,
+          "value": -0.007228612831020574,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.196805,
+          "value": 0.4039586357863241,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.314413,
+        "value": 0.5684947005565137,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.479322,
+          "value": 0.026751524854834986,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.314413,
+          "value": 0.5684947005565137,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.480103,
+          "value": 0.008809544198396564,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmo650m_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.319834,
+          "value": 0.5552777218785016,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.205385,
+        "value": 0.39624416117983274,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.205385,
+          "value": 0.39624416117983274,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.207445,
+          "value": 0.42017487640622475,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.281956,
+          "value": 0.2591125795972278,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.211474,
+          "value": 0.4069231676907388,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.328097,
+        "value": 0.5553950993527207,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.339167,
+          "value": 0.5310529189609325,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.332768,
+          "value": 0.5413880091426565,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.441919,
+          "value": 0.28140738476495875,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.328097,
+          "value": 0.5553950993527207,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.214337,
+        "value": 0.37987655247736507,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.214337,
+          "value": 0.37987655247736507,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.221497,
+          "value": 0.39907454653050833,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.221897,
+          "value": 0.3843608993090493,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.221865,
+          "value": 0.3834297636845742,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "degradation",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.33252,
+        "value": 0.5355403279274004,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.333953,
+          "value": 0.5389909831849014,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.335673,
+          "value": 0.5314595742840702,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.354035,
+          "value": 0.5048500502518586,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_degradation_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.33252,
+          "value": 0.5355403279274004,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_modification_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.084568,
+        "value": 0.9387007422205594,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_modification_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.129535,
+          "value": 0.5193158773769659,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.084568,
+          "value": 0.9387007422205594,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.129718,
+          "value": 0.5584264047659933,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.085111,
+          "value": 0.9382044080940524,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_modification_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.129065,
+        "value": 0.9847652173913043,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_modification_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.220845,
+          "value": 0.5887478260869565,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.129065,
+          "value": 0.9847652173913043,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.219014,
+          "value": 0.5056086956521739,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_ernierna_modification_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.129611,
+          "value": 0.9870434782608696,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_modification_full_s101_family_bestval_v1",
+        "lr": "3e-4",
+        "best_val": 0.080442,
+        "value": 0.9242244324105534,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_modification_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.082406,
+          "value": 0.9240281704465078,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.088352,
+          "value": 0.9272086657815012,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.080442,
+          "value": 0.9242244324105534,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.085176,
+          "value": 0.9250385119865323,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_modification_full_s101_random_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.119677,
+        "value": 0.9798782608695652,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_modification_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.119677,
+          "value": 0.9798782608695652,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.169871,
+          "value": 0.966991304347826,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.124617,
+          "value": 0.973008695652174,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rnafm_modification_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.122968,
+          "value": 0.9800521739130434,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_modification_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.083548,
+        "value": 0.9490268672292477,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.129921,
+          "value": 0.49507613535776634,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.083548,
+          "value": 0.9490268672292477,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.129832,
+          "value": 0.5028812536541188,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.129746,
+          "value": 0.5069289985516401,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_modification_full_s101_random_bestval_v1",
+        "lr": "3e-4",
+        "best_val": 0.218334,
+        "value": 0.5056521739130435,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.221395,
+          "value": 0.5636869565217392,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.222896,
+          "value": 0.4241913043478261,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.218334,
+          "value": 0.5056521739130435,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmo650m_modification_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.222423,
+          "value": 0.6108434782608696,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_modification_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.075961,
+        "value": 0.9444338089565267,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.129655,
+          "value": 0.5161028303579095,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.102773,
+          "value": 0.9352118699072314,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.129845,
+          "value": 0.5447265824634997,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.075961,
+          "value": 0.9444338089565267,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_modification_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.186767,
+        "value": 0.9577217391304348,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.220712,
+          "value": 0.6060434782608696,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.186767,
+          "value": 0.9577217391304348,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.217254,
+          "value": 0.46862608695652175,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomega_modification_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.221796,
+          "value": 0.6433391304347826,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_modification_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.088139,
+        "value": 0.9335785489927919,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.129741,
+          "value": 0.5714967891026508,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.088139,
+          "value": 0.9335785489927919,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.129787,
+          "value": 0.5851848441198837,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.089528,
+          "value": 0.9366052678852514,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "modification",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_modification_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.141449,
+        "value": 0.9787478260869565,
+        "metric": "AUC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.216095,
+          "value": 0.6470608695652175,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.164543,
+          "value": 0.9779652173913044,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.218312,
+          "value": 0.638991304347826,
+          "metric": "AUC"
+        },
+        {
+          "rid": "ft_rinalmomicro_modification_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.141449,
+          "value": 0.9787478260869565,
+          "metric": "AUC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_mrl_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.516094,
+        "value": 0.699845973092189,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_mrl_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.518183,
+          "value": 0.6898456018975061,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.517062,
+          "value": 0.7002989197910728,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.983227,
+          "value": 0.008370078622132125,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.516094,
+          "value": 0.699845973092189,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_mrl_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.484385,
+        "value": 0.8011298178944491,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_mrl_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.490474,
+          "value": 0.7876354957950582,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.491476,
+          "value": 0.7852070704957355,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.078006,
+          "value": 0.049486398752279566,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_ernierna_mrl_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.484385,
+          "value": 0.8011298178944491,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_mrl_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.506152,
+        "value": 0.6907646925124323,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_mrl_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.516897,
+          "value": 0.6855071219965073,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.52775,
+          "value": 0.6852438733891782,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.960189,
+          "value": 0.16033934870431102,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.506152,
+          "value": 0.6907646925124323,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_mrl_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.482556,
+        "value": 0.7969584097182166,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_mrl_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.506725,
+          "value": 0.7718721447523299,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.482556,
+          "value": 0.7969584097182166,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.035913,
+          "value": 0.12302945833569325,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rnafm_mrl_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.492773,
+          "value": 0.7951793112687322,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": null,
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.985056,
+          "value": 0.002754068629137031,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.443492,
+          "value": 0.7630151925540029,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.984479,
+          "value": -0.03328405586156025,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": null,
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 1.082563,
+          "value": 0.014464158483786668,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.43143,
+          "value": 0.8200248105709532,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmo650m_mrl_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 1.079963,
+          "value": -0.006936098949751535,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": null,
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.982952,
+          "value": 0.027974038777790006,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.460862,
+          "value": 0.7384492653827501,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.743877,
+          "value": 0.5546694065423323,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_mrl_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.440936,
+        "value": 0.7989697085734423,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 1.079739,
+          "value": 0.06299489219246666,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.460245,
+          "value": 0.7981336442059026,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.081023,
+          "value": -0.07998025769283931,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomega_mrl_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.440936,
+          "value": 0.7989697085734423,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_mrl_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.462164,
+        "value": 0.7305041412128809,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.507703,
+          "value": 0.694618219626737,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.499005,
+          "value": 0.6976714213310573,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.983088,
+          "value": 0.1705850809919928,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.462164,
+          "value": 0.7305041412128809,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_mrl_full_s101_random_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.431063,
+        "value": 0.8070528575730318,
+        "metric": "PEARSON_R"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.431063,
+          "value": 0.8070528575730318,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.484777,
+          "value": 0.7894898972938679,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.077904,
+          "value": -0.11194591982713607,
+          "metric": "PEARSON_R"
+        },
+        {
+          "rid": "ft_rinalmomicro_mrl_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.456149,
+          "value": 0.8014399189074313,
+          "metric": "PEARSON_R"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.296801,
+        "value": 0.927570093457944,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.429446,
+          "value": 0.8995327102803738,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.344053,
+          "value": 0.9310747663551402,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.5635,
+          "value": 0.0852803738317757,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.296801,
+          "value": 0.927570093457944,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.238748,
+        "value": 0.9393939393939394,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.293892,
+          "value": 0.8951048951048951,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.238842,
+          "value": 0.9452214452214452,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.622719,
+          "value": 0.40326340326340326,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_ernierna_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.238748,
+          "value": 0.9393939393939394,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.393782,
+        "value": 0.9077102803738317,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.393782,
+          "value": 0.9077102803738317,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.490019,
+          "value": 0.875,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.54112,
+          "value": 0.8469626168224299,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.45206,
+          "value": 0.8901869158878505,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.280567,
+        "value": 0.916083916083916,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.280567,
+          "value": 0.916083916083916,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.346428,
+          "value": 0.9195804195804196,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.419065,
+          "value": 0.8811188811188811,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rnafm_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.307781,
+          "value": 0.9254079254079254,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.440478,
+        "value": 0.9217289719626168,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 2.560829,
+          "value": 0.0852803738317757,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.440478,
+          "value": 0.9217289719626168,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.560747,
+          "value": 0.0852803738317757,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.608344,
+          "value": 0.8726635514018691,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.402028,
+        "value": 0.9358974358974359,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 2.57037,
+          "value": 0.09090909090909091,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.402028,
+          "value": 0.9358974358974359,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.5683,
+          "value": 0.09090909090909091,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmo650m_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.440282,
+          "value": 0.872960372960373,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.49364,
+        "value": 0.9007009345794392,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 2.568362,
+          "value": 0.07242990654205607,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.507061,
+          "value": 0.9042056074766355,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.564213,
+          "value": 0.07593457943925233,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.49364,
+          "value": 0.9007009345794392,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.332872,
+        "value": 0.9114219114219114,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 2.568175,
+          "value": 0.06993006993006994,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.417451,
+          "value": 0.9114219114219114,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.566228,
+          "value": 0.07226107226107226,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomega_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.332872,
+          "value": 0.9114219114219114,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.455153,
+        "value": 0.8738317757009346,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_family_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.455153,
+          "value": 0.8738317757009346,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_family_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.497049,
+          "value": 0.8703271028037384,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_family_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.567615,
+          "value": 0.07593457943925233,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_family_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.498651,
+          "value": 0.8691588785046729,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "noncoding-rna-family",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.399151,
+        "value": 0.8881118881118881,
+        "metric": "ACC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_random_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.422031,
+          "value": 0.8706293706293706,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_random_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.484913,
+          "value": 0.8776223776223776,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_random_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 2.564828,
+          "value": 0.09557109557109557,
+          "metric": "ACC"
+        },
+        {
+          "rid": "ft_rinalmomicro_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.399151,
+          "value": 0.8881118881118881,
+          "metric": "ACC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.38827,
+        "value": 0.2975,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.38827,
+          "value": 0.2975,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_family_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.516688,
+          "value": 0.2192,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_family_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.500993,
+          "value": 0.2127,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.445255,
+          "value": 0.2438,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.439936,
+        "value": 0.3052,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.439936,
+          "value": 0.3052,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.559111,
+          "value": 0.1793,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_random_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.305029,
+          "value": 0.006,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_ernierna_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.490757,
+          "value": 0.2371,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.552411,
+        "value": 0.1797,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.552411,
+          "value": 0.1797,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_family_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.587243,
+          "value": 0.1494,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_family_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.558876,
+          "value": 0.1647,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.567471,
+          "value": 0.1715,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_secondarystructure_full_s101_random_pairalign_bestval_v1",
+        "lr": "3e-4",
+        "best_val": 0.5715,
+        "value": 0.1679,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.595991,
+          "value": 0.1504,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.612157,
+          "value": 0.1548,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_random_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.5715,
+          "value": 0.1679,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rnafm_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.601495,
+          "value": 0.1632,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.547109,
+        "value": 0.2786,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 1.289203,
+          "value": 0.0063,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_family_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.567567,
+          "value": 0.3438,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_family_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.285201,
+          "value": 0.0063,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.547109,
+          "value": 0.2786,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.613833,
+        "value": 0.2764,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 1.309063,
+          "value": 0.006,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.613833,
+          "value": 0.2764,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_random_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.305306,
+          "value": 0.006,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.679365,
+          "value": 0.2225,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.480738,
+        "value": 0.2439,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.635021,
+          "value": 0.1479,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_family_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.558439,
+          "value": 0.2182,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_family_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.285567,
+          "value": 0.0063,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.480738,
+          "value": 0.2439,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.533014,
+        "value": 0.2645,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.682742,
+          "value": 0.1427,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.596644,
+          "value": 0.2084,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_random_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.305342,
+          "value": 0.006,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomega_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.533014,
+          "value": 0.2645,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.557928,
+        "value": 0.1622,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_family_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.557928,
+          "value": 0.1622,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_family_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.622693,
+          "value": 0.1617,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_family_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.284453,
+          "value": 0.0063,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_family_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.572741,
+          "value": 0.1723,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "secondary-structure",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.558103,
+        "value": 0.167,
+        "metric": "F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_random_lr0.0001_pairalign_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.558103,
+          "value": 0.167,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_random_lr1e-05_pairalign_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.681423,
+          "value": 0.1498,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_random_pairalign_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 1.308494,
+          "value": 0.006,
+          "metric": "F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_secondarystructure_full_s101_random_lr3e-05_pairalign_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.637352,
+          "value": 0.1743,
+          "metric": "F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.001802,
+        "value": 0.33328023824080344,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003251,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001802,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003269,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.002883,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.001841,
+        "value": 0.333275146474228,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.002989,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001841,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003048,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_ernierna_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.002974,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.00129,
+        "value": 0.3455076931699364,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003015,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.002301,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003058,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.00129,
+          "value": 0.3455076931699364,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.001269,
+        "value": 0.3850665191368346,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.002767,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001606,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.002886,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rnafm_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.001269,
+          "value": 0.3850665191368346,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.00324,
+        "value": 0.33328023824080344,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003258,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.00324,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003258,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.00324,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": null,
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003032,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.002993,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.00303,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.001095,
+        "value": 0.5340503484514774,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003236,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001095,
+          "value": 0.5340503484514774,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003254,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.00324,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.001045,
+        "value": 0.5657898851669236,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.002983,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001045,
+          "value": 0.5657898851669236,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003038,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomega_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.002995,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.001168,
+        "value": 0.33846850085724767,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003244,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001202,
+          "value": 0.4003188223688225,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003249,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.001168,
+          "value": 0.33846850085724767,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.001206,
+        "value": 0.3662663734525726,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.002578,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.001206,
+          "value": 0.3662663734525726,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003004,
+          "value": 0.333275146474228,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmomicro_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.001213,
+          "value": 0.4192557929242205,
+          "metric": "MACRO_F1"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "ERNIE-RNA",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.044526,
+        "value": 0.6261657669181905,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_ssi_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.045131,
+          "value": 0.6213878258352514,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.044873,
+          "value": 0.620038823696701,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.07271,
+          "value": -0.014488926564055373,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.044526,
+          "value": 0.6261657669181905,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "ERNIE-RNA",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_ernierna_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.0441,
+        "value": 0.6613980658578447,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_ernierna_ssi_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.044673,
+          "value": 0.6570254607779556,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.044736,
+          "value": 0.6567217336932798,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.072544,
+          "value": -0.013173906871391234,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_ernierna_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.0441,
+          "value": 0.6613980658578447,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RNA-FM",
+        "family"
+      ],
+      "selected": null,
+      "candidates": [
+        {
+          "rid": "ft_rnafm_ssi_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.047064,
+          "value": 0.5987334111080911,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_ssi_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.047673,
+          "value": 0.5868810665202485,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.046805,
+          "value": 0.5970408309841536,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RNA-FM",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rnafm_ssi_full_s101_random_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.0468,
+        "value": 0.636206038437241,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rnafm_ssi_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.0468,
+          "value": 0.636206038437241,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_ssi_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.047929,
+          "value": 0.6222084834377762,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_ssi_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.047598,
+          "value": 0.6282027908964302,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rnafm_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.046986,
+          "value": 0.6343127153420138,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": null,
+      "candidates": []
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "selected": null,
+      "candidates": []
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.045214,
+        "value": 0.6162415148771947,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.073397,
+          "value": 0.00015842500856165943,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.045397,
+          "value": 0.6124468810429692,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.073026,
+          "value": 0.2620783204451698,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.045214,
+          "value": 0.6162415148771947,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-mega",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomega_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.044855,
+        "value": 0.6540733568889516,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.056091,
+          "value": 0.5125582932208639,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.045177,
+          "value": 0.6506132733354655,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.072419,
+          "value": -0.0011740691799026464,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomega_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.044855,
+          "value": 0.6540733568889516,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-micro",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_ssi_full_s101_family_b20fix_lr0.0001_bestval_v1",
+        "lr": "1e-4",
+        "best_val": 0.046384,
+        "value": 0.6057075436413353,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.046384,
+          "value": 0.6057075436413353,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.04684,
+          "value": 0.5979030756859761,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.047445,
+          "value": 0.5988755058876489,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.046466,
+          "value": 0.6051105757995803,
+          "metric": "PCC"
+        }
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-micro",
+        "random"
+      ],
+      "selected": {
+        "rid": "ft_rinalmomicro_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+        "lr": "3e-5",
+        "best_val": 0.046077,
+        "value": 0.6427274300977407,
+        "metric": "PCC"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_random_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.046113,
+          "value": 0.6427447307095556,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_random_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.046799,
+          "value": 0.6344248128825368,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_random_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.047227,
+          "value": 0.6309178988725521,
+          "metric": "PCC"
+        },
+        {
+          "rid": "ft_rinalmomicro_ssi_full_s101_random_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.046077,
+          "value": 0.6427274300977407,
+          "metric": "PCC"
+        }
+      ]
+    }
+  ],
+  "created_at": "2026-11-10T06:13:25.300513+00:00",
+  "base_ledger": "bestval_ledger_export_20261101_v200.csv",
+  "new_cell_proof": "bestval_v201_new_proof.json",
+  "new_cell_proof_sha256": "4e5e688cb3e53bff3ba22d6a108bf5afcfb515492dbe776cccca89d75d097e18",
+  "registry_summary": {
+    "per-base": {
+      "accepted": 269,
+      "total": 270
+    },
+    "complementary": {
+      "accepted": 306,
+      "total": 324
+    },
+    "LR": {
+      "accepted": 307,
+      "total": 320
+    }
+  },
+  "newly_complete_groups": [
+    {
+      "group": [
+        "spliceai",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "selected": {
+        "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+        "lr": "1e-5",
+        "best_val": 0.00324,
+        "value": 0.33328023824080344,
+        "metric": "MACRO_F1"
+      },
+      "candidates": [
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr0.0001_bestval_v1",
+          "lr": "1e-4",
+          "best_val": 0.003258,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr1e-05_bestval_v1",
+          "lr": "1e-5",
+          "best_val": 0.00324,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_bestval_v1",
+          "lr": "3e-4",
+          "best_val": 0.003258,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        },
+        {
+          "rid": "ft_rinalmo650m_spliceai_full_s101_family_b20fix_lr3e-05_bestval_v1",
+          "lr": "3e-5",
+          "best_val": 0.00324,
+          "value": 0.33328023824080344,
+          "metric": "MACRO_F1"
+        }
+      ]
+    }
+  ],
+  "changed_selections": [],
+  "selection_rule": "minimum held-out best_val; test report-only"
+}

@@ -1087,3 +1087,9 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 
 1. tuned生成预检rc=1、missing=18，未创建selection/jobs；302格复用accepted proof、18格实时proof。default生成RID与正式default对照一致，可直接复用。证据SHA256=`fd9f86a0d9ad838175fc62e17b260d78f72ce722bfd63cb5dedbb46eb818cd92`。
 2. 只读深度预检停止证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`，未影响训练。没有新科学单元，33页PPT/PDF与521文件v120源包保持不变。
+
+## 126. 2026-11-10 当前 v121：LR 73/80组与 SpliceAI 低信号边界
+
+1. v201新增5格，合计 **1892 accepted、0 rejected**；LR=307/320、完整组 **73/80**，选档31/19/20/3。650M SpliceAI family按validation及较低LR tie规则选1e-5，test macro-F1=0.3332802382，近多数类基线，不解释选档收益。证明SHA256=`4e5e688cb3e53bff3ba22d6a108bf5afcfb515492dbe776cccca89d75d097e18`。
+2. 当前PPT **33页**，SHA256=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`；PDF SHA256=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`。仅第20页更新73/80、7组未闭合与低信号说明，其余32页不变，原生渲染通过。
+3. 源包revision=`20261110_refresh_v121_v201ledger_lr73_spliceai_baseline`，527个登记文件，manifest SHA256=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`。核心余13格，tuned仍待80组闭合。
