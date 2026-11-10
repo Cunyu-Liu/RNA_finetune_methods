@@ -1,0 +1,62 @@
+{
+  "created_at": "2026-11-10T08:03:39.329263+00:00",
+  "launch": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/queue_actions/parallel_micro_frozen_launch_20261110.json",
+  "launch_sha256": "118cc9e72dabed76568c456a6ea8684ca7ba99af00dc6e2158b5d3f1a5a84445",
+  "parallel_cells_accepted": 34,
+  "v204_first_batch_proof_sha256": "7c78a9a2430d18e201e6d63224975dc710acb970d07d306b411d656a5c1ae205",
+  "v205_additional_proof_sha256": "959af3f9d90ec6ced4cb772e31aaf1746a9c4e279e0436c21a7eb0763cbe294d",
+  "observed": [
+    {
+      "timestamp": "2026/11/10 15:15:29.140",
+      "gpu_utilization_percent": 99,
+      "memory_used_mib": 28120,
+      "memory_free_mib": 3992
+    },
+    {
+      "timestamp": "2026/11/10 15:33:50.158",
+      "gpu_utilization_percent": 85,
+      "memory_used_mib": 28745,
+      "memory_free_mib": 3367
+    },
+    {
+      "timestamp": "2026/11/10 15:52:51.988",
+      "gpu_utilization_percent": 100,
+      "memory_used_mib": 28803,
+      "memory_free_mib": 3309
+    }
+  ],
+  "current_gpu": "2026/11/10 16:03:39.316, 100, 22747, 9365, 32607",
+  "monitor_state": {
+    "stage": "batch_running",
+    "updated_at": "2026-11-10T07:50:54.994987+00:00",
+    "pid": 3088282,
+    "registry": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/queue_actions/parallel_micro_frozen_20261110T075054.json",
+    "registry_sha256": "3228a6d8b584c6169504f37dee4e5d0c6fb8132a8df66d2e2397ad4482a63c2c",
+    "rids": [
+      "ft_rinalmomicro_modification_frozen_s17_random_e32500_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s29_random_e32500_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s43_random_e32500_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s17_random_e33000_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s29_random_e33000_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s43_random_e33000_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s17_family_e310_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s29_family_e310_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s43_family_e310_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s17_family_e3100_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s29_family_e3100_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s43_family_e3100_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s17_family_e31000_bestval_v1",
+      "ft_rinalmomicro_modification_frozen_s29_family_e31000_bestval_v1"
+    ],
+    "core_processes": [
+      {
+        "pid": 3078102,
+        "command": "/root/miniconda3/envs/llr_env/bin/python -m rnafteval.finetune_regbase --model RiNALMo-650M --strategy full --seed 101 --device 0 --split family --task ssi --converge --convergence-mode bestval --batch-size 4 --rank 8 --n-train 0 --lr 3e-4"
+      }
+    ]
+  },
+  "tests": "58 passed",
+  "dispatcher_commit": "a62587e",
+  "monitor_commit": "aaaf71c",
+  "note": "34 parallel cells independently accepted. Subsequent batches remain in flight and are not counted as complete."
+}

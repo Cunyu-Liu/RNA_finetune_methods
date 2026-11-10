@@ -991,6 +991,15 @@
 - [x] DK4 展示：PPT/v121源包不变；证据SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。
 - [ ] DK5 后续：三地同步并提交，等待完整proof。
 
+## DL 组：v203–v205 并行与 v124 验收
+
+- [x] DL1 LR：1893 accepted、308/320、74组；36个双split组中21组选档不同，SpliceAI不脱离基线。
+- [x] DL2 数据：34个并行格均proof=complete，累计1927 accepted、0 rejected；证明=`7c78a9a2430d18e201e6d63224975dc710acb970d07d306b411d656a5c1ae205`、`959af3f9d90ec6ced4cb772e31aaf1746a9c4e279e0436c21a7eb0763cbe294d`。
+- [x] DL3 调度：GPU 99%/100%、28.1/28.8GB，无OOM；58 passed，`a62587e`、`aaaf71c`、`5532d7e`已推送。证据=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。
+- [x] DL4 曲线：modification random与MRL family Frozen五档闭合，非严格单调/种子变异边界保留。
+- [x] DL5 交付：541文件manifest=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`；PPT=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`，变化页原生渲染通过。
+- [ ] DL6 后续：三地同步并提交v124，继续核心与后续补位批次。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

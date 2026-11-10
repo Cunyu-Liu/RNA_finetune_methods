@@ -1098,3 +1098,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 
 1. v202零新增，仍1892 accepted、0 rejected。当前格epoch2 best_val=0.002990、stale=2/3，result不存在，GPU实际利用，无CPU降级；不按固定步数截止。
 2. 在训证据=`status/inflight_progress_20261110_v202.json`，SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。33页PPT/PDF与527文件v121源包保持。
+
+## 128. 2026-11-10 当前 v124：LR 74组与两条 Frozen 曲线
+
+1. LR=308/320、74/80组，36个双split闭合task×model中21组选档不同；SpliceAI双split均闭合但近多数类基线。v204/v205新增34个并行Frozen格，累计1927 accepted、0 rejected。
+2. 第20页更新74/80；第26页加入modification random Frozen五档mean=0.557730/0.578838/0.553959/0.589867/0.606267；第27页加入MRL family Frozen五档mean=0.256237/0.383207/0.390106/0.502521/0.582154。均不宣称统一scaling，等价判读不变。
+3. 源包revision=`20261110_refresh_v124_v205ledger_lr74_parallel34_modification5`，541个登记文件，manifest SHA256=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`。
+4. 当前PPT **33页**，SHA256=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`；PDF SHA256=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`。第22/23/26/27/28/29/30页同源更新，所有变化页原生渲染通过，其他内容不变。
+5. 并行调度GPU实测99%/100%、28.1/28.8GB，58 passed，`a62587e`、`aaaf71c`、`5532d7e`已推送；证据SHA256=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。

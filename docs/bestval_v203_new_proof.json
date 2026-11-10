@@ -1,0 +1,31 @@
+[
+  {
+    "run_id": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+    "proof_state": "complete",
+    "proof_reason": "",
+    "task": "spliceai",
+    "model": "RiNALMo-650M",
+    "strategy": "full",
+    "split": "random",
+    "seed": "101",
+    "lr": "3e-05",
+    "metric": "MACRO_F1",
+    "value": "0.333275146474228",
+    "best_val": "0.00299",
+    "best_epoch": "0",
+    "epochs": "4",
+    "stop_reason": "validation_no_improvement_patience",
+    "cuda_device": "cuda:0",
+    "cuda_device_name": "NVIDIA GeForce RTX 5090",
+    "plateau_status": "CONVERGED",
+    "checkpoint_bytes": 2603882699,
+    "checkpoint_sha256": "5733c123b0648f64e25c4eef91e5adcb176b4792f764520169c6f3dda26069c4",
+    "out_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+    "epoch_val_losses": [
+      0.00299,
+      0.002969,
+      0.002972,
+      0.002963
+    ]
+  }
+]

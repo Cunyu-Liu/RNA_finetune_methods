@@ -2579,3 +2579,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **进度**：epoch2 best_val=0.002990、best_epoch=0、stale=2/3，无result，不按固定步数截止。
 - [x] **CUDA**：PID2895085存活、GPU实际利用、14668MiB，无CPU降级；补位等待核心。证据SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。
 - [ ] **后续**：三地同步并提交，等待完整收敛proof。
+
+## N171. 2026-11-10 v203–v205 并行补位与 Frozen 曲线
+
+- [x] **LR**：1893 accepted，308/320、74/80组，36组双split中21组选档不同；SpliceAI双split闭合但近基线。证明=`b8acf132fa5871718ae1554c9120a5a1a78001a1a91aa942307b614e87d184b5`。
+- [x] **并行验收**：v204/v205新增34格，1927 accepted、0 rejected；proof=`7c78a9a2430d18e201e6d63224975dc710acb970d07d306b411d656a5c1ae205`、`959af3f9d90ec6ced4cb772e31aaf1746a9c4e279e0436c21a7eb0763cbe294d`。
+- [x] **GPU与代码**：GPU 99%/100%、28.1/28.8GB，无OOM；58 passed，`a62587e`、`aaaf71c`已推送，56格池切换代码`5532d7e`已推送。证据=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。
+- [x] **曲线**：modification random与MRL family Frozen五档闭合，均保留非严格单调/种子变异边界，不写统一scaling。
+- [x] **交付**：541文件manifest=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`；PPT=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`，变化页原生渲染通过。
+- [ ] **后续**：三地同步并提交v124，继续核心余12格与并行Frozen。

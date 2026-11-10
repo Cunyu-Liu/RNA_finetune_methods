@@ -1656,3 +1656,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 1. v202新增0，仍1892 accepted、0 rejected；LR=307/320、73/80组，PPT与v121源包保持。
 2. 650M SpliceAI random/3e-5日志至epoch2，best_val=0.002990、best_epoch=0、stale_epochs=2/3，result不存在；需继续后续epoch并按既有patience验收，不按固定步数截止。
 3. PID2895085存活，GPU有实际利用、显存14668MiB，无CPU降级；补位保持`waiting_core_process`。证据=`status/inflight_progress_20261110_v202.json`，SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。
+
+### 10.171 v203–v205 并行补位、LR 74组与两条 Frozen 曲线（2026-11-10）
+
+1. v203新增650M SpliceAI random/3e-5一格，合计1893 accepted、0 rejected；LR=308/320、完整组 **74/80**，选档32/19/20/3。36个双split闭合task×model中21组选档不同。SpliceAI random选3e-5、family选1e-5，test均近多数类基线，不解释收益。证明SHA256=`b8acf132fa5871718ae1554c9120a5a1a78001a1a91aa942307b614e87d184b5`，LR证据SHA256=`b092abaf3fa3c4e7da6f3546f622e8a505e1df90cc5bee1c9a9c7190ceab5b18`。
+2. v204/v205共新增34个micro Frozen格，合计 **1927 accepted、0 rejected**，均proof=complete。证明SHA256=`7c78a9a2430d18e201e6d63224975dc710acb970d07d306b411d656a5c1ae205`、`959af3f9d90ec6ced4cb772e31aaf1746a9c4e279e0436c21a7eb0763cbe294d`。既有141个micro Frozen实测峰值最高1.10GB，取消9GB过度估算，启用14个不同RID并行、共享cell锁；回归 **58 passed**，提交`a62587e`、`aaaf71c`。后续56格注册池只在完整proof后切换，提交`5532d7e`。
+3. 实测GPU利用率99%/100%、显存28120/28803MiB，核心650M任务并行且未发生OOM；后续批次在训不计完成。证据=`status/parallel_micro_frozen_utilization_20261110_v205.json`，SHA256=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。
+4. modification random Frozen五档mean=0.557730/0.578838/0.553959/0.589867/0.606267，非严格单调；MRL family Frozen五档mean=0.256237/0.383207/0.390106/0.502521/0.582154，中间档种子变异大，均不宣称统一scaling。结论④等价判读不变。
+5. 源包revision=`20261110_refresh_v124_v205ledger_lr74_parallel34_modification5`，**541个登记文件**逐哈希通过，manifest SHA256=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`。PPT SHA256=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF SHA256=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`。第20页74/80，第26页新增modification Frozen、第27页MRL family Frozen，成本与覆盖同源更新；所有变化页原生渲染通过。
