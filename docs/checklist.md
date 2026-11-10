@@ -965,6 +965,15 @@
 - [x] DH5 渲染：原生PowerPoint导出，第20页文字无溢出；无越界shape，Microsoft YaHei、1.5倍行距。
 - [ ] DH6 后续：三地同步并提交，继续补剩余8组LR。
 
+## DI 组：v200 tuned 生成门预检验收
+
+- [x] DI1 数据：v200零新增，1887 accepted、0 rejected；LR 302/320、72组。
+- [x] DI2 门控：rc=1、missing=18，302格复用proof、18格实时proof；selection/jobs未创建。证据SHA256=`fd9f86a0d9ad838175fc62e17b260d78f72ce722bfd63cb5dedbb46eb818cd92`。
+- [x] DI3 去重：default生成RID与正式对照完全一致，result_dir一致，避免重复训练。
+- [x] DI4 安全：只停止只读深度预检，未停训练或删除产物；证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`。
+- [x] DI5 展示：PPT与v120源包保持，不提前生成tuned。
+- [ ] DI6 后续：三地同步并提交，等待80组闭合。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

@@ -1636,3 +1636,10 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 其余8组未闭合：650M MRL双split及mega MRL family各缺default，650M SpliceAI family缺1e-5/3e-5，650M SpliceAI random、650M SSI双split各缺四档，RNA-FM SSI family缺default。seed101仅调参，test不参与，正式三种子tuned复测须等80组闭合。
 3. 第20页仅新增20/35 split差异与8组未闭合说明，其余32页内容、图片和位置逐项对账不变。源包revision=`20261109_refresh_v120_v184ledger_lr72_split20_analysis`，**521个登记文件**逐哈希通过，manifest SHA256=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。
 4. PPT33页SHA256=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`，PDF SHA256=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`。原生PowerPoint导出与第20页渲染通过，文字无溢出；全稿无越界shape，显式字体Microsoft YaHei、1.5倍行距。
+
+### 10.168 v200 tuned 生成门与 default 去重预检（2026-11-09）
+
+1. v200新增0，仍1887 accepted、0 rejected；LR=302/320、72/80组。`select_lr_validation`预检返回rc=1、missing=18；302个accepted RID复用既有独立proof，18个未接受格实时proof，未创建selection或jobs文件。证据=`status/tuned_generation_preflight_20261109_v200.json`，SHA256=`fd9f86a0d9ad838175fc62e17b260d78f72ce722bfd63cb5dedbb46eb818cd92`。
+2. RNA-FM modification family/seed17的default生成RID与正式default对照同为`ft_rnafm_modification_full_s17_family_bestval_v1`，result_dir一致；80组闭合后可直接复用，不重复训练，非default RID保持区分。
+3. 原深度预检因本地监视超时仍在远端重复读取大checkpoint，已只终止该只读进程并保存I/O证据，未终止训练、未删除产物；改用accepted复用与实时缺格检查，生成器逻辑不变。停止证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`。
+4. 没有新科学单元，PPT与v120源包保持，tuned正式三种子仍待80组全部闭合。

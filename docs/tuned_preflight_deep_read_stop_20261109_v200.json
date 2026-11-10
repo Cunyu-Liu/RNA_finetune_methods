@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-11-08T19:24:04.850523+00:00",
+  "pid": 2327542,
+  "command": "/root/miniconda3/envs/llr_env/bin/python scripts/select_lr_validation.py --tuning-jobs /teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_jobs_20261030_small_first_20261102.json --selection-output /tmp/rna_tuned_preflight_v198_selection.json --jobs-output /tmp/rna_tuned_preflight_v198_jobs.json ",
+  "io": "rchar: 149159951399\nwchar: 4\nsyscr: 220444\nsyscw: 1\nread_bytes: 3227648\nwrite_bytes: 4096\ncancelled_write_bytes: 4096\n",
+  "open_checkpoints": [
+    "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rinalmo650m_noncodingrnafamily_full_s101_random_lr3e-05_bestval_v1/best.ckpt"
+  ],
+  "selection_existed": false,
+  "jobs_existed": false,
+  "reason": "Stopped read-only duplicate deep proof after local watcher timeout; no training process or experiment artifact was terminated.",
+  "exited": true
+}

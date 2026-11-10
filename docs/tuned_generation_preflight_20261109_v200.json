@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-11-08T19:24:13.625345+00:00",
+  "gate_returncode": 1,
+  "gate_missing_cells": 18,
+  "proof_calls": {
+    "reused": 302,
+    "live": 18
+  },
+  "selection_file_created": false,
+  "jobs_file_created": false,
+  "default_reuse_example": {
+    "rid": "ft_rnafm_modification_full_s17_family_bestval_v1",
+    "result_dir": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/ft_rnafm_modification_full_s17_family_bestval_v1"
+  },
+  "deep_read_stop_evidence": "tuned_preflight_deep_read_stop_20261109_v200.json",
+  "note": "Generator logic unchanged; 302 independently accepted RIDs reuse prior proof and 18 remaining RIDs receive live proof. No tuned registry or training generated."
+}

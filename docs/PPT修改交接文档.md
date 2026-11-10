@@ -1082,3 +1082,8 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. 72/80个完整LR组中，35个双split均闭合的task×model有 **20组选档不同**。第20页仅新增该统计、其余8组未闭合及tuned三种子复测门，明确seed101 tuning、test不参与。分析SHA256=`e8916d9e0aca6744f20294f6ccffff469af1f82def11090669f4432c1534bfb9`。
 2. 当前PPT **33页**，SHA256=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`；PDF SHA256=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`。其他32页内容、图片和位置逐项不变。
 3. 源包revision=`20261109_refresh_v120_v184ledger_lr72_split20_analysis`，521个登记文件，manifest SHA256=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。原生PowerPoint导出与第20页渲染通过，文字无溢出，Microsoft YaHei、1.5倍行距。
+
+## 125. 2026-11-09 v200 staging：tuned 门预检，展示版保持 v120
+
+1. tuned生成预检rc=1、missing=18，未创建selection/jobs；302格复用accepted proof、18格实时proof。default生成RID与正式default对照一致，可直接复用。证据SHA256=`fd9f86a0d9ad838175fc62e17b260d78f72ce722bfd63cb5dedbb46eb818cd92`。
+2. 只读深度预检停止证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`，未影响训练。没有新科学单元，33页PPT/PDF与521文件v120源包保持不变。

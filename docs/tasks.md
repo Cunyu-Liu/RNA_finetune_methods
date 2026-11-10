@@ -2556,3 +2556,11 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **源包**：v120共521文件逐哈希通过，manifest=`89e3b4920266d412e560173e181692414fd7306a2803ee95ce89c4a680356002`。
 - [x] **PPT**：仅第20页变化，其他32页内容/图片/位置不变；PPT=`ba825a81e57c8ad9646ba5061f5267c80caec08ab2a0024142f105788e3de021`，PDF=`0bad376835453aeebd9cbd42e7ef796fe2f83304a36cab674577876a0b738384`，原生渲染通过。
 - [ ] **后续**：三地同步并提交，继续核心LR队列。
+
+## N168. 2026-11-09 v200 tuned 生成门与 default 去重预检
+
+- [x] **缺格门**：rc=1、missing=18；302格复用accepted proof、18格实时proof，selection/jobs均未创建。证据SHA256=`fd9f86a0d9ad838175fc62e17b260d78f72ce722bfd63cb5dedbb46eb818cd92`。
+- [x] **default去重**：RNA-FM modification family/seed17同RID、同result_dir，可复用；非default保持独立RID。
+- [x] **效率修复**：只停止超时后的只读深度预检，训练与产物不受影响；停止证据SHA256=`b5c39c44bd1bd05e5c29019ef2e665060109dbd5d66501614deaed3de876e35e`。
+- [x] **展示**：v200零新增，PPT与v120源包不变。
+- [ ] **后续**：三地同步并提交，等待80组闭合后冻结选择并生成tuned。
