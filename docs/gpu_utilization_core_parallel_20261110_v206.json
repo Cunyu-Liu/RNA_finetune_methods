@@ -1,0 +1,44 @@
+{
+  "created_at": "2026-11-10T16:01:47.738562+00:00",
+  "initial_observation": {
+    "gpu_utilization_percent": 17,
+    "memory_used_mib": 3725,
+    "memory_free_mib": 28387
+  },
+  "after_parallel_launch": {
+    "gpu_utilization_percent": 98,
+    "memory_used_mib": 25771,
+    "memory_free_mib": 6341
+  },
+  "current_gpu": "2026/11/11 00:01:47.542, 95, 24938, 7174, 32607",
+  "compute_processes": [
+    "45383, 498",
+    "3088282, 498",
+    "3168294, 898",
+    "3168295, 898",
+    "3168312, 898",
+    "3193193, 498",
+    "3193277, 898",
+    "3193278, 904",
+    "3193280, 904",
+    "3193312, 904",
+    "3193336, 898",
+    "3193313, 898",
+    "3193337, 898",
+    "3195094, 498",
+    "3195129, 3280",
+    "3196414, 860",
+    "3196693, 498",
+    "3196739, 2808",
+    "3196736, 3836",
+    "3198408, 860",
+    "3198410, 860",
+    "3199413, 820"
+  ],
+  "launch_evidence": {
+    "queue_actions/parallel_micro_frozen_supplement_launch_20261110.json": "b737d4d27175383448c61f1cc8a22d061bcd4eeb45d23a0d1fd0f59515d9c24e",
+    "queue_actions/core_last_spliceai_frozen_s17_random_launch.json": "c91c43a466427f250c59dbc563b7a4236d2555327ebf33314e778c19678c65d3",
+    "queue_actions/lr_core_mega_mrl_rnafm_ssi_family_default_launch.json": "6555e9c2da93fc7f2d297706171b65e7695399b0df7bb1e369afb1f0de34473c"
+  },
+  "note": "Utilization increased using real micro Frozen cells, final per-base Frozen cell, and two core LR cells. No dummy memory reservation."
+}

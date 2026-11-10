@@ -1000,6 +1000,15 @@
 - [x] DL5 交付：541文件manifest=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`；PPT=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`，变化页原生渲染通过。
 - [ ] DL6 后续：三地同步并提交v124，继续核心与后续补位批次。
 
+## DM 组：v206 百格并行与 v125 验收
+
+- [x] DM1 数据：2031 accepted、0 rejected；104格proof=complete，证明SHA256=`f9657b07a515f390af3de5bb83dc5f0d2700a3a8dcdae57755d573d8a35aec8a`。
+- [x] DM2 LR：313/320、75组；650M SSI family选1e-5、PCC=0.624193，default近零，test不选档。
+- [x] DM3 曲线：modification/SSP双split和MRL family Frozen五档；degradation仅三档，cap不重复。
+- [x] DM4 GPU：正式任务并行后98%、25771MiB，无dummy；证据SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
+- [x] DM5 交付：547文件manifest=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`；PPT=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`，8页原生渲染通过。
+- [ ] DM6 后续：三地同步并提交v125，继续核心与后续批次。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

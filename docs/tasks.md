@@ -2588,3 +2588,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **曲线**：modification random与MRL family Frozen五档闭合，均保留非严格单调/种子变异边界，不写统一scaling。
 - [x] **交付**：541文件manifest=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`；PPT=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`，变化页原生渲染通过。
 - [ ] **后续**：三地同步并提交v124，继续核心余12格与并行Frozen。
+
+## N172. 2026-11-11 v206 百格并行验收与 v125
+
+- [x] **百格验收**：2031 accepted、0 rejected；104格proof=complete，证明SHA256=`f9657b07a515f390af3de5bb83dc5f0d2700a3a8dcdae57755d573d8a35aec8a`。
+- [x] **LR反例**：313/320、75/80组，余7格5组；650M SSI family选1e-5、PCC=0.624193，default近零，test不选档。证据SHA256=`418ad9ec6b1a185233d9c7ee83c39e3e582da8e02eb1119eba338d13dd8be996`。
+- [x] **GPU**：追加正式核心格与12个micro补位，GPU 98%、25771MiB，无dummy占位；证据SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
+- [x] **科学边界**：modification/SSP双split与MRL family Frozen五档；degradation仅三档，cap不重复；低信号不判趋势。
+- [x] **交付**：547文件manifest=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`；PPT=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`，8个变化页原生渲染通过。
+- [ ] **后续**：三地同步并提交v125，继续核心余格与后续批次。

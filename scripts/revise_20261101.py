@@ -177,7 +177,7 @@ def main():
 
     slide = prs.slides[17]
     set_text(slide, "TextBox 5",
-             "读图：3e-4 是 runner 工程缺省，不是普遍最优。seed101 tuning 已闭合74/80组：3e-5三十二组、1e-4十九组、1e-5二十组、3e-4三组；36个双split均闭合的task×model中，21组选档不同。其余6组未闭合，test不参与选档，正式三种子tuned复测待80组闭合；SpliceAI近多数类基线，不解释选档收益。MRL −0.112经CUDA重评为近常数输出，不是评测算错。")
+             "读图：3e-4 是 runner 工程缺省，不是普遍最优。seed101 tuning 已闭合75/80组：3e-5三十二组、1e-4十九组、1e-5二十一组、3e-4三组；36个双split均闭合的task×model中，21组选档不同。650M SSI family 1e-5 PCC=0.624，default≈0；SpliceAI仍近基线。其余5组未闭合，test不参与选档，tuned复测待80组。MRL −0.112经CUDA重评为近常数输出，不是评测算错。")
 
     slide = prs.slides[18]
     set_text(slide, "TextBox 3",
@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA、MRL、modification 的 Frozen random 五档均已三种子闭合。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA、MRL、modification、SSP 的 Frozen random 五档均已三种子闭合。")
     set_text(slide, "TextBox 5",
-             "读图：ncRNA/MRL/modification Frozen 均五档闭合。ncRNA 2000→2500基本持平；modification mean=0.558/0.579/0.554/0.590/0.606，非严格单调；MRL种子变异大，不宣称统一scaling。degradation requested≥2000仍为cap=1552，不是新增数据。")
+             "读图：ncRNA/MRL/modification/SSP Frozen 均五档。ncRNA 2000→2500基本持平；modification 0.558→0.606且非严格单调；MRL种子变异大，不宣称统一scaling。degradation Frozen仅三档，requested≥2000仍cap=1552，不当作新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 
@@ -300,9 +300,9 @@ def main():
         set_text(family_scaling, "TextBox 1", "05F")
         set_text(family_scaling, "TextBox 2", "结论⑤补充  family：多策略数据量曲线")
         set_text(family_scaling, "TextBox 3",
-                 "family split；5/8 任务可判。MRL Frozen 与 full/LoRA 均五档；modification/SSP/degradation/SSI 的 full/LoRA 五档。")
+                 "family split；5/8 任务可判。MRL/modification/SSP Frozen 均五档，五任务 full/LoRA 均五档。")
         set_text(family_scaling, "TextBox 5",
-                 "读图：MRL Frozen 1000→3000 mean=0.256→0.582，中间档种子变异大，不宣称统一趋势；family 不与 random 合并。SSP Frozen 的 n=2000 为全量参照；CRISPR/SpliceAI 低信号不判趋势，degradation requested 2000–3000 同为 cap=1680。等价见④ family。")
+                 "读图：MRL Frozen 1000→3000 mean=0.256→0.582，中间档种子变异大；modification/SSP Frozen 五档已闭合，不宣称统一趋势。family 不与 random 合并；CRISPR/SpliceAI 低信号不判趋势，degradation requested 2000–3000 同为 cap=1680。等价见④ family。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
 
     ncrna_overview = clone_slide(prs, 4)

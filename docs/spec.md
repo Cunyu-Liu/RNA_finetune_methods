@@ -1664,3 +1664,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. 实测GPU利用率99%/100%、显存28120/28803MiB，核心650M任务并行且未发生OOM；后续批次在训不计完成。证据=`status/parallel_micro_frozen_utilization_20261110_v205.json`，SHA256=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。
 4. modification random Frozen五档mean=0.557730/0.578838/0.553959/0.589867/0.606267，非严格单调；MRL family Frozen五档mean=0.256237/0.383207/0.390106/0.502521/0.582154，中间档种子变异大，均不宣称统一scaling。结论④等价判读不变。
 5. 源包revision=`20261110_refresh_v124_v205ledger_lr74_parallel34_modification5`，**541个登记文件**逐哈希通过，manifest SHA256=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`。PPT SHA256=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`，PDF SHA256=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`。第20页74/80，第26页新增modification Frozen、第27页MRL family Frozen，成本与覆盖同源更新；所有变化页原生渲染通过。
+
+### 10.172 v206 百格并行验收与 v125 科学更新（2026-11-11）
+
+1. v206新增104格，**1927+104=2031 accepted、0 rejected**，全部proof=complete、CUDA/checkpoint/plateau通过。证明SHA256=`f9657b07a515f390af3de5bb83dc5f0d2700a3a8dcdae57755d573d8a35aec8a`。LR=313/320、完整组 **75/80**，分布32/19/21/3，余7格、5组；per-base=269/270、complementary=306/324。
+2. 650M SSI family四档闭合，1e-5 best_val=0.044377、test PCC=0.624193，default与1e-4近零；test不参与选档。SpliceAI仍近多数类基线。36个双split闭合task×model中21组选档不同，LR证据SHA256=`418ad9ec6b1a185233d9c7ee83c39e3e582da8e02eb1119eba338d13dd8be996`。
+3. modification random/family、SSP random/family、MRL family Frozen均达五档闭合；degradation random Frozen仅三档，requested≥2000仍actual cap=1552，不当作新增数据。低信号SpliceAI不判scaling，等价规则不变。
+4. 针对空闲显存，追加12个micro补位、最后per-base 650M Frozen-random/seed17，以及mega MRL family和RNA-FM SSI family default核心格。实测GPU由17%/3725MiB升至 **98%/25771MiB**，无dummy占位。证据=`status/gpu_utilization_core_parallel_20261110_v206.json`，SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
+5. 源包revision=`20261111_refresh_v125_v206ledger_lr75_parallel104_frozen_expansion`，**547个登记文件**逐哈希通过，manifest SHA256=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`。PPT SHA256=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF SHA256=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`。第20/22/23/26/27/28/29/30页更新并全部原生渲染通过，其余25页不变。

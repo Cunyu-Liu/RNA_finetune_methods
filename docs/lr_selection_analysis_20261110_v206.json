@@ -1,0 +1,323 @@
+{
+  "created_at": "2026-11-10T16:06:38.095086+00:00",
+  "source": "lr_validation_interim_20261101_v206.json",
+  "source_sha256": "418ad9ec6b1a185233d9c7ee83c39e3e582da8e02eb1119eba338d13dd8be996",
+  "complete_groups": 75,
+  "total_groups": 80,
+  "selection_rule": "minimum held-out best_val; test report-only",
+  "selected_lr_counts": {
+    "1e-4": 19,
+    "1e-5": 21,
+    "3e-4": 3,
+    "3e-5": 32
+  },
+  "by_task": {
+    "crispr-off-target": {
+      "1e-5": 4,
+      "1e-4": 3,
+      "3e-5": 3
+    },
+    "degradation": {
+      "3e-5": 5,
+      "1e-4": 4,
+      "1e-5": 1
+    },
+    "modification": {
+      "1e-5": 5,
+      "3e-4": 2,
+      "1e-4": 1,
+      "3e-5": 2
+    },
+    "mrl": {
+      "3e-5": 5,
+      "1e-5": 1,
+      "1e-4": 1
+    },
+    "noncoding-rna-family": {
+      "3e-5": 5,
+      "1e-4": 3,
+      "1e-5": 2
+    },
+    "secondary-structure": {
+      "1e-4": 5,
+      "3e-4": 1,
+      "3e-5": 3,
+      "1e-5": 1
+    },
+    "spliceai": {
+      "1e-5": 6,
+      "3e-5": 4
+    },
+    "ssi": {
+      "3e-5": 5,
+      "1e-4": 2,
+      "1e-5": 1
+    }
+  },
+  "by_model": {
+    "ERNIE-RNA": {
+      "1e-5": 6,
+      "3e-5": 7,
+      "1e-4": 3
+    },
+    "RNA-FM": {
+      "1e-4": 7,
+      "3e-5": 5,
+      "3e-4": 2,
+      "1e-5": 1
+    },
+    "RiNALMo-650M": {
+      "1e-5": 8,
+      "3e-5": 4,
+      "3e-4": 1
+    },
+    "RiNALMo-mega": {
+      "3e-5": 10,
+      "1e-4": 2,
+      "1e-5": 3
+    },
+    "RiNALMo-micro": {
+      "1e-4": 7,
+      "1e-5": 3,
+      "3e-5": 6
+    }
+  },
+  "by_split": {
+    "family": {
+      "1e-5": 10,
+      "1e-4": 10,
+      "3e-5": 16,
+      "3e-4": 1
+    },
+    "random": {
+      "1e-5": 11,
+      "3e-5": 16,
+      "1e-4": 9,
+      "3e-4": 2
+    }
+  },
+  "default_3e-4_winners": [
+    [
+      "modification",
+      "RNA-FM",
+      "family"
+    ],
+    [
+      "modification",
+      "RiNALMo-650M",
+      "random"
+    ],
+    [
+      "secondary-structure",
+      "RNA-FM",
+      "random"
+    ]
+  ],
+  "both_split_complete_task_models": 36,
+  "split_discordant_task_models": [
+    {
+      "task": "crispr-off-target",
+      "model": "RNA-FM",
+      "family": "1e-4",
+      "random": "3e-5"
+    },
+    {
+      "task": "crispr-off-target",
+      "model": "RiNALMo-650M",
+      "family": "1e-5",
+      "random": "3e-5"
+    },
+    {
+      "task": "crispr-off-target",
+      "model": "RiNALMo-mega",
+      "family": "3e-5",
+      "random": "1e-4"
+    },
+    {
+      "task": "crispr-off-target",
+      "model": "RiNALMo-micro",
+      "family": "1e-4",
+      "random": "1e-5"
+    },
+    {
+      "task": "degradation",
+      "model": "ERNIE-RNA",
+      "family": "3e-5",
+      "random": "1e-4"
+    },
+    {
+      "task": "degradation",
+      "model": "RNA-FM",
+      "family": "3e-5",
+      "random": "1e-4"
+    },
+    {
+      "task": "degradation",
+      "model": "RiNALMo-650M",
+      "family": "3e-5",
+      "random": "1e-5"
+    },
+    {
+      "task": "degradation",
+      "model": "RiNALMo-mega",
+      "family": "1e-4",
+      "random": "3e-5"
+    },
+    {
+      "task": "degradation",
+      "model": "RiNALMo-micro",
+      "family": "1e-4",
+      "random": "3e-5"
+    },
+    {
+      "task": "modification",
+      "model": "RNA-FM",
+      "family": "3e-4",
+      "random": "1e-4"
+    },
+    {
+      "task": "modification",
+      "model": "RiNALMo-650M",
+      "family": "1e-5",
+      "random": "3e-4"
+    },
+    {
+      "task": "modification",
+      "model": "RiNALMo-mega",
+      "family": "3e-5",
+      "random": "1e-5"
+    },
+    {
+      "task": "modification",
+      "model": "RiNALMo-micro",
+      "family": "1e-5",
+      "random": "3e-5"
+    },
+    {
+      "task": "mrl",
+      "model": "RNA-FM",
+      "family": "3e-5",
+      "random": "1e-5"
+    },
+    {
+      "task": "mrl",
+      "model": "RiNALMo-micro",
+      "family": "3e-5",
+      "random": "1e-4"
+    },
+    {
+      "task": "noncoding-rna-family",
+      "model": "RiNALMo-micro",
+      "family": "1e-4",
+      "random": "3e-5"
+    },
+    {
+      "task": "secondary-structure",
+      "model": "RNA-FM",
+      "family": "1e-4",
+      "random": "3e-4"
+    },
+    {
+      "task": "secondary-structure",
+      "model": "RiNALMo-650M",
+      "family": "3e-5",
+      "random": "1e-5"
+    },
+    {
+      "task": "spliceai",
+      "model": "RiNALMo-650M",
+      "family": "1e-5",
+      "random": "3e-5"
+    },
+    {
+      "task": "spliceai",
+      "model": "RiNALMo-micro",
+      "family": "3e-5",
+      "random": "1e-5"
+    },
+    {
+      "task": "ssi",
+      "model": "RiNALMo-micro",
+      "family": "1e-4",
+      "random": "3e-5"
+    }
+  ],
+  "incomplete_groups": [
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-650M",
+        "family"
+      ],
+      "present_lrs": [
+        "1e-4",
+        "1e-5",
+        "3e-5"
+      ],
+      "missing_lrs": [
+        "3e-4"
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "present_lrs": [
+        "1e-4",
+        "1e-5",
+        "3e-5"
+      ],
+      "missing_lrs": [
+        "3e-4"
+      ]
+    },
+    {
+      "group": [
+        "mrl",
+        "RiNALMo-mega",
+        "family"
+      ],
+      "present_lrs": [
+        "1e-4",
+        "1e-5",
+        "3e-5"
+      ],
+      "missing_lrs": [
+        "3e-4"
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RNA-FM",
+        "family"
+      ],
+      "present_lrs": [
+        "1e-4",
+        "1e-5",
+        "3e-5"
+      ],
+      "missing_lrs": [
+        "3e-4"
+      ]
+    },
+    {
+      "group": [
+        "ssi",
+        "RiNALMo-650M",
+        "random"
+      ],
+      "present_lrs": [
+        "3e-4"
+      ],
+      "missing_lrs": [
+        "1e-4",
+        "1e-5",
+        "3e-5"
+      ]
+    }
+  ],
+  "scope": "seed101 validation tuning only; not formal three-seed tuned replication. No test-based selection."
+}

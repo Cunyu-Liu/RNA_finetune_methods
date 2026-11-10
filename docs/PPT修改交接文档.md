@@ -1106,3 +1106,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 源包revision=`20261110_refresh_v124_v205ledger_lr74_parallel34_modification5`，541个登记文件，manifest SHA256=`54a061f6bae0a26f0675129ce177125bc418c23e4f22d92d05601d9e1d6915a0`。
 4. 当前PPT **33页**，SHA256=`fc8185a398a6b2cf2765fd36b33e6dc00aeb7c59edf588c34873c0e8351fd8ed`；PDF SHA256=`5d59a028812277db26884c616c33a75da45e3523abe54ebdb738d50cfc26a9bd`。第22/23/26/27/28/29/30页同源更新，所有变化页原生渲染通过，其他内容不变。
 5. 并行调度GPU实测99%/100%、28.1/28.8GB，58 passed，`a62587e`、`aaaf71c`、`5532d7e`已推送；证据SHA256=`e28555852abd819ac1cb9638f886bb052519b787d26639d837d53b30ddae6995`。
+
+## 129. 2026-11-11 当前 v125：百格验收与多任务 Frozen 扩展
+
+1. v206新增104格，合计 **2031 accepted、0 rejected**，证明SHA256=`f9657b07a515f390af3de5bb83dc5f0d2700a3a8dcdae57755d573d8a35aec8a`。LR=313/320、75/80组，余7格5组；650M SSI family选1e-5、PCC=0.624193，default近零。
+2. 第20页更新75/80与SSI反例；第26/27页加入modification/SSP Frozen五档和MRL family曲线；degradation仅三档，cap不重复。低信号任务不判趋势。
+3. 源包revision=`20261111_refresh_v125_v206ledger_lr75_parallel104_frozen_expansion`，547个登记文件，manifest SHA256=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`。
+4. 当前PPT **33页**，SHA256=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`；PDF SHA256=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`。第20/22/23/26/27/28/29/30页更新并原生渲染通过，其余25页不变。
+5. GPU由17%/3725MiB升至98%/25771MiB，追加正式核心格和12个micro补位，无dummy占位；证据SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
