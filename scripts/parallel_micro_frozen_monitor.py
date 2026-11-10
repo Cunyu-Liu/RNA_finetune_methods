@@ -93,9 +93,10 @@ def main(argv=None):
     parser.add_argument('--attach-pid', type=int)
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--once', action='store_true')
+    parser.add_argument('--batch-size', type=int, default=56)
     args = parser.parse_args()
-    if args.workers < 1 or args.poll_s <= 0:
-        parser.error('workers must be positive and poll-s must be > 0')
+    if args.workers < 1 or args.batch_size < args.workers or args.poll_s <= 0:
+        parser.error('batch-size >= workers >= 1 and poll-s > 0 required')
     LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
     with LOCK_PATH.open('a') as lock:
         try:
@@ -104,7 +105,7 @@ def main(argv=None):
             write_state('blocked', reason='another parallel micro Frozen monitor holds the lock')
             return 2
         if args.prepare_only:
-            items = select_jobs(args.workers)
+            items = select_jobs(args.batch_size)
             path = write_registry(items, 'next_prepared')
             write_state('prepared', registry=str(path), rids=[job.rid for job, _ in items],
                         registry_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
@@ -123,7 +124,7 @@ def main(argv=None):
                     return 0
                 time.sleep(args.poll_s)
                 continue
-            items = select_jobs(args.workers)
+            items = select_jobs(args.batch_size)
             if not items:
                 write_state('complete')
                 return 0
