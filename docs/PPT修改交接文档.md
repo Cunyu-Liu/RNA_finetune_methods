@@ -1093,3 +1093,8 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 1. v201新增5格，合计 **1892 accepted、0 rejected**；LR=307/320、完整组 **73/80**，选档31/19/20/3。650M SpliceAI family按validation及较低LR tie规则选1e-5，test macro-F1=0.3332802382，近多数类基线，不解释选档收益。证明SHA256=`4e5e688cb3e53bff3ba22d6a108bf5afcfb515492dbe776cccca89d75d097e18`。
 2. 当前PPT **33页**，SHA256=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`；PDF SHA256=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`。仅第20页更新73/80、7组未闭合与低信号说明，其余32页不变，原生渲染通过。
 3. 源包revision=`20261110_refresh_v121_v201ledger_lr73_spliceai_baseline`，527个登记文件，manifest SHA256=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`。核心余13格，tuned仍待80组闭合。
+
+## 127. 2026-11-10 v202 staging：SpliceAI random/3e-5 在训，展示版保持 v121
+
+1. v202零新增，仍1892 accepted、0 rejected。当前格epoch2 best_val=0.002990、stale=2/3，result不存在，GPU实际利用，无CPU降级；不按固定步数截止。
+2. 在训证据=`status/inflight_progress_20261110_v202.json`，SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。33页PPT/PDF与527文件v121源包保持。

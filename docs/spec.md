@@ -1650,3 +1650,9 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 2. 650M SpliceAI family四档闭合，1e-5与3e-5的best_val同为0.003240，按既定较低LR tie规则选1e-5；test macro-F1=0.3332802382，近多数类基线，不能解释选档收益。random仍缺3e-5。全部剩余13格、7组，tuned仍待80组闭合。LR证据SHA256=`428c25f26f1703e9e52c9c59e5692a2ba9de8b550e36c21310fd38feee20f980`。
 3. 核心LR父队列PID45383正在运行random/3e-5，主顺序不变。E6接续监控PID **3000476**存活，等待18.5GB窗口，三格pending，无双开；证据SHA256=`dd4361c9a9ad0b46cbf08a4e775b101fc3160b43b7e7b31c68af4b8e79cbe423`。
 4. 源包revision=`20261110_refresh_v121_v201ledger_lr73_spliceai_baseline`，**527个登记文件**逐哈希通过，manifest SHA256=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`。仅第20页更新73/80与低信号边界，其余32页不变；PPT SHA256=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`，PDF SHA256=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`。原生PowerPoint渲染通过，文字无溢出。
+
+### 10.170 v202 SpliceAI random/3e-5 在训实证（2026-11-10）
+
+1. v202新增0，仍1892 accepted、0 rejected；LR=307/320、73/80组，PPT与v121源包保持。
+2. 650M SpliceAI random/3e-5日志至epoch2，best_val=0.002990、best_epoch=0、stale_epochs=2/3，result不存在；需继续后续epoch并按既有patience验收，不按固定步数截止。
+3. PID2895085存活，GPU有实际利用、显存14668MiB，无CPU降级；补位保持`waiting_core_process`。证据=`status/inflight_progress_20261110_v202.json`，SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。

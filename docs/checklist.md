@@ -983,6 +983,14 @@
 - [x] DJ5 展示：仅第20页变化，其余32页不变；PPT=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`，PDF=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`，原生渲染通过。
 - [ ] DJ6 后续：三地同步并提交，继续核心余13格。
 
+## DK 组：v202 SpliceAI random/3e-5 在训验收
+
+- [x] DK1 数据：v202零新增，1892 accepted、0 rejected；LR 307/320、73组。
+- [x] DK2 进度：epoch2 best_val=0.002990、stale=2/3，无result，未达收敛。
+- [x] DK3 CUDA：PID存活、GPU实际利用、14668MiB，无CPU降级；不按固定步数停止。
+- [x] DK4 展示：PPT/v121源包不变；证据SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。
+- [ ] DK5 后续：三地同步并提交，等待完整proof。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

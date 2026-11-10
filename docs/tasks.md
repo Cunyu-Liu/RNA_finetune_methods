@@ -2572,3 +2572,10 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **队列**：核心PID45383运行random/3e-5；E6接续PID3000476等18.5GB窗口，不双开。证据SHA256=`dd4361c9a9ad0b46cbf08a4e775b101fc3160b43b7e7b31c68af4b8e79cbe423`。
 - [x] **交付**：527文件manifest=`73b1f2af8ead886b17a2a80548473f3a1ec574f8ac601ca682cf2cc4d512c13a`；PPT=`26f56e8d17ed02e0f4503d86600d28dbf5ff2c7a52e0d758b36f322533f4b1c8`，PDF=`2d6692dcfa6252807f91722a3625587eca638178d91b23d6df90581f17de7cf7`。仅第20页更新，原生渲染通过。
 - [ ] **后续**：三地同步并提交，继续核心余13格。
+
+## N170. 2026-11-10 v202 SpliceAI random/3e-5 在训
+
+- [x] **台账**：v202零新增，1892 accepted、0 rejected；PPT/v121源包不变。
+- [x] **进度**：epoch2 best_val=0.002990、best_epoch=0、stale=2/3，无result，不按固定步数截止。
+- [x] **CUDA**：PID2895085存活、GPU实际利用、14668MiB，无CPU降级；补位等待核心。证据SHA256=`6d5ae16b7b3961ff5fce1c9d79873e4c5af2eae1e493d7d210b95460870298e3`。
+- [ ] **后续**：三地同步并提交，等待完整收敛proof。

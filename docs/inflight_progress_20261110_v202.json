@@ -1,0 +1,73 @@
+{
+  "created_at": "2026-11-10T06:33:56.387543+00:00",
+  "ledger": "v202: 1892 accepted, 0 rejected; no new cells",
+  "run_id": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+  "pid": 2895085,
+  "pid_alive": true,
+  "log": "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status/lr_tuning_20261030/logs/7792626f644a6bbb85fe.log",
+  "log_sha256": "a96444990ada0b9ca65b786c44fe5d84f44b2869168e756978d583816650e356",
+  "last_epochs": [
+    "epoch 0 loss 0.0033",
+    "epoch 0 val_loss 0.002990",
+    "epoch 1 loss 0.0032",
+    "epoch 1 val_loss 0.002969",
+    "epoch 2 loss 0.0032",
+    "epoch 2 val_loss 0.002972"
+  ],
+  "last_lines": [
+    "/root/rnaft/pypath/transformers/tokenization_utils_base.py:2402: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.",
+    "  warnings.warn(",
+    "epoch 0 loss 0.0033",
+    "epoch 0 val_loss 0.002990",
+    "epoch 1 loss 0.0032",
+    "epoch 1 val_loss 0.002969",
+    "epoch 2 loss 0.0032",
+    "epoch 2 val_loss 0.002972"
+  ],
+  "result_exists": false,
+  "plateau": {
+    "run_id": "ft_rinalmo650m_spliceai_full_s101_random_b20fix_lr3e-05_bestval_v1",
+    "protocol": "bestval_v1",
+    "loss_source": "validation",
+    "epoch_train_losses": [
+      0.003338,
+      0.003168,
+      0.003166
+    ],
+    "epoch_val_losses": [
+      0.00299,
+      0.002969,
+      0.002972
+    ],
+    "updated_epoch": 2,
+    "best_epoch": 0,
+    "best_checkpoint": "best.ckpt",
+    "best_val": 0.00299,
+    "stale_epochs": 2,
+    "status": "RUNNING",
+    "stop_reason": null,
+    "stop_detail": null,
+    "min_delta": 0.02,
+    "patience": 3,
+    "abs_floor": 0.008
+  },
+  "gpu": "2026/11/10 14:33:56.355, NVIDIA GeForce RTX 5090, 45, 14668, 17443, 32607",
+  "guard_state": {
+    "stage": "waiting_core_process",
+    "updated_at": "2026-11-10T06:32:34.469855+00:00",
+    "free_gb": 17.0341796875,
+    "large_processes": [
+      {
+        "pid": 2895085,
+        "used_mb": 13648
+      }
+    ],
+    "training_processes": [
+      {
+        "pid": 2895085,
+        "command": "/root/miniconda3/envs/llr_env/bin/python -m rnafteval.finetune_spl --model RiNALMo-650M --strategy full --seed 101 --device 0 --split random --converge --convergence-mode bestval --batch-size 4 --rank 8 --n-train 0 --lr 3e-5"
+      }
+    ]
+  },
+  "note": "Core LR random/3e-5 remains in training. No fixed step cap; no result is accepted before complete convergence proof."
+}
