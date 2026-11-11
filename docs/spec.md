@@ -1680,3 +1680,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. degradation random/family Frozen均达五档，但requested≥2000对应actual cap=1552/1680，后三档不当作独立新增数据证据；SpliceAI近基线不判趋势，等价规则不变。
 4. 剩余LR核心6格队列与6个micro补位并行，实测GPU **99%、29526MiB**，仅余2585MiB，无dummy占位、无CPU降级。证据=`status/gpu_utilization_core_parallel_20261111_v207.json`，SHA256=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
 5. 源包revision=`20261111_refresh_v126_v208ledger_lr76_degradation_frozen5`，**557个登记文件**逐哈希通过，manifest SHA256=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`。PPT SHA256=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF SHA256=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`。8个变化页原生渲染通过，其余25页不变。
+
+### 10.174 v209 主矩阵全闭合与 v127（2026-11-11）
+
+1. v209新增57格，**2080+57=2137 accepted、0 rejected**，全部proof=complete、CUDA/checkpoint/plateau通过。证明SHA256=`10cd0e66e187969d97e151a686704d551ef356b0418aa8b281862345a59e9a56`。per-base **270/270**、complementary **324/324** 全闭合；ncRNA及CRISPR/SSP/SpliceAI/degradation/SSI均30/30三种子单元。LR=316/320、76/80组，余4格4组。
+2. 650M SpliceAI Frozen-random/seed17 macro-F1=0.385978，完成最后per-base格，仍按任务低信号边界解读。SpliceAI random/1e-5 tuning在训，另外三个MRL default格已启动，不重复派发。
+3. SSI random/family Frozen均达五档；degradation cap与低信号边界不变。650M Full成本扩至6个任务，峰值中位13.3GB、范围12.1–17.0GB，不外推全部任务。
+4. 源包revision=`20261111_refresh_v127_v209ledger_main270_324_lr76_ssi_frozen5`，**563个登记文件**逐哈希通过，manifest SHA256=`a1b77067ccce63bbc8d5c0c4bc71d83d35be6c6eb2f87a083ba3ac817db66b4c`。PPT SHA256=`e99c4b8f6087c45905fbe7ad421e99e1913f377cc8cdee17450c474e0f19cf90`，PDF SHA256=`bd3ad8cf7260093a195a731d091ef52f07dc950f9d9d7b547341ccd912cd20a7`。第5/9/22/23/26/27/28/29/30页更新并全部原生渲染通过，其余24页不变。
+5. 剩余LR队列实测GPU 94%、18388MiB，证据=`status/gpu_core_remaining_20261111_v209.json`，SHA256=`89fc7d839c22e8d3bdf09a2b6ddb5311e61a128c5bc723996bd58bcecb972b66`。

@@ -2606,3 +2606,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **GPU**：核心6格与6个micro补位并行，99%、29526MiB；证据=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
 - [x] **交付**：557文件manifest=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`；PPT=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`，8页原生渲染通过。
 - [ ] **后续**：三地同步并提交v126，继续核心余6格。
+
+## N174. 2026-11-11 v209 主矩阵全闭合与 v127
+
+- [x] **57格验收**：2137 accepted、0 rejected；per-base 270/270、complementary 324/324全闭合，证明=`10cd0e66e187969d97e151a686704d551ef356b0418aa8b281862345a59e9a56`。
+- [x] **覆盖**：ncRNA及五个扩展任务均30/30；650M Full成本覆盖6任务，中位13.3GB、范围12.1–17.0GB。
+- [x] **LR与曲线**：LR 316/320、76组；SSI双split Frozen五档，cap与低信号边界不变。
+- [x] **队列**：剩余4格中1个既有在训，3个MRL default已启动；GPU 94%、18388MiB，证据=`89fc7d839c22e8d3bdf09a2b6ddb5311e61a128c5bc723996bd58bcecb972b66`。
+- [x] **交付**：563文件manifest=`a1b77067ccce63bbc8d5c0c4bc71d83d35be6c6eb2f87a083ba3ac817db66b4c`；PPT=`e99c4b8f6087c45905fbe7ad421e99e1913f377cc8cdee17450c474e0f19cf90`，PDF=`bd3ad8cf7260093a195a731d091ef52f07dc950f9d9d7b547341ccd912cd20a7`，9页原生渲染通过。
+- [ ] **后续**：三地同步并提交v127，继续LR余4格和后续Frozen/CRISPR阶段门。

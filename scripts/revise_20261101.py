@@ -171,7 +171,7 @@ def main():
 
     slide = prs.slides[7]
     set_text(slide, "TextBox 5",
-             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 分别有 28/28/29/30/30 个三种子单元（共30）；degradation 与 SSI 全闭合，SpliceAI 仅剩650M Frozen-random/seed17。")
+             "读图：5 个面板各用自己的主指标，纵轴独立。CRISPR/SSP/SpliceAI/degradation/SSI 均已 30/30 个三种子单元闭合；per-base 主矩阵 270/270，complementary 324/324。")
     replace_picture(slide, "Picture 4",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/eight_task_sixbar.png")
 
@@ -199,9 +199,9 @@ def main():
     slide = prs.slides[21]
     set_text(slide, "TextBox 2", "结论 ⑤  数据量 scaling：标注量如何改变策略收益")
     set_text(slide, "TextBox 3",
-             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA、MRL、modification、SSP、degradation 的 Frozen random 五档均已三种子闭合。")
+             "同模型内比较策略；④/⑤均 6/8 可判。micro ncRNA、MRL、modification、SSP、degradation、SSI 的 Frozen random 五档均已三种子闭合。")
     set_text(slide, "TextBox 5",
-             "读图：ncRNA/MRL/modification/SSP/degradation Frozen 均五档。ncRNA 2000→2500基本持平；modification 0.558→0.606且非严格单调；MRL种子变异大，不宣称统一scaling。degradation requested≥2000仍cap=1552，后三档不当作新增数据。")
+             "读图：ncRNA/MRL/modification/SSP/degradation/SSI Frozen 均五档。ncRNA 2000→2500基本持平；modification 0.558→0.606且非严格单调；MRL种子变异大，不宣称统一scaling。degradation requested≥2000仍cap=1552，后三档不当作新增数据。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/data_volume_8task.png")
 
@@ -233,7 +233,7 @@ def main():
     slide = prs.slides[26]
     set_text(slide, "TextBox 2", "结论⑥补充  成本：显存峰值与规模边界")
     set_text(slide, "TextBox 3",
-             "按当前已完成格统计；650M Full 仅3个任务，峰值中位 13.4GB、范围 13.2–15.5GB，不外推全部任务。")
+             "按当前已完成格统计；650M Full 覆盖6个任务，峰值中位 13.3GB、范围 12.1–17.0GB，不外推全部任务。")
     replace_picture(slide, "Picture 6",
                     ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/scripts/peak_memory.png")
 
@@ -300,16 +300,16 @@ def main():
         set_text(family_scaling, "TextBox 1", "05F")
         set_text(family_scaling, "TextBox 2", "结论⑤补充  family：多策略数据量曲线")
         set_text(family_scaling, "TextBox 3",
-                 "family split；5/8 任务可判。MRL/modification/SSP/degradation Frozen 均五档，五任务 full/LoRA 均五档。")
+                 "family split；5/8 任务可判。MRL/modification/SSP/degradation/SSI Frozen 均五档，五任务 full/LoRA 均五档。")
         set_text(family_scaling, "TextBox 5",
-                 "读图：MRL Frozen 1000→3000 mean=0.256→0.582，中间档种子变异大；modification/SSP/degradation Frozen 五档已闭合，不宣称统一趋势。family 不与 random 合并；CRISPR/SpliceAI 低信号不判趋势，degradation requested 2000–3000 同为 cap=1680。等价见④ family。")
+                 "读图：MRL Frozen 1000→3000 mean=0.256→0.582，中间档种子变异大；modification/SSP/degradation/SSI Frozen 五档已闭合，不宣称统一趋势。family 不与 random 合并；CRISPR/SpliceAI 低信号不判趋势，degradation requested 2000–3000 同为 cap=1680。等价见④ family。")
         replace_picture(family_scaling, "Picture 6", tier_dir / "data_volume_8task_family.png")
 
     ncrna_overview = clone_slide(prs, 4)
     set_text(ncrna_overview, "TextBox 1", "01a")
     set_text(ncrna_overview, "TextBox 2", "结论①a-1  ncRNA 性能总览：修正后的六柱对照")
     set_text(ncrna_overview, "TextBox 3",
-             "Frozen/LoRA/Full × random/family 的三种子均值±SD；28/30 单元闭合，固定 LR 对照，NA=未闭合。")
+             "Frozen/LoRA/Full × random/family 的三种子均值±SD；30/30 单元全闭合，固定 LR 对照，NA=未闭合。")
     set_text(ncrna_overview, "TextBox 5",
              "读图：柱高为 ACC，误差线为 SD；斜线=n<3，空白=NA。本页回答修正后 ncRNA 的性能，下一页解释旧 family 崩溃为何被隔离；不把训练顺序伪影当作分布证据。")
     replace_picture(ncrna_overview, "Picture 6",

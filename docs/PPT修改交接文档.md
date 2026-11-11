@@ -1122,3 +1122,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 源包revision=`20261111_refresh_v126_v208ledger_lr76_degradation_frozen5`，557个登记文件，manifest SHA256=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`。
 4. 当前PPT **33页**，SHA256=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`；PDF SHA256=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`。第20/22/23/26/27/28/29/30页更新并原生渲染通过，其余25页不变。
 5. 剩余LR核心6格与6个micro补位并行，GPU 99%、29526MiB；证据SHA256=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
+
+## 131. 2026-11-11 当前 v127：主矩阵全闭合与 SSI 五档
+
+1. v209新增57格，合计 **2137 accepted、0 rejected**，证明SHA256=`10cd0e66e187969d97e151a686704d551ef356b0418aa8b281862345a59e9a56`。per-base 270/270、complementary 324/324全闭合；ncRNA与五个扩展任务均30/30。
+2. 第5页改为30/30，第9页改为全部主矩阵闭合，第26/27页加入SSI Frozen五档；cap与低信号边界不变。第30页650M Full改为6任务，中位13.3GB、范围12.1–17.0GB。
+3. 源包revision=`20261111_refresh_v127_v209ledger_main270_324_lr76_ssi_frozen5`，563个登记文件，manifest SHA256=`a1b77067ccce63bbc8d5c0c4bc71d83d35be6c6eb2f87a083ba3ac817db66b4c`。
+4. 当前PPT **33页**，SHA256=`e99c4b8f6087c45905fbe7ad421e99e1913f377cc8cdee17450c474e0f19cf90`；PDF SHA256=`bd3ad8cf7260093a195a731d091ef52f07dc950f9d9d7b547341ccd912cd20a7`。第5/9/22/23/26/27/28/29/30页更新并原生渲染通过，其余24页不变。
+5. LR=316/320、76/80组，余4格；1格既有在训，3个MRL default已启动。GPU 94%、18388MiB，证据SHA256=`89fc7d839c22e8d3bdf09a2b6ddb5311e61a128c5bc723996bd58bcecb972b66`。

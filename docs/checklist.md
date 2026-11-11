@@ -1018,6 +1018,15 @@
 - [x] DN5 交付：557文件manifest=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`；PPT=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`，8页原生渲染通过。
 - [ ] DN6 后续：三地同步并提交v126，继续核心余6格。
 
+## DO 组：v209 主矩阵全闭合与 v127 验收
+
+- [x] DO1 数据：2137 accepted、0 rejected；57格proof=complete，证明=`10cd0e66e187969d97e151a686704d551ef356b0418aa8b281862345a59e9a56`。
+- [x] DO2 覆盖：per-base 270/270、complementary 324/324；ncRNA与五个扩展任务均30/30。
+- [x] DO3 LR/曲线：LR 316/320、76组；SSI双split Frozen五档，cap不重复。
+- [x] DO4 成本与GPU：650M Full覆盖6任务，13.3GB/12.1–17.0GB；队列GPU 94%/18388MiB，证据=`89fc7d839c22e8d3bdf09a2b6ddb5311e61a128c5bc723996bd58bcecb972b66`。
+- [x] DO5 交付：563文件manifest=`a1b77067ccce63bbc8d5c0c4bc71d83d35be6c6eb2f87a083ba3ac817db66b4c`；PPT=`e99c4b8f6087c45905fbe7ad421e99e1913f377cc8cdee17450c474e0f19cf90`，PDF=`bd3ad8cf7260093a195a731d091ef52f07dc950f9d9d7b547341ccd912cd20a7`，9页原生渲染通过。
+- [ ] DO6 后续：三地同步并提交v127，继续LR余4格。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。
