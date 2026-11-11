@@ -16,6 +16,8 @@ LRS = ("3e-4", "1e-4", "3e-5", "1e-5")
 
 
 def write_registry(name, jobs):
+    for job in jobs:
+        job["result_dir"] = os.environ["RNAFT_ARTIFACT_ROOT"] + "/" + job["rid"]
     path = OUT / name
     path.write_text(json.dumps(jobs, ensure_ascii=False, indent=2) + "\n")
     loaded = load_jobs(path)
