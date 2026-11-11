@@ -31,3 +31,23 @@ def test_incomplete_group_blocks_selection(tmp_path):
     summary, rows = select_groups(jobs, state_fn=lambda job: ("complete", ""))
     assert summary["status"] == "incomplete"
     assert not rows
+
+
+def test_cuda_constant_candidate_is_excluded_not_selected(tmp_path):
+    jobs = make_jobs(tmp_path)
+    invalid = {job.rid: {"candidate_eligible": False} for job in jobs if job.lr == "3e-4"}
+    state = lambda job: ("running", "no result") if job.rid in invalid else ("complete", "")
+    summary, rows = select_groups(jobs, state_fn=state, invalid_documents=invalid)
+    assert summary["status"] == "complete"
+    assert len(rows) == 4
+    assert all(row["selected_lr"] == "1e-5" for row in rows)
+    assert all(len(row["invalid_candidates"]) == 1 for row in rows)
+    assert all(len(row["candidates"]) == 3 for row in rows)
+
+
+def test_constant_failure_without_proof_blocks_selection(tmp_path):
+    jobs = make_jobs(tmp_path)
+    state = lambda job: ("running", "no result") if job.lr == "3e-4" else ("complete", "")
+    summary, rows = select_groups(jobs, state_fn=state)
+    assert summary["status"] == "incomplete"
+    assert not rows
