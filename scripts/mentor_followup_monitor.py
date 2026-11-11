@@ -94,7 +94,9 @@ def run_once(log):
             "--tuning-default-jobs", str(EXTERNAL),
             "--selection-output", str(EXTERNAL_SELECTION),
             "--jobs-output", str(EXTERNAL_TUNED),
-        ], cwd=REPO, check=True, env=dict(os.environ, PYTHONPATH=".:scripts"))
+        ], cwd=REPO, check=True, env=dict(
+            os.environ, PYTHONPATH=".:scripts",
+            RNAFT_ARTIFACT_ROOT="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts"))
     if not ensure_queue(EXTERNAL_TUNED, 2, log):
         return "external_tuned_running"
     if not ensure_queue(MAIN_TUNED, 2, log):

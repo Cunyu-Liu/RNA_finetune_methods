@@ -33,3 +33,11 @@ def test_failed_legacy_row_does_not_redirect_new_job(tmp_path, monkeypatch):
     job = expansion_jobs.job_for("mrl", "RiNALMo-micro", "lora", "random", 999,
                                  out_suffix="_unit")
     assert job["result_dir"] == str(tmp_path / "new" / job["rid"])
+
+
+def test_explicit_root_is_independent_of_legacy_shell_env(tmp_path, monkeypatch):
+    monkeypatch.setenv("RNAFT_ARTIFACT_ROOT", "/root/rna-ft-eval/artifacts")
+    monkeypatch.setattr(expansion_jobs.ledger, "by_run_id", lambda rid: None)
+    job = expansion_jobs.job_for("mrl", "RiNALMo-micro", "full", "random", 999,
+                                 out_suffix="_unit", artifact_root=tmp_path)
+    assert job["result_dir"] == str(tmp_path / job["rid"])

@@ -19,9 +19,9 @@ from rnafteval import (finetune_base, finetune_clf, finetune_mrl,
                        finetune_one, finetune_regbase, finetune_spl,
                        finetune_ssp, ledger)
 
-ROOT = Path(os.environ.get(
-    "RNAFT_ARTIFACT_ROOT",
-    "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts"))
+TEAMS_ARTIFACT_ROOT = Path(
+    "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts")
+ROOT = Path(os.environ.get("RNAFT_ARTIFACT_ROOT", str(TEAMS_ARTIFACT_ROOT)))
 MODELS = ("RiNALMo-micro", "RiNALMo-mega", "RiNALMo-650M",
           "ERNIE-RNA", "RNA-FM")
 TASK_MODULES = {
@@ -54,13 +54,14 @@ DEFAULTS = {
 def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
              n_train=None, rank=8, out_suffix="", module=None,
              max_len=None, n_test=None, batch_size=None, need_gb=None,
-             lr=None, smoke=False, dense_clusters=False):
+             lr=None, smoke=False, dense_clusters=False, artifact_root=None):
     runner = module or TASK_MODULES[task]
     config = DEFAULTS[task]
     n_train = config["n_train"] if n_train is None else n_train
     lr = lr or ("1e-5" if strategy == "full" else "3e-4")
     batch_size = batch_size or config["batch"]
     n_test = n_test if n_test is not None else config.get("n_test")
+    output_root = Path(artifact_root) if artifact_root is not None else ROOT
     mode = "bestval" if protocol == "bestval_v1" else "plateau"
     args = SimpleNamespace(lr=float(lr), rank=rank, n_train=n_train,
                            epochs=config["epochs"], smoke=smoke,
@@ -79,7 +80,7 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
         "task": task, "model": model, "strategy": strategy, "split": split,
         "seed": seed, "lr": lr, "rank": rank, "n_train": n_train,
         "protocol": protocol, "rid": rid, "dense_clusters": dense_clusters,
-        "result_dir": str(ROOT / rid),
+        "result_dir": str(output_root / rid),
         "module": module_name, "expected_metric": METRICS[task],
         "need_gb": need_gb if need_gb is not None else (
             8.0 if model == "RiNALMo-micro" else
@@ -99,13 +100,11 @@ def job_for(task, model, strategy, split, seed, protocol="bestval_v1",
     if smoke:
         job["args"] += ["--smoke"]
     if module is not None:
-        job["result_dir"] = str(ROOT / rid)
+        job["result_dir"] = str(output_root / rid)
     existing = ledger.by_run_id(rid)
-    formal_root = os.environ.get(
-        "RNAFT_ARTIFACT_ROOT",
-        "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts")
-    if (Path(formal_root) == ROOT == Path(
-            "/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts")
+    formal_root = (str(artifact_root) if artifact_root is not None
+                   else os.environ.get("RNAFT_ARTIFACT_ROOT", str(TEAMS_ARTIFACT_ROOT)))
+    if (Path(formal_root) == output_root == TEAMS_ARTIFACT_ROOT
             and existing and existing.get("status") in ("done", "running")):
         job["result_dir"] = existing["out_dir"]
     return job
@@ -269,7 +268,7 @@ def lr_tuned_jobs(selection):
             jobs.append(job_for(
                 task, model, "full", split, seed,
                 lr=selected[(task, model, split)], module=runners[task],
-                batch_size=batch_size,
+                batch_size=batch_size, artifact_root=TEAMS_ARTIFACT_ROOT,
                 need_gb=8 if model == "RiNALMo-micro" else
                 16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
     return jobs
@@ -294,6 +293,7 @@ def peft_rank_jobs():
                             jobs.append(job_for(
                                 task, model, strategy, split, seed, rank=rank,
                                 module=runners[task], batch_size=batch_size,
+                                artifact_root=TEAMS_ARTIFACT_ROOT,
                                 need_gb=8 if model == "RiNALMo-micro" else
                                 16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
     return jobs
