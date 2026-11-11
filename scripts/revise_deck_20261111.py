@@ -93,7 +93,7 @@ def main():
         19: [("读图：Δ>0 表示 family 表现更低，负值表示 family 更高。本页仅保留 MRL legacy 描述；ncRNA 旧 Δ 与 m6A 旧面板均已隔离，8 任务 corrected Δ 矩阵待补。",
               "读图：Δ>0 表示 family 表现更低，负值表示 family 更高。本页仅保留 MRL legacy 描述；ncRNA 旧 Δ 与 m6A 旧面板均已隔离。corrected 八任务 Δ 可从已闭合主矩阵重算，将作为独立描述性补充，不恢复旧面板。")],
         20: [("读图：3e-4 是 runner 工程缺省，不是普遍最优。seed101 tuning 已闭合76/80组：3e-5三十三组、1e-4十九组、1e-5二十一组、3e-4三组；37个双split均闭合的task×model中，22组选档不同。650M SSI family 1e-5 PCC=0.624，default≈0；SpliceAI仍近基线。其余4组未闭合，test不参与选档，tuned复测待80组。MRL −0.112经CUDA重评为近常数输出，不是评测算错。",
-              "读图：80组=8任务×5模型×2 split，不是按 LR 数值聚类。seed101在每组四档LR中仅按 held-out best_val 选档，test不参与；当前76/80组已闭合，tuned待80组。NucleicBERT/AIDO 的 MRL full 共20格重测已登记，按同法选档后用17/29/43复测并保存逐样本预测。MRL −0.112已CUDA复核为近常数输出，不是评测算错。")],
+              "读图：80组=8任务×5模型×2 split，不是按 LR 数值聚类。seed101在每组四档LR中仅按 held-out best_val 选档，test不参与；当前76/80组已闭合，tuned待80组。NucleicBERT/AIDO 的 MRL full 共40格重测已登记，按同法选档后用17/29/43复测并保存逐样本预测。MRL −0.112已CUDA复核为近常数输出，不是评测算错。")],
         21: [("读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、SSI random/family rank16=0.635/0.597、degradation random rank4/16=0.540/0.536。现有图仍为 legacy，不与 rank8 直接排名；96 格已完成。",
               "读图：新增均值 SpliceAI family rank16=0.450、SSI random/family rank4=0.634/0.597、SSI random/family rank16=0.635/0.597、degradation random rank4/16=0.540/0.536。rank4/16=96/96已闭合，但八任务 DoRA rank8=240格尚待补；本页不与 rank8 混排，也不宣称结论③全部完成。")],
         28: [("数据：最新 best-val 台账 + MRL/modification 聚合 + B20 阶段表（仅补 frozen）；650M 大格在自然空出的独占显存窗口补测，已有 LoRA/frozen 保留，full 等未闭合项为 NA，不补零。",
