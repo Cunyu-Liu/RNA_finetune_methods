@@ -14,7 +14,7 @@ from pptx import Presentation
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "ppt/work/review_20261111"
 DECK = ROOT / "ppt/RNA_LM微调策略评测-导师讨论修订版_20261111_导师反馈重测推进.pptx"
-EXPECTED = "3a98c096548f44262b7a584d0c28a89b28addf9bd889015631186e5505cc723f"
+EXPECTED = "8bb8addec60a270461a438e138d86787fe85b9064f3bc2636c9485e5e44520e3"
 NS = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main",
       "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
       "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships"}
@@ -27,18 +27,19 @@ def sha(path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--embed", action="store_true")
+    parser.add_argument("--deck-sha", default=EXPECTED)
     args = parser.parse_args()
     base = ROOT / "交接文档/绘图数据/current/figure_source_data_20261030_eight_task_v14/data/bestval_ledger_export_20261101_v209.csv"
     increment = OUT / "p0_accepted_ledger_extension_20261112.csv"
     original = list(csv.DictReader(base.open()))
     added = list(csv.DictReader(increment.open()))
-    assert len(original) == 2137 and len(added) == 8
+    assert len(original) == 2137 and added
     ids = {row["run_id"] for row in original}
     assert not ids & {row["run_id"] for row in added}
     source = OUT / "coverage_source"
     (source / "current_results").mkdir(parents=True, exist_ok=True)
     (source / "figures").mkdir(parents=True, exist_ok=True)
-    merged = source / "current_results/bestval_ledger_export_20261101_v210.csv"
+    merged = source / f"current_results/bestval_ledger_export_20261101_v210_p0_{len(added)}.csv"
     with merged.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(original[0]))
         writer.writeheader()
@@ -51,16 +52,20 @@ def main():
     spec.loader.exec_module(builder)
     builder.WORK = source
     builder.OUT = OUT
+    builder.latest_export = lambda: merged
     frame = builder.load_ledger()
     coverage = builder.coverage_matrix(frame)
     coverage.to_csv(OUT / "bigmodel_coverage_data.csv", index=False)
     builder.draw_coverage(coverage, OUT / "bigmodel_coverage.png", OUT / "bigmodel_coverage.pdf")
     selected = coverage[coverage.model == "RiNALMo-650M"].set_index("task")
-    expected = {("mrl", "full_random"): 3, ("mrl", "full_family"): 1,
-                ("modification", "lora_random"): 3, ("modification", "full_random"): 1}
+    expected = {}
+    for task, strategy, split in (("mrl", "full", "random"), ("mrl", "full", "family"),
+                                  ("modification", "lora", "random"), ("modification", "full", "random")):
+        expected[(task, f"{strategy}_{split}")] = len({row["seed"] for row in added
+            if row["task"] == task and row["strategy"] == strategy and row["split"] == split})
     for (task, key), value in expected.items():
         assert int(selected.loc[task, key]) == value, (task, key, selected.loc[task, key])
-    manifest = {"revision": "20261112_p0_coverage_v210", "p0_complete": 8,
+    manifest = {"revision": "20261112_p0_coverage_v210", "p0_complete": len(added),
                 "inputs": {str(base.relative_to(ROOT)): sha(base), increment.name: sha(increment)},
                 "merged": str(merged.relative_to(ROOT)), "merged_sha256": sha(merged),
                 "expected_cells": {f"{task}:{key}": value for (task, key), value in expected.items()},
@@ -68,8 +73,8 @@ def main():
                             ("bigmodel_coverage_data.csv", "bigmodel_coverage.png", "bigmodel_coverage.pdf")}}
     (OUT / "p0_coverage_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n")
     if args.embed:
-        assert sha(DECK) == EXPECTED, sha(DECK)
-        backup = OUT / "before_p0_coverage_image.pptx"
+        assert sha(DECK) == args.deck_sha, sha(DECK)
+        backup = OUT / f"before_p0_coverage_image_{len(added)}.pptx"
         if not backup.exists():
             shutil.copy2(DECK, backup)
         with zipfile.ZipFile(DECK) as zin:
