@@ -82,6 +82,37 @@ def write_dora_registry():
     DORA.write_text(json.dumps(jobs, ensure_ascii=False, indent=2) + "\n")
 
 
+E6_JOBS = REPO / "scripts/rinalmo_e6_checkpoint_jobs_20261112.json"
+E6_STATE = STATUS / "rinalmo_e6_checkpoint_monitor_20261112/state.json"
+E6_PID = STATE / "rinalmo_e6_checkpoint_monitor.pid"
+
+
+def ensure_e6_queue(log):
+    if E6_STATE.exists():
+        state = json.loads(E6_STATE.read_text())
+        if state.get("total") == 39 and state.get("completed") == 39:
+            return True
+    result = subprocess.run(["pgrep", "-af", "monitor_rinalmo_forgetting.py.*--jobs-json"],
+                            text=True, capture_output=True)
+    live = [line for line in result.stdout.splitlines() if line and "pgrep -af" not in line]
+    if live:
+        return False
+    if E6_PID.exists():
+        raise RuntimeError("RiNALMo forgetting monitor exited before 39 complete proofs")
+    env = dict(os.environ, PYTHONPATH=".:scripts",
+               RNAFT_ARTIFACT_ROOT="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts")
+    with (STATE / "rinalmo_e6_checkpoint_monitor.log").open("a") as output:
+        process = subprocess.Popen([
+            sys.executable, "scripts/monitor_rinalmo_forgetting.py",
+            "--jobs-json", str(E6_JOBS), "--state-dir", str(E6_STATE.parent),
+            "--workers", "2", "--poll-s", "300",
+        ], cwd=REPO, env=env, stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
+    E6_PID.write_text(json.dumps({"pid": process.pid, "jobs": str(E6_JOBS)})+"\n")
+    log.write(json.dumps({"started": E6_JOBS.name, "pid": process.pid})+"\n")
+    log.flush()
+    return False
+
+
 def run_once(log):
     if not ensure_queue(P0, 2, log):
         return "p0_running"
@@ -104,6 +135,8 @@ def run_once(log):
     write_dora_registry()
     if not ensure_queue(DORA, 2, log):
         return "dora_running"
+    if not ensure_e6_queue(log):
+        return "rinalmo_forgetting_running"
     return "complete"
 
 
