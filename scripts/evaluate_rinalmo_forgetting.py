@@ -34,6 +34,44 @@ def load_lm(model, device):
     return tokenizer, backbone.to(device)
 
 
+def restore_lm_backbone(backbone, state, strategy):
+    target = _official_encoder(backbone) if strategy == "full" else backbone
+    core = target.m if hasattr(target, "m") else target
+    if strategy == "full":
+        incompatible = core.load_state_dict(state, strict=False)
+        allowed = {"pooler.dense.weight", "pooler.dense.bias"}
+        if incompatible.missing_keys or set(incompatible.unexpected_keys) - allowed:
+            raise ValueError(f"MaskedLM encoder mismatch: {incompatible}")
+        auxiliary = sorted(set(incompatible.unexpected_keys) & allowed)
+        expected = state
+    else:
+        target_keys = set(vp.backbone_state_dict(target))
+        expected = {}
+        auxiliary = []
+        for key, value in state.items():
+            mapped = key
+            if mapped not in target_keys and key.startswith("base_model.model."):
+                mapped = "base_model.model.model." + key[len("base_model.model."):]
+            if mapped not in target_keys:
+                if key.startswith("base_model.model.pooler."):
+                    auxiliary.append(key)
+                    continue
+                raise ValueError("unrecognized LoRA checkpoint key: " + key)
+            expected[mapped] = value
+        incompatible = core.load_state_dict(expected, strict=False)
+        if incompatible.unexpected_keys or any(
+                not key.startswith(("lm_head.", "base_model.model.lm_head."))
+                for key in incompatible.missing_keys):
+            raise ValueError(f"LoRA MaskedLM mismatch: {incompatible}")
+    restored = vp.backbone_state_dict(target)
+    for key, value in expected.items():
+        if key in auxiliary:
+            continue
+        if key not in restored or not torch.equal(restored[key].detach().cpu(), value.detach().cpu()):
+            raise ValueError("restored MaskedLM tensor mismatch: " + key)
+    return auxiliary
+
+
 def validate_source(result, plateau):
     if result["model"] not in _LM_CLASS:
         raise ValueError("only official RiNALMo models are supported")
@@ -105,12 +143,7 @@ def main():
     state = torch.load(checkpoint, map_location=device, weights_only=True)
     if state["best_epoch"] != plateau["best_epoch"]:
         raise ValueError("source checkpoint epoch mismatch")
-    load_target = _official_encoder(backbone) if result["strategy"] == "full" else backbone
-    vp.load_backbone_state_dict(load_target, state["backbone"])
-    restored = vp.backbone_state_dict(backbone)
-    for key, expected in state["backbone"].items():
-        if key not in restored or not torch.equal(restored[key].detach().cpu(), expected.detach().cpu()):
-            raise ValueError("restored MaskedLM tensor mismatch: " + key)
+    auxiliary_keys = restore_lm_backbone(backbone, state["backbone"], result["strategy"])
     if result["strategy"] == "lora" and hasattr(backbone, "merge_and_unload"):
         backbone = backbone.merge_and_unload()
     backbone.eval()
@@ -140,6 +173,7 @@ def main():
         "mask_seed_noise": 707, "batch_size": args.batch_size,
         **values, "forgot": (post - pre_a) > max(noise, 1e-6),
         "protocol": "E6-checkpoint-fixed-mask-mlm-v1",
+        "non_mlm_auxiliary_keys_not_required": auxiliary_keys,
         "restored_tensor_match": True, "cuda": runtime,
         "evaluation_peak_mem_mb": torch.cuda.max_memory_allocated(args.device)/1024**2,
         "wall_sec": time.time()-started,
