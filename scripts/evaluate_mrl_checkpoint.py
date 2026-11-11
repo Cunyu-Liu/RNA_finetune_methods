@@ -130,16 +130,22 @@ def main():
         raise ValueError("nonfinite predictions require separate failure diagnosis")
     value = pearson(y_true, y_pred)
     source_value = result.get("value")
+    source_mse = result.get("mse")
+    if not isinstance(source_mse, (int, float)) or not math.isfinite(source_mse):
+        raise ValueError("finite source MSE is required")
+    mse = float(np.mean((y_true-y_pred)**2))
+    mse_match = math.isclose(mse, source_mse, rel_tol=2e-5, abs_tol=2e-7)
     if isinstance(source_value, (int, float)) and math.isfinite(source_value):
         metric_match = value is not None and math.isclose(value, source_value, rel_tol=2e-5, abs_tol=2e-7)
     else:
         metric_match = value is None and float(y_pred.std()) < 1e-6
+    metric_match = metric_match and mse_match
     summary = {
         "run_id": rid, "model": result["model"], "task": "mrl", "strategy": "full",
         "seed": seed, "split": split_name, "protocol": "bestval_v1",
         "n_train": result["n_train"], "n_test": len(test),
         "source_pearson_r": source_value, "revalidated_pearson_r": value,
-        "source_mse": result.get("value2"), "revalidated_mse": float(np.mean((y_true-y_pred)**2)),
+        "source_mse": source_mse, "revalidated_mse": mse, "full_test_mse_match": mse_match,
         "full_test_metric_match": metric_match,
         "nonfinite_reason": "constant_prediction" if value is None else None,
         "y_true_mean": float(y_true.mean()), "y_true_std": float(y_true.std()),
