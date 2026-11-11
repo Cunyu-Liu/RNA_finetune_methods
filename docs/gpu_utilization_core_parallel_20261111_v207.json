@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-11-10T16:51:32.918154+00:00",
+  "gpu_utilization_percent": 99,
+  "memory_used_mib": 29526,
+  "memory_free_mib": 2585,
+  "memory_total_mib": 32607,
+  "accepted_ledger_v207": 2078,
+  "lr_complete_groups": "76/80",
+  "lr_remaining_launch_sha256": "8ffc5b2a1c4b6dfe1f0c9539210023e44978eadda16a7110db47c86617ac1a40",
+  "supplement_launch_sha256": "47c6f26f5583863d8b56e248bb9d5cd67af534253fe9e91ae60f7fe73f3ed595",
+  "note": "Real core LR and micro Frozen training; no dummy allocation or CPU fallback."
+}

@@ -1009,6 +1009,15 @@
 - [x] DM5 交付：547文件manifest=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`；PPT=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`，8页原生渲染通过。
 - [ ] DM6 后续：三地同步并提交v125，继续核心与后续批次。
 
+## DN 组：v207–v208 与 v126 验收
+
+- [x] DN1 数据：2080 accepted、0 rejected；49格proof=complete，证明=`c28fc4827048ebc87e10a76642ba653dcd2ffc347c6b0d91e3990da13e81bae1`、`b7e9c44bec8456f628cba7096cf9283d57bac8e3a565e44df4088ef7bfbe13dd`。
+- [x] DN2 LR：314/320、76组，37组双split中22组选档不同；RNA-FM SSI family选3e-5但与default接近。
+- [x] DN3 曲线：degradation双split Frozen五档，cap后三档不重复计数据收益。
+- [x] DN4 GPU：99%、29526MiB，证据=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
+- [x] DN5 交付：557文件manifest=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`；PPT=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`，8页原生渲染通过。
+- [ ] DN6 后续：三地同步并提交v126，继续核心余6格。
+
 ## CK 组：显存补位与 Frozen 路径修复验收
 
 - [x] CK1 预算：micro Frozen按9GiB含余量调度，28GiB核心大格不在不足窗口强行启动；正式阶段门不变。

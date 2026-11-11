@@ -2597,3 +2597,12 @@ T0.1/T0.2 ──→ T0.3（spec 冻结）
 - [x] **科学边界**：modification/SSP双split与MRL family Frozen五档；degradation仅三档，cap不重复；低信号不判趋势。
 - [x] **交付**：547文件manifest=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`；PPT=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`，8个变化页原生渲染通过。
 - [ ] **后续**：三地同步并提交v125，继续核心余格与后续批次。
+
+## N173. 2026-11-11 v207–v208 LR 76与 degradation Frozen 五档
+
+- [x] **验收**：v207/v208新增49格，2080 accepted、0 rejected；证明=`c28fc4827048ebc87e10a76642ba653dcd2ffc347c6b0d91e3990da13e81bae1`、`b7e9c44bec8456f628cba7096cf9283d57bac8e3a565e44df4088ef7bfbe13dd`。
+- [x] **LR**：314/320、76/80组，37组双split中22组选档不同；RNA-FM SSI family选3e-5但与default接近，不夸大。证据=`449f415794532b29178226d5c7fe0ea873bbbbcb7666e276ff9f9994aecbd512`。
+- [x] **曲线**：degradation双split Frozen五档，cap后三档不当作新增数据；低信号不判趋势。
+- [x] **GPU**：核心6格与6个micro补位并行，99%、29526MiB；证据=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
+- [x] **交付**：557文件manifest=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`；PPT=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`，8页原生渲染通过。
+- [ ] **后续**：三地同步并提交v126，继续核心余6格。

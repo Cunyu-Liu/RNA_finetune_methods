@@ -1114,3 +1114,11 @@ scp A100:/mnt/cunyuliu/rna-ft-eval/status/figs/fig_c5b.png ppt/
 3. 源包revision=`20261111_refresh_v125_v206ledger_lr75_parallel104_frozen_expansion`，547个登记文件，manifest SHA256=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`。
 4. 当前PPT **33页**，SHA256=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`；PDF SHA256=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`。第20/22/23/26/27/28/29/30页更新并原生渲染通过，其余25页不变。
 5. GPU由17%/3725MiB升至98%/25771MiB，追加正式核心格和12个micro补位，无dummy占位；证据SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
+
+## 130. 2026-11-11 当前 v126：LR 76与 degradation Frozen 五档
+
+1. v207/v208新增49格，合计 **2080 accepted、0 rejected**。LR=314/320、76/80组，37个双split闭合task×model中22组选档不同；RNA-FM SSI family选3e-5但与default接近，不夸大。
+2. 第20页更新76/80与22/37；第26/27页加入degradation Frozen五档，requested≥2000对应actual cap=1552/1680，后三档不当作新增数据。低信号SpliceAI不判趋势。
+3. 源包revision=`20261111_refresh_v126_v208ledger_lr76_degradation_frozen5`，557个登记文件，manifest SHA256=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`。
+4. 当前PPT **33页**，SHA256=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`；PDF SHA256=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`。第20/22/23/26/27/28/29/30页更新并原生渲染通过，其余25页不变。
+5. 剩余LR核心6格与6个micro补位并行，GPU 99%、29526MiB；证据SHA256=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。

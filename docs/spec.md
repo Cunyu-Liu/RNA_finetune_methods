@@ -1672,3 +1672,11 @@ RNA-Sc tokenizer 无特殊 token，B20 错位不影响其既有 per-base 对齐�
 3. modification random/family、SSP random/family、MRL family Frozen均达五档闭合；degradation random Frozen仅三档，requested≥2000仍actual cap=1552，不当作新增数据。低信号SpliceAI不判scaling，等价规则不变。
 4. 针对空闲显存，追加12个micro补位、最后per-base 650M Frozen-random/seed17，以及mega MRL family和RNA-FM SSI family default核心格。实测GPU由17%/3725MiB升至 **98%/25771MiB**，无dummy占位。证据=`status/gpu_utilization_core_parallel_20261110_v206.json`，SHA256=`28289c43bbcc1bce4f97823e04f4e6c5d28da69ac10ec60dd4148c14202e5fdb`。
 5. 源包revision=`20261111_refresh_v125_v206ledger_lr75_parallel104_frozen_expansion`，**547个登记文件**逐哈希通过，manifest SHA256=`6dec566a6d8328e9725f27563aa6ba4e7ac4df828a8c368df12c756b31dab5e2`。PPT SHA256=`7855263605522ff4226b244dd70a8fbcac7fe8d1cb634b48355c07cb500092a0`，PDF SHA256=`beeb5733a5fd794ce4f21bb6878f9693c921991d868e9f00bdef8d0a6ee159e7`。第20/22/23/26/27/28/29/30页更新并全部原生渲染通过，其余25页不变。
+
+### 10.173 v207–v208 LR 76组与 degradation Frozen 五档（2026-11-11）
+
+1. v207新增47格、v208新增2格，累计 **2080 accepted、0 rejected**，均proof=complete。证明SHA256=`c28fc4827048ebc87e10a76642ba653dcd2ffc347c6b0d91e3990da13e81bae1`、`b7e9c44bec8456f628cba7096cf9283d57bac8e3a565e44df4088ef7bfbe13dd`。LR=314/320、完整组 **76/80**，选档33/19/21/3，余6格4组；per-base=269/270、complementary=306/324。
+2. RNA-FM SSI family按best_val选3e-5，test PCC=0.597041，default=0.597980，差异很小，不夸大。37个双split闭合task×model中22组选档不同。LR证据SHA256=`449f415794532b29178226d5c7fe0ea873bbbbcb7666e276ff9f9994aecbd512`；v208两格SpliceAI仍低信号，不改LR组数。
+3. degradation random/family Frozen均达五档，但requested≥2000对应actual cap=1552/1680，后三档不当作独立新增数据证据；SpliceAI近基线不判趋势，等价规则不变。
+4. 剩余LR核心6格队列与6个micro补位并行，实测GPU **99%、29526MiB**，仅余2585MiB，无dummy占位、无CPU降级。证据=`status/gpu_utilization_core_parallel_20261111_v207.json`，SHA256=`42ee45de39dd42507e0dd68fe5a85538f3199874530c53ae3bfd06ac930c3901`。
+5. 源包revision=`20261111_refresh_v126_v208ledger_lr76_degradation_frozen5`，**557个登记文件**逐哈希通过，manifest SHA256=`b751990be857d9a3562992b6899b59dfda1e760f3d9577d45d361bd90c80b938`。PPT SHA256=`07a15c82fbd33f264eadb5f555aa998a437c87ceeb79e95c293ec7671009058b`，PDF SHA256=`68a3d381654bd54ede2e5863fc1c6ddf49d1fbeb675c545ebb956c6d9c0315fe`。8个变化页原生渲染通过，其余25页不变。
