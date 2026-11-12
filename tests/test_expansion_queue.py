@@ -578,3 +578,26 @@ def test_task_specific_runners_receive_explicit_task(tmp_path, module, task):
     job = make_job(tmp_path, module=module, task=task)
     command = job.build_command(device=0)
     assert command[command.index("--task") + 1] == task
+
+
+def test_checkpoint_proof_cache_reloads_changed_checkpoint(proof_env, monkeypatch):
+    proof_env.job = make_job(
+        Path(proof_env.job.result_dir).parents[1], protocol=q.vp.BESTVAL_PROTOCOL,
+        rid="ft_bestval_cache_test", result_dir=proof_env.job.result_dir + "-bestval-cache")
+    write_bestval_proof(proof_env)
+    calls = []
+    original = q.vp.checkpoint_proof_error
+
+    def counted(*args):
+        calls.append(args[0])
+        return original(*args)
+
+    monkeypatch.setattr(q.vp, "checkpoint_proof_error", counted)
+    assert q.proof_state(proof_env.job) == ("complete", "")
+    assert q.proof_state(proof_env.job) == ("complete", "")
+    assert len(calls) == 1
+    checkpoint = Path(proof_env.job.result_dir) / "best.ckpt"
+    state = torch.load(checkpoint, map_location="cpu", weights_only=True)
+    torch.save(state, checkpoint)
+    assert q.proof_state(proof_env.job) == ("complete", "")
+    assert len(calls) == 2

@@ -11,6 +11,7 @@ import argparse
 import contextlib
 import datetime
 import fcntl
+from functools import lru_cache
 import hashlib
 import json
 import math
@@ -362,6 +363,21 @@ def plateau_error(job, result, plateau):
     return errors
 
 
+@lru_cache(maxsize=512)
+def _checkpoint_proof_cached(result_dir, device, inode, mtime_ns, size,
+                             result_payload, ledger_payload):
+    return vp.checkpoint_proof_error(
+        result_dir, json.loads(result_payload), json.loads(ledger_payload))
+
+
+def _checkpoint_proof(result_dir, result, ledger_row):
+    stat = (Path(result_dir) / "best.ckpt").stat()
+    payload = lambda value: json.dumps(value, sort_keys=True, separators=(",", ":"))
+    return _checkpoint_proof_cached(
+        result_dir, stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_size,
+        payload(result), payload(ledger_row))
+
+
 def proof_state(job):
     """Return complete, running, conflict, or runnable for this exact RID."""
     try:
@@ -410,8 +426,7 @@ def proof_state(job):
         if checkpoint_error:
             errors.append("ledger " + checkpoint_error)
         else:
-            checkpoint_error = vp.checkpoint_proof_error(
-                job.result_dir, result, row)
+            checkpoint_error = _checkpoint_proof(job.result_dir, result, row)
             if checkpoint_error:
                 errors.append(checkpoint_error)
     return ("conflict", "; ".join(errors)) if errors else ("complete", "")
