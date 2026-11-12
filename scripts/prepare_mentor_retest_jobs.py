@@ -47,7 +47,7 @@ def main():
     external = []
     for model, default_lr, batch, need in (
         ("NucleicBERT", "3e-5", 8, 18),
-        ("AIDO.RNA-1.6B", "1e-5", 1, 32),
+        ("AIDO.RNA-1.6B", "1e-5", 1, 31),
     ):
         for split in SPLITS:
             for lr in LRS:

@@ -40,7 +40,7 @@ def _run_extra(args):
     e3_tag = ("_e3%d" % args.n_train) if args.n_train != 20000 else ""
     protocol_tag = vp.protocol_tag(args)
     return (("_smoke" if args.smoke else "") + e3_tag + lr_tag + rank_tag +
-            protocol_tag)
+            protocol_tag + getattr(args, "out_suffix", ""))
 
 
 def main() -> int:
@@ -61,6 +61,8 @@ def main() -> int:
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--rank", type=int, default=8,
                     help="LoRA/DoRA rank (E2 sweep; default 8)")
+    ap.add_argument("--out-suffix", default="",
+                    help="append an explicit protocol/revalidation label to the run ID")
     vp.add_convergence_args(ap)
     args = ap.parse_args()
     vp.validate_convergence_args(args)

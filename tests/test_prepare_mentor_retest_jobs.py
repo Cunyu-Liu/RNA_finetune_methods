@@ -22,5 +22,5 @@ def test_registries_have_unique_jobs_and_expected_protocols():
     assert {job["model"] for job in external} == {"NucleicBERT", "AIDO.RNA-1.6B"}
     assert all("_reval20261111" in job["rid"] for job in external)
     aido = next(job for job in external if job["model"] == "AIDO.RNA-1.6B")
-    assert aido["need_gb"] == 32
+    assert aido["need_gb"] == 31
     assert "--batch-size" in aido["args"] or "-bs" in aido["args"] or any("batch" in arg for arg in aido["args"])

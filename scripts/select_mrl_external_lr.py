@@ -12,7 +12,7 @@ from select_lr_validation import load_invalid_candidates
 LRS = ("3e-4", "1e-4", "3e-5", "1e-5")
 MODEL_SETTINGS = {
     "NucleicBERT": {"default_lr": "3e-5", "batch": 8, "need_gb": 18},
-    "AIDO.RNA-1.6B": {"default_lr": "1e-5", "batch": 1, "need_gb": 32},
+    "AIDO.RNA-1.6B": {"default_lr": "1e-5", "batch": 1, "need_gb": 31},
 }
 
 
