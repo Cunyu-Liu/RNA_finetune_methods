@@ -29,6 +29,11 @@ def is_valid(path, rid):
             and Path(data.get("predictions", "")).is_file())
 
 
+def evaluation_env():
+    return dict(os.environ, PYTHONPATH=os.pathsep.join(
+        ["/root/rna-ft-eval/pypath", ".", "scripts"]))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jobs-json", action="append", required=True)
@@ -65,7 +70,8 @@ def main():
                     "--artifact-dir", job.result_dir, "--reference-result", str(job.result_path),
                     "--output-dir", str(out_dir), "--device", "0", "--wait-free-gb", "10",
                     "--batch-size", "1" if job.model == "AIDO.RNA-1.6B" else "8",
-                ], check=True, stdout=handle, stderr=subprocess.STDOUT)
+                ], check=True, stdout=handle, stderr=subprocess.STDOUT,
+                    env=evaluation_env())
             if not is_valid(destination, job.rid):
                 raise RuntimeError("evaluation did not produce complete prediction proof: " + job.rid)
             evaluated += 1
