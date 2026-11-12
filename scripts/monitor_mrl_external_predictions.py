@@ -38,6 +38,10 @@ def evaluation_batch_size(model):
     return 2 if model == "AIDO.RNA-1.6B" else 16
 
 
+def evaluation_wait_free_gb(model):
+    return 10 if model == "AIDO.RNA-1.6B" else 4.5
+
+
 def deduplicate_jobs(jobs):
     unique = {}
     for job in jobs:
@@ -90,7 +94,7 @@ def main():
                 subprocess.run([
                     sys.executable, str(Path(__file__).with_name("evaluate_mrl_checkpoint.py")),
                     "--artifact-dir", job.result_dir, "--reference-result", str(job.result_path),
-                    "--output-dir", str(out_dir), "--device", "0", "--wait-free-gb", "10",
+                    "--output-dir", str(out_dir), "--device", "0", "--wait-free-gb", str(evaluation_wait_free_gb(job.model)),
                     "--batch-size", str(evaluation_batch_size(job.model)),
                 ], check=True, stdout=handle, stderr=subprocess.STDOUT,
                     env=evaluation_env())

@@ -39,6 +39,12 @@ def test_evaluation_batch_matches_source_protocol():
     assert evaluation_batch_size("AIDO.RNA-1.6B") == 2
 
 
+def test_nuc_evaluation_memory_reserve_uses_measured_peak():
+    from monitor_mrl_external_predictions import evaluation_wait_free_gb
+    assert evaluation_wait_free_gb("NucleicBERT") == 4.5
+    assert evaluation_wait_free_gb("AIDO.RNA-1.6B") == 10
+
+
 def test_monitor_keeps_waiting_for_future_tuned_jobs():
     from types import SimpleNamespace
     from monitor_mrl_external_predictions import should_exit
