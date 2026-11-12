@@ -21,6 +21,9 @@ EXTERNAL_SELECTION = STATUS / "mrl_nuc_lr_selection_20261112.json"
 EXTERNAL_TUNED = STATUS / "mrl_nuc_tuned_jobs_20261112.json"
 MAIN_SELECTION = STATUS / "lr_validation_selection_20261111.json"
 MAIN_TUNED = STATUS / "lr_tuned_jobs_20261111.json"
+LORA_TUNING = REPO / "scripts/lr_lora_tuning_jobs_20261112.json"
+LORA_SELECTION = STATUS / "lr_lora_validation_selection_20261112.json"
+LORA_TUNED = STATUS / "lr_lora_tuned_jobs_20261112.json"
 DORA = REPO / "scripts/dora_rank8_240_jobs_20261111.json"
 
 
@@ -82,6 +85,15 @@ def write_dora_registry():
     DORA.write_text(json.dumps(jobs, ensure_ascii=False, indent=2) + "\n")
 
 
+def write_lora_tuning_registry():
+    if LORA_TUNING.exists():
+        return
+    from expansion_jobs import lr_tuning_jobs
+    jobs = lr_tuning_jobs(strategy="lora")
+    assert len(jobs) == 320 and len({job["rid"] for job in jobs}) == 320
+    LORA_TUNING.write_text(json.dumps(jobs, ensure_ascii=False, indent=2) + "\n")
+
+
 E6_JOBS = REPO / "scripts/rinalmo_e6_checkpoint_jobs_20261112.json"
 E6_STATE = STATUS / "rinalmo_e6_checkpoint_monitor_20261112/state.json"
 E6_PID = STATE / "rinalmo_e6_checkpoint_monitor.pid"
@@ -133,6 +145,22 @@ def run_once(log):
         return "external_tuned_running"
     if not ensure_queue(MAIN_TUNED, 2, log):
         return "main_tuned_running"
+    write_lora_tuning_registry()
+    if not ensure_queue(LORA_TUNING, 2, log):
+        return "lora_tuning_running"
+    if not LORA_TUNED.exists():
+        subprocess.run([
+            sys.executable,
+            "scripts/select_lr_validation.py",
+            "--strategy", "lora",
+            "--tuning-jobs", str(LORA_TUNING),
+            "--selection-output", str(LORA_SELECTION),
+            "--jobs-output", str(LORA_TUNED),
+        ], cwd=REPO, check=True, env=dict(
+            os.environ, PYTHONPATH=".:scripts",
+            RNAFT_ARTIFACT_ROOT="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts"))
+    if not ensure_queue(LORA_TUNED, 2, log):
+        return "lora_tuned_running"
     write_dora_registry()
     if not ensure_queue(DORA, 2, log):
         return "dora_running"

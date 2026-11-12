@@ -54,3 +54,34 @@ def test_forgetting_waits_for_prior_stages(monkeypatch):
     monkeypatch.setattr(monitor, "ensure_e6_queue",
                         lambda log: (_ for _ in ()).throw(AssertionError("stage skipped")))
     assert monitor.run_once(io.StringIO()) == "p0_running"
+
+
+def test_lora_lr_registries_use_independent_validation_selection():
+    from expansion_jobs import lr_tuning_jobs, lr_tuned_jobs
+
+    tuning = lr_tuning_jobs(strategy="lora")
+    assert len(tuning) == 320
+    assert {job["strategy"] for job in tuning} == {"lora"}
+    assert {job["seed"] for job in tuning} == {101}
+    assert len({job["rid"] for job in tuning}) == 320
+    groups = {(job["task"], job["model"], job["split"]) for job in tuning}
+    rows = [{"task": task, "model": model, "split": split,
+             "strategy": "lora", "selected_lr": "1e-4"}
+            for task, model, split in sorted(groups)]
+    formal = lr_tuned_jobs(rows, strategy="lora")
+    assert len(formal) == 240
+    assert {job["strategy"] for job in formal} == {"lora"}
+    assert {job["lr"] for job in formal} == {"1e-4"}
+    assert len({job["rid"] for job in formal}) == 240
+
+
+def test_lora_tuning_starts_only_after_full_tuned(monkeypatch):
+    import io
+    import mentor_followup_monitor as monitor
+
+    monkeypatch.setattr(monitor, "ensure_queue",
+                        lambda registry, *args: registry != monitor.LORA_TUNING)
+    monkeypatch.setattr(monitor, "write_lora_tuning_registry", lambda: None)
+    monkeypatch.setattr(monitor, "write_dora_registry",
+                        lambda: (_ for _ in ()).throw(AssertionError("stage skipped")))
+    assert monitor.run_once(io.StringIO()) == "lora_tuning_running"

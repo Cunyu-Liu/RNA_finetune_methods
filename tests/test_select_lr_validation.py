@@ -41,3 +41,44 @@ def test_load_invalid_candidates_rejects_nonconstant_or_missing_cuda(tmp_path):
         load_invalid_candidates([write(tmp_path, proof(y_pred_std=0.1))])
     with pytest.raises(ValueError, match='CUDA or split proof'):
         load_invalid_candidates([write(tmp_path, proof(cuda_available=False))])
+
+
+def test_lora_selection_uses_validation_and_preserves_strategy(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import select_lr_validation as selector
+
+    validation_loss = {'3e-4': 0.4, '1e-4': 0.1, '3e-5': 0.2, '1e-5': 0.3}
+    tasks = (*selector.jobspec.TASK_MODULES, 'spliceai', 'degradation', 'ssi')
+    jobs = []
+    for task in tasks:
+        for model in selector.jobspec.MODELS:
+            for split in ('random', 'family'):
+                for lr, best_val in validation_loss.items():
+                    rid = f'ft_{task}_{model}_{split}_{lr}'
+                    result = tmp_path / f'{rid}.json'
+                    result.write_text(json.dumps({
+                        'best_val': best_val, 'best_epoch': 2,
+                        'value': 0.99 if lr == '3e-4' else 0.01,
+                    }))
+                    jobs.append(SimpleNamespace(
+                        task=task, model=model, split=split, strategy='lora',
+                        lr=lr, rid=rid, result_path=result))
+    monkeypatch.setattr(selector.queue, 'load_jobs', lambda source: jobs)
+    monkeypatch.setattr(selector.queue, 'proof_state', lambda job: ('complete', ''))
+    selection = tmp_path / 'selection.json'
+    formal = tmp_path / 'formal.json'
+    source = tmp_path / 'tuning.json'
+    source.write_text('[]')
+    assert selector.main([
+        '--strategy', 'lora', '--tuning-jobs', str(source),
+        '--selection-output', str(selection), '--jobs-output', str(formal),
+    ]) == 0
+    document = json.loads(selection.read_text())
+    assert document['test_metric_used'] is False
+    assert len(document['rows']) == 80
+    assert all(row['selected_lr'] == '1e-4' for row in document['rows'])
+    assert {row['strategy'] for row in document['rows']} == {'lora'}
+    formal_jobs = json.loads(formal.read_text())
+    assert len(formal_jobs) == 240
+    assert {job['strategy'] for job in formal_jobs} == {'lora'}
+    assert {job['lr'] for job in formal_jobs} == {'1e-4'}

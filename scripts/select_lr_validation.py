@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select full-FT learning rates from complete seed-101 validation evidence."""
+"""Select strategy-specific learning rates from seed-101 validation evidence."""
 from __future__ import annotations
 
 import argparse
@@ -49,6 +49,7 @@ def load_invalid_candidates(paths):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--strategy", choices=("full", "lora"), default="full")
     parser.add_argument("--tuning-jobs", required=True)
     parser.add_argument("--selection-output", required=True)
     parser.add_argument("--jobs-output", required=True)
@@ -62,6 +63,8 @@ def main(argv=None):
         raise ValueError(f"expected 320 tuning jobs, found {len(jobs)}")
     groups = collections.defaultdict(list)
     for job in jobs:
+        if job.strategy != args.strategy:
+            raise ValueError(f"unexpected tuning strategy for {job.rid}: {job.strategy}")
         groups[(job.task, job.model, job.split)].append(job)
     if len(groups) != 80 or any(len(items) != 4 for items in groups.values()):
         raise ValueError("tuning registry must contain 80 groups of four LRs")
@@ -91,6 +94,7 @@ def main(argv=None):
             selected = min(candidates, key=lambda row: (row["best_val"], float(row["lr"])))
             rows.append({
                 "task": task, "model": model, "split": split,
+                "strategy": args.strategy,
                 "selected_lr": selected["lr"],
                 "selected_best_val": selected["best_val"],
                 "selected_rid": selected["rid"],
@@ -103,11 +107,12 @@ def main(argv=None):
     if len(rows) != 80:
         raise ValueError(f"selection covers {len(rows)} groups instead of 80")
 
-    formal_jobs = jobspec.lr_tuned_jobs(rows)
+    formal_jobs = jobspec.lr_tuned_jobs(rows, strategy=args.strategy)
     if len(formal_jobs) != 240 or len({job["rid"] for job in formal_jobs}) != 240:
         raise ValueError("formal tuned-LR registry is incomplete or contains duplicate RIDs")
     document = {
         "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "strategy": args.strategy,
         "source_registry": str(source),
         "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
         "selection_metric": "best_val (held-out validation loss)",

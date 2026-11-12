@@ -191,8 +191,10 @@ def equivalence_rnasc_jobs():
     return jobs
 
 
-def lr_tuning_jobs():
-    """Register seed-101 validation-only LR selection runs for full FT."""
+def lr_tuning_jobs(strategy="full"):
+    """Register seed-101 validation-only LR selection runs for one strategy."""
+    if strategy not in ("full", "lora"):
+        raise ValueError("LR tuning supports only full and lora")
     runners = dict(TASK_MODULES, spliceai=finetune_spl,
                    degradation=finetune_regbase, ssi=finetune_regbase)
     jobs = []
@@ -204,13 +206,14 @@ def lr_tuning_jobs():
                 for lr in ("3e-4", "1e-4", "3e-5", "1e-5"):
                     base = DEFAULTS[task]["batch"]
                     if model == "RiNALMo-650M":
-                        batch_size = 1 if task == "secondary-structure" else min(base, 4)
+                        cap = 8 if strategy == "lora" else 4
+                        batch_size = 1 if task == "secondary-structure" else min(base, cap)
                     elif model == "RiNALMo-mega":
                         batch_size = 2 if task == "secondary-structure" else min(base, 8)
                     else:
                         batch_size = base
                     jobs.append(job_for(
-                        task, model, "full", split, 101, lr=lr,
+                        task, model, strategy, split, 101, lr=lr,
                         module=runners[task], batch_size=batch_size,
                         need_gb=8 if model == "RiNALMo-micro" else
                         16 if model in ("RiNALMo-mega", "ERNIE-RNA", "RNA-FM") else 28))
@@ -243,12 +246,16 @@ def lr_default_jobs():
     return jobs
 
 
-def lr_tuned_jobs(selection):
-    """Build formal full-FT jobs from frozen validation-LR selections."""
+def lr_tuned_jobs(selection, strategy="full"):
+    """Build formal jobs from one strategy's frozen validation-LR selections."""
+    if strategy not in ("full", "lora"):
+        raise ValueError("LR tuning supports only full and lora")
     runners = dict(TASK_MODULES, spliceai=finetune_spl,
                    degradation=finetune_regbase, ssi=finetune_regbase)
     expected = {(task, model, split)
                 for task in runners for model in MODELS for split in ("random", "family")}
+    if any(row.get("strategy", "full") != strategy for row in selection):
+        raise ValueError("LR selection strategy does not match formal jobs")
     selected = {(row["task"], row["model"], row["split"]): row["selected_lr"]
                 for row in selection}
     if set(selected) != expected or len(selection) != 80:
@@ -260,13 +267,14 @@ def lr_tuned_jobs(selection):
         for seed in (17, 29, 43):
             base = DEFAULTS[task]["batch"]
             if model == "RiNALMo-650M":
-                batch_size = 1 if task == "secondary-structure" else min(base, 4)
+                cap = 8 if strategy == "lora" else 4
+                batch_size = 1 if task == "secondary-structure" else min(base, cap)
             elif model == "RiNALMo-mega":
                 batch_size = 2 if task == "secondary-structure" else min(base, 8)
             else:
                 batch_size = base
             jobs.append(job_for(
-                task, model, "full", split, seed,
+                task, model, strategy, split, seed,
                 lr=selected[(task, model, split)], module=runners[task],
                 batch_size=batch_size, artifact_root=TEAMS_ARTIFACT_ROOT,
                 need_gb=8 if model == "RiNALMo-micro" else
