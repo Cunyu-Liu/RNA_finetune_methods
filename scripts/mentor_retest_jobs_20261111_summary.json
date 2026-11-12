@@ -12,7 +12,7 @@
     {
       "file": "mrl_external_tuning_default_28_jobs_20261111.json",
       "n_jobs": 28,
-      "sha256": "fc7ecc0bbd8536ef0d0e73c799dae3c776ebd3d0825534b34fc45cf3a3ff0c1c"
+      "sha256": "6c87a2aed74ecf0185f85f40764e2ee71eb10a0126cc106c636f081f801e595d"
     },
     {
       "file": "mrl_external_tuned_12_required_20261111.json",

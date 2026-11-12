@@ -20,7 +20,7 @@ def test_registries_have_unique_jobs_and_expected_protocols():
         assert all(job["result_dir"].startswith("/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts/") for job in jobs)
         assert all(job["result_dir"].endswith(job["rid"]) for job in jobs)
     assert {job["model"] for job in external} == {"NucleicBERT", "AIDO.RNA-1.6B"}
-    assert all("_reval20261111" in job["rid"] for job in external)
+    assert all(job["rid"].count("_reval20261111") == 1 for job in external)
     aido = next(job for job in external if job["model"] == "AIDO.RNA-1.6B")
     assert aido["need_gb"] == 31
     assert "--batch-size" in aido["args"] or "-bs" in aido["args"] or any("batch" in arg for arg in aido["args"])

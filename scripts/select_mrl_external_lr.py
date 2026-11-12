@@ -88,7 +88,8 @@ def main():
                           lr=row["selected_lr"], out_suffix="_reval20261111",
                           batch_size=settings["batch"], need_gb=settings["need_gb"],
                           artifact_root="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts")
-            job["rid"] += "_reval20261111"
+            if not job["rid"].endswith("_reval20261111"):
+                job["rid"] += "_reval20261111"
             job["result_dir"] = str(Path(job["result_dir"]).with_name(job["rid"]))
             tuned_jobs.append(job)
     if len(tuned_jobs) != 12 or len({job["rid"] for job in tuned_jobs}) != 12:

@@ -59,7 +59,8 @@ def main():
                     "mrl", model, "full", split, seed, lr=default_lr,
                     out_suffix="_reval20261111", batch_size=batch, need_gb=need))
     for job in external:
-        job["rid"] += "_reval20261111"
+        if not job["rid"].endswith("_reval20261111"):
+            job["rid"] += "_reval20261111"
         job["result_dir"] = str(Path(job["result_dir"]).with_name(job["rid"]))
     reports.append(write_registry("mrl_external_tuning_default_28_jobs_20261111.json", external))
 
