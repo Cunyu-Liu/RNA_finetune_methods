@@ -37,3 +37,13 @@ def test_evaluation_batch_matches_source_protocol():
     from monitor_mrl_external_predictions import evaluation_batch_size
     assert evaluation_batch_size("NucleicBERT") == 16
     assert evaluation_batch_size("AIDO.RNA-1.6B") == 2
+
+
+def test_monitor_keeps_waiting_for_future_tuned_jobs():
+    from types import SimpleNamespace
+    from monitor_mrl_external_predictions import should_exit
+
+    persistent = SimpleNamespace(once=False, exit_when_complete=False)
+    assert not should_exit(persistent, [object()], 1)
+    assert should_exit(SimpleNamespace(once=True, exit_when_complete=False), [object()], 1)
+    assert should_exit(SimpleNamespace(once=False, exit_when_complete=True), [object()], 1)

@@ -38,12 +38,17 @@ def evaluation_batch_size(model):
     return 2 if model == "AIDO.RNA-1.6B" else 16
 
 
+def should_exit(args, jobs, evaluated):
+    return args.once or (args.exit_when_complete and jobs and evaluated == len(jobs))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jobs-json", action="append", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--poll-s", type=int, default=300)
     parser.add_argument("--once", action="store_true")
+    parser.add_argument("--exit-when-complete", action="store_true")
     args = parser.parse_args()
     if args.poll_s <= 0:
         raise ValueError("poll-s must be positive")
@@ -86,7 +91,7 @@ def main():
         temporary.write_text(json.dumps(status, indent=2)+"\n")
         os.replace(temporary, args.output_dir / "state.json")
         print(json.dumps({k: v for k, v in status.items() if k != "pending"}), flush=True)
-        if args.once or (jobs and evaluated == len(jobs)):
+        if should_exit(args, jobs, evaluated):
             return
         time.sleep(args.poll_s)
 

@@ -81,7 +81,43 @@ def test_lora_tuning_starts_only_after_full_tuned(monkeypatch):
 
     monkeypatch.setattr(monitor, "ensure_queue",
                         lambda registry, *args: registry != monitor.LORA_TUNING)
+    monkeypatch.setattr(monitor, "external_predictions_ready", lambda log: True)
     monkeypatch.setattr(monitor, "write_lora_tuning_registry", lambda: None)
     monkeypatch.setattr(monitor, "write_dora_registry",
                         lambda: (_ for _ in ()).throw(AssertionError("stage skipped")))
     assert monitor.run_once(io.StringIO()) == "lora_tuning_running"
+
+
+def test_external_prediction_gate_requires_all_six_independent_proofs(tmp_path, monkeypatch):
+    import io
+    from types import SimpleNamespace
+    import mentor_followup_monitor as monitor
+
+    jobs = [SimpleNamespace(rid=f"ft_nuc_{seed}", model="NucleicBERT")
+            for seed in (17, 29, 43, 101, 102, 103)]
+    monkeypatch.setattr(monitor, "load_jobs", lambda path: jobs)
+    monkeypatch.setattr(monitor, "PREDICTIONS", tmp_path)
+    assert not monitor.external_predictions_ready(io.StringIO())
+    for job in jobs:
+        directory = tmp_path / job.rid
+        directory.mkdir()
+        predictions = directory / "predictions.npz"
+        predictions.write_bytes(b"test-predictions")
+        (directory / f"{job.rid}_evaluation.json").write_text(json.dumps({
+            "run_id": job.rid, "full_test_metric_match": True,
+            "split_evidence_match": True, "restored_tensor_match": True,
+            "cuda_available": True, "y_pred_std": 0.1,
+            "predictions": str(predictions),
+        }))
+    assert monitor.external_predictions_ready(io.StringIO())
+
+
+def test_main_tuned_waits_for_external_prediction_review(monkeypatch):
+    import io
+    import mentor_followup_monitor as monitor
+
+    monkeypatch.setattr(monitor, "ensure_queue", lambda *args: True)
+    monkeypatch.setattr(monitor, "external_predictions_ready", lambda log: False)
+    monkeypatch.setattr(monitor, "write_lora_tuning_registry",
+                        lambda: (_ for _ in ()).throw(AssertionError("stage skipped")))
+    assert monitor.run_once(io.StringIO()) == "external_prediction_review"

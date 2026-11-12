@@ -25,6 +25,21 @@ LORA_TUNING = REPO / "scripts/lr_lora_tuning_jobs_20261112.json"
 LORA_SELECTION = STATUS / "lr_lora_validation_selection_20261112.json"
 LORA_TUNED = STATUS / "lr_lora_tuned_jobs_20261112.json"
 DORA = REPO / "scripts/dora_rank8_240_jobs_20261111.json"
+PREDICTIONS = STATUS / "mrl_external_predictions_20261111"
+
+
+def external_predictions_ready(log):
+    from monitor_mrl_external_predictions import evaluation_path, is_valid
+
+    jobs = load_jobs(EXTERNAL_TUNED)
+    if len(jobs) != 6 or any(job.model != "NucleicBERT" for job in jobs):
+        raise ValueError("external tuned registry must contain exactly six NucleicBERT jobs")
+    missing = [job.rid for job in jobs
+               if not is_valid(evaluation_path(PREDICTIONS, job.rid), job.rid)]
+    log.write(json.dumps({"external_prediction_proof": "complete" if not missing else "pending",
+                          "missing": missing}) + "\n")
+    log.flush()
+    return not missing
 
 
 def jobs_status(path):
@@ -143,6 +158,8 @@ def run_once(log):
             RNAFT_ARTIFACT_ROOT="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts"))
     if not ensure_queue(EXTERNAL_TUNED, 2, log):
         return "external_tuned_running"
+    if not external_predictions_ready(log):
+        return "external_prediction_review"
     if not ensure_queue(MAIN_TUNED, 2, log):
         return "main_tuned_running"
     write_lora_tuning_registry()
