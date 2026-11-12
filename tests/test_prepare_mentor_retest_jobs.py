@@ -24,4 +24,4 @@ def test_registries_have_unique_jobs_and_expected_protocols():
         assert all(job["result_dir"].endswith(job["rid"]) for job in jobs)
     assert {job["model"] for job in external} == {"NucleicBERT"}
     assert all(job["rid"].count("_reval20261111") == 1 for job in external)
-    assert all(job["need_gb"] == 18 for job in external)
+    assert all(job["need_gb"] == 12 for job in external)

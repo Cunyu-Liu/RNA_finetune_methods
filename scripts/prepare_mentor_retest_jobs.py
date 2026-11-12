@@ -46,7 +46,7 @@ def main():
 
     external = []
     for model, default_lr, batch, need in (
-        ("NucleicBERT", "3e-5", 8, 18),
+        ("NucleicBERT", "3e-5", 8, 12),
     ):
         for split in SPLITS:
             for lr in LRS:
