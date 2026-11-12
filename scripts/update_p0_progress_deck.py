@@ -54,13 +54,21 @@ def main():
         2: [("6任务主矩阵闭合；两任务补尾" if previous_pending == 18 else "6任务主矩阵闭合；P0补尾", "6任务主矩阵闭合；P0补尾"),
             (f"per-base 270/270、complementary 324/324；P0补18格中{args.previous_p0_complete}格已闭合、{previous_pending}格待补" if previous_pending < 18 else "per-base 270/270、complementary 324/324；650M MRL full 6格、modification LoRA/full 12格待补",
              f"per-base 270/270、complementary 324/324；P0补18格中{args.p0_complete}格已闭合、{pending}格待补")],
-        7: [(f"读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M LoRA random=0.984±0.001，full random {args.previous_mod_full_random_complete}/3完成，其余{previous_mod_pending}格待补，不能称对 split 免疫。" if previous_pending < 18 else "读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M modification LoRA/full 双split共12格待补，不能称对 split 免疫。",
+        7: [(f"读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M LoRA {'random/family=0.984/0.950' if args.previous_mod_lora_family_complete or args.previous_mod_full_family_complete else 'random=0.984±0.001'}，full random {args.previous_mod_full_random_complete}/3{'完成，其余' if not (args.previous_mod_lora_family_complete or args.previous_mod_full_family_complete) else '，full family=0.945，仅余'}{previous_mod_pending}格待补，不能称对 split 免疫。" if previous_pending < 18 else "读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M modification LoRA/full 双split共12格待补，不能称对 split 免疫。",
              f"读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M LoRA random/family=0.984/0.950，full random {args.mod_full_random_complete}/3，full family=0.945，仅余{mod_pending}格待补，不能称对 split 免疫。")],
         8: [(f"读图：三档同属 RiNALMo 家族，接近结果只说明当前数据、指标与协议下规模增益有限，不能推广到所有任务。650M full random=0.823±0.010；family {args.previous_mrl_family_complete}/3完成，余{previous_mrl_pending}格待补；降幅按模型与策略分别比较。" if previous_pending < 18 else "读图：三档同属 RiNALMo 家族，接近结果只说明当前数据、指标与协议下规模增益有限，不能推广到所有任务。650M MRL full 双split共6格待补；family 降幅按模型与策略分别比较。",
              f"读图：三档同属 RiNALMo 家族，接近结果只说明当前数据、指标与协议下规模增益有限，不能推广到所有任务。650M full random=0.823±0.010；family {args.mrl_family_complete}/3完成，余{mrl_pending}格待补；降幅按模型与策略分别比较。")],
         28: [(f"数据：最新 best-val 台账 + MRL/modification 聚合 + B20 阶段表（仅补 frozen）；6任务主矩阵闭合，P0补18格中{args.previous_p0_complete}格已闭合、{previous_pending}格待补，未闭合格为 NA，不补零。" if previous_pending < 18 else "数据：最新 best-val 台账 + MRL/modification 聚合 + B20 阶段表（仅补 frozen）；6任务主矩阵闭合，MRL/modification 的650M相关臂共18格待补，未闭合格为 NA，不补零。",
               f"数据：最新 best-val 台账 + MRL/modification 聚合 + B20 阶段表（仅补 frozen）；6任务主矩阵闭合，P0补18格中{args.p0_complete}格已闭合、{pending}格待补，未闭合格为 NA，不补零。")],
     }
+    if pending == 0:
+        edits[2][0] = (edits[2][0][0], "八任务主矩阵闭合")
+        edits[2][1] = (edits[2][1][0],
+                       "per-base 270/270、complementary 324/324；650M MRL/modification 18格全闭合")
+        edits[7][0] = (edits[7][0][0],
+                       "读图：六柱为 frozen/LoRA/full × random/family 的三种子均值，重点看同模型同策略的两柱差。LoRA 多数下降约 0.04–0.06；mega-full 的 family 反而高 0.211。非650M三策略已闭合；650M LoRA random/family=0.984/0.950，full random/family=0.983/0.945，不同策略随 split 变化，不能称对 split 免疫。")
+        edits[28][0] = (edits[28][0][0],
+                        "数据：最新 best-val 台账 + P0正式增量 + B20 阶段表（仅补 frozen）；八任务主矩阵闭合，未闭合格为 NA，不补零。")
     changed = []
     for index, replacements in edits.items():
         part = parts[index-1]
