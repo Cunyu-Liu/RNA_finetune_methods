@@ -16,7 +16,7 @@ MODEL_SETTINGS = {
 }
 
 
-def select_groups(jobs, state_fn=proof_state, invalid_documents=None):
+def select_groups(jobs, state_fn=proof_state, invalid_documents=None, expected_groups=4):
     invalid_documents = invalid_documents or {}
     groups = collections.defaultdict(list)
     for job in jobs:
@@ -55,8 +55,8 @@ def select_groups(jobs, state_fn=proof_state, invalid_documents=None):
                          "candidates": candidates, "invalid_candidates": invalid})
     if incomplete:
         return {"status": "incomplete", "missing": incomplete}, []
-    if len(rows) != 4:
-        raise ValueError(f"expected 4 model×split groups, got {len(rows)}")
+    if len(rows) != expected_groups:
+        raise ValueError(f"expected {expected_groups} model×split groups, got {len(rows)}")
     return {"status": "complete", "selection_metric": "best_val (held-out validation loss)",
             "test_metric_used": False, "tie_rule": "minimum best_val, then lower LR",
             "invalid_candidate_rule": "only independent CUDA constant-output proofs; excluded from selection",
@@ -69,13 +69,15 @@ def main():
     parser.add_argument("--selection-output", required=True)
     parser.add_argument("--jobs-output", required=True)
     parser.add_argument("--invalid-candidate", action="append", default=[])
+    parser.add_argument("--expected-groups", type=int, choices=(2, 4), default=4)
     args = parser.parse_args()
     invalid_documents = load_invalid_candidates(args.invalid_candidate)
     source = Path(args.tuning_default_jobs)
     jobs = load_jobs(source)
-    if len(jobs) != 28:
-        raise ValueError(f"expected 28 tuning/default jobs, got {len(jobs)}")
-    summary, selected = select_groups(jobs, invalid_documents=invalid_documents)
+    if len(jobs) != args.expected_groups * 7:
+        raise ValueError(f"expected {args.expected_groups * 7} tuning/default jobs, got {len(jobs)}")
+    summary, selected = select_groups(jobs, invalid_documents=invalid_documents,
+                                      expected_groups=args.expected_groups)
     if summary["status"] != "complete":
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         raise SystemExit(1)
@@ -92,7 +94,7 @@ def main():
                 job["rid"] += "_reval20261111"
             job["result_dir"] = str(Path(job["result_dir"]).with_name(job["rid"]))
             tuned_jobs.append(job)
-    if len(tuned_jobs) != 12 or len({job["rid"] for job in tuned_jobs}) != 12:
+    if len(tuned_jobs) != args.expected_groups * 3 or len({job["rid"] for job in tuned_jobs}) != len(tuned_jobs):
         raise ValueError("tuned job generation failed uniqueness check")
     for path, value in ((Path(args.selection_output), summary), (Path(args.jobs_output), tuned_jobs)):
         path.parent.mkdir(parents=True, exist_ok=True)

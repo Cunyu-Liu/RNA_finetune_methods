@@ -47,7 +47,6 @@ def main():
     external = []
     for model, default_lr, batch, need in (
         ("NucleicBERT", "3e-5", 8, 18),
-        ("AIDO.RNA-1.6B", "1e-5", 1, 31),
     ):
         for split in SPLITS:
             for lr in LRS:
@@ -62,30 +61,33 @@ def main():
         if not job["rid"].endswith("_reval20261111"):
             job["rid"] += "_reval20261111"
         job["result_dir"] = str(Path(job["result_dir"]).with_name(job["rid"]))
-    reports.append(write_registry("mrl_external_tuning_default_28_jobs_20261111.json", external))
+    reports.append(write_registry("mrl_external_nuc_tuning_default_14_jobs_20261112.json", external))
 
     tuned = {
         "status": "blocked_until_validation_complete",
-        "required_jobs": 12,
-        "models": ["NucleicBERT", "AIDO.RNA-1.6B"],
+        "required_jobs": 6,
+        "models": ["NucleicBERT"],
+        "deferred_models": ["AIDO.RNA-1.6B"],
         "splits": list(SPLITS),
         "seeds": list(SEEDS),
         "out_suffix": "_reval20261111",
         "rule": "Select one LR per model×split by held-out best_val from four completed tuning runs; never use test for selection.",
-        "source_registry": "mrl_external_tuning_default_28_jobs_20261111.json",
+        "source_registry": "mrl_external_nuc_tuning_default_14_jobs_20261112.json",
     }
-    tuned_path = OUT / "mrl_external_tuned_12_required_20261111.json"
+    tuned_path = OUT / "mrl_nuc_tuned_6_required_20261112.json"
     tuned_path.write_text(json.dumps(tuned, ensure_ascii=False, indent=2) + "\n")
     reports.append({
         "file": tuned_path.name,
-        "required_jobs": 12,
+        "required_jobs": 6,
         "sha256": hashlib.sha256(tuned_path.read_bytes()).hexdigest(),
     })
     summary = {
         "p0_canonical": 18,
-        "external_tuning_and_default": 28,
-        "external_tuned_pending": 12,
-        "external_total": 40,
+        "external_tuning_and_default": 14,
+        "external_tuned_pending": 6,
+        "external_total": 28,
+        "deferred_models": ["AIDO.RNA-1.6B"],
+        "deferred_cells": 14,
         "registries": reports,
     }
     summary_path = OUT / "mentor_retest_jobs_20261111_summary.json"

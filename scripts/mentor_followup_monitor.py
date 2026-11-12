@@ -16,9 +16,9 @@ REPO = Path(__file__).resolve().parents[1]
 STATUS = Path("/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/status")
 STATE = STATUS / "mentor_followup_20261111"
 P0 = REPO / "scripts/main_remaining_650m_18_jobs_20261111.json"
-EXTERNAL = REPO / "scripts/mrl_external_tuning_default_28_jobs_20261111.json"
-EXTERNAL_SELECTION = STATUS / "mrl_external_lr_selection_20261111.json"
-EXTERNAL_TUNED = STATUS / "mrl_external_tuned_jobs_20261111.json"
+EXTERNAL = REPO / "scripts/mrl_external_nuc_tuning_default_14_jobs_20261112.json"
+EXTERNAL_SELECTION = STATUS / "mrl_nuc_lr_selection_20261112.json"
+EXTERNAL_TUNED = STATUS / "mrl_nuc_tuned_jobs_20261112.json"
 MAIN_SELECTION = STATUS / "lr_validation_selection_20261111.json"
 MAIN_TUNED = STATUS / "lr_tuned_jobs_20261111.json"
 DORA = REPO / "scripts/dora_rank8_240_jobs_20261111.json"
@@ -125,6 +125,7 @@ def run_once(log):
             "--tuning-default-jobs", str(EXTERNAL),
             "--selection-output", str(EXTERNAL_SELECTION),
             "--jobs-output", str(EXTERNAL_TUNED),
+            "--expected-groups", "2",
         ], cwd=REPO, check=True, env=dict(
             os.environ, PYTHONPATH=".:scripts",
             RNAFT_ARTIFACT_ROOT="/teams/HoulabData_1788502323/liucunyu/rna-ft-eval/artifacts"))

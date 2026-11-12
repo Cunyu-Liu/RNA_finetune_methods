@@ -1,0 +1,22 @@
+{
+  "status": "blocked_until_validation_complete",
+  "required_jobs": 6,
+  "models": [
+    "NucleicBERT"
+  ],
+  "deferred_models": [
+    "AIDO.RNA-1.6B"
+  ],
+  "splits": [
+    "random",
+    "family"
+  ],
+  "seeds": [
+    17,
+    29,
+    43
+  ],
+  "out_suffix": "_reval20261111",
+  "rule": "Select one LR per model×split by held-out best_val from four completed tuning runs; never use test for selection.",
+  "source_registry": "mrl_external_nuc_tuning_default_14_jobs_20261112.json"
+}

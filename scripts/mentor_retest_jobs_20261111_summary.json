@@ -1,8 +1,12 @@
 {
   "p0_canonical": 18,
-  "external_tuning_and_default": 28,
-  "external_tuned_pending": 12,
-  "external_total": 40,
+  "external_tuning_and_default": 14,
+  "external_tuned_pending": 6,
+  "external_total": 28,
+  "deferred_models": [
+    "AIDO.RNA-1.6B"
+  ],
+  "deferred_cells": 14,
   "registries": [
     {
       "file": "main_remaining_650m_18_jobs_20261111.json",
@@ -10,14 +14,14 @@
       "sha256": "e7fdb8e762aae96ebf5bd864f4ad376a32a950cff7db7ebed79e7ddf9c7edad9"
     },
     {
-      "file": "mrl_external_tuning_default_28_jobs_20261111.json",
-      "n_jobs": 28,
-      "sha256": "6c87a2aed74ecf0185f85f40764e2ee71eb10a0126cc106c636f081f801e595d"
+      "file": "mrl_external_nuc_tuning_default_14_jobs_20261112.json",
+      "n_jobs": 14,
+      "sha256": "f87ab1dbb897f5d62d769af98a82483d2ec95bbb1f151660f8a50376751ef35f"
     },
     {
-      "file": "mrl_external_tuned_12_required_20261111.json",
-      "required_jobs": 12,
-      "sha256": "d9df71eaed9e8104b65dc58d2ecce46fc741e313bbf23bfa5f1b7fe6e6750d0b"
+      "file": "mrl_nuc_tuned_6_required_20261112.json",
+      "required_jobs": 6,
+      "sha256": "b910eaaf1d4c99ca4304e889dad4a82f0158718d44a9cb5d9f2f3987267033df"
     }
   ]
 }

@@ -51,3 +51,12 @@ def test_constant_failure_without_proof_blocks_selection(tmp_path):
     summary, rows = select_groups(jobs, state_fn=state)
     assert summary["status"] == "incomplete"
     assert not rows
+
+
+def test_nuc_only_two_groups_are_supported(tmp_path):
+    jobs = [job for job in make_jobs(tmp_path) if job.model == "NucleicBERT"]
+    summary, rows = select_groups(jobs, state_fn=lambda job: ("complete", ""),
+                                  expected_groups=2)
+    assert summary["status"] == "complete"
+    assert len(rows) == 2
+    assert all(row["model"] == "NucleicBERT" for row in rows)
