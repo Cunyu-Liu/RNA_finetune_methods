@@ -38,6 +38,20 @@ def evaluation_batch_size(model):
     return 2 if model == "AIDO.RNA-1.6B" else 16
 
 
+def deduplicate_jobs(jobs):
+    unique = {}
+    for job in jobs:
+        if job.rid not in unique:
+            unique[job.rid] = job
+            continue
+        previous = vars(unique[job.rid])
+        current = vars(job)
+        scientific_keys = (set(previous) | set(current)) - {"need_gb"}
+        if any(previous.get(key) != current.get(key) for key in scientific_keys):
+            raise ValueError("conflicting external RID: " + job.rid)
+    return list(unique.values())
+
+
 def should_exit(args, jobs, evaluated):
     return args.once or (args.exit_when_complete and jobs and evaluated == len(jobs))
 
@@ -57,8 +71,7 @@ def main():
         for path in args.jobs_json:
             if Path(path).is_file():
                 jobs.extend(load_jobs(path))
-        if len({job.rid for job in jobs}) != len(jobs):
-            raise ValueError("duplicate external RID")
+        jobs = deduplicate_jobs(jobs)
         complete, pending, evaluated = 0, [], 0
         for job in jobs:
             state, reason = proof_state(job)

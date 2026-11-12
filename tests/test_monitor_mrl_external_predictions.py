@@ -47,3 +47,16 @@ def test_monitor_keeps_waiting_for_future_tuned_jobs():
     assert not should_exit(persistent, [object()], 1)
     assert should_exit(SimpleNamespace(once=True, exit_when_complete=False), [object()], 1)
     assert should_exit(SimpleNamespace(once=False, exit_when_complete=True), [object()], 1)
+
+
+def test_reused_rid_deduplicates_only_identical_scientific_jobs():
+    from types import SimpleNamespace
+    import pytest
+    from monitor_mrl_external_predictions import deduplicate_jobs
+
+    original = SimpleNamespace(rid="ft_reused", need_gb=18, result_dir="/same")
+    reused = SimpleNamespace(rid="ft_reused", need_gb=12, result_dir="/same")
+    assert deduplicate_jobs([original, reused]) == [original]
+    reused.result_dir = "/different"
+    with pytest.raises(ValueError, match="conflicting external RID"):
+        deduplicate_jobs([original, reused])
