@@ -34,6 +34,10 @@ def evaluation_env():
         ["/root/rna-ft-eval/pypath", ".", "scripts"]))
 
 
+def evaluation_batch_size(model):
+    return 2 if model == "AIDO.RNA-1.6B" else 16
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jobs-json", action="append", required=True)
@@ -69,7 +73,7 @@ def main():
                     sys.executable, str(Path(__file__).with_name("evaluate_mrl_checkpoint.py")),
                     "--artifact-dir", job.result_dir, "--reference-result", str(job.result_path),
                     "--output-dir", str(out_dir), "--device", "0", "--wait-free-gb", "10",
-                    "--batch-size", "1" if job.model == "AIDO.RNA-1.6B" else "8",
+                    "--batch-size", str(evaluation_batch_size(job.model)),
                 ], check=True, stdout=handle, stderr=subprocess.STDOUT,
                     env=evaluation_env())
             if not is_valid(destination, job.rid):

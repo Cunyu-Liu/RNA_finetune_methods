@@ -31,3 +31,9 @@ def test_missing_prediction_file_is_not_reused(tmp_path):
 
 def test_evaluation_env_includes_compatible_pypath():
     assert evaluation_env()["PYTHONPATH"].split(":")[0] == "/root/rna-ft-eval/pypath"
+
+
+def test_evaluation_batch_matches_source_protocol():
+    from monitor_mrl_external_predictions import evaluation_batch_size
+    assert evaluation_batch_size("NucleicBERT") == 16
+    assert evaluation_batch_size("AIDO.RNA-1.6B") == 2
