@@ -71,9 +71,10 @@ def ensure_queue(registry, workers, log):
         return True
     if running:
         return False
-    if done:
-        raise RuntimeError(f"queue exited with incomplete cells: {registry}: {counts}")
     state_dir = STATE / registry.stem
+    previous_queue = (state_dir / "manifest.jsonl").exists() or (state_dir / "queue.log").exists()
+    if done and previous_queue:
+        raise RuntimeError(f"queue exited with incomplete cells: {registry}: {counts}")
     state_dir.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ)
     env.update({

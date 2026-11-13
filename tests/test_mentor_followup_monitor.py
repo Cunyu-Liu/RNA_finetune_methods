@@ -121,3 +121,38 @@ def test_main_tuned_waits_for_external_prediction_review(monkeypatch):
     monkeypatch.setattr(monitor, "write_lora_tuning_registry",
                         lambda: (_ for _ in ()).throw(AssertionError("stage skipped")))
     assert monitor.run_once(io.StringIO()) == "external_prediction_review"
+
+
+def test_precomplete_results_allow_first_queue_launch(tmp_path, monkeypatch):
+    import collections
+    import io
+    from types import SimpleNamespace
+    import mentor_followup_monitor as monitor
+
+    monkeypatch.setattr(monitor, "STATE", tmp_path)
+    monkeypatch.setattr(monitor, "jobs_status",
+                        lambda path: collections.Counter(complete=75, runnable=165))
+    monkeypatch.setattr(monitor, "live_queue", lambda registry: [])
+    calls = []
+    monkeypatch.setattr(monitor.subprocess, "Popen",
+                        lambda *args, **kwargs: calls.append(kwargs) or SimpleNamespace(pid=123))
+    assert not monitor.ensure_queue(tmp_path / "lr_tuned_jobs_20261111.json", 2, io.StringIO())
+    assert len(calls) == 1
+
+
+def test_exited_queue_with_history_does_not_restart(tmp_path, monkeypatch):
+    import collections
+    import io
+    import pytest
+    import mentor_followup_monitor as monitor
+
+    monkeypatch.setattr(monitor, "STATE", tmp_path)
+    monkeypatch.setattr(monitor, "jobs_status",
+                        lambda path: collections.Counter(complete=75, runnable=165))
+    monkeypatch.setattr(monitor, "live_queue", lambda registry: [])
+    registry = tmp_path / "lr_tuned_jobs_20261111.json"
+    state_dir = tmp_path / registry.stem
+    state_dir.mkdir()
+    (state_dir / "queue.log").write_text("previous queue")
+    with pytest.raises(RuntimeError, match="queue exited with incomplete cells"):
+        monitor.ensure_queue(registry, 2, io.StringIO())
