@@ -55,6 +55,15 @@ def test_batch_mismatch_and_missing_cuda_are_rejected():
                         lambda source: invalid)
 
 
+def test_small_model_uses_reserved_memory_margin():
+    sources = {"a": job("a", "3e-4")}
+    calibrated, evidence = calibrate_group(
+        job("formal", "1e-5", need=16), sources, selection(["a"]),
+        lambda source: result(source["rid"], 1912.4))
+    assert calibrated["need_gb"] == 3.0
+    assert evidence["margin"] == 1.5
+
+
 def test_without_lr_preserves_all_other_arguments():
     assert without_lr(["--lr", "3e-4", "--batch-size", "4", "--lr=1e-5"]) == [
         "--batch-size", "4"]

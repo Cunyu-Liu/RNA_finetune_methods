@@ -24,7 +24,7 @@ def without_lr(args):
     return result
 
 
-def calibrate_group(job, sources, selection, result_loader, margin=1.2):
+def calibrate_group(job, sources, selection, result_loader, margin=None):
     key = (job["task"], job["model"], job["split"])
     if (selection["task"], selection["model"], selection["split"]) != key:
         raise ValueError("selection group mismatch")
@@ -49,6 +49,8 @@ def calibrate_group(job, sources, selection, result_loader, margin=1.2):
     if not candidates:
         raise ValueError("no accepted memory source for " + str(key))
     peak = max(row["peak_mem_mb"] for row in candidates)
+    if margin is None:
+        margin = 1.5 if peak < 12000 else 1.2
     reserve = max(2.0, math.ceil((peak * margin / 1024) * 2) / 2)
     calibrated = copy.deepcopy(job)
     calibrated["need_gb"] = min(float(job["need_gb"]), reserve)
@@ -111,7 +113,8 @@ def main():
             raise ValueError("seed memory calibration differs within group: " + str(key))
         grouped[key] = row
     report = {
-        "jobs": len(calibrated), "groups": len(grouped), "margin": 1.2,
+        "jobs": len(calibrated), "groups": len(grouped),
+        "margin_policy": "1.5 below 12000MB; 1.2 at or above 12000MB",
         "rounding_gib": 0.5, "minimum_gib": 2.0,
         "source_registry": str(source_path),
         "source_sha256": selection["source_sha256"],
