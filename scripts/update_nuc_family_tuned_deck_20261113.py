@@ -39,11 +39,13 @@ def update_deck(deck, backup, family, report_path):
     footer = slide20.shapes[3].text_frame.paragraphs[0].runs[0]
     if "family tuned在训" not in footer.text:
         raise ValueError("slide 20 is not in the expected pending state")
+    tuned_sd = (f"{family['tuned_sample_sd']:.5f}" if family["tuned_sample_sd"] >= 5e-6
+                else f"{family['tuned_sample_sd']:.1e}")
     footer.text = (
-        "读图：80组=8任务×5模型×2 split；seed101按held-out best_val选档，test不选档；主tuned 240待跑。"
+        "读图：80组=8任务×5模型×2 split；seed101按held-out best_val选档，test不选档；主tuned 240按队列推进。"
         "Nuc random default=tuned=3e-5，复用三格r=−0.00162±2.7e-6；"
         f"family default(3e-5) r={family['default_mean']:.5f}±{family['default_sample_sd']:.5f}，"
-        f"tuned(3e-4) r={family['tuned_mean']:.5f}±{family['tuned_sample_sd']:.5f}，"
+        f"tuned(3e-4) r={family['tuned_mean']:.5f}±{tuned_sd}，"
         f"配对Δ={family['tuned_minus_default_mean']:+.5f}，6/6复核；AIDO暂缓NA。"
     )
     scope = presentation.slides[31].shapes[9].text_frame.paragraphs[0].runs[0]
